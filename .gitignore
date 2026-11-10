@@ -1,0 +1,59 @@
+# dependencies
+node_modules/
+web/node_modules/
+.pnpm-store/
+
+# builds
+.next/
+web/.next/
+web/generated/
+out/
+dist/
+build/
+*.tsbuildinfo
+next-env.d.ts
+
+# env and secrets
+.env
+.env.*
+!.env.example
+web/.env
+web/.env.*
+!web/.env.example
+
+# runtime data (never commit)
+storage/
+!storage/.gitkeep
+web/storage/
+
+# logs and backups
+*.log
+npm-debug.log*
+logs/
+backups/
+*.sql
+*.sql.gz
+*.dump
+
+# tests
+coverage/
+playwright-report/
+test-results/
+.vitest-cache/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# deployment artefacts
+releases/
+*.zip
+*.tar.gz
+
+# client confidential material (keep originals out of public repos)
+*.pdf
+docs/source-materials/*
+!docs/source-materials/README.md
