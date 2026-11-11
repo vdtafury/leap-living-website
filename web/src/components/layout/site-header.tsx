@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ArrowUpRightIcon, CalculatorIcon, CloseIcon, MenuIcon } from '@/components/ui/icons'
@@ -18,18 +18,43 @@ const NAV_LINKS = [
 export function SiteHeader() {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const updateScroll = () => {
+      setScrolled(window.scrollY > 24)
+    }
+    updateScroll()
+    window.addEventListener('scroll', updateScroll, { passive: true })
+    return () => window.removeEventListener('scroll', updateScroll)
+  }, [])
+
+  const isOverlayPage = pathname === '/'
+  const isTransparent = isOverlayPage && !scrolled && !mobileOpen
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/'
     return pathname === href || pathname.startsWith(`${href}/`)
   }
 
+  const headerClass = [
+    'll-header',
+    isOverlayPage ? 'll-header--overlay' : '',
+    isTransparent ? 'll-header--transparent' : 'll-header--glass',
+  ]
+    .filter(Boolean)
+    .join(' ')
+
   return (
-    <header className="ll-header">
+    <header className={headerClass}>
       <div className="ll-container ll-header-inner">
         <Link href="/" className="ll-brand-group" aria-label="LEAP LIVING Home">
           <img
-            src="/brand/logo-horizontal-brand.png"
+            src={
+              isTransparent
+                ? '/brand/logo-horizontal-white.png'
+                : '/brand/logo-horizontal-brand.png'
+            }
             alt="LEAP LIVING"
             style={{ height: '38px', width: 'auto', display: 'block' }}
           />
