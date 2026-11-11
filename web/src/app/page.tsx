@@ -3,6 +3,7 @@ import { prisma } from '@/server/db'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { HeroSearchBar } from '@/components/home/hero-search-bar'
+import { HeroVideoBackdrop } from '@/components/home/hero-video-backdrop'
 import { PropertyCard } from '@/components/property/property-card'
 import { ProjectCard } from '@/components/project/project-card'
 import { ArrowRightIcon, ArrowUpRightIcon } from '@/components/ui/icons'
@@ -31,14 +32,16 @@ export default async function HomePage() {
       <SiteHeader />
 
       <main>
-        {/* ==================== EDITORIAL HERO ==================== */}
+        {/* ==================== CINEMATIC HERO ==================== */}
         <section className="ll-hero">
+          <HeroVideoBackdrop />
+
           <div className="ll-container ll-hero-grid">
             <div className="ll-hero-content">
-              <div className="ll-eyebrow">CERTAINTY THROUGH PRECISION</div>
+              <div className="ll-eyebrow ll-eyebrow-light">CERTAINTY THROUGH PRECISION</div>
               <h1 className="ll-hero-title">
                 Unlock your
-                <span>next move</span>
+                <span>next move.</span>
               </h1>
               <p className="ll-hero-desc">
                 In a market driven by noise and speculation, Leap Living brings institutional
@@ -50,20 +53,11 @@ export default async function HomePage() {
                   <span>Explore Properties</span>
                   <ArrowRightIcon size={15} />
                 </Link>
-                <Link href="/about" className="ll-btn ll-btn-outline">
+                <Link href="/about" className="ll-btn ll-btn-outline-light">
                   Our Approach
                 </Link>
               </div>
             </div>
-          </div>
-
-          <div className="ll-hero-panorama" aria-hidden="true">
-            <img
-              src="/images/hero-dubai-skyline.jpg"
-              alt="Panoramic Downtown Dubai skyline featuring Burj Khalifa"
-              className="ll-hero-skyline-img"
-            />
-            <div className="ll-hero-scrim" />
           </div>
         </section>
 
@@ -87,7 +81,7 @@ export default async function HomePage() {
                 </p>
               </div>
               <div className="ll-stat-item">
-                <div className="ll-stat-value">Fiduciary Advisory</div>
+                <div className="ll-stat-value">100% Fiduciary</div>
                 <p className="ll-stat-desc">
                   Client-aligned counsel structured around long-term value over short-term brokerage volume.
                 </p>
