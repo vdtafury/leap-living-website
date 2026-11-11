@@ -55,15 +55,6 @@ export default async function HomePage() {
                 </Link>
               </div>
             </div>
-
-            <div className="ll-hero-showcase">
-              <div className="ll-hero-residence-frame">
-                <img
-                  src="/images/property-palm-villa.jpg"
-                  alt="Contemporary luxury Dubai residential villa with private infinity pool and terrace"
-                />
-              </div>
-            </div>
           </div>
 
           <div className="ll-hero-panorama" aria-hidden="true">
