@@ -143,6 +143,13 @@ for icon_path in /favicon.ico /brand/favicon-32x32.png /brand/favicon-192x192.pn
   check "GET $icon_path" 200 "$code"
 done
 
+# 8. Hero Video & Statistics Checks
+check_contains "Stats bar displays 100% Fiduciary" "100% Fiduciary" "$TMP/home.html"
+for vid in dubai-downtown-aerial.mp4 dubai-palm-jumeirah.mp4 luxury-villa-pool.mp4 modern-residence-interior.mp4 dubai-marina-skyline.mp4; do
+  code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE/videos/$vid")
+  check "GET /videos/$vid" 200 "$code"
+done
+
 echo
 echo "RESULT: $pass passed, $fail failed"
 [ "$fail" -eq 0 ]
