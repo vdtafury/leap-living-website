@@ -54,3 +54,4 @@
 | 2026-11-08 | Audit assistant | Phase 0 public hosting checks; compatibility report; contradictions recorded | Public unauthenticated checks only |
 | 2026-11-10 | Audit assistant | Local Phase 0 PoC: Next.js + Prisma + SQLite + Sharp | `tsc` PASS, `next build` PASS, `verify.sh` 14/14 PASS |
 | 2026-11-11 | Antigravity | Refactored `poc/` → `web/`, built full multi-page platform, restored client logo lockups, sourced 11 internet architectural images, refined bespoke design | `tsc` PASS, `next build` PASS, `verify.sh` 33/33 PASS |
+| 2026-11-11 | Antigravity | Redesigned Header (`Mortgage Calculator` + `Free Valuation ↗`, `Insights`), Hero panoramic composition (Burj Khalifa skyline + infinity-pool villa, exact preserved copy), and Search Interface (`Buy` / `Rent` / `Commercial`) | `tsc` PASS, `next build` PASS, `verify.sh` 33/33 PASS |

@@ -3,15 +3,15 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ArrowUpRightIcon, CloseIcon, MenuIcon } from '@/components/ui/icons'
+import { ArrowUpRightIcon, CalculatorIcon, CloseIcon, MenuIcon } from '@/components/ui/icons'
 
 const NAV_LINKS = [
   { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
   { href: '/buy', label: 'Buy' },
   { href: '/rent', label: 'Rent' },
   { href: '/sell', label: 'Sell' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/about', label: 'About' },
+  { href: '/projects', label: 'Insights' },
   { href: '/contact', label: 'Contact' },
 ]
 
@@ -54,12 +54,13 @@ export function SiteHeader() {
         </nav>
 
         <div className="ll-header-actions">
-          <Link href="/sell#valuation-form" className="ll-btn ll-btn-valuation">
-            Free Valuation
+          <Link href="/mortgage" className="ll-btn ll-btn-mortgage">
+            <CalculatorIcon size={15} />
+            <span>Mortgage Calculator</span>
           </Link>
-          <Link href="/contact" className="ll-btn ll-btn-primary">
-            Private Advisory
-            <ArrowUpRightIcon size={15} />
+          <Link href="/sell#valuation-form" className="ll-btn ll-btn-primary">
+            <span>Free Valuation</span>
+            <ArrowUpRightIcon size={14} />
           </Link>
         </div>
 
@@ -89,19 +90,20 @@ export function SiteHeader() {
             ))}
             <div className="ll-mobile-nav-actions">
               <Link
-                href="/sell#valuation-form"
+                href="/mortgage"
                 onClick={() => setMobileOpen(false)}
-                className="ll-btn ll-btn-valuation"
+                className="ll-btn ll-btn-mortgage"
               >
-                Free Valuation
+                <CalculatorIcon size={15} />
+                <span>Mortgage Calculator</span>
               </Link>
               <Link
-                href="/contact"
+                href="/sell#valuation-form"
                 onClick={() => setMobileOpen(false)}
                 className="ll-btn ll-btn-primary"
               >
-                Private Advisory
-                <ArrowUpRightIcon size={15} />
+                <span>Free Valuation</span>
+                <ArrowUpRightIcon size={14} />
               </Link>
             </div>
           </nav>
@@ -110,4 +112,3 @@ export function SiteHeader() {
     </header>
   )
 }
-

@@ -36,3 +36,4 @@ export function ImageGallery({ images, title }: ImageGalleryProps) {
     </div>
   )
 }
+

@@ -5,7 +5,7 @@ import { SiteFooter } from '@/components/layout/site-footer'
 import { HeroSearchBar } from '@/components/home/hero-search-bar'
 import { PropertyCard } from '@/components/property/property-card'
 import { ProjectCard } from '@/components/project/project-card'
-import { ArrowUpRightIcon } from '@/components/ui/icons'
+import { ArrowRightIcon, ArrowUpRightIcon } from '@/components/ui/icons'
 import {
   CLIENT_PERSPECTIVES,
   CORE_SERVICES,
@@ -34,8 +34,8 @@ export default async function HomePage() {
         {/* ==================== EDITORIAL HERO ==================== */}
         <section className="ll-hero">
           <div className="ll-container ll-hero-grid">
-            <div>
-              <div className="ll-eyebrow">Certainty Through Precision</div>
+            <div className="ll-hero-content">
+              <div className="ll-eyebrow">CERTAINTY THROUGH PRECISION</div>
               <h1 className="ll-hero-title">
                 Unlock your
                 <span>next move</span>
@@ -48,27 +48,31 @@ export default async function HomePage() {
               <div className="ll-hero-ctas">
                 <Link href="/buy" className="ll-btn ll-btn-primary">
                   <span>Explore Properties</span>
-                  <ArrowUpRightIcon size={15} />
+                  <ArrowRightIcon size={15} />
                 </Link>
-                <Link href="/projects" className="ll-btn ll-btn-outline">
-                  View New Projects
-                </Link>
-                <Link href="/mortgage" className="ll-btn ll-btn-outline">
-                  Mortgage Calculator
+                <Link href="/about" className="ll-btn ll-btn-outline">
+                  Our Approach
                 </Link>
               </div>
             </div>
 
-            <div className="ll-hero-media">
-              <img
-                src="/images/hero-dubai-skyline.jpg"
-                alt="Downtown Dubai architectural skyline at sunset"
-              />
-              <div className="ll-hero-media-caption">
-                <span>Dubai · Private Real Estate Consultancy</span>
-                <span>Est. Leadership 2005</span>
+            <div className="ll-hero-showcase">
+              <div className="ll-hero-residence-frame">
+                <img
+                  src="/images/property-palm-villa.jpg"
+                  alt="Contemporary luxury Dubai residential villa with private infinity pool and terrace"
+                />
               </div>
             </div>
+          </div>
+
+          <div className="ll-hero-panorama" aria-hidden="true">
+            <img
+              src="/images/hero-dubai-skyline.jpg"
+              alt="Panoramic Downtown Dubai skyline featuring Burj Khalifa"
+              className="ll-hero-skyline-img"
+            />
+            <div className="ll-hero-scrim" />
           </div>
         </section>
 

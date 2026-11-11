@@ -241,3 +241,60 @@ export function BuildingIcon({ size = 16, ...props }: IconProps) {
   )
 }
 
+export function CalculatorIcon({ size = 15, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.6}
+      aria-hidden="true"
+      {...props}
+    >
+      <rect x="4" y="2.5" width="16" height="19" rx="1.5" />
+      <path d="M8 7h8v3H8z" />
+      <path d="M8 14h1.5M11.75 14h1.5M15.5 14H17M8 17.5h1.5M11.75 17.5h1.5M15.5 17.5H17" />
+    </svg>
+  )
+}
+
+export function LayersIcon({ size = 15, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.6}
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M12 3 2.5 8 12 13l9.5-5L12 3Z" />
+      <path d="m2.5 12.5 9.5 5 9.5-5" />
+      <path d="m2.5 17 9.5 5 9.5-5" />
+    </svg>
+  )
+}
+
+export function CurrencyIcon({ size = 15, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.6}
+      aria-hidden="true"
+      {...props}
+    >
+      <ellipse cx="12" cy="7" rx="7" ry="3" />
+      <path d="M5 7v5c0 1.66 3.13 3 7 3s7-1.34 7-3V7" />
+      <path d="M5 12v5c0 1.66 3.13 3 7 3s7-1.34 7-3v-5" />
+    </svg>
+  )
+}
+
