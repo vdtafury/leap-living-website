@@ -9,24 +9,28 @@ interface HeroClip {
 
 const HERO_CLIPS: HeroClip[] = [
   {
-    src: '/videos/dubai-downtown-aerial.mp4',
+    src: '/videos/dubai-palace-burj-waterfront.mp4',
     poster: '/images/hero-dubai-skyline.jpg',
+  },
+  {
+    src: '/videos/broker-key-handover.mp4',
+    poster: '/images/property-sky-penthouse.jpg',
   },
   {
     src: '/videos/dubai-palm-jumeirah.mp4',
-    poster: '/images/hero-dubai-skyline.jpg',
-  },
-  {
-    src: '/videos/luxury-villa-pool.mp4',
     poster: '/images/property-palm-villa.jpg',
   },
   {
-    src: '/videos/modern-residence-interior.mp4',
-    poster: '/images/property-sky-penthouse.jpg',
+    src: '/videos/executive-skyscraper-meeting.mp4',
+    poster: '/images/architecture-glass-towers.jpg',
   },
   {
     src: '/videos/dubai-marina-skyline.mp4',
     poster: '/images/dubai-marina-commercial.jpg',
+  },
+  {
+    src: '/videos/dubai-downtown-aerial.mp4',
+    poster: '/images/hero-dubai-skyline.jpg',
   },
 ]
 
