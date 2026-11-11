@@ -240,3 +240,4 @@ export function BuildingIcon({ size = 16, ...props }: IconProps) {
     </svg>
   )
 }
+

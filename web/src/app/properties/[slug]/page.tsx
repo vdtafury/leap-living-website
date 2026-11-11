@@ -5,6 +5,7 @@ import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { ConsultationForm } from '@/components/forms/consultation-form'
 import { MortgageCalculator } from '@/components/tools/mortgage-calculator'
+import { ImageGallery } from '@/components/ui/image-gallery'
 import { CheckIcon, ChevronRightIcon, MapPinIcon } from '@/components/ui/icons'
 import { PROPERTIES } from '@/data/catalog'
 
@@ -103,19 +104,7 @@ export default async function PropertyDetailPage({
         <section className="ll-section-muted">
           <div className="ll-container ll-detail-layout">
             <div>
-              <div className="ll-gallery-main">
-                <img src={property.heroImage} alt={property.title} />
-              </div>
-
-              {property.gallery.length > 1 && (
-                <div className="ll-gallery-thumbs">
-                  {property.gallery.map((img, i) => (
-                    <div key={img + i} className="ll-gallery-thumb">
-                      <img src={img} alt={`${property.title} view ${i + 1}`} />
-                    </div>
-                  ))}
-                </div>
-              )}
+              <ImageGallery images={property.gallery} title={property.title} />
 
               <div className="ll-key-specs-box tabular-nums">
                 <div className="ll-key-spec-cell">
@@ -197,3 +186,4 @@ export default async function PropertyDetailPage({
     </>
   )
 }
+

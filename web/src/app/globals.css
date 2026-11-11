@@ -1207,10 +1207,21 @@ button, input, select, textarea {
 }
 
 .ll-gallery-thumb {
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
   border-radius: 3px;
   overflow: hidden;
-  border: 1px solid var(--border-subtle);
+  border: 2px solid var(--border-subtle);
   height: 110px;
+  opacity: 0.78;
+  transition: border-color 0.18s ease, opacity 0.18s ease;
+}
+
+.ll-gallery-thumb:hover,
+.ll-gallery-thumb.active {
+  border-color: var(--brand-teal);
+  opacity: 1;
 }
 
 .ll-gallery-thumb img {

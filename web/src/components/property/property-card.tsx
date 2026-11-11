@@ -70,3 +70,4 @@ export function PropertyCard({ property }: { property: PropertyListing }) {
     </article>
   )
 }
+

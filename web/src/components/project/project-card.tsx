@@ -45,3 +45,4 @@ export function ProjectCard({ project }: { project: ProjectItem }) {
     </article>
   )
 }
+

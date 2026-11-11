@@ -33,16 +33,16 @@
 - [x] Sourced & visually inspected 11 high-resolution people-free architectural photographs
 - [x] Implemented Provident-inspired multi-page navigation and dedicated detail routes (`/buy`, `/rent`, `/sell`, `/projects`, `/projects/[slug]`, `/properties/[slug]`, `/mortgage`, `/about`, `/contact`)
 - [x] Verified Prisma Client generation, TypeScript strict check (`tsc --noEmit`), and Next.js production build (`next build`)
+- [x] Added interactive [`ImageGallery`](web/src/components/ui/image-gallery.tsx) on property and project detail pages
+- [x] Connected GitHub repository (`https://github.com/vdtafury/leap-living-website.git`, branch `feat/multi-page-platform`)
 
 ## Next (in order)
 
-1. Push repository to a new GitHub repository once GitHub CLI / remote credentials are connected by the owner.
-2. Review the multi-page website (`web/`) with the client/CEO.
-3. Obtain Tasjeel cPanel / SSH / MySQL credentials to complete Phase 0 host verification (`INFRASTRUCTURE.md`) and proceed into Phase 1 Admin CMS/CRM & persistent inquiry database writes.
+1. Review the multi-page website (`web/`) with the client/CEO and open/merge PR from `feat/multi-page-platform` to `main` once approved.
+2. Obtain Tasjeel cPanel / SSH / MySQL credentials to complete Phase 0 host verification (`INFRASTRUCTURE.md`) and proceed into Phase 1 Admin CMS/CRM & persistent inquiry database writes.
 
 ## Blocked / waiting on client & environment
 
-- **GitHub Push:** Neither `gh` CLI nor an SSH key / PAT is configured on this machine, so creating the remote GitHub repository and pushing requires user authentication or remote configuration.
 - **Hosting access:** No cPanel login, SSH key, API token, or DB credentials → 16 of 17 host checklist items remain UNKNOWN.
 - **Content/legal items:** O-04 exact office address & social links, O-06 developer logo permissions, O-08 legal pages text & permit numbers, O-19 SMTP path.
 

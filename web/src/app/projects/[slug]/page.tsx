@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { ConsultationForm } from '@/components/forms/consultation-form'
+import { ImageGallery } from '@/components/ui/image-gallery'
 import { CheckIcon, ChevronRightIcon, MapPinIcon } from '@/components/ui/icons'
 import { PROJECTS } from '@/data/catalog'
 
@@ -91,19 +92,7 @@ export default async function ProjectDetailPage({
         <section className="ll-section-muted">
           <div className="ll-container ll-detail-layout">
             <div>
-              <div className="ll-gallery-main">
-                <img src={project.heroImage} alt={project.title} />
-              </div>
-
-              {project.gallery.length > 1 && (
-                <div className="ll-gallery-thumbs">
-                  {project.gallery.map((img, i) => (
-                    <div key={img + i} className="ll-gallery-thumb">
-                      <img src={img} alt={`${project.title} perspective ${i + 1}`} />
-                    </div>
-                  ))}
-                </div>
-              )}
+              <ImageGallery images={project.gallery} title={project.title} />
 
               <div className="ll-key-specs-box">
                 {project.keyFacts.map((fact) => (
@@ -161,3 +150,4 @@ export default async function ProjectDetailPage({
     </>
   )
 }
+
