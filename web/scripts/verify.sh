@@ -134,6 +134,15 @@ code=$(curl -s -o "$TMP/mortgage.html" -w '%{http_code}' "$BASE/mortgage")
 check "GET /mortgage content" 200 "$code"
 check_contains "Mortgage page contains calculator" "UAE Mortgage Calculator" "$TMP/mortgage.html"
 
+# 7. Favicon Configuration & Asset Checks
+check_not_contains "Head has no broken logo-mark.svg reference" "logo-mark.svg" "$TMP/home.html"
+check_contains "Head declares favicon.ico" "/favicon.ico?v=2" "$TMP/home.html"
+check_contains "Head declares 32x32 PNG favicon" "/brand/favicon-32x32.png?v=2" "$TMP/home.html"
+for icon_path in /favicon.ico /brand/favicon-32x32.png /brand/favicon-192x192.png /brand/apple-touch-icon.png; do
+  code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE$icon_path")
+  check "GET $icon_path" 200 "$code"
+done
+
 echo
 echo "RESULT: $pass passed, $fail failed"
 [ "$fail" -eq 0 ]
