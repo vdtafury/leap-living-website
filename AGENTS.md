@@ -40,7 +40,7 @@ Both share one codebase, one database, and the same domain modules. The company 
 
 ## 3. Scope control: grow, don't sprawl
 
-- Work **only on the current phase** in `STATUS.md`. Later-phase ideas go to the backlog in `ROADMAP.md`; do not implement them.
+- Follow the phase order in `ROADMAP.md` and the current focus in `STATUS.md`. Phases are a work order, not gates (`D-20`): the owner may reorder or change scope at any time. Ideas the owner has not requested go to the backlog in `ROADMAP.md`; do not implement them unasked.
 - **Design for extension, build only what is needed now.** Concretely:
   - Put replaceable technical concerns behind small interfaces (storage, email, jobs, search, cache). See the "Extension points" table in `ARCHITECTURE.md`.
   - Build the RBAC engine permission-based from day one. Start with few roles; add roles as **data**, not code changes.
