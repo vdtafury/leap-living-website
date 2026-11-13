@@ -8,6 +8,10 @@
 
 ## Last updated
 
+2026-11-11 — by: Arena agent (development environment set up end-to-end; ESLint + Vitest added; review findings recorded below)
+
+### Previous update
+
 2026-11-11 — by: Antigravity (renamed `poc/` → `web/`, removed duplicate root PDFs and mockup crops, restored horizontal/stacked/mark/wordmark logo assets strictly from client `leap-living-logo.png`, sourced 11 high-res architectural photos from Unsplash/Wikimedia, built dedicated multi-page routes `/`, `/buy`, `/rent`, `/sell`, `/projects`, `/projects/[slug]`, `/properties/[slug]`, `/mortgage`, `/about`, `/contact`, and verified `tsc`, `next build`, and all automated HTTP checks)
 
 ## State of the repository
@@ -36,6 +40,21 @@
 - [x] Added interactive [`ImageGallery`](web/src/components/ui/image-gallery.tsx) on property and project detail pages
 - [x] Connected GitHub repository (`https://github.com/vdtafury/leap-living-website.git`, branch `feat/multi-page-platform`)
 
+## Open review findings (2026-11-11, not yet fixed — need owner decision)
+
+- Homepage hero rotates two clips that show people (`broker-key-handover.mp4`, `executive-skyscraper-meeting.mp4`) — conflicts with `D-16`.
+- `CLIENT_PERSPECTIVES` testimonials (Hassan A., Leila K., Omar N.) have no client source — `AGENTS.md` §2.4.
+- Credentials strip (`21+ Years`, `AED 12B+`, `100% Fiduciary`) still UNVERIFIED (`O-05`); years are inconsistent (21+ / since 2005 / 22 in brand story).
+- Sample properties and projects carry real developer names (Emaar, Meraas, Omniyat, Nakheel) with no visible `SAMPLE` label; developer bar implies partnership (`O-06`).
+- `ConsultationForm` shows "Advisory Request Recorded" without persisting anything (rule §2.7).
+- Header shows `Mortgage Calculator` + `Free Valuation`; `D-18` asks for `Free Valuation` alongside `Private Advisory`. On mobile the CTA is only inside the drawer.
+- Hero search `Commercial` tab always routes to `/rent`.
+- `/` is `force-dynamic` only to render a hidden debug line from the database.
+- `/api/upload` and `/api/sharp` are unauthenticated and not rate-limited; `/api/health` returns raw DB error messages; no security headers/CSP.
+- Nav label `Insights` points to `/projects`; social icons and Privacy/Terms link to `/contact`.
+- Media weight: ~21 MB hero videos and a 2.2 MB PNG; images use plain `<img>` (14 lint warnings).
+- `docs/source-materials/` (approved homepage design, brand PDFs, logo PNG) is git-ignored and absent from fresh clones — needed for design work.
+
 ## Next (in order)
 
 1. Review the multi-page website (`web/`) with the client/CEO and open/merge PR from `feat/multi-page-platform` to `main` once approved.
@@ -61,3 +80,4 @@
 | 2026-11-11 | Antigravity | Curated 6 luxury Dubai real-estate & executive brokerage hero clips (`dubai-palace-burj-waterfront.mp4`, `broker-key-handover.mp4`, `executive-skyscraper-meeting.mp4`, Palm Jumeirah, Marina, Downtown aerials) | `tsc` PASS, `next build` PASS, `verify.sh` 47/47 PASS |
 | 2026-11-11 | Antigravity | Made Homepage top navbar transparent (`ll-header--transparent`, white logo & white links) over full-bleed Hero video, transitioning on scroll into a frosted glassy header (`ll-header--glass`) | `tsc` PASS, `next build` PASS, `verify.sh` 47/47 PASS |
 | 2026-11-11 | Antigravity | Redesigned Footer to deep dark architectural teal (`#0B353A`) with internet-sourced glass skyscraper facade (`footer-glass-facade.jpg`), 5 vertical-divided columns (`Brand/Contact/Socials`, `Explore`, `Properties`, `Information`, `Location`), preserving all existing links and contact details | `tsc` PASS, `next build` PASS, `verify.sh` 47/47 PASS |
+| 2026-11-11 | Arena agent | Reviewed project + homepage (desktop/mobile screenshots); installed deps (native `better-sqlite3` build), generated Prisma client, created local SQLite DB; added ESLint 9.39.5 + `eslint-config-next` 16.4.5 + Vitest 5.1.0 with `lint`/`test` scripts and first unit tests (`validation`, `safeJoin`); fixed `react-hooks/set-state-in-effect` error in `HeroVideoBackdrop` via `useSyncExternalStore`; filled `AGENTS.md` §9 commands | `typecheck` PASS, `lint` PASS (0 errors, 14 `<img>` warnings), `test` PASS 5/5, `next build` PASS, `verify.sh` 46/47 (only failure: `file` utility missing in sandbox; JPEG magic bytes confirmed manually) |

@@ -111,16 +111,18 @@ Do not rely on middleware/proxy alone for authentication: re-check authorization
 
 ## 9. Commands
 
-> Filled in after Phase 0 confirms the stack on the real hosting. Until then do not assume commands exist.
+> Run from `web/`. Local development uses SQLite (`DATABASE_URL="file:./storage/dev.db"` in `web/.env`); the production database is still pending host verification (`D-04`, `INFRASTRUCTURE.md`).
 
 ```
-install:    (TBD)
-dev:        (TBD)
-typecheck:  (TBD)
-lint:       (TBD)
-test:       (TBD)
-build:      (TBD)
-db migrate: (TBD)
+install:    npm ci                  # compiles better-sqlite3; needs python3, make, g++
+generate:   npm run prisma:generate # writes the Prisma client to web/generated (git-ignored)
+dev:        npm run dev
+typecheck:  npm run typecheck
+lint:       npm run lint            # ESLint 9 + eslint-config-next (0 errors required)
+test:       npm run test            # Vitest, files: src/**/*.test.ts
+build:      npm run build
+db migrate: npm run prisma:migrate  # prisma migrate dev
+verify:     BASE=http://localhost:3000 ./scripts/verify.sh   # needs a running server, ImageMagick and `file`
 ```
 
 ## 10. Report format (end of every task)
