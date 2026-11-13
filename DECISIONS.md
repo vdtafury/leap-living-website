@@ -25,6 +25,7 @@ Single place for accepted decisions, open questions, and known contradictions. W
 | D-17 | **CEO Title:** Remove `Founder &` from Mohab Samak's title everywhere; use **`CEO`** only (`Mohab Samak / CEO`) | 2026-11-10 |
 | D-18 | **Header CTA — `Free Valuation` Button:** Add a `Free Valuation` button in the top Header alongside `Private Advisory` | 2026-11-10 |
 | D-19 | **Mortgage Calculator:** Add an interactive Mortgage Calculator section to the website (inspired by Provident Estate) | 2026-11-10 |
+| D-20 | **Project phases:** 6 phases (Phase 0 → Phase 5, `ROADMAP.md`) plus backlog. Owner chose to work continuously until the project is finished, with frequent changes expected; phases are used as a work order only — no fixed milestones, deadlines, or per-phase sign-off. Production deployment still requires explicit written approval | 2026-11-11 |
 
 ## B. Proposed, pending Phase 0 evidence
 
