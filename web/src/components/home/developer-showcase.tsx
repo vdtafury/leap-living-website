@@ -5,8 +5,11 @@ import { DEVELOPER_BRANDS, type DeveloperBrand } from '@/data/catalog'
 import { PauseIcon, PlayIcon } from '@/components/ui/icons'
 
 interface DeveloperShowcaseProps {
-  /** Section surface; pick the one that differs from the neighbouring sections. */
-  surface?: 'light' | 'muted'
+  /**
+   * Section surface. `glass` = skyline photo + teal scrim with frosted glass
+   * tiles and white logos (default). `light` / `muted` = flat surfaces.
+   */
+  surface?: 'glass' | 'light' | 'muted'
   /** Optional index shown in the numbered eyebrow (e.g. "06"). */
   index?: string
   title?: string
@@ -42,7 +45,7 @@ function DeveloperTile({ brand }: { brand: DeveloperBrand }) {
  * - Honours prefers-reduced-motion: becomes a static wrapped grid.
  */
 export function DeveloperShowcase({
-  surface = 'light',
+  surface = 'glass',
   index,
   title = 'Developers We Work With Across the UAE',
 }: DeveloperShowcaseProps) {
@@ -53,6 +56,20 @@ export function DeveloperShowcase({
       className={`ll-dev-showcase ll-section-${surface}`}
       aria-labelledby="ll-dev-showcase-title"
     >
+      {surface === 'glass' && (
+        <div className="ll-section-image-bg" aria-hidden="true">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/developer-network-skyline.jpg"
+            srcSet="/images/developer-network-skyline-960.jpg 960w, /images/developer-network-skyline.jpg 1920w"
+            sizes="100vw"
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+          <div className="ll-dev-glass-scrim" />
+        </div>
+      )}
       <div className="ll-container ll-dev-showcase-head">
         <div>
           <div className="ll-eyebrow">
