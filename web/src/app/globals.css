@@ -2124,9 +2124,10 @@ button, input, select, textarea {
   position: relative;
   overflow: hidden;
   padding: 0.75rem 0 1.25rem;
-  /* Soft fade at both edges so logos glide in and out */
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%);
-  mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%);
+  /* Soft fade at both edges so logos glide in and out. The strip lives inside
+     .ll-container (same edges as the heading), so the fade is kept short. */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
 }
 
 .ll-marquee-track {
@@ -2387,7 +2388,7 @@ button, input, select, textarea {
   .ll-marquee-list {
     flex-wrap: wrap;
     justify-content: center;
-    padding: 0 1.5rem;
+    padding: 0;
   }
   .ll-marquee-list[aria-hidden='true'],
   .ll-marquee-toggle {

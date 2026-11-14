@@ -163,6 +163,7 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 - A brand without a logo file still renders as a spaced uppercase wordmark (fallback; no brand uses it at the moment).
 - Loop duration scales with the logo count (`--marquee-items`, set by the component): 3.9 s per logo (3 s on mobile), so adding brands keeps the glide speed constant (28 logos give 109 s).
 - The dark `glass` surface turns logos into white silhouettes. Several sheet logos (Dubai South shield, Mira box, Aldar) lose detail that way, so keep `glass-light` for this list.
+- **Contained strip:** the marquee sits inside `.ll-container`, so it starts and ends exactly where the heading and every other section's content do (same `--content-max` and `--page-gutter`). It is **not** full-bleed (owner request, 2026-11-14). Logos fade in and out over the outer 6% of that box.
 - Slots: each logo sits in an invisible fixed-width slot, 200×72 (156×60 on mobile), so the spacing stays even. **Do not reintroduce tile backgrounds, borders, shadows or a band.** Logos are full colour on light and flat surfaces; only the dark `glass` variant renders them white.
 - Motion: CSS-only `translateX(-50%)` loop over a duplicated list (the duplicate is `aria-hidden`), 55s per loop (42s on mobile), edge fade mask. Pauses on hover, on keyboard focus, and via a **Pause/Play** button (WCAG 2.2.2). `prefers-reduced-motion` turns it into a static wrapped grid.
 - Logos are third-party trademarks. Usage permission is still open (`DECISIONS.md` O-06) and must be confirmed before launch.

@@ -92,23 +92,26 @@ export function DeveloperShowcase({
         </button>
       </div>
 
-      {/* Loop length scales with the logo count so the glide speed stays constant. */}
-      <div
-        className={`ll-marquee${paused ? ' is-paused' : ''}`}
-        style={{ '--marquee-items': DEVELOPER_BRANDS.length } as CSSProperties}
-      >
-        <div className="ll-marquee-track">
-          <ul className="ll-marquee-list" aria-label="Developers we work with">
-            {DEVELOPER_BRANDS.map((brand) => (
-              <DeveloperTile key={brand.name} brand={brand} />
-            ))}
-          </ul>
-          {/* Visual duplicate for the seamless loop; hidden from assistive tech. */}
-          <ul className="ll-marquee-list" aria-hidden="true">
-            {DEVELOPER_BRANDS.map((brand) => (
-              <DeveloperTile key={`dup-${brand.name}`} brand={brand} />
-            ))}
-          </ul>
+      {/* Contained like every other section: same width and gutters as the heading. */}
+      <div className="ll-container">
+        {/* Loop length scales with the logo count so the glide speed stays constant. */}
+        <div
+          className={`ll-marquee${paused ? ' is-paused' : ''}`}
+          style={{ '--marquee-items': DEVELOPER_BRANDS.length } as CSSProperties}
+        >
+          <div className="ll-marquee-track">
+            <ul className="ll-marquee-list" aria-label="Developers we work with">
+              {DEVELOPER_BRANDS.map((brand) => (
+                <DeveloperTile key={brand.name} brand={brand} />
+              ))}
+            </ul>
+            {/* Visual duplicate for the seamless loop; hidden from assistive tech. */}
+            <ul className="ll-marquee-list" aria-hidden="true">
+              {DEVELOPER_BRANDS.map((brand) => (
+                <DeveloperTile key={`dup-${brand.name}`} brand={brand} />
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </section>
