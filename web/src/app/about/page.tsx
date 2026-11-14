@@ -196,7 +196,7 @@ export default function AboutPage() {
         </section>
 
         {/* Developer network (logo marquee) */}
-        <DeveloperShowcase surface="muted" />
+        <DeveloperShowcase />
       </main>
 
       <SiteFooter />
