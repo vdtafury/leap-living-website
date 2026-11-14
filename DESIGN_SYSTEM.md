@@ -162,7 +162,7 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 
 1. Full-screen hero (video) with the glass search **inside** it (see 7.7)
 2. `01` Developer Network: light glass logo marquee
-3. `02` Featured Properties: light
+3. `02` Featured Properties: light, **carousel with arrows** (see 7.8)
 4. `03` Advisory Scope: gradient bento
 5. `04` Dubai Developments: grey
 6. `05` Executive Leadership: image + glass
@@ -198,3 +198,15 @@ The search lives inside the hero (`.ll-hero-inner` = hero copy + `<HeroSearchBar
 | landscape, height ≤ 520px | title on one line; 4 fields + icon-only Search in one row |
 
 Verified with no horizontal overflow, and with the panel fully in view, at 1920×1080, 1440×900, 1366×650, 1280×600, 1024×1366, 768×1024, 390×844, 360×640 and 844×390.
+
+### 7.8 Featured properties carousel (`ll-carousel-*`)
+
+`PropertyCarousel` (`web/src/components/property/property-carousel.tsx`) replaces the fixed 3-card grid on the homepage. It shows every `featured: true` BUY listing (currently 8).
+
+- **Track:** a native horizontal scroll-snap list, so touch swipe and trackpad work natively. Cards keep the standard `ll-card` design. The track has internal padding so the hover lift and shadow are not clipped.
+- **Controls (header, right):** "View All" link, a counter (`01–03 / 08`, announced via `aria-live`), and round prev/next buttons (48px; 44px on mobile). Each click moves exactly one card; the button is disabled at either end. Hover turns it solid teal. ←/→ keys work when focus is inside the carousel.
+- **Progress:** a 2px hairline under the track with a teal thumb sized to the visible fraction.
+- **Per view:** 3 above 1120px; 2 at 1120px and below; 1 card plus a peek of the next at 700px and below. On mobile the link shortens to "View all", so the link, counter and arrows fit on one row.
+- **Accessibility:** `role="region"` + `aria-roledescription="carousel"`; slides are labelled "n of N". Smooth scrolling is disabled under `prefers-reduced-motion`.
+
+> The four listings added on 2026-11-14 (Jumeirah Bay Island, Bluewaters Island, Business Bay, Tilal Al Ghaf) are **sample showcase mandates**, like the rest of the catalogue. Their photos (`property-jumeirah-bay-mansion.jpg`, `property-bluewaters-residence.jpg`, `property-business-bay-penthouse.jpg`, `property-lagoon-villa.jpg`) are **AI-generated placeholders**. Replace them with real listing photography before launch.
