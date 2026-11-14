@@ -2213,9 +2213,10 @@ button, input, select, textarea {
   max-width: 100%;
   height: auto;
   object-fit: contain;
-  filter: grayscale(1);
-  opacity: 0.74;
-  transition: filter 0.3s ease, opacity 0.3s ease;
+  /* Logos show in their own brand colours at all times */
+  filter: none;
+  opacity: 1;
+  transition: filter 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
 }
 
 .ll-marquee-wordmark {
@@ -2223,7 +2224,7 @@ button, input, select, textarea {
   font-weight: 600;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: #6F7977;
+  color: var(--heading);
   transition: color 0.3s ease;
 }
 
@@ -2423,8 +2424,8 @@ button, input, select, textarea {
 }
 
 .ll-section-glass-light .ll-marquee-logo {
-  filter: grayscale(1);
-  opacity: 0.72;
+  filter: none;
+  opacity: 1;
 }
 
 .ll-section-glass-light .ll-marquee-item:hover {
