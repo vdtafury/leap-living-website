@@ -568,21 +568,21 @@ button, input, select, textarea {
   inset: 0;
   z-index: 3;
   background:
-    /* Light brand-teal wash (#3B9EA1), stronger only behind the copy */
+    /* Luxury brand-teal directional scrim for crystal-clear typography on bright water/sky */
     linear-gradient(
       95deg,
-      rgba(36, 112, 115, 0.6) 0%,
-      rgba(59, 158, 161, 0.36) 40%,
-      rgba(59, 158, 161, 0.14) 70%,
-      rgba(59, 158, 161, 0.06) 100%
+      rgba(9, 44, 46, 0.78) 0%,
+      rgba(14, 58, 61, 0.55) 38%,
+      rgba(59, 158, 161, 0.15) 68%,
+      rgba(59, 158, 161, 0.04) 100%
     ),
     /* Soft shade under the header and behind the search for legibility */
     linear-gradient(
       180deg,
-      rgba(16, 42, 44, 0.34) 0%,
-      rgba(16, 42, 44, 0.04) 22%,
-      rgba(16, 42, 44, 0) 62%,
-      rgba(16, 42, 44, 0.26) 100%
+      rgba(9, 44, 46, 0.42) 0%,
+      rgba(9, 44, 46, 0.05) 24%,
+      rgba(9, 44, 46, 0) 60%,
+      rgba(9, 44, 46, 0.32) 100%
     );
   pointer-events: none;
 }
@@ -603,17 +603,19 @@ button, input, select, textarea {
 }
 
 .ll-hero-title {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: clamp(2.4rem, min(4.6vw, 7.4vh), 4.15rem);
   font-weight: 600;
-  line-height: 1.05;
+  letter-spacing: -0.028em;
+  line-height: 1.06;
   color: var(--white);
   margin-bottom: 1.35rem;
 }
 
 .ll-hero-title span {
   display: block;
-  color: var(--brand-teal-75);
+  color: var(--brand-teal);
+  font-weight: 600;
 }
 
 .ll-hero-desc {
@@ -3583,21 +3585,22 @@ button, input, select, textarea {
 .ll-hero-title,
 .ll-hero-desc,
 .ll-hero .ll-eyebrow {
-  text-shadow: 0 2px 22px rgba(7, 43, 45, 0.38);
+  text-shadow: 0 2px 20px rgba(7, 43, 45, 0.42);
 }
 
 .ll-hero-title span {
-  color: var(--brand-teal-25);
+  color: #4AD2D6;
+  text-shadow: 0 2px 24px rgba(7, 35, 37, 0.6);
 }
 
 .ll-hero .ll-eyebrow {
-  color: rgba(255, 255, 255, 0.92);
-}
-
-.ll-hero-desc {
   color: rgba(255, 255, 255, 0.94);
 }
 
+.ll-hero-desc {
+  color: rgba(255, 255, 255, 0.95);
+}
+
 .ll-hero .ll-eyebrow::after {
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: var(--brand-teal);
 }
