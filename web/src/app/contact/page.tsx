@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ResponsiveImg } from '@/components/ui/responsive-img'
 import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
@@ -27,9 +28,9 @@ export default function ContactPage() {
             <div className="ll-eyebrow">Direct Desk</div>
             <h1 className="ll-page-hero-title">Speak With Our Advisory Team</h1>
             <p className="ll-page-hero-desc">
-              Every mandate begins with a confidential conversation. Contact Leap Living
-              directly regarding residential acquisitions, corporate leasing, asset valuations,
-              or institutional consultancy in Dubai.
+              Every mandate begins with a confidential conversation. Contact Leap Living directly
+              regarding residential acquisitions, corporate leasing, asset valuations, or
+              institutional consultancy in Dubai.
             </p>
           </div>
         </section>
@@ -42,8 +43,8 @@ export default function ContactPage() {
                 Direct Contact Channels
               </h2>
               <p style={{ fontSize: '0.92rem', marginBottom: '1.75rem' }}>
-                Available Sunday through Friday for scheduled executive briefings, on-site
-                property inspections, and private remote consultations.
+                Available Sunday through Friday for scheduled executive briefings, on-site property
+                inspections, and private remote consultations.
               </p>
 
               <div style={{ display: 'grid', gap: '1.15rem', marginBottom: '2rem' }}>
@@ -98,8 +99,9 @@ export default function ContactPage() {
                   height: '220px',
                 }}
               >
-                <img
+                <ResponsiveImg
                   src="/images/dubai-sunset-waterfront.png"
+                  sizes="(max-width: 900px) 100vw, 40vw"
                   alt="Dubai skyline along the water"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                 />
@@ -108,7 +110,10 @@ export default function ContactPage() {
 
             <div>
               <div style={{ marginBottom: '1rem' }}>
-                <h2 className="ll-serif-title" style={{ fontSize: '1.5rem', marginBottom: '0.35rem' }}>
+                <h2
+                  className="ll-serif-title"
+                  style={{ fontSize: '1.5rem', marginBottom: '0.35rem' }}
+                >
                   Schedule a Briefing
                 </h2>
                 <p style={{ fontSize: '0.86rem' }}>
@@ -125,4 +130,3 @@ export default function ContactPage() {
     </>
   )
 }
-
