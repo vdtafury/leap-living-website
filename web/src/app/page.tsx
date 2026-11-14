@@ -4,7 +4,7 @@ import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { HeroSearchBar } from '@/components/home/hero-search-bar'
 import { HeroVideoBackdrop } from '@/components/home/hero-video-backdrop'
-import { PropertyCard } from '@/components/property/property-card'
+import { PropertyCarousel } from '@/components/property/property-carousel'
 import { ProjectCard } from '@/components/project/project-card'
 import { ArrowRightIcon, ArrowUpRightIcon } from '@/components/ui/icons'
 import { KeyholeMark } from '@/components/ui/keyhole-mark'
@@ -81,28 +81,29 @@ export default async function HomePage() {
         {/* ==================== FEATURED BUY PORTFOLIO PREVIEW ==================== */}
         <section className="ll-section-light">
           <div className="ll-container">
-            <div className="ll-section-header">
-              <div>
-                <div className="ll-eyebrow">
-                  <span className="ll-eyebrow-num">02</span>Curated Portfolio
-                </div>
-                <h2 className="ll-serif-title ll-section-title">Featured Properties for Sale</h2>
-                <p className="ll-section-lead">
-                  Representative architectural residences across Palm Jumeirah, Downtown Dubai,
-                  and Dubai Hills Estate. Select any mandate for full specifications and financing analysis.
-                </p>
+            <PropertyCarousel
+              items={featuredSaleProperties}
+              label="Featured properties for sale"
+              action={
+                <Link href="/buy" className="ll-link-arrow">
+                  <span className="ll-label-long">View All Properties for Sale</span>
+                  <span className="ll-label-short" aria-hidden="true">
+                    View all
+                  </span>
+                  <ArrowUpRightIcon size={15} />
+                </Link>
+              }
+            >
+              <div className="ll-eyebrow">
+                <span className="ll-eyebrow-num">02</span>Curated Portfolio
               </div>
-              <Link href="/buy" className="ll-link-arrow">
-                <span>View All Properties for Sale</span>
-                <ArrowUpRightIcon size={15} />
-              </Link>
-            </div>
-
-            <div className="ll-cards-grid">
-              {featuredSaleProperties.map((property) => (
-                <PropertyCard key={property.slug} property={property} />
-              ))}
-            </div>
+              <h2 className="ll-serif-title ll-section-title">Featured Properties for Sale</h2>
+              <p className="ll-section-lead">
+                Representative residences across Dubai&apos;s most sought-after addresses, from
+                Palm Jumeirah and Downtown to Jumeirah Bay Island. Use the arrows to browse, then
+                select any mandate for full specifications and financing analysis.
+              </p>
+            </PropertyCarousel>
           </div>
         </section>
 
