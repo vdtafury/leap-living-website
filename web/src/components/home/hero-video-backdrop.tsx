@@ -9,28 +9,28 @@ interface HeroClip {
 
 const HERO_CLIPS: HeroClip[] = [
   {
-    src: '/videos/dubai-palace-burj-waterfront.mp4',
-    poster: '/images/hero-dubai-skyline.jpg',
+    src: '/videos/beach-turquoise-ocean.mp4',
+    poster: '/images/hero-dubai-beach-daylight.jpg',
   },
   {
-    src: '/videos/broker-key-handover.mp4',
-    poster: '/images/property-sky-penthouse.jpg',
+    src: '/videos/dubai-palm-jumeirah-sunny.mp4',
+    poster: '/images/hero-palm-villas.jpg',
   },
   {
-    src: '/videos/dubai-palm-jumeirah.mp4',
-    poster: '/images/property-palm-villa.jpg',
+    src: '/videos/beach-aerial-pier.mp4',
+    poster: '/images/hero-dubai-beach-daylight.jpg',
   },
   {
-    src: '/videos/executive-skyscraper-meeting.mp4',
-    poster: '/images/architecture-glass-towers.jpg',
+    src: '/videos/luxury-villa-pool-sunny.mp4',
+    poster: '/images/waterfront-pool-estate.jpg',
   },
   {
-    src: '/videos/dubai-marina-skyline.mp4',
-    poster: '/images/dubai-marina-commercial.jpg',
+    src: '/videos/luxury-yacht-waterfront.mp4',
+    poster: '/images/hero-marina-daylight.jpg',
   },
   {
-    src: '/videos/dubai-downtown-aerial.mp4',
-    poster: '/images/hero-dubai-skyline.jpg',
+    src: '/videos/coastal-yacht-bay.mp4',
+    poster: '/images/hero-palm-villas.jpg',
   },
 ]
 
