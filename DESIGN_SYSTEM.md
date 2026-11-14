@@ -148,13 +148,13 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 
 `DeveloperShowcase` (`web/src/components/home/developer-showcase.tsx`), used on `/` (index `01`, directly under the hero search) and `/about`.
 
-- Default surface **`glass-light`**: the Dubai sunset skyline (`public/images/developer-network-skyline.jpg`, plus a 960w variant) shown greyscale under a light `#F3F6F5` scrim with a faint teal glow at the bottom-left. A frosted white band holds frosted white glass tiles with grey logos; on hover a tile turns solid white and the logo shows its original colours.
+- Default surface **`glass-light`**: the Dubai sunset skyline (`public/images/developer-network-skyline.jpg`, plus a 960w variant) shown greyscale under a light `#F3F6F5` scrim with a faint teal glow at the bottom-left. A frosted white band holds frosted white glass tiles with logos in their **original brand colours at all times** (owner request); on hover a tile turns solid white and lifts.
 - The hero search band's lower half is `#F3F6F5`, matching the solid top of this scrim, so the search box straddles the hero and this section seamlessly.
 - Other surfaces: `glass` (same photo under a deep-teal scrim, white logos; colour on hover) and flat `light` / `muted`.
 
 - Data: `DEVELOPER_BRANDS` in `web/src/data/catalog.ts` (name, logo path, display width/height). Logos are transparent PNGs in `web/public/images/developers/` (120px-tall masters, 128-colour, ~104 KB total). Display sizes are optically balanced: square marks are taller, long wordmarks are shorter.
 - A brand without a logo file renders as a spaced uppercase wordmark (currently **Meydan**, because no reliable developer logo was found).
-- Tiles: 208×108 (164×88 on mobile), `--radius-md`. On flat surfaces, logos are greyscale at 74% opacity and switch to full colour with a lift on hover.
+- Tiles: 208×108 (164×88 on mobile), `--radius-md`. Logos are full colour on light and flat surfaces; only the dark `glass` variant renders them white (colour on hover).
 - Motion: CSS-only `translateX(-50%)` loop over a duplicated list (the duplicate is `aria-hidden`), 55s per loop (42s on mobile), edge fade mask. Pauses on hover, on keyboard focus, and via a **Pause/Play** button (WCAG 2.2.2). `prefers-reduced-motion` turns it into a static wrapped grid.
 - Logos are third-party trademarks. Usage permission is still open (`DECISIONS.md` O-06) and must be confirmed before launch.
 
