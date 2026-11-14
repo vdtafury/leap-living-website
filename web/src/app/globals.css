@@ -568,19 +568,21 @@ button, input, select, textarea {
   inset: 0;
   z-index: 3;
   background:
+    /* Light brand-teal wash (#3B9EA1), stronger only behind the copy */
     linear-gradient(
       95deg,
-      rgba(7, 43, 45, 0.88) 0%,
-      rgba(10, 63, 65, 0.7) 38%,
-      rgba(19, 104, 107, 0.34) 68%,
-      rgba(7, 43, 45, 0.22) 100%
+      rgba(36, 112, 115, 0.6) 0%,
+      rgba(59, 158, 161, 0.36) 40%,
+      rgba(59, 158, 161, 0.14) 70%,
+      rgba(59, 158, 161, 0.06) 100%
     ),
+    /* Soft shade under the header and behind the search for legibility */
     linear-gradient(
       180deg,
-      rgba(16, 42, 44, 0.54) 0%,
-      rgba(16, 42, 44, 0.12) 24%,
-      rgba(16, 42, 44, 0) 70%,
-      rgba(16, 42, 44, 0.56) 100%
+      rgba(16, 42, 44, 0.34) 0%,
+      rgba(16, 42, 44, 0.04) 22%,
+      rgba(16, 42, 44, 0) 62%,
+      rgba(16, 42, 44, 0.26) 100%
     );
   pointer-events: none;
 }
@@ -2963,8 +2965,8 @@ button, input, select, textarea {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   padding: 4px;
   border-radius: 999px;
-  background: rgba(4, 30, 32, 0.34);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(8, 44, 46, 0.24);
+  border: 1px solid rgba(255, 255, 255, 0.16);
 }
 
 .ll-hs-mode-thumb {
@@ -3031,8 +3033,8 @@ button, input, select, textarea {
   align-items: stretch;
   padding: 6px;
   border-radius: 16px;
-  background: rgba(6, 32, 34, 0.34);
-  border: 1px solid rgba(255, 255, 255, 0.13);
+  background: rgba(8, 44, 46, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.16);
 }
 
 .ll-hs-field {
@@ -3340,8 +3342,8 @@ button, input, select, textarea {
     border: none;
   }
   .ll-hs-field {
-    background: rgba(6, 32, 34, 0.36);
-    border: 1px solid rgba(255, 255, 255, 0.13);
+    background: rgba(8, 44, 46, 0.24);
+    border: 1px solid rgba(255, 255, 255, 0.16);
   }
   .ll-hs-field + .ll-hs-field::before {
     display: none;
@@ -3573,4 +3575,29 @@ button, input, select, textarea {
   .ll-hs-pop {
     animation: none;
   }
+}
+
+/* ==========================================================================
+   LIGHT HERO WASH: legibility on the lighter brand-teal overlay
+   ========================================================================== */
+.ll-hero-title,
+.ll-hero-desc,
+.ll-hero .ll-eyebrow {
+  text-shadow: 0 2px 22px rgba(7, 43, 45, 0.38);
+}
+
+.ll-hero-title span {
+  color: var(--brand-teal-25);
+}
+
+.ll-hero .ll-eyebrow {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.ll-hero-desc {
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.ll-hero .ll-eyebrow::after {
+  background-color: rgba(255, 255, 255, 0.7);
 }

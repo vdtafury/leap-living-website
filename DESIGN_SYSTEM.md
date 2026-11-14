@@ -149,7 +149,7 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 `DeveloperShowcase` (`web/src/components/home/developer-showcase.tsx`), used on `/` (index `01`, directly under the hero search) and `/about`.
 
 - Default surface **`glass-light`**: the Dubai sunset skyline (`public/images/developer-network-skyline.jpg`, plus a 960w variant) shown greyscale under a light `#F3F6F5` scrim with a faint teal glow at the bottom-left. A frosted white band holds frosted white glass tiles with logos in their **original brand colours at all times** (owner request); on hover a tile turns solid white and lifts.
-- The hero search band's lower half is `#F3F6F5`, matching the solid top of this scrim, so the search box straddles the hero and this section seamlessly.
+- The section starts directly under the full-screen hero (the search now lives inside the hero, see 7.7).
 - Other surfaces: `glass` (same photo under a deep-teal scrim, white logos; colour on hover) and flat `light` / `muted`.
 
 - Data: `DEVELOPER_BRANDS` in `web/src/data/catalog.ts` (name, logo path, display width/height). Logos are transparent PNGs in `web/public/images/developers/` (120px-tall masters, 128-colour, ~104 KB total). Display sizes are optically balanced: square marks are taller, long wordmarks are shorter.
@@ -175,6 +175,7 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 
 The search lives inside the hero (`.ll-hero-inner` = hero copy + `<HeroSearchBar />`). There is no separate search band any more.
 
+- **Hero overlay (`.ll-hero-scrim`):** a **light** brand-teal wash (owner request, replacing the earlier deep-teal 88% scrim). It runs `rgba(36,112,115,.6)` behind the copy → `#3B9EA1` at 36% → 14% → 6% on the right, plus a soft top/bottom shade (34% / 26%). The hero copy gets a faint `text-shadow`, and "next move." uses `--brand-teal-25`, so text stays legible on the lighter photo. The search's inner fills were lightened to `rgba(8,44,46,.22–.24)`.
 - **Hero size:** `min-height: min(100svh, 1120px)`, so it fills the screen on every device but is capped on very tall portrait screens. Padding and gaps use `vh` clamps; content can always grow past the minimum.
 - **Panel:** frosted glass (`rgba(255,255,255,.15→.06)`, `blur(22px) saturate(140%)`, 1px white/22% border, 22px radius). Falls back to deep teal `rgba(10,52,54,.82)` where `backdrop-filter` is unsupported.
 - **Modes:** segmented Buy / Rent / Commercial pill with a sliding teal thumb (`--mode-index`).
