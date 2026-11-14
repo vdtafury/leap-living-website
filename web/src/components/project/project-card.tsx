@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { ProjectItem } from '@/data/catalog'
+import { ResponsiveImg } from '@/components/ui/responsive-img'
 import { ArrowUpRightIcon, BuildingIcon, MapPinIcon } from '@/components/ui/icons'
 
 export function ProjectCard({ project }: { project: ProjectItem }) {
@@ -8,7 +9,10 @@ export function ProjectCard({ project }: { project: ProjectItem }) {
   return (
     <article className="ll-card">
       <Link href={href} className="ll-card-media" tabIndex={-1} aria-hidden="true">
-        <img src={project.heroImage} alt="" loading="lazy" />
+        <ResponsiveImg
+          src={project.heroImage}
+          sizes="(max-width: 700px) 92vw, (max-width: 1120px) 46vw, 400px"
+        />
         <span className="ll-card-media-shade" />
         <div className="ll-card-badges">
           <span className="ll-chip ll-chip-teal">{project.status}</span>
@@ -22,7 +26,13 @@ export function ProjectCard({ project }: { project: ProjectItem }) {
 
       <div className="ll-card-body">
         <div className="ll-card-kicker">
-          <span>{project.segment === 'MIXED-USE' ? 'Mixed-Use' : project.segment === 'COMMERCIAL' ? 'Commercial' : 'Residential'}</span>
+          <span>
+            {project.segment === 'MIXED-USE'
+              ? 'Mixed-Use'
+              : project.segment === 'COMMERCIAL'
+                ? 'Commercial'
+                : 'Residential'}
+          </span>
         </div>
 
         <h3 className="ll-card-title">

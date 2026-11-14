@@ -8,13 +8,9 @@ import { PropertyCarousel } from '@/components/property/property-carousel'
 import { ProjectCard } from '@/components/project/project-card'
 import { ArrowRightIcon, ArrowUpRightIcon } from '@/components/ui/icons'
 import { KeyholeMark } from '@/components/ui/keyhole-mark'
+import { ResponsiveImg } from '@/components/ui/responsive-img'
 import { DeveloperShowcase } from '@/components/home/developer-showcase'
-import {
-  CLIENT_PERSPECTIVES,
-  CORE_SERVICES,
-  PROJECTS,
-  PROPERTIES,
-} from '@/data/catalog'
+import { CLIENT_PERSPECTIVES, CORE_SERVICES, PROJECTS, PROPERTIES } from '@/data/catalog'
 
 export const dynamic = 'force-dynamic'
 
@@ -56,8 +52,8 @@ export default async function HomePage() {
               </h1>
               <p className="ll-hero-desc">
                 In a market driven by noise and speculation, Leap Living brings institutional
-                clarity, strategic foresight, and over two decades of Dubai real estate
-                leadership to high-value property decisions.
+                clarity, strategic foresight, and over two decades of Dubai real estate leadership
+                to high-value property decisions.
               </p>
               <div className="ll-hero-ctas">
                 <Link href="/buy" className="ll-btn ll-btn-primary">
@@ -79,7 +75,7 @@ export default async function HomePage() {
         <DeveloperShowcase index="01" />
 
         {/* ==================== FEATURED BUY PORTFOLIO PREVIEW ==================== */}
-        <section className="ll-section-light">
+        <section className="ll-section-light ll-defer-render">
           <div className="ll-container">
             <PropertyCarousel
               items={featuredSaleProperties}
@@ -99,16 +95,16 @@ export default async function HomePage() {
               </div>
               <h2 className="ll-serif-title ll-section-title">Featured Properties for Sale</h2>
               <p className="ll-section-lead">
-                Representative residences across Dubai&apos;s most sought-after addresses, from
-                Palm Jumeirah and Downtown to Jumeirah Bay Island. Use the arrows to browse, then
-                select any mandate for full specifications and financing analysis.
+                Representative residences across Dubai&apos;s most sought-after addresses, from Palm
+                Jumeirah and Downtown to Jumeirah Bay Island. Use the arrows to browse, then select
+                any mandate for full specifications and financing analysis.
               </p>
             </PropertyCarousel>
           </div>
         </section>
 
         {/* ==================== SERVICES OVERVIEW (WITH CONSULTANCY) ==================== */}
-        <section className="ll-section-gradient">
+        <section className="ll-section-gradient ll-defer-render">
           <KeyholeMark className="ll-keyhole ll-keyhole-services" strokeWidth={1.6} />
           <div className="ll-container">
             <div className="ll-section-header">
@@ -154,7 +150,7 @@ export default async function HomePage() {
         </section>
 
         {/* ==================== SIGNATURE PROJECTS PREVIEW ==================== */}
-        <section className="ll-section-grey">
+        <section className="ll-section-grey ll-defer-render">
           <KeyholeMark className="ll-keyhole ll-keyhole-grey" strokeWidth={1.6} />
           <div className="ll-container">
             <div className="ll-section-header">
@@ -183,9 +179,9 @@ export default async function HomePage() {
         </section>
 
         {/* ==================== EXECUTIVE LEADERSHIP (CEO ONLY, ZERO PEOPLE PHOTOS) ==================== */}
-        <section className="ll-section-image">
+        <section className="ll-section-image ll-defer-render">
           <div className="ll-section-image-bg" aria-hidden="true">
-            <img src="/images/architecture-glass-towers.jpg" alt="" loading="lazy" />
+            <ResponsiveImg src="/images/architecture-glass-towers.jpg" sizes="100vw" />
             <span className="ll-section-image-scrim" />
           </div>
           <div className="ll-container">
@@ -215,8 +211,8 @@ export default async function HomePage() {
                 </div>
                 <blockquote className="ll-leadership-quote">
                   &ldquo;Informed decisions create exceptional outcomes. Every property decision
-                  carries financial, strategic, and personal significance. Our responsibility
-                  is to ensure clients have clarity and insight.&rdquo;
+                  carries financial, strategic, and personal significance. Our responsibility is to
+                  ensure clients have clarity and insight.&rdquo;
                 </blockquote>
 
                 <div className="ll-leadership-meta">
@@ -226,9 +222,9 @@ export default async function HomePage() {
 
                 <p className="ll-section-lead ll-leadership-bio">
                   With over two decades of senior leadership across Emaar Properties, Hamptons
-                  International, Coldwell Banker, Engel &amp; Völkers Dubai, D&amp;B Properties,
-                  and Metropolitan Premium Properties, Mohab Samak directs Leap Living with an
-                  emphasis on analytical precision over short-term sales volume.
+                  International, Coldwell Banker, Engel &amp; Völkers Dubai, D&amp;B Properties, and
+                  Metropolitan Premium Properties, Mohab Samak directs Leap Living with an emphasis
+                  on analytical precision over short-term sales volume.
                 </p>
 
                 <div className="ll-hero-ctas">
@@ -246,7 +242,7 @@ export default async function HomePage() {
         </section>
 
         {/* ==================== DEDICATED TOOLS & VALUATION ENTRY BAND ==================== */}
-        <section className="ll-section-teal">
+        <section className="ll-section-teal ll-defer-render">
           <KeyholeMark className="ll-keyhole ll-keyhole-teal-band" strokeWidth={1.6} />
           <div className="ll-container ll-cta-band">
             <div>
@@ -255,9 +251,9 @@ export default async function HomePage() {
                 Free Property Valuation &amp; Mortgage Planning
               </h2>
               <p className="ll-section-lead">
-                Whether benchmarking the market value of an existing Dubai asset prior to exit
-                or structuring UAE bank financing prior to acquisition, our dedicated advisory
-                pages provide direct analytical tools and senior consultation.
+                Whether benchmarking the market value of an existing Dubai asset prior to exit or
+                structuring UAE bank financing prior to acquisition, our dedicated advisory pages
+                provide direct analytical tools and senior consultation.
               </p>
             </div>
 
@@ -274,7 +270,7 @@ export default async function HomePage() {
         </section>
 
         {/* ==================== CLIENT PERSPECTIVES ==================== */}
-        <section className="ll-section-muted">
+        <section className="ll-section-muted ll-defer-render">
           <div className="ll-container">
             <div className="ll-section-header">
               <div>
@@ -312,32 +308,36 @@ export default async function HomePage() {
         </section>
 
         {/* ==================== INSTITUTIONAL PILLARS ==================== */}
-        <section className="ll-stats-section" aria-label="Institutional Pillars">
+        <section className="ll-stats-section ll-defer-render" aria-label="Institutional Pillars">
           <KeyholeMark className="ll-keyhole ll-keyhole-stats" />
           <div className="ll-container">
             <div className="ll-stats-grid">
               <div className="ll-stat-item">
                 <div className="ll-stat-value">21+ Years</div>
                 <p className="ll-stat-desc">
-                  Executive leadership across Dubai&apos;s residential and commercial cycles since 2005.
+                  Executive leadership across Dubai&apos;s residential and commercial cycles since
+                  2005.
                 </p>
               </div>
               <div className="ll-stat-item">
                 <div className="ll-stat-value">AED 12B+</div>
                 <p className="ll-stat-desc">
-                  Commercialisation, pricing strategy, and landmark project stewardship across the UAE.
+                  Commercialisation, pricing strategy, and landmark project stewardship across the
+                  UAE.
                 </p>
               </div>
               <div className="ll-stat-item">
                 <div className="ll-stat-value">100% Fiduciary</div>
                 <p className="ll-stat-desc">
-                  Client-aligned counsel structured around long-term value over short-term brokerage volume.
+                  Client-aligned counsel structured around long-term value over short-term brokerage
+                  volume.
                 </p>
               </div>
               <div className="ll-stat-item">
                 <div className="ll-stat-value">Direct Access</div>
                 <p className="ll-stat-desc">
-                  Executive relationships across Tier-1 master developers, family offices, and private owners.
+                  Executive relationships across Tier-1 master developers, family offices, and
+                  private owners.
                 </p>
               </div>
             </div>

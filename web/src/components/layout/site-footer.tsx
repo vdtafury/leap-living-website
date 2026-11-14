@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ResponsiveImg } from '@/components/ui/responsive-img'
 import {
   InstagramIcon,
   LinkedInIcon,
@@ -12,8 +13,9 @@ export function SiteFooter() {
   return (
     <footer className="ll-footer">
       <div className="ll-footer-bg" aria-hidden="true">
-        <img
+        <ResponsiveImg
           src="/images/footer-glass-facade.jpg"
+          sizes="100vw"
           alt="Modern architectural glass facade tower"
           className="ll-footer-bg-img"
         />
@@ -53,7 +55,11 @@ export function SiteFooter() {
               <Link href="/contact" aria-label="LEAP LIVING on LinkedIn" className="ll-social-link">
                 <LinkedInIcon size={16} />
               </Link>
-              <Link href="/contact" aria-label="LEAP LIVING on Instagram" className="ll-social-link">
+              <Link
+                href="/contact"
+                aria-label="LEAP LIVING on Instagram"
+                className="ll-social-link"
+              >
                 <InstagramIcon size={16} />
               </Link>
               <Link href="/contact" aria-label="LEAP LIVING on YouTube" className="ll-social-link">

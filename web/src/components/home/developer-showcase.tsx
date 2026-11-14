@@ -3,13 +3,14 @@
 import { useState } from 'react'
 import { DEVELOPER_BRANDS, type DeveloperBrand } from '@/data/catalog'
 import { PauseIcon, PlayIcon } from '@/components/ui/icons'
+import { ResponsiveImg } from '@/components/ui/responsive-img'
 
 interface DeveloperShowcaseProps {
   /**
    * Section surface.
-   * - `glass-light` (default): skyline photo under a light scrim, frosted white
-   *   tiles, grey logos that turn full colour on hover.
-   * - `glass`: skyline photo under a deep-teal scrim, white logos.
+   * - `glass-light` (default): skyline photo under a light scrim; bare
+   *   full-colour logos glide across it (no tiles, frames or band).
+   * - `glass`: skyline photo under a deep-teal scrim, bare white logos.
    * - `light` / `muted`: flat surfaces.
    */
   surface?: 'glass-light' | 'glass' | 'light' | 'muted'
@@ -61,15 +62,7 @@ export function DeveloperShowcase({
     >
       {(surface === 'glass' || surface === 'glass-light') && (
         <div className="ll-section-image-bg" aria-hidden="true">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/images/developer-network-skyline.jpg"
-            srcSet="/images/developer-network-skyline-960.jpg 960w, /images/developer-network-skyline.jpg 1920w"
-            sizes="100vw"
-            alt=""
-            loading="lazy"
-            decoding="async"
-          />
+          <ResponsiveImg src="/images/developer-network-skyline.jpg" sizes="100vw" />
           <div className="ll-dev-glass-scrim" />
         </div>
       )}

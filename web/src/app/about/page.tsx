@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ResponsiveImg } from '@/components/ui/responsive-img'
 import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
@@ -29,16 +30,17 @@ export default function AboutPage() {
               <div className="ll-eyebrow">Certainty Through Precision</div>
               <h1 className="ll-page-hero-title">Experience That Shapes Better Decisions</h1>
               <p className="ll-page-hero-desc">
-                Leap Living is a real estate consultancy built on a simple belief: better
-                decisions come from clarity and precision. In a market driven by pace and
-                ambition, we bring focus, strategic depth, and a deliberate approach to every
-                opportunity.
+                Leap Living is a real estate consultancy built on a simple belief: better decisions
+                come from clarity and precision. In a market driven by pace and ambition, we bring
+                focus, strategic depth, and a deliberate approach to every opportunity.
               </p>
             </div>
 
             <div className="ll-hero-media" style={{ height: '330px' }}>
-              <img
+              <ResponsiveImg
                 src="/images/architecture-glass-towers.jpg"
+                sizes="(max-width: 900px) 100vw, 50vw"
+                priority
                 alt="Dubai commercial glass towers"
                 style={{ height: '330px' }}
               />
@@ -56,9 +58,9 @@ export default function AboutPage() {
                   Advisory Over Speculation
                 </h2>
                 <p className="ll-service-desc" style={{ fontSize: '0.88rem' }}>
-                  We believe real estate decisions should never be rushed, influenced by noise,
-                  or driven by uncertainty. As an independent consultancy, we operate as a
-                  trusted partner rather than a conventional transactional brokerage.
+                  We believe real estate decisions should never be rushed, influenced by noise, or
+                  driven by uncertainty. As an independent consultancy, we operate as a trusted
+                  partner rather than a conventional transactional brokerage.
                 </p>
               </div>
 
@@ -70,8 +72,7 @@ export default function AboutPage() {
                 <p className="ll-service-desc" style={{ fontSize: '0.88rem' }}>
                   To strengthen decision-making for property buyers and investors through
                   well-informed, experience-driven real estate advisory — grounded in strategic
-                  thinking, market clarity, and long-term value rather than short-term
-                  opportunity.
+                  thinking, market clarity, and long-term value rather than short-term opportunity.
                 </p>
               </div>
 
@@ -81,9 +82,9 @@ export default function AboutPage() {
                   Disciplined Long-Term Value
                 </h2>
                 <p className="ll-service-desc" style={{ fontSize: '0.88rem' }}>
-                  To be a globally respected real estate consultancy, recognized for its
-                  disciplined approach, depth of experience, and consistent focus on long-term
-                  value creation across cycles.
+                  To be a globally respected real estate consultancy, recognized for its disciplined
+                  approach, depth of experience, and consistent focus on long-term value creation
+                  across cycles.
                 </p>
               </div>
             </div>
@@ -118,7 +119,13 @@ export default function AboutPage() {
                   >
                     Mohab Samak
                   </div>
-                  <div style={{ color: 'var(--brand-teal-50)', fontSize: '0.82rem', marginTop: '0.25rem' }}>
+                  <div
+                    style={{
+                      color: 'var(--brand-teal-50)',
+                      fontSize: '0.82rem',
+                      marginTop: '0.25rem',
+                    }}
+                  >
                     Chief Executive Officer
                   </div>
                 </div>
@@ -142,14 +149,14 @@ export default function AboutPage() {
                 </div>
                 <p style={{ fontSize: '0.94rem', lineHeight: 1.75, marginBottom: '1rem' }}>
                   Since beginning his real estate career in Dubai in 2005, Mohab Samak has held
-                  senior leadership and executive roles across prominent industry firms
-                  including Emaar Properties, Hamptons International, Coldwell Banker, Engel
-                  &amp; Völkers Dubai, D&amp;B Properties, and Metropolitan Premium Properties.
+                  senior leadership and executive roles across prominent industry firms including
+                  Emaar Properties, Hamptons International, Coldwell Banker, Engel &amp; Völkers
+                  Dubai, D&amp;B Properties, and Metropolitan Premium Properties.
                 </p>
                 <p style={{ fontSize: '0.94rem', lineHeight: 1.75, marginBottom: '1.5rem' }}>
-                  His career spans large-scale residential and commercial master
-                  developments, developer project commercialisation, private wealth mandates,
-                  and cross-cycle advisory strategy.
+                  His career spans large-scale residential and commercial master developments,
+                  developer project commercialisation, private wealth mandates, and cross-cycle
+                  advisory strategy.
                 </p>
                 <Link href="/contact" className="ll-btn ll-btn-primary">
                   <span>Request an Executive Consultation</span>
@@ -182,9 +189,7 @@ export default function AboutPage() {
                   key={service.title}
                   className={`ll-service-card ${idx === 0 ? 'featured' : ''}`}
                 >
-                  <div className="ll-service-num">
-                    {idx + 1 < 10 ? `0${idx + 1}` : idx + 1}
-                  </div>
+                  <div className="ll-service-num">{idx + 1 < 10 ? `0${idx + 1}` : idx + 1}</div>
                   <h3 className="ll-service-title">{service.title}</h3>
                   <p className="ll-service-desc" style={{ fontSize: '0.84rem' }}>
                     {service.desc}
@@ -203,4 +208,3 @@ export default function AboutPage() {
     </>
   )
 }
-
