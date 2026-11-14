@@ -6,10 +6,13 @@ import { PauseIcon, PlayIcon } from '@/components/ui/icons'
 
 interface DeveloperShowcaseProps {
   /**
-   * Section surface. `glass` = skyline photo + teal scrim with frosted glass
-   * tiles and white logos (default). `light` / `muted` = flat surfaces.
+   * Section surface.
+   * - `glass-light` (default): skyline photo under a light scrim, frosted white
+   *   tiles, grey logos that turn full colour on hover.
+   * - `glass`: skyline photo under a deep-teal scrim, white logos.
+   * - `light` / `muted`: flat surfaces.
    */
-  surface?: 'glass' | 'light' | 'muted'
+  surface?: 'glass-light' | 'glass' | 'light' | 'muted'
   /** Optional index shown in the numbered eyebrow (e.g. "06"). */
   index?: string
   title?: string
@@ -45,7 +48,7 @@ function DeveloperTile({ brand }: { brand: DeveloperBrand }) {
  * - Honours prefers-reduced-motion: becomes a static wrapped grid.
  */
 export function DeveloperShowcase({
-  surface = 'glass',
+  surface = 'glass-light',
   index,
   title = 'Developers We Work With Across the UAE',
 }: DeveloperShowcaseProps) {
@@ -56,7 +59,7 @@ export function DeveloperShowcase({
       className={`ll-dev-showcase ll-section-${surface}`}
       aria-labelledby="ll-dev-showcase-title"
     >
-      {surface === 'glass' && (
+      {(surface === 'glass' || surface === 'glass-light') && (
         <div className="ll-section-image-bg" aria-hidden="true">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img

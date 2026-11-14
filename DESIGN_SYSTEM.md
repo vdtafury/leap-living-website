@@ -146,7 +146,11 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 
 ### 7.5 Developer network marquee
 
-`DeveloperShowcase` (`web/src/components/home/developer-showcase.tsx`), used on `/` (index `01`, directly under the hero search; the search band's lower half is `#072B2D`, matching the solid top of this section's scrim, so the search box straddles hero and section seamlessly) and `/about`, both on the default **`glass`** surface: the Dubai sunset skyline (`public/images/developer-network-skyline.jpg`, plus a 960w variant) is tinted toward teal under a deep-teal scrim with a cyan glow at the bottom-left. A frosted band holds frosted-glass tiles with **white** logos; on hover a tile turns solid white and the logo shows its original colours. A hairline divider separates the section from the footer. `surface="light" | "muted"` remain available for flat use.
+`DeveloperShowcase` (`web/src/components/home/developer-showcase.tsx`), used on `/` (index `01`, directly under the hero search) and `/about`.
+
+- Default surface **`glass-light`**: the Dubai sunset skyline (`public/images/developer-network-skyline.jpg`, plus a 960w variant) shown greyscale under a light `#F3F6F5` scrim with a faint teal glow at the bottom-left. A frosted white band holds frosted white glass tiles with grey logos; on hover a tile turns solid white and the logo shows its original colours.
+- The hero search band's lower half is `#F3F6F5`, matching the solid top of this scrim, so the search box straddles the hero and this section seamlessly.
+- Other surfaces: `glass` (same photo under a deep-teal scrim, white logos; colour on hover) and flat `light` / `muted`.
 
 - Data: `DEVELOPER_BRANDS` in `web/src/data/catalog.ts` (name, logo path, display width/height). Logos are transparent PNGs in `web/public/images/developers/` (120px-tall masters, 128-colour, ~104 KB total). Display sizes are optically balanced: square marks are taller, long wordmarks are shorter.
 - A brand without a logo file renders as a spaced uppercase wordmark (currently **Meydan**, because no reliable developer logo was found).
@@ -157,7 +161,7 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 ### 7.6 Homepage section order
 
 1. Hero (video) + search (the box straddles the hero and the next section)
-2. `01` Developer Network: glass logo marquee
+2. `01` Developer Network: light glass logo marquee
 3. `02` Featured Properties: light
 4. `03` Advisory Scope: gradient bento
 5. `04` Dubai Developments: grey

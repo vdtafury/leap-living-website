@@ -627,10 +627,10 @@ button, input, select, textarea {
   z-index: 20;
   margin-bottom: 0;
   --search-overlap: 3.5rem;
-  /* Lower half matches the top of the section below (developer network glass
-     section, scrim starts at solid #072B2D) so the search box straddles the
+  /* Lower half matches the top of the section below (developer network
+     light-glass section, scrim starts at solid #F3F6F5) so the search box straddles the
      hero and that section seamlessly. */
-  background: linear-gradient(180deg, transparent 0 var(--search-overlap), #072B2D var(--search-overlap) 100%);
+  background: linear-gradient(180deg, transparent 0 var(--search-overlap), #F3F6F5 var(--search-overlap) 100%);
 }
 
 .ll-search-shell {
@@ -2364,6 +2364,82 @@ button, input, select, textarea {
 
 @media (max-width: 960px) {
   .ll-dev-showcase.ll-section-glass {
+    padding: 4.5rem 0 4.25rem;
+  }
+}
+
+/* ---- Light glass surface: washed skyline + frosted white tiles ---- */
+.ll-dev-showcase.ll-section-glass-light {
+  background-color: #F3F6F5;
+  padding: 6rem 0 5.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.ll-section-glass-light > .ll-container,
+.ll-section-glass-light > .ll-marquee {
+  position: relative;
+  z-index: 1;
+}
+
+.ll-section-glass-light .ll-section-image-bg img {
+  object-position: center 62%;
+  /* desaturated, cool-toned skyline so it reads as a soft architectural texture */
+  filter: grayscale(1) contrast(0.9) brightness(1.08);
+}
+
+.ll-section-glass-light .ll-dev-glass-scrim {
+  background:
+    radial-gradient(ellipse 55% 75% at 8% 105%, rgba(59, 158, 161, 0.22) 0%, rgba(59, 158, 161, 0) 62%),
+    linear-gradient(180deg, rgba(243, 246, 245, 1) 0%, rgba(243, 246, 245, 0.95) 16%, rgba(243, 246, 245, 0.82) 48%, rgba(236, 243, 242, 0.7) 76%, rgba(243, 246, 245, 0.92) 100%);
+}
+
+.ll-section-glass-light .ll-dev-showcase-lead {
+  color: var(--body-text);
+}
+
+.ll-section-glass-light .ll-marquee-toggle {
+  background-color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(10, 52, 54, 0.14);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Frosted band behind the moving strip */
+.ll-section-glass-light .ll-marquee {
+  padding: 1.6rem 0;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0.15));
+  border-top: 1px solid rgba(10, 52, 54, 0.07);
+  border-bottom: 1px solid rgba(10, 52, 54, 0.07);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.ll-section-glass-light .ll-marquee-item {
+  background-color: rgba(255, 255, 255, 0.62);
+  border-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 30px -18px rgba(10, 52, 54, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+}
+
+.ll-section-glass-light .ll-marquee-logo {
+  filter: grayscale(1);
+  opacity: 0.72;
+}
+
+.ll-section-glass-light .ll-marquee-item:hover {
+  background-color: var(--white);
+  border-color: rgba(59, 158, 161, 0.35);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.ll-section-glass-light .ll-marquee-item:hover .ll-marquee-logo {
+  filter: none;
+  opacity: 1;
+}
+
+@media (max-width: 960px) {
+  .ll-dev-showcase.ll-section-glass-light {
     padding: 4.5rem 0 4.25rem;
   }
 }
