@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { DEVELOPER_BRANDS, type DeveloperBrand } from '@/data/catalog'
 import { PauseIcon, PlayIcon } from '@/components/ui/icons'
 import { ResponsiveImg } from '@/components/ui/responsive-img'
@@ -92,7 +92,11 @@ export function DeveloperShowcase({
         </button>
       </div>
 
-      <div className={`ll-marquee${paused ? ' is-paused' : ''}`}>
+      {/* Loop length scales with the logo count so the glide speed stays constant. */}
+      <div
+        className={`ll-marquee${paused ? ' is-paused' : ''}`}
+        style={{ '--marquee-items': DEVELOPER_BRANDS.length } as CSSProperties}
+      >
         <div className="ll-marquee-track">
           <ul className="ll-marquee-list" aria-label="Developers we work with">
             {DEVELOPER_BRANDS.map((brand) => (

@@ -47,7 +47,7 @@ Single place for accepted decisions, open questions, and known contradictions. W
 | O-03 | Inner page layouts follow the CEO-approved Homepage design system (`D-13`, `D-14`). | Resolved |
 | O-04 | Real office address, social links, opening hours. Is "Office 1204, Al Saqr Business Tower" real or only a mock-up? (Currently showing `Dubai, United Arab Emirates` per approved design footer). | Client |
 | O-05 | Credentials strip in the CEO-approved homepage design shows `21+ Years`, `AED 12B+`, `100% Fiduciary`, `Direct Access`. Confirm final production sign-off before public launch. | Client |
-| O-06 | Permission to show developer logos/names and each relationship wording; same for employer logos in the CEO profile | Client |
+| O-06 | Permission to show developer logos/names and each relationship wording; same for employer logos in the CEO profile. **Update 2026-11-14:** the client supplied the 28-developer "Developers we work with" sheet (`docs/client-assets/developers-we-work-with.png`), now used as the marquee list. Still open: written confirmation of logo-usage permission, plus original high-resolution logo files | Client |
 | O-07 | Photo licences for non-people architectural photography. *(Note: CEO photo and all people photos are excluded from the Homepage per `D-16`.)* | Client |
 | O-08 | Legal pages text (Privacy Policy, Terms), licence/registration numbers to display, whether listing permit numbers must be shown | Client / legal |
 
