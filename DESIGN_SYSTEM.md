@@ -94,6 +94,11 @@ The CEO approved the second homepage design (`docs/source-materials/homepage-app
 ## 6. Layout, Components & Accessibility
 
 - Mobile-first responsive grid (desktop, tablet, mobile).
+- **Page widths (Provident-style, owner request 2026-11-14):**
+  - `--page-gutter: clamp(1.25rem, 5vw, 5rem)`: the side gutter for all section content (20px on phones, up to 80px).
+  - `--content-max: 1220px`: `.ll-container` = 1220px of content plus gutters, centred.
+  - The **navbar is wider than the content**: `--nav-gutter: clamp(1.25rem, calc(10vw - 77px), 5rem)` (always ≤ the content gutter) and `--nav-max: 1920px`. At 1568px the bar runs 80px from each edge while content starts at ~174px. On phones both use 20px.
+  - Navbar layout: logo on the left; links grouped on the right next to the actions, separated by a 1px hairline. It switches to the menu button at **≤ 1200px** (was 1120px) so the bar never gets cramped.
 - Core interactive states required on all controls: hover, focus-visible ring, active, disabled, loading, empty, and confirmation states.
 - WCAG 2.2 AA baseline: keyboard operability, labelled controls, semantic landmarks.
 
