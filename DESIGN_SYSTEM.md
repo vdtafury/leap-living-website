@@ -153,13 +153,13 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 
 `DeveloperShowcase` (`web/src/components/home/developer-showcase.tsx`), used on `/` (index `01`, directly under the hero search) and `/about`.
 
-- Default surface **`glass-light`**: the Dubai sunset skyline (`public/images/developer-network-skyline.jpg`, plus a 960w variant) shown greyscale under a light `#F3F6F5` scrim with a faint teal glow at the bottom-left. A frosted white band holds frosted white glass tiles with logos in their **original brand colours at all times** (owner request); on hover a tile turns solid white and lifts.
+- Default surface **`glass-light`**: the Dubai sunset skyline (`public/images/developer-network-skyline.jpg`, plus a 960w variant) shown greyscale under a light `#F3F6F5` scrim with a faint teal glow at the bottom-left. Logos scroll **bare, straight on the skyline**: no tiles, no borders/frames, no frosted band (owner request, 2026-11-14). They show in their **original brand colours at all times**; hover gives a gentle 1.08 scale.
 - The section starts directly under the full-screen hero (the search now lives inside the hero, see 7.7).
-- Other surfaces: `glass` (same photo under a deep-teal scrim, white logos; colour on hover) and flat `light` / `muted`.
+- Other surfaces: `glass` (same photo under a deep-teal scrim, bare white logos that brighten on hover) and flat `light` / `muted`.
 
 - Data: `DEVELOPER_BRANDS` in `web/src/data/catalog.ts` (name, logo path, display width/height). Logos are transparent PNGs in `web/public/images/developers/` (120px-tall masters, 128-colour, ~104 KB total). Display sizes are optically balanced: square marks are taller, long wordmarks are shorter.
 - A brand without a logo file renders as a spaced uppercase wordmark (currently **Meydan**, because no reliable developer logo was found).
-- Tiles: 208×108 (164×88 on mobile), `--radius-md`. Logos are full colour on light and flat surfaces; only the dark `glass` variant renders them white (colour on hover).
+- Slots: each logo sits in an invisible fixed-width slot, 200×72 (156×60 on mobile), so the spacing stays even. **Do not reintroduce tile backgrounds, borders, shadows or a band.** Logos are full colour on light and flat surfaces; only the dark `glass` variant renders them white.
 - Motion: CSS-only `translateX(-50%)` loop over a duplicated list (the duplicate is `aria-hidden`), 55s per loop (42s on mobile), edge fade mask. Pauses on hover, on keyboard focus, and via a **Pause/Play** button (WCAG 2.2.2). `prefers-reduced-motion` turns it into a static wrapped grid.
 - Logos are third-party trademarks. Usage permission is still open (`DECISIONS.md` O-06) and must be confirmed before launch.
 
@@ -175,6 +175,26 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 8. `06` Client Perspectives: muted
 9. Institutional Pillars (21+ Years, AED 12B+, ...): teal stats band
 10. Footer
+
+### 7.9 Media & performance rules
+
+Measured with Lighthouse 12 on `/` (`next start`). Mobile uses default throttling; desktop is 1440 px wide.
+
+| | Mobile before | Mobile after | Desktop before | Desktop after |
+|---|---|---|---|---|
+| Performance score | n/a¹ | **93** | 83 | **98** |
+| LCP | 15.3 s | **3.1 s** | 2.9 s | **1.0 s** |
+| FCP / TBT / CLS | 1.4 s / 0 / 0 | 1.4 s / 0 / 0 | 0.4 s / 0 / 0.001 | 0.4 s / 0 / 0.001 |
+| Page weight | 9,962 KiB | **663 KiB** | 14,584 KiB | **3,170 KiB**² |
+
+¹ Speed Index errored in that run. ² Includes the hero video, which now loads only after the page has finished loading.
+
+- **Photos:** never reference `/images/*.jpg|png` from a raw `<img>`. Use `<ResponsiveImg src sizes>` (`web/src/components/ui/responsive-img.tsx`). It serves pre-generated WebP variants (640/768/960/1280/1920) from `public/images/opt/` via `srcSet`, and is lazy by default (`priority` sets eager loading and `fetchPriority="high"` for above-the-fold images). After adding or replacing a photo, run `npm run images:optimize` and commit `public/images/opt/` and `src/data/image-manifest.json`. Sharp runs at build time on a dev machine, not on the host.
+- **Hero poster (the LCP element):** preloaded with high priority. Phones in portrait get an art-directed 540×900 centre crop (`CROPS` in `scripts/optimize-images.mjs`), which is sharper and lighter than the landscape frame.
+- **Hero video:** renditions live in `public/videos/hero/<name>-1280.mp4` and `-854.mp4`. They are silent, trimmed to 9.6 s, faststart, and re-encoded by `scripts/encode-hero-videos.sh`. They load only after `window.load` plus idle time. Phones and 3G get 854, and Save-Data or 2G get no video (the poster stays). Clips have no `poster` attribute because a clip is only shown once it can play. The masters stay in `public/videos/`.
+- **Developer logos** stay PNG (≈80 KB total). WebP with alpha came out larger.
+- **Deferred rendering:** homepage sections below `01` and the footer carry `ll-defer-render` (`content-visibility: auto`), so the browser skips their layout, paint and lazy images until they near the viewport. Paint containment clips overflow to the section box, so keep decorations inside the section. A full-page screenshot that does not scroll shows these sections blank; that is expected.
+- **Caching:** `next.config.ts` sends `Cache-Control: public, max-age=604800, stale-while-revalidate=86400` for `/images`, `/videos` and `/brand`. File names are not hashed, so they are not marked immutable.
 
 ### 7.7 Hero search (`ll-hs-*`)
 

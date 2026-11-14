@@ -1,0 +1,544 @@
+{
+  "/images/architecture-glass-towers.jpg": {
+    "width": 1600,
+    "height": 1067,
+    "variants": [
+      {
+        "w": 640,
+        "src": "/images/opt/architecture-glass-towers-640.webp"
+      },
+      {
+        "w": 768,
+        "src": "/images/opt/architecture-glass-towers-768.webp"
+      },
+      {
+        "w": 960,
+        "src": "/images/opt/architecture-glass-towers-960.webp"
+      },
+      {
+        "w": 1280,
+        "src": "/images/opt/architecture-glass-towers-1280.webp"
+      },
+      {
+        "w": 1600,
+        "src": "/images/opt/architecture-glass-towers-1600.webp"
+      }
+    ]
+  },
+  "/images/developer-network-skyline-960.jpg": {
+    "width": 960,
+    "height": 542,
+    "variants": [
+      {
+        "w": 640,
+        "src": "/images/opt/developer-network-skyline-960-640.webp"
+      },
+      {
+        "w": 768,
+        "src": "/images/opt/developer-network-skyline-960-768.webp"
+      },
+      {
+        "w": 960,
+        "src": "/images/opt/developer-network-skyline-960-960.webp"
+      }
+    ]
+  },
+  "/images/developer-network-skyline.jpg": {
+    "width": 1920,
+    "height": 1084,
+    "variants": [
+      {
+        "w": 640,
+        "src": "/images/opt/developer-network-skyline-640.webp"
+      },
+      {
+        "w": 768,
+        "src": "/images/opt/developer-network-skyline-768.webp"
+      },
+      {
+        "w": 960,
+        "src": "/images/opt/developer-network-skyline-960.webp"
+      },
+      {
+        "w": 1280,
+        "src": "/images/opt/developer-network-skyline-1280.webp"
+      },
+      {
+        "w": 1920,
+        "src": "/images/opt/developer-network-skyline-1920.webp"
+      }
+    ]
+  },
+  "/images/dubai-marina-commercial.jpg": {
+    "width": 1920,
+    "height": 1280,
+    "variants": [
+      {
+        "w": 640,
+        "src": "/images/opt/dubai-marina-commercial-640.webp"
+      },
+      {
+        "w": 768,
+        "src": "/images/opt/dubai-marina-commercial-768.webp"
+      },
+      {
+        "w": 960,
+        "src": "/images/opt/dubai-marina-commercial-960.webp"
+      },
+      {
+        "w": 1280,
+        "src": "/images/opt/dubai-marina-commercial-1280.webp"
+      },
+      {
+        "w": 1920,
+        "src": "/images/opt/dubai-marina-commercial-1920.webp"
+      }
+    ]
+  },
+  "/images/dubai-sunset-waterfront.png": {
+    "width": 1920,
+    "height": 1084,
+    "variants": [
+      {
+        "w": 640,
+        "src": "/images/opt/dubai-sunset-waterfront-640.webp"
+      },
+      {
+        "w": 768,
+        "src": "/images/opt/dubai-sunset-waterfront-768.webp"
+      },
+      {
+        "w": 960,
+        "src": "/images/opt/dubai-sunset-waterfront-960.webp"
+      },
+      {
+        "w": 1280,
+        "src": "/images/opt/dubai-sunset-waterfront-1280.webp"
+      },
+      {
+        "w": 1920,
+        "src": "/images/opt/dubai-sunset-waterfront-1920.webp"
+      }
+    ]
+  },
+  "/images/footer-glass-facade.jpg": {
+    "width": 1920,
+    "height": 1280,
+    "variants": [
+      {
+        "w": 640,
+        "src": "/images/opt/footer-glass-facade-640.webp"
+      },
+      {
+        "w": 768,
+        "src": "/images/opt/footer-glass-facade-768.webp"
+      },
+      {
+        "w": 960,
+        "src": "/images/opt/footer-glass-facade-960.webp"
+      },
+      {
+        "w": 1280,
+        "src": "/images/opt/footer-glass-facade-1280.webp"
+      },
+      {
+        "w": 1920,
+        "src": "/images/opt/footer-glass-facade-1920.webp"
+      }
+    ]
+  },
+  "/images/hero-dubai-beach-daylight.jpg": {
+    "width": 1920,
+    "height": 1080,
+    "variants": [
+      {
+        "w": 640,
+        "src": "/images/opt/hero-dubai-beach-daylight-640.webp"
+      },
+      {
+        "w": 768,
+        "src": "/images/opt/hero-dubai-beach-daylight-768.webp"
+      },
+      {
+        "w": 960,
+        "src": "/images/opt/hero-dubai-beach-daylight-960.webp"
+      },
+      {
+        "w": 1280,
+        "src": "/images/opt/hero-dubai-beach-daylight-1280.webp"
+      },
+      {
+        "w": 1920,
+        "src": "/images/opt/hero-dubai-beach-daylight-1920.webp"
+      }
+    ]
+  },
+  "/images/hero-dubai-skyline.jpg": {
+    "width": 1920,
+    "height": 1080,
+    "variants": [
+      {
+        "w": 640,
+        "src": "/images/opt/hero-dubai-skyline-640.webp"
+      },
+      {
+        "w": 768,
+        "src": "/images/opt/hero-dubai-skyline-768.webp"
+      },
+      {
+        "w": 960,
+        "src": "/images/opt/hero-dubai-skyline-960.webp"
+      },
+      {
+        "w": 1280,
+        "src": "/images/opt/hero-dubai-skyline-1280.webp"
+      },
+      {
+        "w": 1920,
+        "src": "/images/opt/hero-dubai-skyline-1920.webp"
+      }
+    ],
+    "portrait": {
+      "w": 540,
+      "src": "/images/opt/hero-dubai-skyline-portrait-540.webp"
+    }
+  },
+  "/images/hero-marina-daylight.jpg": {
+    "width": 1920,
+    "height": 1080,
+    "variants": [
+      {
+        "w": 640,
+        "src": "/images/opt/hero-marina-daylight-640.webp"
+      },
+      {
+        "w": 768,
+        "src": "/images/opt/hero-marina-daylight-768.webp"
+      },
+      {
+        "w": 960,
+        "src": "/images/opt/hero-marina-daylight-960.webp"
+      },
+      {
+        "w": 1280,
+        "src": "/images/opt/hero-marina-daylight-1280.webp"
+      },
+      {
+        "w": 1920,
+        "src": "/images/opt/hero-marina-daylight-1920.webp"
+      }
+    ]
+  },
+  "/images/hero-palm-villas.jpg": {
+    "width": 1920,
+    "height": 1080,
+    "variants": [
+      {
+        "w": 640,
+        "src": "/images/opt/hero-palm-villas-640.webp"
+      },
+      {
+        "w": 768,
+        "src": "/images/opt/hero-palm-villas-768.webp"
+      },
+      {
+        "w": 960,
+        "src": "/images/opt/hero-palm-villas-960.webp"
+      },
+      {
+        "w": 1280,
+        "src": "/images/opt/hero-palm-villas-1280.webp"
+      },
+      {
+        "w": 1920,
+        "src": "/images/opt/hero-palm-villas-1920.webp"
+      }
+    ]
+  },
+  "/images/hero-villa-dusk.jpg": {
+    "width": 1920,
+    "height": 1280,
+    "variants": [
+      {
+        "w": 640,
+        "src": "/images/opt/hero-villa-dusk-640.webp"
+      },
+      {
+        "w": 768,
+        "src": "/images/opt/hero-villa-dusk-768.webp"
+      },
+      {
+        "w": 960,
+        "src": "/images/opt/hero-villa-dusk-960.webp"
+      },
+      {
+        "w": 1280,
+        "src": "/images/opt/hero-villa-dusk-1280.webp"
+      },
+      {
+        "w": 1920,
+        "src": "/images/opt/hero-villa-dusk-1920.webp"
+      }
+    ]
+  },
+  "/images/property-bluewaters-residence.jpg": {
+    "width": 1408,
+    "height": 768,
+    "variants": [
+      {
+        "w": 640,
+        "src": "/images/opt/property-bluewaters-residence-640.webp"
+      },
+      {
+        "w": 768,
+        "src": "/images/opt/property-bluewaters-residence-768.webp"
+      },
+      {
+        "w": 960,
+        "src": "/images/opt/property-bluewaters-residence-960.webp"
+      },
+      {
+        "w": 1280,
+        "src": "/images/opt/property-bluewaters-residence-1280.webp"
+      },
+      {
+        "w": 1408,
+        "src": "/images/opt/property-bluewaters-residence-1408.webp"
+      }
+    ]
+  },
+  "/images/property-business-bay-penthouse.jpg": {
+    "width": 1408,
+    "height": 768,
+    "variants": [
+      {
+        "w": 640,
+        "src": "/images/opt/property-business-bay-penthouse-640.webp"
+      },
+      {
+        "w": 768,
+        "src": "/images/opt/property-business-bay-penthouse-768.webp"
+      },
+      {
+        "w": 960,
+        "src": "/images/opt/property-business-bay-penthouse-960.webp"
+      },
+      {
+        "w": 1280,
+        "src": "/images/opt/property-business-bay-penthouse-1280.webp"
+      },
+      {
+        "w": 1408,
+        "src": "/images/opt/property-business-bay-penthouse-1408.webp"
+      }
+    ]
+  },
+  "/images/property-golfside-duplex.jpg": {
+    "width": 1600,
+    "height": 1067,
+    "variants": [
+      {
+        "w": 640,
+        "src": "/images/opt/property-golfside-duplex-640.webp"
+      },
+      {
+        "w": 768,
+        "src": "/images/opt/property-golfside-duplex-768.webp"
+      },
+      {
+        "w": 960,
+        "src": "/images/opt/property-golfside-duplex-960.webp"
+      },
+      {
+        "w": 1280,
+        "src": "/images/opt/property-golfside-duplex-1280.webp"
+      },
+      {
+        "w": 1600,
+        "src": "/images/opt/property-golfside-duplex-1600.webp"
+      }
+    ]
+  },
+  "/images/property-jumeirah-bay-mansion.jpg": {
+    "width": 1408,
+    "height": 768,
+    "variants": [
+      {
+        "w": 640,
+        "src": "/images/opt/property-jumeirah-bay-mansion-640.webp"
+      },
+      {
+        "w": 768,
+        "src": "/images/opt/property-jumeirah-bay-mansion-768.webp"
+      },
+      {
+        "w": 960,
+        "src": "/images/opt/property-jumeirah-bay-mansion-960.webp"
+      },
+      {
+        "w": 1280,
+        "src": "/images/opt/property-jumeirah-bay-mansion-1280.webp"
+      },
+      {
+        "w": 1408,
+        "src": "/images/opt/property-jumeirah-bay-mansion-1408.webp"
+      }
+    ]
+  },
+  "/images/property-lagoon-villa.jpg": {
+    "width": 1408,
+    "height": 768,
+    "variants": [
+      {
+        "w": 640,
+        "src": "/images/opt/property-lagoon-villa-640.webp"
+      },
+      {
+        "w": 768,
+        "src": "/images/opt/property-lagoon-villa-768.webp"
+      },
+      {
+        "w": 960,
+        "src": "/images/opt/property-lagoon-villa-960.webp"
+      },
+      {
+        "w": 1280,
+        "src": "/images/opt/property-lagoon-villa-1280.webp"
+      },
+      {
+        "w": 1408,
+        "src": "/images/opt/property-lagoon-villa-1408.webp"
+      }
+    ]
+  },
+  "/images/property-palm-villa.jpg": {
+    "width": 1600,
+    "height": 1067,
+    "variants": [
+      {
+        "w": 640,
+        "src": "/images/opt/property-palm-villa-640.webp"
+      },
+      {
+        "w": 768,
+        "src": "/images/opt/property-palm-villa-768.webp"
+      },
+      {
+        "w": 960,
+        "src": "/images/opt/property-palm-villa-960.webp"
+      },
+      {
+        "w": 1280,
+        "src": "/images/opt/property-palm-villa-1280.webp"
+      },
+      {
+        "w": 1600,
+        "src": "/images/opt/property-palm-villa-1600.webp"
+      }
+    ]
+  },
+  "/images/property-sky-penthouse.jpg": {
+    "width": 1600,
+    "height": 1088,
+    "variants": [
+      {
+        "w": 640,
+        "src": "/images/opt/property-sky-penthouse-640.webp"
+      },
+      {
+        "w": 768,
+        "src": "/images/opt/property-sky-penthouse-768.webp"
+      },
+      {
+        "w": 960,
+        "src": "/images/opt/property-sky-penthouse-960.webp"
+      },
+      {
+        "w": 1280,
+        "src": "/images/opt/property-sky-penthouse-1280.webp"
+      },
+      {
+        "w": 1600,
+        "src": "/images/opt/property-sky-penthouse-1600.webp"
+      }
+    ]
+  },
+  "/images/residence-boutique-facade.jpg": {
+    "width": 1600,
+    "height": 2400,
+    "variants": [
+      {
+        "w": 640,
+        "src": "/images/opt/residence-boutique-facade-640.webp"
+      },
+      {
+        "w": 768,
+        "src": "/images/opt/residence-boutique-facade-768.webp"
+      },
+      {
+        "w": 960,
+        "src": "/images/opt/residence-boutique-facade-960.webp"
+      },
+      {
+        "w": 1280,
+        "src": "/images/opt/residence-boutique-facade-1280.webp"
+      },
+      {
+        "w": 1600,
+        "src": "/images/opt/residence-boutique-facade-1600.webp"
+      }
+    ]
+  },
+  "/images/residence-cedar-dusk.jpg": {
+    "width": 1600,
+    "height": 1067,
+    "variants": [
+      {
+        "w": 640,
+        "src": "/images/opt/residence-cedar-dusk-640.webp"
+      },
+      {
+        "w": 768,
+        "src": "/images/opt/residence-cedar-dusk-768.webp"
+      },
+      {
+        "w": 960,
+        "src": "/images/opt/residence-cedar-dusk-960.webp"
+      },
+      {
+        "w": 1280,
+        "src": "/images/opt/residence-cedar-dusk-1280.webp"
+      },
+      {
+        "w": 1600,
+        "src": "/images/opt/residence-cedar-dusk-1600.webp"
+      }
+    ]
+  },
+  "/images/waterfront-pool-estate.jpg": {
+    "width": 1600,
+    "height": 1067,
+    "variants": [
+      {
+        "w": 640,
+        "src": "/images/opt/waterfront-pool-estate-640.webp"
+      },
+      {
+        "w": 768,
+        "src": "/images/opt/waterfront-pool-estate-768.webp"
+      },
+      {
+        "w": 960,
+        "src": "/images/opt/waterfront-pool-estate-960.webp"
+      },
+      {
+        "w": 1280,
+        "src": "/images/opt/waterfront-pool-estate-1280.webp"
+      },
+      {
+        "w": 1600,
+        "src": "/images/opt/waterfront-pool-estate-1600.webp"
+      }
+    ]
+  }
+}

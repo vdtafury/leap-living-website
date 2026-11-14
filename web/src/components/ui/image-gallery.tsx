@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { ResponsiveImg } from '@/components/ui/responsive-img'
 
 interface ImageGalleryProps {
   images: string[]
@@ -14,7 +15,12 @@ export function ImageGallery({ images, title }: ImageGalleryProps) {
   return (
     <div>
       <div className="ll-gallery-main">
-        <img src={activeImage} alt={`${title} — view ${activeIndex + 1}`} />
+        <ResponsiveImg
+          src={activeImage}
+          sizes="(max-width: 1000px) 100vw, 60vw"
+          priority={activeIndex === 0}
+          alt={`${title} — view ${activeIndex + 1}`}
+        />
       </div>
 
       {images.length > 1 && (
@@ -28,7 +34,7 @@ export function ImageGallery({ images, title }: ImageGalleryProps) {
               aria-pressed={activeIndex === idx}
               className={`ll-gallery-thumb ${activeIndex === idx ? 'active' : ''}`}
             >
-              <img src={src} alt={`${title} thumbnail ${idx + 1}`} />
+              <ResponsiveImg src={src} sizes="160px" alt={`${title} thumbnail ${idx + 1}`} />
             </button>
           ))}
         </div>
@@ -36,4 +42,3 @@ export function ImageGallery({ images, title }: ImageGalleryProps) {
     </div>
   )
 }
-

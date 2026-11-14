@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ResponsiveImg } from '@/components/ui/responsive-img'
 import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
@@ -35,8 +36,10 @@ export default function SellPage() {
             </div>
 
             <div className="ll-hero-media" style={{ height: '320px' }}>
-              <img
+              <ResponsiveImg
                 src="/images/residence-cedar-dusk.jpg"
+                sizes="(max-width: 900px) 100vw, 50vw"
+                priority
                 alt="Architectural living space overlooking terrace"
                 style={{ height: '320px' }}
               />
@@ -97,8 +100,8 @@ export default function SellPage() {
                   marginBottom: '1.5rem',
                 }}
               >
-                Share your unit, villa, or land plot details to receive a comprehensive
-                comparative pricing review and recommended exit strategy.
+                Share your unit, villa, or land plot details to receive a comprehensive comparative
+                pricing review and recommended exit strategy.
               </p>
 
               <div className="ll-highlight-list">
@@ -124,4 +127,3 @@ export default function SellPage() {
     </>
   )
 }
-
