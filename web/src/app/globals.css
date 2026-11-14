@@ -2118,7 +2118,8 @@ button, input, select, textarea {
 }
 
 .ll-marquee {
-  --marquee-duration: 55s;
+  /* ~3.9s per logo (55s for the original 14) — constant speed for any count */
+  --marquee-duration: calc(var(--marquee-items, 14) * 3.9s);
   --marquee-gap: 1.25rem;
   position: relative;
   overflow: hidden;
@@ -2359,7 +2360,7 @@ button, input, select, textarea {
 
 @media (max-width: 600px) {
   .ll-marquee {
-    --marquee-duration: 42s;
+    --marquee-duration: calc(var(--marquee-items, 14) * 3s);
     --marquee-gap: 0.85rem;
   }
   .ll-marquee-item {

@@ -219,7 +219,7 @@ export const PROPERTIES: PropertyListing[] = [
       '/images/hero-dubai-skyline.jpg',
     ],
     description:
-      'Set on one of Dubai\'s most private island addresses, this beachfront mansion layers honed limestone volumes beneath deep cantilevered roofs, opening entirely onto a 40-metre infinity pool, a private beach, and an uninterrupted view of the Downtown skyline across the water.',
+      "Set on one of Dubai's most private island addresses, this beachfront mansion layers honed limestone volumes beneath deep cantilevered roofs, opening entirely onto a 40-metre infinity pool, a private beach, and an uninterrupted view of the Downtown skyline across the water.",
     highlights: [
       'Direct private beach frontage with a 40m reflecting infinity pool',
       'Double-height reception, cinema, wellness spa and staff wing',
@@ -324,7 +324,7 @@ export const PROPERTIES: PropertyListing[] = [
       '/images/residence-cedar-dusk.jpg',
     ],
     description:
-      'Designed for family life on the water, this villa combines warm sand-toned render and timber screens with a landscaped garden and deck that step straight onto a white-sand lagoon beach in one of Dubai\'s most sought-after new master communities.',
+      "Designed for family life on the water, this villa combines warm sand-toned render and timber screens with a landscaped garden and deck that step straight onto a white-sand lagoon beach in one of Dubai's most sought-after new master communities.",
     highlights: [
       'Direct lagoon-beach frontage with a private timber deck',
       'Ground-floor guest suite, family majlis and a landscaped garden',
@@ -424,10 +424,7 @@ export const PROPERTIES: PropertyListing[] = [
     areaFormatted: '2,850 sq ft',
     completionStatus: 'Leasing Available',
     heroImage: '/images/architecture-glass-towers.jpg',
-    gallery: [
-      '/images/architecture-glass-towers.jpg',
-      '/images/hero-dubai-skyline.jpg',
-    ],
+    gallery: ['/images/architecture-glass-towers.jpg', '/images/hero-dubai-skyline.jpg'],
     description:
       'A fully fitted Grade-A office floorplate in the heart of Dubai International Financial Centre, partitioned with acoustic glass boardrooms, private partner suites, and direct DIFC Gate connectivity.',
     highlights: [
@@ -617,28 +614,47 @@ export const FULL_SERVICE_CATALOG = [
   },
 ]
 
+/** Upper-case developer names (client sheet order). Mirrors DEVELOPER_BRANDS. */
 export const DEVELOPERS = [
   'EMAAR',
   'NAKHEEL',
   'MERAAS',
-  'OMNIYAT',
-  'SOBHA REALTY',
-  'ALDAR',
-  'SELECT GROUP',
-  'DAMAC',
-  'ELLINGTON',
-  'MAJID AL FUTTAIM',
   'DUBAI PROPERTIES',
+  'MAJID AL FUTTAIM',
+  'SELECT GROUP',
+  'OMNIYAT',
+  'NSHAMA',
+  'DAMAC',
   'AL BARARI',
-  'MEYDAN',
+  'DUBAI SOUTH',
+  'SLS DUBAI',
+  'W RESIDENCES',
+  'MBR CITY DISTRICT ONE',
   'WASL',
+  'SOBHA REALTY',
+  'MIRA DEVELOPMENTS',
+  'ARADA',
+  'AVENEW DEVELOPMENT',
+  'ALDAR',
+  'ELLINGTON PROPERTIES',
+  'BINGHATTI',
+  'IMTIAZ DEVELOPMENTS',
+  'MAG DEVELOPMENT',
+  'RAK PROPERTIES',
+  'BEYOND',
+  'EXPO CITY DUBAI',
+  'MEYDAN',
 ]
 
 /**
- * Developer logos for the homepage/about marquee.
- * Files live in `public/images/developers/` (transparent PNG, 120px tall
- * masters). `width`/`height` are the *display* size in CSS px, balanced
- * optically so square marks and long wordmarks carry similar visual weight.
+ * Developer logos for the homepage/about marquee, in the order of the
+ * client's "Developers we work with" sheet (28 brands, 2026-11-14).
+ * Files live in `public/images/developers/` (transparent PNG). Eight are
+ * 120px-tall masters; the rest were cut from the client sheet (white keyed
+ * out), so they are ~30–60px tall — ask the client for original files to
+ * sharpen them. `width`/`height` are the *display* size in CSS px, balanced
+ * optically (~3,500px² each, max 150 wide / ~50 tall) so square marks and
+ * long wordmarks carry similar visual weight.
  * A brand without `logo` renders as a typographic wordmark.
  * Logo usage permission is still open with the client (DECISIONS O-06).
  */
@@ -650,20 +666,54 @@ export type DeveloperBrand = {
 }
 
 export const DEVELOPER_BRANDS: DeveloperBrand[] = [
-  { name: 'Emaar', logo: '/images/developers/emaar.png', width: 52, height: 52 },
-  { name: 'Nakheel', logo: '/images/developers/nakheel.png', width: 52, height: 52 },
+  { name: 'Emaar', logo: '/images/developers/emaar.png', width: 129, height: 27 },
+  { name: 'Nakheel', logo: '/images/developers/nakheel.png', width: 136, height: 26 },
   { name: 'Meraas', logo: '/images/developers/meraas.png', width: 132, height: 28 },
-  { name: 'Omniyat', logo: '/images/developers/omniyat.png', width: 150, height: 23 },
-  { name: 'Sobha Realty', logo: '/images/developers/sobha-realty.png', width: 105, height: 36 },
-  { name: 'Aldar', logo: '/images/developers/aldar.png', width: 47, height: 52 },
+  {
+    name: 'Dubai Properties',
+    logo: '/images/developers/dubai-properties.png',
+    width: 72,
+    height: 47,
+  },
+  {
+    name: 'Majid Al Futtaim',
+    logo: '/images/developers/majid-al-futtaim.png',
+    width: 131,
+    height: 27,
+  },
   { name: 'Select Group', logo: '/images/developers/select-group.png', width: 94, height: 39 },
+  { name: 'Omniyat', logo: '/images/developers/omniyat.png', width: 150, height: 23 },
+  { name: 'Nshama', logo: '/images/developers/nshama.png', width: 150, height: 16 },
   { name: 'DAMAC', logo: '/images/developers/damac.png', width: 150, height: 19 },
-  { name: 'Ellington', logo: '/images/developers/ellington.png', width: 97, height: 38 },
-  { name: 'Majid Al Futtaim', logo: '/images/developers/majid-al-futtaim.png', width: 84, height: 42 },
-  { name: 'Dubai Properties', logo: '/images/developers/dubai-properties.png', width: 72, height: 47 },
-  { name: 'Al Barari', logo: '/images/developers/al-barari.png', width: 85, height: 41 },
-  { name: 'Meydan', width: 0, height: 0 },
-  { name: 'wasl', logo: '/images/developers/wasl.png', width: 97, height: 38 },
+  { name: 'Al Barari', logo: '/images/developers/al-barari.png', width: 52, height: 56 },
+  { name: 'Dubai South', logo: '/images/developers/dubai-south.png', width: 56, height: 50 },
+  { name: 'SLS Dubai', logo: '/images/developers/sls.png', width: 37, height: 56 },
+  { name: 'W Residences', logo: '/images/developers/w-residences.png', width: 78, height: 45 },
+  {
+    name: 'MBR City District One',
+    logo: '/images/developers/mbr-city.png',
+    width: 117,
+    height: 51,
+  },
+  { name: 'wasl', logo: '/images/developers/wasl.png', width: 84, height: 32 },
+  { name: 'Sobha Realty', logo: '/images/developers/sobha-realty.png', width: 105, height: 36 },
+  { name: 'Mira Developments', logo: '/images/developers/mira.png', width: 116, height: 30 },
+  { name: 'Arada', logo: '/images/developers/arada.png', width: 150, height: 23 },
+  { name: 'Avenew Development', logo: '/images/developers/avenew.png', width: 82, height: 43 },
+  { name: 'Aldar', logo: '/images/developers/aldar.png', width: 47, height: 52 },
+  { name: 'Ellington Properties', logo: '/images/developers/ellington.png', width: 97, height: 38 },
+  { name: 'Binghatti', logo: '/images/developers/binghatti.png', width: 125, height: 28 },
+  { name: 'Imtiaz Developments', logo: '/images/developers/imtiaz.png', width: 112, height: 31 },
+  { name: 'MAG Development', logo: '/images/developers/mag.png', width: 85, height: 41 },
+  { name: 'RAK Properties', logo: '/images/developers/rak-properties.png', width: 129, height: 27 },
+  { name: 'Beyond', logo: '/images/developers/beyond.png', width: 140, height: 20 },
+  {
+    name: 'Expo City Dubai',
+    logo: '/images/developers/expo-city-dubai.png',
+    width: 86,
+    height: 41,
+  },
+  { name: 'Meydan', logo: '/images/developers/meydan.png', width: 111, height: 31 },
 ]
 
 export const CLIENT_PERSPECTIVES = [
@@ -689,4 +739,3 @@ export const CLIENT_PERSPECTIVES = [
     role: 'Real Estate Investor',
   },
 ]
-
