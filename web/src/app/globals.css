@@ -2192,6 +2192,33 @@ button, input, select, textarea {
   color: var(--dark-teal);
 }
 
+/* ---- Brand watermark: large keyhole mark, cropped by the right edge ---- */
+.ll-keyhole-dev {
+  width: 640px;
+  height: 640px;
+  right: -150px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--brand-teal);
+  opacity: 0.13;
+}
+
+.ll-section-glass .ll-keyhole-dev {
+  color: var(--white);
+  opacity: 0.1;
+}
+
+@media (max-width: 960px) {
+  .ll-keyhole-dev {
+    width: 440px;
+    height: 440px;
+    right: -170px;
+    top: auto;
+    bottom: -70px;
+    transform: none;
+  }
+}
+
 /* ---- Glass surface: skyline photo + teal scrim, bare white logos ---- */
 .ll-dev-showcase.ll-section-glass {
   background-color: var(--brand-deep);
