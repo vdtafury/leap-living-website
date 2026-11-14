@@ -65,38 +65,8 @@ export default async function HomePage() {
         {/* ==================== INTEGRATED MULTI-PAGE SEARCH ==================== */}
         <HeroSearchBar />
 
-        {/* ==================== INSTITUTIONAL PILLARS ==================== */}
-        <section className="ll-stats-section" aria-label="Institutional Pillars">
-          <KeyholeMark className="ll-keyhole ll-keyhole-stats" />
-          <div className="ll-container">
-            <div className="ll-stats-grid">
-              <div className="ll-stat-item">
-                <div className="ll-stat-value">21+ Years</div>
-                <p className="ll-stat-desc">
-                  Executive leadership across Dubai&apos;s residential and commercial cycles since 2005.
-                </p>
-              </div>
-              <div className="ll-stat-item">
-                <div className="ll-stat-value">AED 12B+</div>
-                <p className="ll-stat-desc">
-                  Commercialisation, pricing strategy, and landmark project stewardship across the UAE.
-                </p>
-              </div>
-              <div className="ll-stat-item">
-                <div className="ll-stat-value">100% Fiduciary</div>
-                <p className="ll-stat-desc">
-                  Client-aligned counsel structured around long-term value over short-term brokerage volume.
-                </p>
-              </div>
-              <div className="ll-stat-item">
-                <div className="ll-stat-value">Direct Access</div>
-                <p className="ll-stat-desc">
-                  Executive relationships across Tier-1 master developers, family offices, and private owners.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* ==================== DEVELOPER NETWORK (logo marquee) ==================== */}
+        <DeveloperShowcase index="01" />
 
         {/* ==================== FEATURED BUY PORTFOLIO PREVIEW ==================== */}
         <section className="ll-section-light">
@@ -104,7 +74,7 @@ export default async function HomePage() {
             <div className="ll-section-header">
               <div>
                 <div className="ll-eyebrow">
-                  <span className="ll-eyebrow-num">01</span>Curated Portfolio
+                  <span className="ll-eyebrow-num">02</span>Curated Portfolio
                 </div>
                 <h2 className="ll-serif-title ll-section-title">Featured Properties for Sale</h2>
                 <p className="ll-section-lead">
@@ -133,7 +103,7 @@ export default async function HomePage() {
             <div className="ll-section-header">
               <div>
                 <div className="ll-eyebrow">
-                  <span className="ll-eyebrow-num">02</span>Advisory Scope
+                  <span className="ll-eyebrow-num">03</span>Advisory Scope
                 </div>
                 <h2 className="ll-serif-title ll-section-title">End-to-End Real Estate Advisory</h2>
                 <p className="ll-section-lead">
@@ -179,7 +149,7 @@ export default async function HomePage() {
             <div className="ll-section-header">
               <div>
                 <div className="ll-eyebrow">
-                  <span className="ll-eyebrow-num">03</span>Dubai Developments
+                  <span className="ll-eyebrow-num">04</span>Dubai Developments
                 </div>
                 <h2 className="ll-serif-title ll-section-title">Selected Real Estate Projects</h2>
                 <p className="ll-section-lead">
@@ -230,7 +200,7 @@ export default async function HomePage() {
 
               <div>
                 <div className="ll-eyebrow">
-                  <span className="ll-eyebrow-num">04</span>Executive Leadership
+                  <span className="ll-eyebrow-num">05</span>Executive Leadership
                 </div>
                 <blockquote className="ll-leadership-quote">
                   &ldquo;Informed decisions create exceptional outcomes. Every property decision
@@ -298,7 +268,7 @@ export default async function HomePage() {
             <div className="ll-section-header">
               <div>
                 <div className="ll-eyebrow">
-                  <span className="ll-eyebrow-num">05</span>Client Perspectives
+                  <span className="ll-eyebrow-num">06</span>Client Perspectives
                 </div>
                 <h2 className="ll-serif-title ll-section-title">Private Client Experience</h2>
               </div>
@@ -330,8 +300,38 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* ==================== DEVELOPER NETWORK (logo marquee) ==================== */}
-        <DeveloperShowcase index="06" />
+        {/* ==================== INSTITUTIONAL PILLARS ==================== */}
+        <section className="ll-stats-section" aria-label="Institutional Pillars">
+          <KeyholeMark className="ll-keyhole ll-keyhole-stats" />
+          <div className="ll-container">
+            <div className="ll-stats-grid">
+              <div className="ll-stat-item">
+                <div className="ll-stat-value">21+ Years</div>
+                <p className="ll-stat-desc">
+                  Executive leadership across Dubai&apos;s residential and commercial cycles since 2005.
+                </p>
+              </div>
+              <div className="ll-stat-item">
+                <div className="ll-stat-value">AED 12B+</div>
+                <p className="ll-stat-desc">
+                  Commercialisation, pricing strategy, and landmark project stewardship across the UAE.
+                </p>
+              </div>
+              <div className="ll-stat-item">
+                <div className="ll-stat-value">100% Fiduciary</div>
+                <p className="ll-stat-desc">
+                  Client-aligned counsel structured around long-term value over short-term brokerage volume.
+                </p>
+              </div>
+              <div className="ll-stat-item">
+                <div className="ll-stat-value">Direct Access</div>
+                <p className="ll-stat-desc">
+                  Executive relationships across Tier-1 master developers, family offices, and private owners.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
       <SiteFooter />
