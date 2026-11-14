@@ -95,11 +95,31 @@ button, input, select, textarea {
 }
 
 /* Container */
+/* Page width system (Provident-style):
+   - one fluid side gutter shared by everything (20px on phones, up to 80px);
+   - section content capped at 1220px and centred;
+   - the navbar is NOT capped by the content width: it runs nearly
+     edge-to-edge (up to 1760px on ultra-wide screens). */
+:root {
+  --page-gutter: clamp(1.25rem, 5vw, 5rem);
+  --content-max: 1220px;
+  /* Navbar gutter is always <= the content gutter, so the bar reads wider
+     than the sections: 80px at >=1568px, ~51px at 1280px, 20px on phones. */
+  --nav-gutter: clamp(1.25rem, calc(10vw - 77px), 5rem);
+  --nav-max: 1920px;
+}
+
 .ll-container {
   width: 100%;
-  max-width: 1240px;
+  max-width: calc(var(--content-max) + 2 * var(--page-gutter));
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 var(--page-gutter);
+}
+
+.ll-container.ll-header-inner,
+.ll-container.ll-mobile-nav {
+  max-width: var(--nav-max);
+  padding: 0 var(--nav-gutter);
 }
 
 /* Eyebrow label */
@@ -3789,5 +3809,36 @@ button, input, select, textarea {
   .ll-carousel-btn,
   .ll-carousel-progress-thumb {
     transition: none;
+  }
+}
+
+/* ==========================================================================
+   NAVBAR LAYOUT (Provident-style): logo left, links grouped on the right
+   next to the actions, separated by a hairline.
+   ========================================================================== */
+.ll-nav {
+  margin-left: auto;
+  gap: clamp(1.05rem, 1.6vw, 1.75rem);
+}
+
+.ll-header-actions {
+  padding-left: clamp(1rem, 1.6vw, 1.5rem);
+  border-left: 1px solid var(--border-subtle);
+}
+
+.ll-header--transparent .ll-header-actions {
+  border-left-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Switch to the menu button before the full bar can get cramped */
+@media (max-width: 1200px) {
+  .ll-nav,
+  .ll-header-actions {
+    display: none;
+  }
+  .ll-mobile-menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 }
