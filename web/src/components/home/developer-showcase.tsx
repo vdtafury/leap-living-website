@@ -3,6 +3,7 @@
 import { useState, type CSSProperties } from 'react'
 import { DEVELOPER_BRANDS, type DeveloperBrand } from '@/data/catalog'
 import { PauseIcon, PlayIcon } from '@/components/ui/icons'
+import { KeyholeMark } from '@/components/ui/keyhole-mark'
 import { ResponsiveImg } from '@/components/ui/responsive-img'
 
 interface DeveloperShowcaseProps {
@@ -66,6 +67,9 @@ export function DeveloperShowcase({
           <div className="ll-dev-glass-scrim" />
         </div>
       )}
+      {/* Brand watermark: the Leap Living keyhole mark, large and cropped by the
+          section edge, the way the Brand Guidelines use it on the cover. */}
+      <KeyholeMark className="ll-keyhole ll-keyhole-dev" strokeWidth={1.4} />
       <div className="ll-container ll-dev-showcase-head">
         <div>
           <div className="ll-eyebrow">
