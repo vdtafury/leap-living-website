@@ -9,6 +9,7 @@ interface PropertyListingBrowserProps {
   items: PropertyListing[]
   initialCommunity?: string
   initialType?: string
+  initialBeds?: string
   initialBudget?: string
 }
 
@@ -17,11 +18,12 @@ export function PropertyListingBrowser({
   items,
   initialCommunity = 'ALL',
   initialType = 'ALL',
+  initialBeds = 'ALL',
   initialBudget = 'ALL',
 }: PropertyListingBrowserProps) {
   const [community, setCommunity] = useState(initialCommunity)
   const [propertyType, setPropertyType] = useState(initialType)
-  const [minBeds, setMinBeds] = useState('ALL')
+  const [minBeds, setMinBeds] = useState(initialBeds)
   const [budget, setBudget] = useState(initialBudget)
 
   const communities = useMemo(

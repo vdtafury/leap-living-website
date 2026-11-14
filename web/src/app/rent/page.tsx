@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export default async function RentPage({
   searchParams,
 }: {
-  searchParams: Promise<{ community?: string; type?: string; budget?: string }>
+  searchParams: Promise<{ community?: string; type?: string; beds?: string; budget?: string }>
 }) {
   const params = await searchParams
   const rentalItems = PROPERTIES.filter((p) => p.transactionType === 'RENT')
@@ -48,6 +48,7 @@ export default async function RentPage({
               items={rentalItems}
               initialCommunity={params.community ?? 'ALL'}
               initialType={params.type ?? 'ALL'}
+              initialBeds={params.beds ?? 'ALL'}
               initialBudget={params.budget ?? 'ALL'}
             />
           </div>

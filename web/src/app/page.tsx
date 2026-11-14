@@ -20,6 +20,16 @@ export const dynamic = 'force-dynamic'
 
 export default async function HomePage() {
   const mediaAssetCount = await prisma.mediaAsset.count()
+
+  // Communities offered by the hero search, per mode, straight from the catalogue.
+  const uniqueSorted = (list: string[]) => Array.from(new Set(list)).sort()
+  const communitiesWhere = (match: (p: (typeof PROPERTIES)[number]) => boolean) =>
+    uniqueSorted(PROPERTIES.filter(match).map((p) => p.community))
+  const searchCommunities = {
+    BUY: communitiesWhere((p) => p.transactionType === 'BUY' && p.propertyType !== 'Commercial'),
+    RENT: communitiesWhere((p) => p.transactionType === 'RENT' && p.propertyType !== 'Commercial'),
+    COMMERCIAL: communitiesWhere((p) => p.propertyType === 'Commercial'),
+  }
   const featuredSaleProperties = PROPERTIES.filter(
     (item) => item.transactionType === 'BUY' && item.featured,
   )
@@ -37,7 +47,7 @@ export default async function HomePage() {
         <section className="ll-hero">
           <HeroVideoBackdrop />
 
-          <div className="ll-container ll-hero-grid">
+          <div className="ll-container ll-hero-inner">
             <div className="ll-hero-content">
               <div className="ll-eyebrow ll-eyebrow-light">CERTAINTY THROUGH PRECISION</div>
               <h1 className="ll-hero-title">
@@ -59,11 +69,11 @@ export default async function HomePage() {
                 </Link>
               </div>
             </div>
+
+            {/* Integrated search lives inside the hero */}
+            <HeroSearchBar communities={searchCommunities} />
           </div>
         </section>
-
-        {/* ==================== INTEGRATED MULTI-PAGE SEARCH ==================== */}
-        <HeroSearchBar />
 
         {/* ==================== DEVELOPER NETWORK (logo marquee) ==================== */}
         <DeveloperShowcase index="01" />
