@@ -2199,8 +2199,9 @@ button, input, select, textarea {
   right: -150px;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--brand-teal);
-  opacity: 0.13;
+  /* white mark on the teal tint, as on the Brand Guidelines cover */
+  color: var(--white);
+  opacity: 0.5;
 }
 
 .ll-section-glass .ll-keyhole-dev {
@@ -2319,9 +2320,10 @@ button, input, select, textarea {
   }
 }
 
-/* ---- Light glass surface: washed skyline, bare full-colour logos ---- */
+/* ---- Light glass surface: brand-teal tint over the skyline, bare full-colour logos ---- */
 .ll-dev-showcase.ll-section-glass-light {
-  background-color: #F3F6F5;
+  /* Brand teal tints (10% -> 25%), light enough for full-colour logos */
+  background-color: var(--brand-teal-10);
   padding: 6rem 0 5.5rem;
   border-bottom: 1px solid var(--border-subtle);
 }
@@ -2334,18 +2336,21 @@ button, input, select, textarea {
 
 .ll-section-glass-light .ll-section-image-bg img {
   object-position: center 62%;
-  /* desaturated, cool-toned skyline so it reads as a soft architectural texture */
-  filter: grayscale(1) contrast(0.9) brightness(1.08);
+  /* skyline toned toward the brand teal so it reads as a soft brand texture */
+  filter: grayscale(1) sepia(0.45) hue-rotate(128deg) saturate(1.7) contrast(0.88) brightness(1.04);
 }
 
 .ll-section-glass-light .ll-dev-glass-scrim {
   background:
-    radial-gradient(ellipse 55% 75% at 8% 105%, rgba(59, 158, 161, 0.22) 0%, rgba(59, 158, 161, 0) 62%),
-    linear-gradient(180deg, rgba(243, 246, 245, 1) 0%, rgba(243, 246, 245, 0.95) 16%, rgba(243, 246, 245, 0.82) 48%, rgba(236, 243, 242, 0.7) 76%, rgba(243, 246, 245, 0.92) 100%);
+    radial-gradient(ellipse 60% 80% at 6% 110%, rgba(59, 158, 161, 0.34) 0%, rgba(59, 158, 161, 0) 65%),
+    radial-gradient(ellipse 50% 70% at 100% 0%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 70%),
+    linear-gradient(180deg, rgba(229, 243, 243, 0.94) 0%, rgba(220, 239, 240, 0.86) 22%, rgba(205, 230, 231, 0.74) 55%, rgba(196, 226, 227, 0.7) 80%, rgba(196, 226, 227, 0.88) 100%),
+    rgba(59, 158, 161, 0.14);
 }
 
 .ll-section-glass-light .ll-dev-showcase-lead {
-  color: var(--body-text);
+  /* darker than --body-text: keeps WCAG AA (>= 4.5:1) on the teal tint */
+  color: #44504F;
 }
 
 .ll-section-glass-light .ll-marquee-toggle {
