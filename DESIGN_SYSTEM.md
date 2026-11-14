@@ -176,7 +176,7 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 The search lives inside the hero (`.ll-hero-inner` = hero copy + `<HeroSearchBar />`). There is no separate search band any more.
 
 - **Hero overlay (`.ll-hero-scrim`):** a **light** brand-teal wash (owner request, replacing the earlier deep-teal 88% scrim). It runs `rgba(36,112,115,.6)` behind the copy → `#3B9EA1` at 36% → 14% → 6% on the right, plus a soft top/bottom shade (34% / 26%). The hero copy gets a faint `text-shadow`, and "next move." uses `--brand-teal-25`, so text stays legible on the lighter photo. The search's inner fills were lightened to `rgba(8,44,46,.22–.24)`.
-- **Hero size:** `min-height: min(100svh, 1120px)`, so it fills the screen on every device but is capped on very tall portrait screens. Padding and gaps use `vh` clamps; content can always grow past the minimum.
+- **Hero size:** `min-height: clamp(520px, 68vh, 690px)` on desktop, matching top-tier Dubai consultancy proportions (e.g. Provident) where the hero occupies ~68% of the viewport and seamlessly reveals the partner/developer network band immediately above the fold. Padding and gaps use `vh` clamps; content can always grow past the minimum.
 - **Panel:** frosted glass (`rgba(255,255,255,.15→.06)`, `blur(22px) saturate(140%)`, 1px white/22% border, 22px radius). Falls back to deep teal `rgba(10,52,54,.82)` where `backdrop-filter` is unsupported.
 - **Modes:** segmented Buy / Rent / Commercial pill with a sliding teal thumb (`--mode-index`).
 - **Bar:** Location (searchable) · Property type · Bedrooms · Price (Annual budget in Rent). Fields are separated by hairlines; the whole field is the click target. Commercial locks type and beds.
