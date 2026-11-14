@@ -3,7 +3,8 @@ import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { ArrowUpRightIcon, ChevronRightIcon } from '@/components/ui/icons'
-import { DEVELOPERS, FULL_SERVICE_CATALOG } from '@/data/catalog'
+import { FULL_SERVICE_CATALOG } from '@/data/catalog'
+import { DeveloperShowcase } from '@/components/home/developer-showcase'
 
 export const metadata: Metadata = {
   title: 'About Us & Real Estate Consultancy | LEAP LIVING Dubai',
@@ -194,31 +195,8 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Developers */}
-        <section className="ll-section-muted" style={{ padding: '3rem 0' }}>
-          <div className="ll-container">
-            <div
-              style={{
-                textAlign: 'center',
-                fontSize: '0.7rem',
-                fontWeight: 600,
-                letterSpacing: '0.16em',
-                textTransform: 'uppercase',
-                color: 'var(--body-text)',
-                marginBottom: '1.25rem',
-              }}
-            >
-              Developers We Work With
-            </div>
-            <div className="ll-dev-grid">
-              {DEVELOPERS.map((dev) => (
-                <span key={dev} className="ll-dev-badge">
-                  {dev}
-                </span>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* Developer network (logo marquee) */}
+        <DeveloperShowcase surface="muted" />
       </main>
 
       <SiteFooter />

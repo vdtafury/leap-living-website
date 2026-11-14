@@ -8,10 +8,10 @@ import { PropertyCard } from '@/components/property/property-card'
 import { ProjectCard } from '@/components/project/project-card'
 import { ArrowRightIcon, ArrowUpRightIcon } from '@/components/ui/icons'
 import { KeyholeMark } from '@/components/ui/keyhole-mark'
+import { DeveloperShowcase } from '@/components/home/developer-showcase'
 import {
   CLIENT_PERSPECTIVES,
   CORE_SERVICES,
-  DEVELOPERS,
   PROJECTS,
   PROPERTIES,
 } from '@/data/catalog'
@@ -330,19 +330,8 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* ==================== DEVELOPERS TRUST BAR ==================== */}
-        <section className="ll-dev-section">
-          <div className="ll-container">
-            <div className="ll-dev-heading">Developers We Work With Across the UAE</div>
-            <div className="ll-dev-grid">
-              {DEVELOPERS.map((dev) => (
-                <span key={dev} className="ll-dev-badge">
-                  {dev}
-                </span>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* ==================== DEVELOPER NETWORK (logo marquee) ==================== */}
+        <DeveloperShowcase index="06" />
       </main>
 
       <SiteFooter />

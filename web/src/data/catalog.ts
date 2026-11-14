@@ -494,6 +494,38 @@ export const DEVELOPERS = [
   'WASL',
 ]
 
+/**
+ * Developer logos for the homepage/about marquee.
+ * Files live in `public/images/developers/` (transparent PNG, 120px tall
+ * masters). `width`/`height` are the *display* size in CSS px, balanced
+ * optically so square marks and long wordmarks carry similar visual weight.
+ * A brand without `logo` renders as a typographic wordmark.
+ * Logo usage permission is still open with the client (DECISIONS O-06).
+ */
+export type DeveloperBrand = {
+  name: string
+  logo?: string
+  width: number
+  height: number
+}
+
+export const DEVELOPER_BRANDS: DeveloperBrand[] = [
+  { name: 'Emaar', logo: '/images/developers/emaar.png', width: 52, height: 52 },
+  { name: 'Nakheel', logo: '/images/developers/nakheel.png', width: 52, height: 52 },
+  { name: 'Meraas', logo: '/images/developers/meraas.png', width: 132, height: 28 },
+  { name: 'Omniyat', logo: '/images/developers/omniyat.png', width: 150, height: 23 },
+  { name: 'Sobha Realty', logo: '/images/developers/sobha-realty.png', width: 105, height: 36 },
+  { name: 'Aldar', logo: '/images/developers/aldar.png', width: 47, height: 52 },
+  { name: 'Select Group', logo: '/images/developers/select-group.png', width: 94, height: 39 },
+  { name: 'DAMAC', logo: '/images/developers/damac.png', width: 150, height: 19 },
+  { name: 'Ellington', logo: '/images/developers/ellington.png', width: 97, height: 38 },
+  { name: 'Majid Al Futtaim', logo: '/images/developers/majid-al-futtaim.png', width: 84, height: 42 },
+  { name: 'Dubai Properties', logo: '/images/developers/dubai-properties.png', width: 72, height: 47 },
+  { name: 'Al Barari', logo: '/images/developers/al-barari.png', width: 85, height: 41 },
+  { name: 'Meydan', width: 0, height: 0 },
+  { name: 'wasl', logo: '/images/developers/wasl.png', width: 97, height: 38 },
+]
+
 export const CLIENT_PERSPECTIVES = [
   {
     initials: 'HA',
