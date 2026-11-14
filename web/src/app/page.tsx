@@ -7,10 +7,11 @@ import { HeroVideoBackdrop } from '@/components/home/hero-video-backdrop'
 import { PropertyCard } from '@/components/property/property-card'
 import { ProjectCard } from '@/components/project/project-card'
 import { ArrowRightIcon, ArrowUpRightIcon } from '@/components/ui/icons'
+import { KeyholeMark } from '@/components/ui/keyhole-mark'
+import { DeveloperShowcase } from '@/components/home/developer-showcase'
 import {
   CLIENT_PERSPECTIVES,
   CORE_SERVICES,
-  DEVELOPERS,
   PROJECTS,
   PROPERTIES,
 } from '@/data/catalog'
@@ -64,8 +65,244 @@ export default async function HomePage() {
         {/* ==================== INTEGRATED MULTI-PAGE SEARCH ==================== */}
         <HeroSearchBar />
 
+        {/* ==================== DEVELOPER NETWORK (logo marquee) ==================== */}
+        <DeveloperShowcase index="01" />
+
+        {/* ==================== FEATURED BUY PORTFOLIO PREVIEW ==================== */}
+        <section className="ll-section-light">
+          <div className="ll-container">
+            <div className="ll-section-header">
+              <div>
+                <div className="ll-eyebrow">
+                  <span className="ll-eyebrow-num">02</span>Curated Portfolio
+                </div>
+                <h2 className="ll-serif-title ll-section-title">Featured Properties for Sale</h2>
+                <p className="ll-section-lead">
+                  Representative architectural residences across Palm Jumeirah, Downtown Dubai,
+                  and Dubai Hills Estate. Select any mandate for full specifications and financing analysis.
+                </p>
+              </div>
+              <Link href="/buy" className="ll-link-arrow">
+                <span>View All Properties for Sale</span>
+                <ArrowUpRightIcon size={15} />
+              </Link>
+            </div>
+
+            <div className="ll-cards-grid">
+              {featuredSaleProperties.map((property) => (
+                <PropertyCard key={property.slug} property={property} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ==================== SERVICES OVERVIEW (WITH CONSULTANCY) ==================== */}
+        <section className="ll-section-gradient">
+          <KeyholeMark className="ll-keyhole ll-keyhole-services" strokeWidth={1.6} />
+          <div className="ll-container">
+            <div className="ll-section-header">
+              <div>
+                <div className="ll-eyebrow">
+                  <span className="ll-eyebrow-num">03</span>Advisory Scope
+                </div>
+                <h2 className="ll-serif-title ll-section-title">End-to-End Real Estate Advisory</h2>
+                <p className="ll-section-lead">
+                  Led by independent Real Estate Consultancy, our practice supports acquisition,
+                  leasing, investment structuring, development evaluation, and confidential exits.
+                </p>
+              </div>
+              <Link href="/about#services" className="ll-link-arrow">
+                <span>Explore Full Service Scope</span>
+                <ArrowUpRightIcon size={15} />
+              </Link>
+            </div>
+
+            <div className="ll-services-bento">
+              {CORE_SERVICES.map((service, index) => (
+                <div
+                  key={service.id}
+                  className={`ll-service-tile ${service.featured ? 'featured' : ''}`}
+                >
+                  {service.featured && (
+                    <KeyholeMark className="ll-keyhole ll-keyhole-tile" strokeWidth={1.8} />
+                  )}
+                  <div className="ll-service-bignum" aria-hidden="true">
+                    0{index + 1}
+                  </div>
+                  <div className="ll-service-tile-body">
+                    {service.featured && service.tag && (
+                      <span className="ll-chip ll-chip-light">{service.tag}</span>
+                    )}
+                    <h3 className="ll-service-tile-title">{service.title}</h3>
+                    <p className="ll-service-tile-desc">{service.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ==================== SIGNATURE PROJECTS PREVIEW ==================== */}
+        <section className="ll-section-grey">
+          <KeyholeMark className="ll-keyhole ll-keyhole-grey" strokeWidth={1.6} />
+          <div className="ll-container">
+            <div className="ll-section-header">
+              <div>
+                <div className="ll-eyebrow">
+                  <span className="ll-eyebrow-num">04</span>Dubai Developments
+                </div>
+                <h2 className="ll-serif-title ll-section-title">Selected Real Estate Projects</h2>
+                <p className="ll-section-lead">
+                  Institutional insight into upcoming master-planned waterfront and golfside
+                  developments across Dubai.
+                </p>
+              </div>
+              <Link href="/projects" className="ll-link-arrow">
+                <span>Browse All Projects</span>
+                <ArrowUpRightIcon size={15} />
+              </Link>
+            </div>
+
+            <div className="ll-cards-grid">
+              {PROJECTS.map((project) => (
+                <ProjectCard key={project.slug} project={project} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ==================== EXECUTIVE LEADERSHIP (CEO ONLY, ZERO PEOPLE PHOTOS) ==================== */}
+        <section className="ll-section-image">
+          <div className="ll-section-image-bg" aria-hidden="true">
+            <img src="/images/architecture-glass-towers.jpg" alt="" loading="lazy" />
+            <span className="ll-section-image-scrim" />
+          </div>
+          <div className="ll-container">
+            <div className="ll-leadership-glass">
+              <div className="ll-leadership-emblem-card">
+                <KeyholeMark className="ll-keyhole ll-keyhole-emblem" strokeWidth={1.8} />
+                <img
+                  src="/brand/logo-horizontal-white.png"
+                  alt="LEAP LIVING"
+                  className="ll-leadership-emblem-logo"
+                />
+                <div>
+                  <div className="ll-leadership-emblem-kicker">Institutional Leadership</div>
+                  <div className="ll-serif-title ll-leadership-emblem-title">
+                    Two Decades Shaping Prime UAE Developments
+                  </div>
+                </div>
+                <div className="ll-leadership-emblem-foot">
+                  <span>Dubai · UAE</span>
+                  <span>Since 2005</span>
+                </div>
+              </div>
+
+              <div>
+                <div className="ll-eyebrow">
+                  <span className="ll-eyebrow-num">05</span>Executive Leadership
+                </div>
+                <blockquote className="ll-leadership-quote">
+                  &ldquo;Informed decisions create exceptional outcomes. Every property decision
+                  carries financial, strategic, and personal significance. Our responsibility
+                  is to ensure clients have clarity and insight.&rdquo;
+                </blockquote>
+
+                <div className="ll-leadership-meta">
+                  <span className="ll-leadership-name">Mohab Samak</span>
+                  <span className="ll-leadership-title">CEO</span>
+                </div>
+
+                <p className="ll-section-lead ll-leadership-bio">
+                  With over two decades of senior leadership across Emaar Properties, Hamptons
+                  International, Coldwell Banker, Engel &amp; Völkers Dubai, D&amp;B Properties,
+                  and Metropolitan Premium Properties, Mohab Samak directs Leap Living with an
+                  emphasis on analytical precision over short-term sales volume.
+                </p>
+
+                <div className="ll-hero-ctas">
+                  <Link href="/about" className="ll-btn ll-btn-primary">
+                    <span>About Leap Living &amp; Leadership</span>
+                    <ArrowUpRightIcon size={15} />
+                  </Link>
+                  <Link href="/contact" className="ll-btn ll-btn-outline-light">
+                    Request Executive Briefing
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ==================== DEDICATED TOOLS & VALUATION ENTRY BAND ==================== */}
+        <section className="ll-section-teal">
+          <KeyholeMark className="ll-keyhole ll-keyhole-teal-band" strokeWidth={1.6} />
+          <div className="ll-container ll-cta-band">
+            <div>
+              <div className="ll-eyebrow">Owner &amp; Buyer Advisory</div>
+              <h2 className="ll-serif-title ll-section-title">
+                Free Property Valuation &amp; Mortgage Planning
+              </h2>
+              <p className="ll-section-lead">
+                Whether benchmarking the market value of an existing Dubai asset prior to exit
+                or structuring UAE bank financing prior to acquisition, our dedicated advisory
+                pages provide direct analytical tools and senior consultation.
+              </p>
+            </div>
+
+            <div className="ll-cta-band-actions">
+              <Link href="/sell#valuation-form" className="ll-btn ll-btn-light">
+                <span>Request Free Valuation</span>
+                <ArrowUpRightIcon size={15} />
+              </Link>
+              <Link href="/mortgage" className="ll-btn ll-btn-outline-light">
+                Open Mortgage Calculator
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ==================== CLIENT PERSPECTIVES ==================== */}
+        <section className="ll-section-muted">
+          <div className="ll-container">
+            <div className="ll-section-header">
+              <div>
+                <div className="ll-eyebrow">
+                  <span className="ll-eyebrow-num">06</span>Client Perspectives
+                </div>
+                <h2 className="ll-serif-title ll-section-title">Private Client Experience</h2>
+              </div>
+              <Link href="/contact" className="ll-link-arrow">
+                <span>Speak With an Advisor</span>
+                <ArrowUpRightIcon size={15} />
+              </Link>
+            </div>
+
+            <div className="ll-cards-grid">
+              {CLIENT_PERSPECTIVES.map((item) => (
+                <figure key={item.author} className="ll-quote-card">
+                  <span className="ll-quote-mark" aria-hidden="true">
+                    &ldquo;
+                  </span>
+                  <blockquote className="ll-quote-text">{item.quote}</blockquote>
+                  <figcaption className="ll-quote-author">
+                    <span className="ll-monogram" aria-hidden="true">
+                      {item.initials}
+                    </span>
+                    <span>
+                      <span className="ll-quote-name">{item.author}</span>
+                      <span className="ll-quote-role">{item.role}</span>
+                    </span>
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* ==================== INSTITUTIONAL PILLARS ==================== */}
         <section className="ll-stats-section" aria-label="Institutional Pillars">
+          <KeyholeMark className="ll-keyhole ll-keyhole-stats" />
           <div className="ll-container">
             <div className="ll-stats-grid">
               <div className="ll-stat-item">
@@ -92,262 +329,6 @@ export default async function HomePage() {
                   Executive relationships across Tier-1 master developers, family offices, and private owners.
                 </p>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ==================== FEATURED BUY PORTFOLIO PREVIEW ==================== */}
-        <section className="ll-section-light">
-          <div className="ll-container">
-            <div className="ll-section-header">
-              <div>
-                <div className="ll-eyebrow">Curated Portfolio</div>
-                <h2 className="ll-serif-title ll-section-title">Featured Properties for Sale</h2>
-                <p className="ll-section-lead">
-                  Representative architectural residences across Palm Jumeirah, Downtown Dubai,
-                  and Dubai Hills Estate. Select any mandate for full specifications and financing analysis.
-                </p>
-              </div>
-              <Link href="/buy" className="ll-link-arrow">
-                <span>View All Properties for Sale</span>
-                <ArrowUpRightIcon size={15} />
-              </Link>
-            </div>
-
-            <div className="ll-cards-grid">
-              {featuredSaleProperties.map((property) => (
-                <PropertyCard key={property.slug} property={property} />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ==================== SERVICES OVERVIEW (WITH CONSULTANCY) ==================== */}
-        <section className="ll-section-muted">
-          <div className="ll-container ll-services-layout">
-            <div>
-              <div className="ll-eyebrow">Advisory Scope</div>
-              <h2 className="ll-serif-title ll-section-title" style={{ marginBottom: '0.85rem' }}>
-                End-to-End Real Estate Advisory
-              </h2>
-              <p className="ll-section-lead" style={{ marginBottom: '1.5rem' }}>
-                Led by independent Real Estate Consultancy, our practice supports acquisition,
-                leasing, investment structuring, development evaluation, and confidential exits.
-              </p>
-              <Link href="/about#services" className="ll-btn ll-btn-outline">
-                <span>Explore Full Service Scope</span>
-                <ArrowUpRightIcon size={15} />
-              </Link>
-            </div>
-
-            <div className="ll-services-grid">
-              {CORE_SERVICES.map((service, index) => (
-                <div
-                  key={service.id}
-                  className={`ll-service-card ${service.featured ? 'featured' : ''}`}
-                >
-                  <div className="ll-service-num">0{index + 1}</div>
-                  <h3 className="ll-service-title">{service.title}</h3>
-                  <p className="ll-service-desc">{service.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ==================== SIGNATURE PROJECTS PREVIEW ==================== */}
-        <section className="ll-section-light">
-          <div className="ll-container">
-            <div className="ll-section-header">
-              <div>
-                <div className="ll-eyebrow">Dubai Developments</div>
-                <h2 className="ll-serif-title ll-section-title">Selected Real Estate Projects</h2>
-                <p className="ll-section-lead">
-                  Institutional insight into upcoming master-planned waterfront and golfside
-                  developments across Dubai.
-                </p>
-              </div>
-              <Link href="/projects" className="ll-link-arrow">
-                <span>Browse All Projects</span>
-                <ArrowUpRightIcon size={15} />
-              </Link>
-            </div>
-
-            <div className="ll-cards-grid">
-              {PROJECTS.map((project) => (
-                <ProjectCard key={project.slug} project={project} />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ==================== EXECUTIVE LEADERSHIP (CEO ONLY, ZERO PEOPLE PHOTOS) ==================== */}
-        <section className="ll-section-muted">
-          <div className="ll-container">
-            <div className="ll-leadership-panel">
-              <div className="ll-leadership-emblem">
-                <img
-                  src="/brand/logo-horizontal-white.png"
-                  alt="LEAP LIVING"
-                  style={{ height: '34px', width: 'auto', alignSelf: 'flex-start' }}
-                />
-                <div>
-                  <div
-                    style={{
-                      fontSize: '0.68rem',
-                      letterSpacing: '0.15em',
-                      textTransform: 'uppercase',
-                      color: 'var(--brand-teal-25)',
-                      marginBottom: '0.45rem',
-                    }}
-                  >
-                    Institutional Leadership
-                  </div>
-                  <div
-                    className="ll-serif-title"
-                    style={{ color: 'var(--white)', fontSize: '1.35rem', lineHeight: 1.3 }}
-                  >
-                    Two Decades Shaping Prime UAE Developments
-                  </div>
-                </div>
-                <div
-                  style={{
-                    borderTop: '1px solid rgba(255,255,255,0.18)',
-                    paddingTop: '0.85rem',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    fontSize: '0.72rem',
-                    color: 'var(--brand-teal-25)',
-                  }}
-                >
-                  <span>Dubai · UAE</span>
-                  <span>Since 2005</span>
-                </div>
-              </div>
-
-              <div>
-                <div className="ll-eyebrow">Executive Leadership</div>
-                <blockquote className="ll-leadership-quote">
-                  &ldquo;Informed decisions create exceptional outcomes. Every property decision
-                  carries financial, strategic, and personal significance. Our responsibility
-                  is to ensure clients have clarity and insight.&rdquo;
-                </blockquote>
-
-                <div className="ll-leadership-meta">
-                  <span className="ll-leadership-name">Mohab Samak</span>
-                  <span className="ll-leadership-title">CEO</span>
-                </div>
-
-                <p className="ll-section-lead" style={{ marginBottom: '1.5rem' }}>
-                  With over two decades of senior leadership across Emaar Properties, Hamptons
-                  International, Coldwell Banker, Engel &amp; Völkers Dubai, D&amp;B Properties,
-                  and Metropolitan Premium Properties, Mohab Samak directs Leap Living with an
-                  emphasis on analytical precision over short-term sales volume.
-                </p>
-
-                <div className="ll-hero-ctas">
-                  <Link href="/about" className="ll-btn ll-btn-primary">
-                    <span>About Leap Living &amp; Leadership</span>
-                    <ArrowUpRightIcon size={15} />
-                  </Link>
-                  <Link href="/contact" className="ll-btn ll-btn-outline">
-                    Request Executive Briefing
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ==================== DEDICATED TOOLS & VALUATION ENTRY BAND ==================== */}
-        <section className="ll-section-dark">
-          <div className="ll-container ll-two-col" style={{ gap: '2.5rem', alignItems: 'center' }}>
-            <div>
-              <div className="ll-eyebrow ll-eyebrow-light">Owner &amp; Buyer Advisory</div>
-              <h2
-                className="ll-serif-title ll-section-title"
-                style={{ color: 'var(--white)', marginBottom: '0.85rem' }}
-              >
-                Free Property Valuation &amp; Mortgage Planning
-              </h2>
-              <p style={{ color: 'var(--brand-teal-25)', fontSize: '0.94rem', lineHeight: 1.7 }}>
-                Whether benchmarking the market value of an existing Dubai asset prior to exit
-                or structuring UAE bank financing prior to acquisition, our dedicated advisory
-                pages provide direct analytical tools and senior consultation.
-              </p>
-            </div>
-
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.85rem', justifyContent: 'flex-end' }}>
-              <Link href="/sell#valuation-form" className="ll-btn ll-btn-primary">
-                <span>Request Free Valuation</span>
-                <ArrowUpRightIcon size={15} />
-              </Link>
-              <Link href="/mortgage" className="ll-btn ll-btn-outline-light">
-                Open Mortgage Calculator
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* ==================== CLIENT PERSPECTIVES ==================== */}
-        <section className="ll-section-light">
-          <div className="ll-container">
-            <div className="ll-section-header">
-              <div>
-                <div className="ll-eyebrow">Client Perspectives</div>
-                <h2 className="ll-serif-title ll-section-title">Private Client Experience</h2>
-              </div>
-              <Link href="/contact" className="ll-link-arrow">
-                <span>Speak With an Advisor</span>
-                <ArrowUpRightIcon size={15} />
-              </Link>
-            </div>
-
-            <div className="ll-cards-grid">
-              {CLIENT_PERSPECTIVES.map((item) => (
-                <div key={item.author} className="ll-testimonial-card">
-                  <p className="ll-testimonial-quote">&ldquo;{item.quote}&rdquo;</p>
-                  <div className="ll-testimonial-author-row">
-                    <span className="ll-monogram" aria-hidden="true">
-                      {item.initials}
-                    </span>
-                    <div>
-                      <div style={{ fontWeight: 700, fontSize: '0.88rem', color: 'var(--heading)' }}>
-                        {item.author}
-                      </div>
-                      <div style={{ fontSize: '0.76rem', color: 'var(--body-text)' }}>
-                        {item.role}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ==================== DEVELOPERS TRUST BAR ==================== */}
-        <section className="ll-section-muted" style={{ padding: '3rem 0' }}>
-          <div className="ll-container">
-            <div
-              style={{
-                textAlign: 'center',
-                fontSize: '0.7rem',
-                fontWeight: 600,
-                letterSpacing: '0.16em',
-                textTransform: 'uppercase',
-                color: 'var(--body-text)',
-                marginBottom: '1.35rem',
-              }}
-            >
-              Developers We Work With Across the UAE
-            </div>
-            <div className="ll-dev-grid">
-              {DEVELOPERS.map((dev) => (
-                <span key={dev} className="ll-dev-badge">
-                  {dev}
-                </span>
-              ))}
             </div>
           </div>
         </section>

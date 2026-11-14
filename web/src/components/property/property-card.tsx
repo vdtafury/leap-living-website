@@ -2,72 +2,81 @@ import Link from 'next/link'
 import type { PropertyListing } from '@/data/catalog'
 import { AreaIcon, ArrowUpRightIcon, BathIcon, BedIcon, MapPinIcon } from '@/components/ui/icons'
 
+const HIGHLIGHT_STATUSES = new Set(['Private Advisory', 'Exclusive Mandate'])
+
 export function PropertyCard({ property }: { property: PropertyListing }) {
+  const href = `/properties/${property.slug}`
+  const segmentLabel = property.segment === 'COMMERCIAL' ? 'Commercial' : 'Residential'
+
   return (
-    <article className="ll-property-card">
-      <Link href={`/properties/${property.slug}`} className="ll-property-media">
-        <img src={property.heroImage} alt={property.title} />
-        <div className="ll-property-media-badges">
+    <article className="ll-card">
+      <Link href={href} className="ll-card-media" tabIndex={-1} aria-hidden="true">
+        <img src={property.heroImage} alt="" loading="lazy" />
+        <span className="ll-card-media-shade" />
+        <div className="ll-card-badges">
           <span
-            className={`ll-card-tag ${
-              property.statusLabel === 'Private Advisory' || property.statusLabel === 'Exclusive Mandate'
-                ? 'll-card-tag-teal'
-                : 'll-card-tag-light'
-            }`}
+            className={`ll-chip ${HIGHLIGHT_STATUSES.has(property.statusLabel) ? 'll-chip-teal' : 'll-chip-glass'}`}
           >
             {property.statusLabel}
           </span>
-          <span className="ll-card-tag ll-card-tag-dark">{property.propertyType}</span>
+          <span className="ll-chip ll-chip-glass">{property.propertyType}</span>
         </div>
-      </Link>
-
-      <div className="ll-property-body">
-        <div className="ll-property-meta-top">
-          <span>{property.refCode}</span>
-          <span>{property.segment}</span>
-        </div>
-
-        <div className="ll-property-price tabular-nums">
-          {property.priceLabel}
-          {property.priceFrequency && (
-            <span className="ll-property-freq"> {property.priceFrequency}</span>
-          )}
-        </div>
-
-        <h3 className="ll-property-title">
-          <Link href={`/properties/${property.slug}`}>{property.title}</Link>
-        </h3>
-
-        <div className="ll-property-location">
+        <div className="ll-card-media-foot">
           <MapPinIcon size={14} />
           <span>
             {property.community}, {property.emirate}
           </span>
         </div>
+      </Link>
 
-        <div className="ll-property-specs">
-          {property.beds > 0 && (
-            <span className="ll-spec-item">
-              <BedIcon size={15} />
-              <span>{property.beds} Beds</span>
-            </span>
-          )}
-          <span className="ll-spec-item">
-            <BathIcon size={15} />
-            <span>{property.baths} Baths</span>
-          </span>
-          <span className="ll-spec-item">
-            <AreaIcon size={15} />
-            <span>{property.areaFormatted}</span>
-          </span>
+      <div className="ll-card-body">
+        <div className="ll-card-kicker">
+          <span>{segmentLabel}</span>
+          <span className="ll-card-kicker-dot" aria-hidden="true" />
+          <span>{property.completionStatus}</span>
         </div>
 
-        <Link href={`/properties/${property.slug}`} className="ll-card-detail-link">
-          <span>View Property Brief</span>
-          <ArrowUpRightIcon size={15} />
-        </Link>
+        <h3 className="ll-card-title">
+          <Link href={href}>{property.title}</Link>
+        </h3>
+
+        <div className="ll-card-price tabular-nums">
+          {property.priceLabel}
+          {property.priceFrequency && (
+            <span className="ll-card-price-freq"> {property.priceFrequency}</span>
+          )}
+        </div>
+
+        <dl className="ll-card-specs">
+          {property.beds > 0 && (
+            <div className="ll-card-spec">
+              <BedIcon size={16} />
+              <dt>Beds</dt>
+              <dd className="tabular-nums">{property.beds}</dd>
+            </div>
+          )}
+          <div className="ll-card-spec">
+            <BathIcon size={16} />
+            <dt>Baths</dt>
+            <dd className="tabular-nums">{property.baths}</dd>
+          </div>
+          <div className="ll-card-spec">
+            <AreaIcon size={16} />
+            <dt>Area</dt>
+            <dd className="tabular-nums">{property.areaFormatted}</dd>
+          </div>
+        </dl>
+
+        <div className="ll-card-foot">
+          <span className="ll-card-ref">{property.refCode}</span>
+          <Link href={href} className="ll-card-cta">
+            <span>View Property Brief</span>
+            <span className="ll-card-cta-icon" aria-hidden="true">
+              <ArrowUpRightIcon size={14} />
+            </span>
+          </Link>
+        </div>
       </div>
     </article>
   )
 }
-

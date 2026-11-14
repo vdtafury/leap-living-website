@@ -40,7 +40,7 @@ Both share one codebase, one database, and the same domain modules. The company 
 
 ## 3. Scope control: grow, don't sprawl
 
-- Work **only on the current phase** in `STATUS.md`. Later-phase ideas go to the backlog in `ROADMAP.md`; do not implement them.
+- Follow the phase order in `ROADMAP.md` and the current focus in `STATUS.md`. Phases are a work order, not gates (`D-20`): the owner may reorder or change scope at any time. Ideas the owner has not requested go to the backlog in `ROADMAP.md`; do not implement them unasked.
 - **Design for extension, build only what is needed now.** Concretely:
   - Put replaceable technical concerns behind small interfaces (storage, email, jobs, search, cache). See the "Extension points" table in `ARCHITECTURE.md`.
   - Build the RBAC engine permission-based from day one. Start with few roles; add roles as **data**, not code changes.
@@ -111,16 +111,18 @@ Do not rely on middleware/proxy alone for authentication: re-check authorization
 
 ## 9. Commands
 
-> Filled in after Phase 0 confirms the stack on the real hosting. Until then do not assume commands exist.
+> Run from `web/`. Local development uses SQLite (`DATABASE_URL="file:./storage/dev.db"` in `web/.env`); the production database is still pending host verification (`D-04`, `INFRASTRUCTURE.md`).
 
 ```
-install:    (TBD)
-dev:        (TBD)
-typecheck:  (TBD)
-lint:       (TBD)
-test:       (TBD)
-build:      (TBD)
-db migrate: (TBD)
+install:    npm ci                  # compiles better-sqlite3; needs python3, make, g++
+generate:   npm run prisma:generate # writes the Prisma client to web/generated (git-ignored)
+dev:        npm run dev
+typecheck:  npm run typecheck
+lint:       npm run lint            # ESLint 9 + eslint-config-next (0 errors required)
+test:       npm run test            # Vitest, files: src/**/*.test.ts
+build:      npm run build
+db migrate: npm run prisma:migrate  # prisma migrate dev
+verify:     BASE=http://localhost:3000 ./scripts/verify.sh   # needs a running server, ImageMagick and `file`
 ```
 
 ## 10. Report format (end of every task)

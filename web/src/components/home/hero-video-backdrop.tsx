@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 
 interface HeroClip {
   src: string
@@ -35,22 +35,27 @@ const HERO_CLIPS: HeroClip[] = [
 ]
 
 const CLIP_DURATION_MS = 9000
+const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)'
+
+function subscribeToReducedMotion(onChange: () => void) {
+  const mq = window.matchMedia(REDUCED_MOTION_QUERY)
+  mq.addEventListener('change', onChange)
+  return () => mq.removeEventListener('change', onChange)
+}
+
+const getReducedMotion = () => window.matchMedia(REDUCED_MOTION_QUERY).matches
+const getReducedMotionOnServer = () => false
 
 export function HeroVideoBackdrop() {
   const [activeIndex, setActiveIndex] = useState(0)
   const [previousIndex, setPreviousIndex] = useState<number | null>(null)
   const [readyClips, setReadyClips] = useState<Record<number, boolean>>({})
-  const [reducedMotion, setReducedMotion] = useState(false)
+  const reducedMotion = useSyncExternalStore(
+    subscribeToReducedMotion,
+    getReducedMotion,
+    getReducedMotionOnServer,
+  )
   const videoRefs = useRef<Array<HTMLVideoElement | null>>([])
-
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setReducedMotion(mq.matches)
-
-    const onChange = (event: MediaQueryListEvent) => setReducedMotion(event.matches)
-    mq.addEventListener('change', onChange)
-    return () => mq.removeEventListener('change', onChange)
-  }, [])
 
   const advanceTo = (nextIdx: number) => {
     setActiveIndex((current) => {
