@@ -8,10 +8,13 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev"
   },
   "dependencies": {
+    "@fontsource/poppins": "5.3.0",
     "@prisma/adapter-better-sqlite3": "7.10.1",
     "@prisma/client": "7.10.1",
     "better-sqlite3": "12.11.1",
@@ -27,8 +30,11 @@
     "@types/node": "24.19.2",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.4.5",
     "prisma": "7.10.1",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vitest": "5.1.0"
   },
   "allowScripts": {
     "@prisma/engines@7.10.1": true,

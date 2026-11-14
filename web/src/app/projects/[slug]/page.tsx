@@ -74,14 +74,11 @@ export default async function ProjectDetailPage({
                 </div>
               </div>
 
-              <div style={{ textAlign: 'right' }}>
-                <div className="ll-field-label" style={{ marginBottom: '0.2rem' }}>
+              <div className="ll-hero-price">
+                <div className="ll-hero-price-label">
                   Guide Pricing
                 </div>
-                <div
-                  className="tabular-nums"
-                  style={{ fontSize: '1.85rem', fontWeight: 700, color: 'var(--dark-teal)' }}
-                >
+                <div className="ll-hero-price-value tabular-nums">
                   {project.startingPriceLabel}
                 </div>
               </div>

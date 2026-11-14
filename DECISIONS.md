@@ -25,6 +25,8 @@ Single place for accepted decisions, open questions, and known contradictions. W
 | D-17 | **CEO Title:** Remove `Founder &` from Mohab Samak's title everywhere; use **`CEO`** only (`Mohab Samak / CEO`) | 2026-11-10 |
 | D-18 | **Header CTA — `Free Valuation` Button:** Add a `Free Valuation` button in the top Header alongside `Private Advisory` | 2026-11-10 |
 | D-19 | **Mortgage Calculator:** Add an interactive Mortgage Calculator section to the website (inspired by Provident Estate) | 2026-11-10 |
+| D-20 | **Project phases:** 6 phases (Phase 0 → Phase 5, `ROADMAP.md`) plus backlog. Owner chose to work continuously until the project is finished, with frequent changes expected; phases are used as a work order only — no fixed milestones, deadlines, or per-phase sign-off. Production deployment still requires explicit written approval | 2026-11-11 |
+| D-21 | **Brand visual layer + self-hosted fonts:** Owner asked to move the site closer to `BRAND GUIDELINES.pdf`. (a) Fonts are self-hosted via `@fontsource/poppins` (no Google Fonts requests). (b) Display titles use **Poppins** (medium, tight tracking) instead of the editorial serif, because the brand identity has no serif and the licensed headline face (Sony Sketch EF) is unavailable. Supersedes the C-14 handling *pending client confirmation*; revert = point `--font-display` in `globals.css` back to a serif and re-add its `@fontsource` import. (c) Brand motifs adopted: deep-teal gradient with cyan glow, thin-line keyhole watermark (`KeyholeMark`), flat teal bands, large faded index numbers, hairline label dividers, glass panels over photography. (d) Every homepage section has a distinct surface so sections read as separate | 2026-11-11 |
 
 ## B. Proposed, pending Phase 0 evidence
 
@@ -86,7 +88,7 @@ Single place for accepted decisions, open questions, and known contradictions. W
 | C-11 | The mock-up says "Explore Verified Properties"; approved design uses "Explore Properties" | Use "Explore Properties" (`D-14`) |
 | C-12 | Benchmark-based model rankings given earlier were inconsistent | Choose the coding model by a small real task |
 | C-13 | **Mission/Vision wording differs** between `BRAND_GUIDELINES.pdf` and `Company + CEO Profile.pdf` | Both preserved in `docs/business/client-content.md`; client to confirm preferred variant |
-| C-14 | Brand PDF specifies **Sony Sketch EF** for headlines while approved homepage uses editorial display serif + **Poppins** | Use Poppins + editorial display serif per approved homepage design (`DESIGN_SYSTEM.md` §4) |
+| C-14 | Brand PDF specifies **Sony Sketch EF** for headlines while approved homepage uses editorial display serif + **Poppins** | **UPDATED (`D-21`):** Poppins used for display titles too (no serif in the identity; Sony Sketch EF unlicensed). Pending client confirmation; one-variable revert documented in D-21 |
 | C-15 | Working tree had duplicate root docs and nested `leap-living-root-files/` tree | **RESOLVED (2026-11-10):** Consolidated into single clean root layout |
 | C-16 | `docs/source-materials/README.md` listed wrong filenames | **RESOLVED (2026-11-10):** Updated to match exact files + extracted vector SVGs |
 | C-17 | `DESIGN_SYSTEM.md` tint values and missing SVG logos | **RESOLVED (2026-11-10):** Exact tint values recorded and 8 vector SVGs extracted from `BRAND GUIDELINES.pdf` |

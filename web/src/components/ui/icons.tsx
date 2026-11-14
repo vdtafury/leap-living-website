@@ -333,3 +333,20 @@ export function YouTubeIcon({ size = 18, ...props }: IconProps) {
   )
 }
 
+
+export function PauseIcon({ size = 14, ...props }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <rect x="6" y="5" width="4" height="14" />
+      <rect x="14" y="5" width="4" height="14" />
+    </svg>
+  )
+}
+
+export function PlayIcon({ size = 14, ...props }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M7 4.5v15l12.5-7.5z" />
+    </svg>
+  )
+}

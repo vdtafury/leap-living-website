@@ -1,8 +1,10 @@
 # ROADMAP.md — LEAP LIVING
 
-Principle: **build the foundation correctly, then grow in vertical slices.** Each phase ends with something working end-to-end and tested. Do not start a phase until the previous one's acceptance criteria are met and the owner approves.
+Principle: **build the foundation correctly, then grow in vertical slices.** Each phase ends with something working end-to-end and tested.
 
-Current phase is recorded in `STATUS.md`.
+**Number of phases: 6 (Phase 0 → Phase 5)** plus an unscheduled backlog. Per `D-20`, the phases are a **work order, not fixed milestones or deadlines**: work continues until the project is finished, the owner may reorder or change scope at any time, and a phase does not need formal sign-off before the next one starts. The safety rules still apply regardless of phase: staging before production, and production only with explicit written approval (`AGENTS.md` §2.3).
+
+Current focus is recorded in `STATUS.md`.
 
 ## Phase 0 — Audit, proof of concept, and pre-meeting design baseline
 **Goal:** know whether the stack can run on Tasjeel before building on it, and prepare the CEO-approved Homepage design with the 6 meeting modifications for review.

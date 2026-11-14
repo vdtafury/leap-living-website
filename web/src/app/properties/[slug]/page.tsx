@@ -80,17 +80,14 @@ export default async function PropertyDetailPage({
                 </div>
               </div>
 
-              <div style={{ textAlign: 'right' }}>
-                <div className="ll-field-label" style={{ marginBottom: '0.2rem' }}>
+              <div className="ll-hero-price">
+                <div className="ll-hero-price-label">
                   {property.transactionType === 'BUY' ? 'Guide Asking Price' : 'Annual Lease'}
                 </div>
-                <div
-                  className="tabular-nums"
-                  style={{ fontSize: '1.9rem', fontWeight: 700, color: 'var(--dark-teal)' }}
-                >
+                <div className="ll-hero-price-value tabular-nums">
                   {property.priceLabel}
                   {property.priceFrequency && (
-                    <span style={{ fontSize: '0.95rem', fontWeight: 500, color: 'var(--body-text)' }}>
+                    <span className="ll-hero-price-freq">
                       {' '}
                       {property.priceFrequency}
                     </span>
