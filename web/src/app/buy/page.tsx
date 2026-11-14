@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export default async function BuyPage({
   searchParams,
 }: {
-  searchParams: Promise<{ community?: string; type?: string; budget?: string }>
+  searchParams: Promise<{ community?: string; type?: string; beds?: string; budget?: string }>
 }) {
   const params = await searchParams
   const saleItems = PROPERTIES.filter((p) => p.transactionType === 'BUY')
@@ -49,6 +49,7 @@ export default async function BuyPage({
               items={saleItems}
               initialCommunity={params.community ?? 'ALL'}
               initialType={params.type ?? 'ALL'}
+              initialBeds={params.beds ?? 'ALL'}
               initialBudget={params.budget ?? 'ALL'}
             />
           </div>

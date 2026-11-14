@@ -519,12 +519,15 @@ button, input, select, textarea {
 /* ==================== CINEMATIC FULL-BLEED HERO ==================== */
 .ll-hero {
   position: relative;
+  z-index: 5; /* lets search popovers float above the next section */
   background-color: #143638;
-  padding: 9rem 0 8rem;
-  overflow: hidden;
-  min-height: 675px;
   display: flex;
-  align-items: center;
+  align-items: stretch;
+  /* Full-screen on every device, capped so very tall portrait screens
+     still hint at the section below. Content can always grow past it. */
+  min-height: min(100vh, 1120px);
+  min-height: min(100svh, 1120px);
+  padding: calc(82px + clamp(1.25rem, 5vh, 4.5rem)) 0 clamp(1.5rem, 5vh, 3.75rem);
 }
 
 .ll-hero-backdrop {
@@ -582,9 +585,14 @@ button, input, select, textarea {
   pointer-events: none;
 }
 
-.ll-hero-grid {
+.ll-hero-inner {
   position: relative;
   z-index: 4;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(1.5rem, 5.5vh, 3.5rem);
 }
 
 .ll-hero-content {
@@ -594,7 +602,7 @@ button, input, select, textarea {
 
 .ll-hero-title {
   font-family: var(--font-serif);
-  font-size: clamp(2.75rem, 4.6vw, 4.15rem);
+  font-size: clamp(2.4rem, min(4.6vw, 7.4vh), 4.15rem);
   font-weight: 600;
   line-height: 1.05;
   color: var(--white);
@@ -610,7 +618,7 @@ button, input, select, textarea {
   font-size: 1rem;
   color: rgba(255, 255, 255, 0.88);
   max-width: 510px;
-  margin-bottom: 2.1rem;
+  margin-bottom: clamp(1.25rem, 3.4vh, 2.1rem);
   line-height: 1.72;
 }
 
@@ -618,73 +626,6 @@ button, input, select, textarea {
   display: flex;
   flex-wrap: wrap;
   gap: 0.85rem;
-}
-
-/* ==================== SEARCH BAR ==================== */
-.ll-search-section {
-  margin-top: -3.5rem;
-  position: relative;
-  z-index: 20;
-  margin-bottom: 0;
-  --search-overlap: 3.5rem;
-  /* Lower half matches the top of the section below (developer network
-     light-glass section, scrim starts at solid #F3F6F5) so the search box straddles the
-     hero and that section seamlessly. */
-  background: linear-gradient(180deg, transparent 0 var(--search-overlap), #F3F6F5 var(--search-overlap) 100%);
-}
-
-.ll-search-shell {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.ll-search-tabs-bar {
-  display: inline-flex;
-  background-color: rgba(245, 247, 246, 0.94);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  border-bottom: none;
-  border-radius: var(--radius-md) var(--radius-md) 0 0;
-  overflow: hidden;
-}
-
-.ll-search-tab {
-  padding: 0.72rem 1.75rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  border: none;
-  background: transparent;
-  color: var(--heading);
-  cursor: pointer;
-  transition: background-color 0.18s ease, color 0.18s ease;
-}
-
-.ll-search-tab.active {
-  background-color: var(--brand-teal);
-  color: var(--white);
-}
-
-.ll-search-tab:not(.active):hover {
-  background-color: var(--white);
-  color: var(--dark-teal);
-}
-
-.ll-search-panel {
-  width: 100%;
-  background-color: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  border-radius: 0 var(--radius-md) var(--radius-md) var(--radius-md);
-  box-shadow: 0 26px 60px rgba(7, 43, 45, 0.28);
-  padding: 1.5rem 1.7rem;
-}
-
-.ll-search-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr 1fr auto;
-  gap: 1rem;
-  align-items: end;
 }
 
 .ll-field-label {
@@ -726,10 +667,6 @@ button, input, select, textarea {
   color: var(--heading);
   outline: none;
   cursor: pointer;
-}
-
-.ll-search-submit {
-  height: 43px;
 }
 
 /* ==================== 4-PILLAR CREDENTIALS BAR ==================== */
@@ -2711,25 +2648,9 @@ button, input, select, textarea {
   .ll-services-grid {
     grid-template-columns: repeat(3, 1fr);
   }
-  .ll-search-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-  .ll-search-submit {
-    grid-column: 1 / -1;
-  }
 }
 
 @media (max-width: 960px) {
-  .ll-hero {
-    min-height: 560px;
-    padding: 7.25rem 0 5.5rem;
-  }
-  .ll-search-section {
-    margin-top: -2.25rem;
-    --search-overlap: 2.25rem;
-  }
-  .ll-hero-grid,
-  .ll-search-grid,
   .ll-stats-grid,
   .ll-cards-grid,
   .ll-services-catalog-grid,
@@ -2776,19 +2697,6 @@ button, input, select, textarea {
 }
 
 @media (max-width: 600px) {
-  .ll-search-section {
-    margin-top: -1.75rem;
-    --search-overlap: 1.75rem;
-  }
-  .ll-search-tabs-bar {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-  }
-  .ll-search-tab {
-    padding: 0.65rem 0.5rem;
-    text-align: center;
-  }
   .ll-stats-grid {
     grid-template-columns: 1fr;
   }
@@ -3018,5 +2926,651 @@ button, input, select, textarea {
 @media (max-width: 600px) {
   .ll-two-col {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ==========================================================================
+   HERO SEARCH: integrated glass search inside the full-screen hero
+   (.ll-hs-*). Fully responsive by width AND height.
+   ========================================================================== */
+.ll-hs {
+  position: relative;
+  width: 100%;
+  padding: clamp(0.6rem, 1.2vw, 0.95rem);
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.06) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    0 30px 80px rgba(3, 24, 26, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  backdrop-filter: blur(22px) saturate(140%);
+  color: var(--white);
+}
+
+.ll-hs-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.1rem 0.15rem 0.75rem;
+}
+
+/* Segmented Buy / Rent / Commercial with a sliding teal thumb */
+.ll-hs-modes {
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(4, 30, 32, 0.34);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.ll-hs-mode-thumb {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc((100% - 8px) / 3);
+  border-radius: 999px;
+  background: var(--brand-teal);
+  box-shadow: 0 6px 18px rgba(var(--brand-teal-rgb), 0.45);
+  transform: translateX(calc(var(--mode-index, 0) * 100%));
+  transition: transform 0.38s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.ll-hs-mode {
+  position: relative;
+  z-index: 1;
+  min-width: 6.4rem;
+  padding: 0.55rem 1.1rem;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.74);
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+
+.ll-hs-mode:hover,
+.ll-hs-mode.is-active {
+  color: var(--white);
+}
+
+.ll-hs-mode:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 1px;
+}
+
+.ll-hs-aux {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.ll-hs-aux:hover {
+  color: var(--white);
+}
+
+/* The bar: fields separated by hairlines + teal submit */
+.ll-hs-bar {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 0.85fr) minmax(0, 1.1fr)
+    auto;
+  align-items: stretch;
+  padding: 6px;
+  border-radius: 16px;
+  background: rgba(6, 32, 34, 0.34);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.ll-hs-field {
+  position: relative;
+  min-width: 0;
+  padding: 0.7rem 1.15rem 0.72rem;
+  border-radius: 12px;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ll-hs-field + .ll-hs-field::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 24%;
+  bottom: 24%;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.16);
+  transition: opacity 0.2s ease;
+}
+
+.ll-hs-field:hover:not(.is-disabled),
+.ll-hs-field.is-open {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ll-hs-field:hover::before,
+.ll-hs-field.is-open::before,
+.ll-hs-field:hover + .ll-hs-field::before,
+.ll-hs-field.is-open + .ll-hs-field::before {
+  opacity: 0;
+}
+
+.ll-hs-field:has(.ll-hs-trigger:focus-visible) {
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.55);
+}
+
+.ll-hs-field.is-disabled {
+  opacity: 0.5;
+}
+
+.ll-hs-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ll-hs-label svg {
+  flex-shrink: 0;
+  color: var(--brand-teal-50);
+}
+
+.ll-hs-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  margin-top: 0.3rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--white);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+}
+
+/* The whole field is the hit area */
+.ll-hs-trigger::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.ll-hs-trigger:disabled {
+  cursor: not-allowed;
+}
+
+.ll-hs-value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ll-hs-chevron {
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.7);
+  transition: transform 0.25s ease;
+}
+
+.ll-hs-field.is-open .ll-hs-chevron {
+  transform: rotate(180deg);
+}
+
+/* Popover: solid light glass for perfect legibility over video */
+.ll-hs-pop {
+  position: absolute;
+  z-index: 60;
+  top: calc(100% + 12px);
+  left: 0;
+  width: max(100%, 248px);
+  padding: 6px;
+  border-radius: 14px;
+  /* Solid on purpose: nested backdrop-filters inside the glass panel
+     let the hero copy bleed through in Chromium. */
+  background: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 24px 60px rgba(3, 24, 26, 0.32);
+  color: var(--heading);
+  isolation: isolate;
+  animation: ll-hs-pop-in 0.18s ease-out;
+}
+
+.ll-hs-pop.is-up {
+  top: auto;
+  bottom: calc(100% + 12px);
+  animation-name: ll-hs-pop-in-up;
+}
+
+@keyframes ll-hs-pop-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes ll-hs-pop-in-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.ll-hs-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 4px;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--brand-teal);
+}
+
+.ll-hs-filter input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  font-size: 0.88rem;
+  color: var(--heading);
+}
+
+.ll-hs-options {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: min(300px, 46vh);
+  overflow-y: auto;
+  outline: none;
+  overscroll-behavior: contain;
+}
+
+.ll-hs-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.64rem 0.8rem;
+  border-radius: 9px;
+  font-size: 0.88rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+
+.ll-hs-option.is-active {
+  background: var(--brand-teal-10);
+}
+
+.ll-hs-option.is-selected {
+  color: var(--dark-teal);
+  font-weight: 600;
+}
+
+.ll-hs-option svg {
+  color: var(--brand-teal);
+  flex-shrink: 0;
+}
+
+.ll-hs-empty {
+  padding: 0.75rem 0.8rem;
+  font-size: 0.85rem;
+  color: var(--body-text);
+}
+
+.ll-hs-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 56px;
+  margin-left: 6px;
+  padding: 0 1.9rem;
+  border: none;
+  border-radius: 12px;
+  background: var(--brand-teal);
+  color: var(--white);
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 10px 26px rgba(var(--brand-teal-rgb), 0.42);
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ll-hs-submit:hover {
+  background: #318D90;
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(var(--brand-teal-rgb), 0.5);
+}
+
+.ll-hs-submit:active {
+  transform: none;
+}
+
+.ll-hs-submit:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 2px;
+}
+
+/* Popular communities */
+.ll-hs-quick {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.8rem 0.2rem 0.1rem;
+  min-width: 0;
+}
+
+.ll-hs-quick-label {
+  flex-shrink: 0;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.ll-hs-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.ll-hs-chip {
+  flex-shrink: 0;
+  padding: 0.34rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.78rem;
+  font-weight: 400;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.ll-hs-chip:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: var(--white);
+}
+
+/* Fallback for browsers without backdrop-filter: deeper tint keeps contrast */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .ll-hs {
+    background: rgba(10, 52, 54, 0.82);
+  }
+}
+
+/* ---------- Width breakpoints ---------- */
+
+/* Tablet: 2-column tiles, full-width submit */
+@media (max-width: 900px) {
+  .ll-hs-bar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    padding: 0;
+    background: transparent;
+    border: none;
+  }
+  .ll-hs-field {
+    background: rgba(6, 32, 34, 0.36);
+    border: 1px solid rgba(255, 255, 255, 0.13);
+  }
+  .ll-hs-field + .ll-hs-field::before {
+    display: none;
+  }
+  .ll-hs-submit {
+    grid-column: 1 / -1;
+    margin-left: 0;
+    min-height: 54px;
+  }
+}
+
+/* Phone: location full width, budget + search share the last row */
+@media (max-width: 600px) {
+  .ll-hs {
+    border-radius: 18px;
+  }
+  .ll-hs-top {
+    padding-bottom: 0.6rem;
+  }
+  .ll-hs-modes {
+    width: 100%;
+  }
+  .ll-hs-mode {
+    min-width: 0;
+    padding: 0.6rem 0.4rem;
+  }
+  .ll-hs-aux {
+    display: none;
+  }
+  .ll-hs-f-location {
+    grid-column: 1 / -1;
+  }
+  .ll-hs-field {
+    padding: 0.62rem 0.9rem 0.66rem;
+  }
+  .ll-hs-trigger {
+    font-size: 0.9rem;
+  }
+  .ll-hs-submit {
+    grid-column: auto;
+    min-height: 0;
+    padding: 0 1rem;
+  }
+  .ll-hs-pop {
+    width: max(100%, 220px);
+  }
+  /* Right-column field: anchor its popover to the right edge */
+  .ll-hs-f-beds .ll-hs-pop {
+    left: auto;
+    right: 0;
+  }
+  /* Chips become a single swipeable row */
+  .ll-hs-quick {
+    padding-top: 0.7rem;
+  }
+  .ll-hs-quick-label {
+    display: none;
+  }
+  .ll-hs-chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent);
+    mask-image: linear-gradient(90deg, #000 85%, transparent);
+  }
+  .ll-hs-chips::-webkit-scrollbar {
+    display: none;
+  }
+  /* On phones the search is the primary action: drop the duplicate CTAs */
+  .ll-hero-ctas {
+    display: none;
+  }
+  .ll-hero-desc {
+    margin-bottom: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+.ll-hs-label-short {
+  display: none;
+}
+
+/* Very narrow phones: tighter labels so "Property type" never clips */
+@media (max-width: 400px) {
+  .ll-hs-label-full {
+    display: none;
+  }
+  .ll-hs-label-short {
+    display: inline;
+  }
+  .ll-hs-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.07em;
+    gap: 0.3rem;
+  }
+  .ll-hs-field {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
+/* ---------- Height breakpoints (short laptop / landscape screens) ---------- */
+
+@media (min-width: 901px) and (max-height: 820px) {
+  .ll-hero-ctas {
+    display: none; /* the search is the primary action on short screens */
+  }
+  .ll-hero-title {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (min-width: 901px) and (max-height: 720px) {
+  .ll-hero {
+    padding-top: calc(82px + 0.75rem);
+    padding-bottom: 1.25rem;
+  }
+  .ll-hero-inner {
+    gap: 1.25rem;
+  }
+  .ll-hero .ll-eyebrow {
+    margin-bottom: 0.6rem;
+  }
+  .ll-hero-title {
+    font-size: clamp(2.2rem, 6.6vh, 3.4rem);
+    margin-bottom: 0.75rem;
+  }
+  .ll-hero-desc {
+    margin-bottom: 0;
+    line-height: 1.6;
+  }
+  .ll-hs-top {
+    padding-bottom: 0.55rem;
+  }
+  .ll-hs-field {
+    padding-top: 0.55rem;
+    padding-bottom: 0.58rem;
+  }
+  .ll-hs-submit {
+    min-height: 50px;
+  }
+  .ll-hs-quick {
+    padding-top: 0.6rem;
+  }
+}
+
+@media (min-width: 901px) and (max-height: 620px) {
+  .ll-hero-desc {
+    display: none;
+  }
+  .ll-hs-quick {
+    display: none;
+  }
+}
+
+/* Small / short phones (e.g. 360x640): keep the headline + search only */
+@media (max-width: 600px) and (max-height: 700px) {
+  .ll-hero {
+    padding-top: calc(82px + 0.75rem);
+  }
+  .ll-hero .ll-eyebrow,
+  .ll-hero-desc {
+    display: none;
+  }
+  .ll-hero-title {
+    margin-bottom: 0;
+  }
+  .ll-hero-inner {
+    gap: 1.1rem;
+  }
+}
+
+/* Phones in landscape: one compact row, hero text trimmed to the essentials */
+@media (max-height: 520px) and (orientation: landscape) {
+  .ll-hero {
+    padding-top: calc(72px + 1rem);
+  }
+  .ll-hero-inner {
+    gap: 1rem;
+  }
+  .ll-hero-title {
+    font-size: clamp(1.8rem, 9vh, 2.4rem);
+    margin-bottom: 0.25rem;
+  }
+  .ll-hero-title span {
+    display: inline;
+    margin-left: 0.25em;
+  }
+  .ll-hero-desc,
+  .ll-hero-ctas,
+  .ll-hs-quick,
+  .ll-hs-aux {
+    display: none;
+  }
+  .ll-hs-top {
+    padding-bottom: 0.5rem;
+  }
+  .ll-hs-bar {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+  }
+  .ll-hs-f-location {
+    grid-column: auto;
+  }
+  .ll-hs-field {
+    padding: 0.5rem 0.75rem;
+  }
+  .ll-hs-submit {
+    grid-column: auto;
+    min-height: 0;
+    padding: 0 1.1rem;
+  }
+  .ll-hs-submit span {
+    display: none;
+  }
+  .ll-hs-pop {
+    width: max(100%, 220px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ll-hs-mode-thumb,
+  .ll-hs-submit,
+  .ll-hs-chevron {
+    transition: none;
+  }
+  .ll-hs-pop {
+    animation: none;
   }
 }

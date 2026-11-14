@@ -160,7 +160,7 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 
 ### 7.6 Homepage section order
 
-1. Hero (video) + search (the box straddles the hero and the next section)
+1. Full-screen hero (video) with the glass search **inside** it (see 7.7)
 2. `01` Developer Network: light glass logo marquee
 3. `02` Featured Properties: light
 4. `03` Advisory Scope: gradient bento
@@ -171,3 +171,29 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 9. Institutional Pillars (21+ Years, AED 12B+, ...): teal stats band
 10. Footer
 
+### 7.7 Hero search (`ll-hs-*`)
+
+The search lives inside the hero (`.ll-hero-inner` = hero copy + `<HeroSearchBar />`). There is no separate search band any more.
+
+- **Hero size:** `min-height: min(100svh, 1120px)`, so it fills the screen on every device but is capped on very tall portrait screens. Padding and gaps use `vh` clamps; content can always grow past the minimum.
+- **Panel:** frosted glass (`rgba(255,255,255,.15→.06)`, `blur(22px) saturate(140%)`, 1px white/22% border, 22px radius). Falls back to deep teal `rgba(10,52,54,.82)` where `backdrop-filter` is unsupported.
+- **Modes:** segmented Buy / Rent / Commercial pill with a sliding teal thumb (`--mode-index`).
+- **Bar:** Location (searchable) · Property type · Bedrooms · Price (Annual budget in Rent). Fields are separated by hairlines; the whole field is the click target. Commercial locks type and beds.
+- **Dropdowns (`HeroSelect`):** custom button + listbox (WAI-ARIA). Keyboard: arrows, Home/End, type-ahead, Enter, Escape, Tab. Opens upward when there is less than 300px below. The popover is **solid white**, because nested `backdrop-filter` lets the copy bleed through.
+- **Submit:** teal, 56px tall, magnifier icon.
+- **Quick chips:** "Popular" communities taken from the catalogue for the current mode, so a chip never leads to an empty result.
+- **Routing:** `/buy` or `/rent` with `community`, `type`, `beds`, `budget`; listing pages pre-fill all four (`initialBeds`).
+
+| Viewport | Layout |
+|---|---|
+| > 900px | single-row bar, hairline dividers |
+| ≤ 900px | 2-column tiles, full-width Search |
+| ≤ 600px | Location full width; Type + Beds; Price + Search; chips swipe in one row; hero CTAs hidden; description clamped to 3 lines |
+| ≤ 400px | shorter "Type" label, tighter field padding |
+| desktop, height ≤ 820px | hero CTAs hidden (search is the primary action) |
+| desktop, height ≤ 720px | compact spacing and title |
+| desktop, height ≤ 620px | description and chips hidden |
+| phone, height ≤ 700px | eyebrow and description hidden |
+| landscape, height ≤ 520px | title on one line; 4 fields + icon-only Search in one row |
+
+Verified with no horizontal overflow, and with the panel fully in view, at 1920×1080, 1440×900, 1366×650, 1280×600, 1024×1366, 768×1024, 390×844, 360×640 and 844×390.
