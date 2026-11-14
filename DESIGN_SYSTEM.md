@@ -60,8 +60,8 @@ It is essential to distinguish between **Core Brand Colors** and **Supporting We
 ## 4. Typography
 
 - **Body & UI Typeface:** **Poppins** (Light 300, Regular 400, Medium 500, SemiBold 600, Bold 700) — confirmed in `BRAND GUIDELINES.pdf` (p. 19) and company documents.
-- **Editorial Display / Headlines:** The CEO-approved homepage design pairs clean geometric sans-serif UI/subtitles with an editorial serif display font (`Playfair Display` / `Cormorant Garamond` style) for major section titles (`Unlock your next move`, `Featured Properties`, `End-to-End Real Estate Advisory`, `What Our Clients Say`).
-  *(Note: `BRAND GUIDELINES.pdf` p. 18 also mentions `Sony Sketch EF` for signage/headlines, which has an unverified commercial licence — see `DECISIONS.md` C-14).*
+- **Display / Headlines:** **Poppins Medium 500** with tight tracking (`-0.025em`), exposed as `--font-display` (`--font-serif` is kept as an alias for old selectors). The brand identity has no serif, and its headline face `Sony Sketch EF` has no available licence (`DECISIONS.md` D-21, C-14). Quotes use Poppins Light 300, upright.
+- **Loading:** self-hosted through `@fontsource/poppins` (300–700) imported in `web/src/app/layout.tsx`. No requests to Google Fonts.
 
 ## 5. Approved Homepage Baseline & The 6 Mandatory Meeting Modifications
 
@@ -96,3 +96,51 @@ The CEO approved the second homepage design (`docs/source-materials/homepage-app
 - Mobile-first responsive grid (desktop, tablet, mobile).
 - Core interactive states required on all controls: hover, focus-visible ring, active, disabled, loading, empty, and confirmation states.
 - WCAG 2.2 AA baseline: keyboard operability, labelled controls, semantic landmarks.
+
+## 7. Brand Visual Layer (D-21)
+
+All tokens live at the top of `web/src/app/globals.css`; the brand layer is appended after the base styles.
+
+### 7.1 Tokens
+
+| Token | Value / purpose |
+|---|---|
+| `--brand-deep` | `#0A3436`, the deepest teal, used at the dark end of gradients |
+| `--brand-gradient` | cyan radial glow bottom-left over a 125° teal → near-black gradient (brand PDF cover/backgrounds) |
+| `--teal-band` | flat `#3B9EA1` band for stats and CTAs |
+| `--keyhole-white` | data-URI thin-line keyhole for CSS backgrounds |
+| `--radius-sm/md/lg` | 4 / 12 / 18 px. Cards and panels use `md` |
+| `--shadow-card`, `--shadow-card-hover` | the single shadow language for every card and panel |
+
+### 7.2 Section system (sections must read as separate)
+
+Each section gets one surface class. Adjacent sections must never share a surface.
+
+| Class | Surface | Used for |
+|---|---|---|
+| `ll-section-light` | white | default content |
+| `ll-section-muted` | `#F5F7F6` | alternating content |
+| `ll-section-grey` | neutral-grey wash + faint keyhole | listings blocks |
+| `ll-section-teal` | flat teal band, white text | CTA bands (`ll-cta-band`) |
+| `ll-section-gradient` | `--brand-gradient`, white text | featured/service blocks |
+| `ll-section-image` | photo (`.ll-section-image-bg`) + teal scrim + glass panel | leadership/editorial, same language as the footer |
+| `ll-section-dark` | gradient, white text | forms on dark (Sell valuation) |
+
+Dark surfaces automatically re-colour titles, leads, eyebrows, link arrows and checklist ticks. Inner-page heroes (`ll-page-hero`) use the brand gradient + keyhole watermark; detail pages show the price in a glass `.ll-hero-price` panel.
+
+### 7.3 Labels & motifs
+
+- `ll-eyebrow-num`: index number + hairline + label, e.g. `01 | CURATED PORTFOLIO ——`.
+- `KeyholeMark` (`web/src/components/ui/keyhole-mark.tsx`): inline SVG of the logo keyhole (circle r 62.5, viewBox 132), `aria-hidden`. Positioned with `.ll-keyhole` plus a variant (`-stats`, `-grey`, `-teal-band`, `-services`, `-tile`, `-emblem`). Watermark only: never recoloured, distorted, or used in place of the logo.
+- Large faded index numbers (`.ll-service-bignum`) in the services bento.
+
+### 7.4 Cards (`ll-card-*`)
+
+Shared shell for `PropertyCard` and `ProjectCard`:
+
+1. **Media** (`.ll-card-media`): photo with a bottom shade, status chip (teal for `Private Advisory` / `Exclusive Mandate` / project status, glass otherwise), type/developer chip, and location in the media foot.
+2. **Body**: kicker (segment · completion), title, price (with frequency for rentals), then either `ll-card-specs` (beds/baths/area with icons, beds hidden when 0) or `ll-card-facts` (handover + payment plan) for projects.
+3. **Foot**: reference code + `View Property Brief` / `Explore Development` CTA with a circular arrow.
+
+Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows), `ll-quote-card` (quote mark, text, monogram + author/role), and panels (`ll-form-card`, `ll-key-specs-box`, `ll-mortgage-shell`, `ll-filter-bar`, `ll-leadership-panel`). All use `--radius-md` + `--shadow-card`.
+

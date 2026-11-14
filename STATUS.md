@@ -8,11 +8,11 @@
 
 ## Last updated
 
-2026-11-11 — by: Arena agent (development environment set up end-to-end; ESLint + Vitest added; review findings recorded below)
+2026-11-11 — by: Arena agent (brand-aligned visual redesign, D-21: brand gradient/keyhole/teal-band section system, glass layers, rebuilt property & project cards, Poppins display type, self-hosted fonts, mobile overflow fixes)
 
 ### Previous update
 
-2026-11-11 — by: Antigravity (renamed `poc/` → `web/`, removed duplicate root PDFs and mockup crops, restored horizontal/stacked/mark/wordmark logo assets strictly from client `leap-living-logo.png`, sourced 11 high-res architectural photos from Unsplash/Wikimedia, built dedicated multi-page routes `/`, `/buy`, `/rent`, `/sell`, `/projects`, `/projects/[slug]`, `/properties/[slug]`, `/mortgage`, `/about`, `/contact`, and verified `tsc`, `next build`, and all automated HTTP checks)
+2026-11-11 — by: Arena agent (development environment set up end-to-end; ESLint + Vitest added; review findings recorded below)
 
 ## State of the repository
 
@@ -38,6 +38,8 @@
 - [x] Implemented Provident-inspired multi-page navigation and dedicated detail routes (`/buy`, `/rent`, `/sell`, `/projects`, `/projects/[slug]`, `/properties/[slug]`, `/mortgage`, `/about`, `/contact`)
 - [x] Verified Prisma Client generation, TypeScript strict check (`tsc --noEmit`), and Next.js production build (`next build`)
 - [x] Added interactive [`ImageGallery`](web/src/components/ui/image-gallery.tsx) on property and project detail pages
+- [x] Brand visual layer (D-21): section surfaces, keyhole watermark, glass panels, rebuilt `PropertyCard`/`ProjectCard`, Poppins display type, self-hosted fonts (`DESIGN_SYSTEM.md` §7)
+- [x] Fixed mobile horizontal overflow on detail pages and `/mortgage` (grid `minmax(0, 1fr)`)
 - [x] Connected GitHub repository (`https://github.com/vdtafury/leap-living-website.git`, branch `feat/multi-page-platform`)
 
 ## Open review findings (2026-11-11, not yet fixed — need owner decision)
@@ -59,6 +61,8 @@
 
 1. Review the multi-page website (`web/`) with the client/CEO and open/merge PR from `feat/multi-page-platform` to `main` once approved.
 2. Obtain Tasjeel cPanel / SSH / MySQL credentials to complete Phase 0 host verification (`INFRASTRUCTURE.md`) and proceed into Phase 1 Admin CMS/CRM & persistent inquiry database writes.
+
+- Client to confirm the D-21 typography change (Poppins display vs. the serif in the approved homepage design).
 
 ## Blocked / waiting on client & environment
 
@@ -82,3 +86,4 @@
 | 2026-11-11 | Antigravity | Redesigned Footer to deep dark architectural teal (`#0B353A`) with internet-sourced glass skyscraper facade (`footer-glass-facade.jpg`), 5 vertical-divided columns (`Brand/Contact/Socials`, `Explore`, `Properties`, `Information`, `Location`), preserving all existing links and contact details | `tsc` PASS, `next build` PASS, `verify.sh` 47/47 PASS |
 | 2026-11-11 | Arena agent | Reviewed project + homepage (desktop/mobile screenshots); installed deps (native `better-sqlite3` build), generated Prisma client, created local SQLite DB; added ESLint 9.39.5 + `eslint-config-next` 16.4.5 + Vitest 5.1.0 with `lint`/`test` scripts and first unit tests (`validation`, `safeJoin`); fixed `react-hooks/set-state-in-effect` error in `HeroVideoBackdrop` via `useSyncExternalStore`; filled `AGENTS.md` §9 commands | `typecheck` PASS, `lint` PASS (0 errors, 14 `<img>` warnings), `test` PASS 5/5, `next build` PASS, `verify.sh` 46/47 (only failure: `file` utility missing in sandbox; JPEG magic bytes confirmed manually) |
 | 2026-11-11 | Arena agent | Recorded project phase count: 6 phases (0 → 5) + backlog, used as a flexible work order per owner (`D-20`); updated `ROADMAP.md` principle and `AGENTS.md` §3 | Documentation only |
+| 2026-11-11 | Arena agent | Brand-aligned redesign (D-21): brand gradient, teal bands, keyhole watermark, glass-over-photo leadership section, numbered eyebrows, services bento, rebuilt property/project/quote cards, Poppins display titles, self-hosted fonts, detail-hero price panel, mobile overflow fixes. Visually checked at 1440px and 390px | `tsc` PASS, lint 0 errors (14 `<img>` warnings), tests 5/5, `next build` PASS, `verify.sh` 46/47 (only the known missing `file` utility check fails) |
