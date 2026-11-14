@@ -388,3 +388,23 @@ export function ChevronDownIcon({ size = 14, ...props }: IconProps) {
     </svg>
   )
 }
+
+export function ArrowLeftIcon({ size = 16, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.65}
+      strokeLinecap="square"
+      strokeLinejoin="miter"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M19 12H5" />
+      <path d="m11 6-6 6 6 6" />
+    </svg>
+  )
+}

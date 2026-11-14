@@ -3603,3 +3603,191 @@ button, input, select, textarea {
 .ll-hero .ll-eyebrow::after {
   background-color: var(--brand-teal);
 }
+
+/* ==========================================================================
+   PROPERTY CAROUSEL (homepage featured properties)
+   ========================================================================== */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ll-carousel {
+  --carousel-gap: 1.75rem;
+  --carousel-per-view: 3;
+  position: relative;
+}
+
+.ll-carousel-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.ll-carousel-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.ll-carousel-count {
+  min-width: 4.5rem;
+  margin-right: 0.35rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--heading);
+  text-align: right;
+}
+
+.ll-carousel-count-total {
+  font-weight: 400;
+  color: var(--body-text);
+}
+
+.ll-carousel-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  background: var(--white);
+  color: var(--dark-teal);
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(16, 42, 44, 0.06);
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease,
+    transform 0.2s ease, opacity 0.2s ease;
+}
+
+.ll-carousel-btn:hover:not(:disabled) {
+  background: var(--brand-teal);
+  border-color: var(--brand-teal);
+  color: var(--white);
+  transform: translateY(-1px);
+}
+
+.ll-carousel-btn:focus-visible {
+  outline: 2px solid var(--brand-teal);
+  outline-offset: 3px;
+}
+
+.ll-carousel-btn:disabled {
+  opacity: 0.38;
+  cursor: default;
+  box-shadow: none;
+}
+
+/* Native scroll-snap track: swipe, trackpad and keyboard all work */
+.ll-carousel-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc(
+    (100% - (var(--carousel-per-view) - 1) * var(--carousel-gap)) / var(--carousel-per-view)
+  );
+  column-gap: var(--carousel-gap);
+  list-style: none;
+  margin: -8px -12px -28px;
+  padding: 8px 12px 28px; /* room for card lift + shadow inside the scroller */
+  scroll-padding-inline: 12px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ll-carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+.ll-carousel-slide {
+  display: flex;
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+.ll-carousel-slide > .ll-card {
+  flex: 1;
+  min-width: 0;
+}
+
+.ll-carousel-progress {
+  position: relative;
+  height: 2px;
+  margin-top: 2.25rem;
+  border-radius: 2px;
+  background: var(--border-subtle);
+  overflow: hidden;
+}
+
+.ll-carousel-progress-thumb {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  background: var(--brand-teal);
+  transition: transform 0.15s linear, width 0.2s ease;
+}
+
+@media (max-width: 1120px) {
+  .ll-carousel {
+    --carousel-per-view: 2;
+    --carousel-gap: 1.25rem;
+  }
+}
+
+.ll-label-short {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .ll-carousel {
+    --carousel-gap: 1rem;
+  }
+  .ll-carousel .ll-label-long {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+  .ll-carousel .ll-label-short {
+    display: inline;
+  }
+  .ll-carousel-actions {
+    flex-wrap: nowrap;
+  }
+  /* One card with a peek of the next to invite swiping */
+  .ll-carousel-track {
+    grid-auto-columns: calc(100% - 2.75rem);
+  }
+  .ll-carousel-actions {
+    width: 100%;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .ll-carousel-btn {
+    width: 44px;
+    height: 44px;
+  }
+  .ll-carousel-progress {
+    margin-top: 1.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ll-carousel-btn,
+  .ll-carousel-progress-thumb {
+    transition: none;
+  }
+}
