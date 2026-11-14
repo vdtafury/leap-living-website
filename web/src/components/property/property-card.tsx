@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { PropertyListing } from '@/data/catalog'
+import { ResponsiveImg } from '@/components/ui/responsive-img'
 import { AreaIcon, ArrowUpRightIcon, BathIcon, BedIcon, MapPinIcon } from '@/components/ui/icons'
 
 const HIGHLIGHT_STATUSES = new Set(['Private Advisory', 'Exclusive Mandate'])
@@ -11,7 +12,10 @@ export function PropertyCard({ property }: { property: PropertyListing }) {
   return (
     <article className="ll-card">
       <Link href={href} className="ll-card-media" tabIndex={-1} aria-hidden="true">
-        <img src={property.heroImage} alt="" loading="lazy" />
+        <ResponsiveImg
+          src={property.heroImage}
+          sizes="(max-width: 700px) 92vw, (max-width: 1120px) 46vw, 400px"
+        />
         <span className="ll-card-media-shade" />
         <div className="ll-card-badges">
           <span
