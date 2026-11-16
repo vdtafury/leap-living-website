@@ -20,6 +20,13 @@ const HERO_CLIPS = [
   'coastal-yacht-bay',
 ]
 
+/**
+ * Official client hero reel provided by the client (1080p, sunny daylight Dubai aerials).
+ * If present and available, it takes priority and loops continuously.
+ * Otherwise, the component smoothly falls back to the multi-clip rotation above.
+ */
+const CLIENT_HERO_VIDEO = '/videos/client-hero-faststart.mp4'
+
 type Rendition = '1280' | '854'
 
 const clipSrc = (name: string, rendition: Rendition) => `/videos/hero/${name}-${rendition}.mp4`
@@ -62,6 +69,9 @@ export function HeroVideoBackdrop() {
   const [activeIndex, setActiveIndex] = useState(0)
   const [previousIndex, setPreviousIndex] = useState<number | null>(null)
   const [readyClips, setReadyClips] = useState<Record<number, boolean>>({})
+  const [clientVideoReady, setClientVideoReady] = useState(false)
+  const [clientVideoFailed, setClientVideoFailed] = useState(false)
+  const clientVideoRef = useRef<HTMLVideoElement | null>(null)
   const reducedMotion = useSyncExternalStore(
     subscribeToReducedMotion,
     getReducedMotion,
@@ -129,6 +139,20 @@ export function HeroVideoBackdrop() {
   useEffect(() => {
     if (reducedMotion || !rendition) return
 
+    // If client master video is active, play it in loop and skip multi-clip rotation
+    if (!clientVideoFailed) {
+      const cv = clientVideoRef.current
+      if (cv) {
+        const p = cv.play()
+        if (p) {
+          p.catch(() => {
+            // Fallback remains visible if autoplay is blocked
+          })
+        }
+      }
+      return
+    }
+
     const activeVideo = videoRefs.current[activeIndex]
     if (activeVideo) {
       activeVideo.currentTime = 0
@@ -145,7 +169,7 @@ export function HeroVideoBackdrop() {
     }, CLIP_DURATION_MS)
 
     return () => window.clearInterval(timer)
-  }, [activeIndex, reducedMotion, rendition])
+  }, [activeIndex, reducedMotion, rendition, clientVideoFailed])
 
   const nextIndex = (activeIndex + 1) % HERO_CLIPS.length
 
@@ -163,8 +187,27 @@ export function HeroVideoBackdrop() {
         />
       </picture>
 
+      {/* Primary: official client hero video reel */}
+      {!reducedMotion && rendition && !clientVideoFailed && (
+        <video
+          ref={clientVideoRef}
+          src={CLIENT_HERO_VIDEO}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          onCanPlay={() => setClientVideoReady(true)}
+          onError={() => setClientVideoFailed(true)}
+          className={`ll-hero-video ${clientVideoReady ? 'is-visible' : ''}`}
+          style={{ zIndex: 2 }}
+        />
+      )}
+
+      {/* Fallback multi-clip rotation if client video is absent or fails */}
       {!reducedMotion &&
         rendition &&
+        clientVideoFailed &&
         HERO_CLIPS.map((name, idx) => {
           const isActive = idx === activeIndex
           const isPrevious = idx === previousIndex
@@ -175,8 +218,6 @@ export function HeroVideoBackdrop() {
           const isVisible = isActive ? isReady : isPrevious && !readyClips[activeIndex]
 
           return (
-            // No `poster` attribute: a clip only becomes visible once it can
-            // play, so per-clip posters were never seen — just downloaded.
             <video
               key={name}
               ref={(el) => {
