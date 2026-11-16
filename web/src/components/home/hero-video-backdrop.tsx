@@ -5,17 +5,22 @@ import { preload } from 'react-dom'
 import { ResponsiveImg, getPortraitImage, getResponsiveImage } from '@/components/ui/responsive-img'
 
 /**
- * Official client hero reel (Dubai & Palm Jumeirah aerials, 74 s loop), re-encoded by
- * scripts/encode-hero-videos.sh into two silent, faststart, BT.709-tagged renditions:
- *   /videos/hero/client-hero-1280.mp4 (desktop, ~9 MB)
- *   /videos/hero/client-hero-854.mp4  (phones / 3G, ~4 MB)
+ * Official client hero reel (Dubai & Palm Jumeirah aerials, 74 s loop):
+ *   /videos/hero/client-hero-original.mp4  the client's file as delivered (~150 MB, 1080p60),
+ *       only on big screens with a fast link. Prepared by scripts/prepare-hero-original.sh
+ *       (bit-for-bit copy, faststart). Git-ignored (over GitHub's 100 MB limit), so it exists
+ *       only where it was placed: the build checks for it (`hasOriginal`).
+ *   /videos/hero/client-hero-1280.mp4      desktop fallback (~9 MB)
+ *   /videos/hero/client-hero-854.mp4       phones / 3G (~4 MB)
  *
  * Seamless start: the poster IS frame 0 of the rendition the device plays (landscape from the
  * 1280 file, phone crop from the 854 file), both layers share the same object-fit/position, and
  * the video is switched on — with no fade — only once it has presented its first frame. So the
  * still simply starts moving.
  */
-type Rendition = '1280' | '854'
+type Rendition = 'original' | '1280' | '854'
+
+const videoSrcFor = (rendition: Rendition) => `/videos/hero/client-hero-${rendition}.mp4`
 
 const HERO_POSTER = '/images/client-video-frame-0.jpg'
 const PORTRAIT_MEDIA = '(max-width: 700px) and (orientation: portrait)'
@@ -24,18 +29,24 @@ const LANDSCAPE_MEDIA = '(min-width: 701px), (orientation: landscape)'
 interface NetworkInformationLike {
   saveData?: boolean
   effectiveType?: string
+  /** Mbps estimate; Chrome caps it at 10. Not available in Safari / Firefox. */
+  downlink?: number
 }
 
 /**
  * Decides whether — and at what size — the background video may load.
  * Returns null when video should be skipped entirely (Save-Data, 2G).
  */
-function pickRendition(): Rendition | null {
+function pickRendition(hasOriginal: boolean): Rendition | null {
   const connection = (navigator as Navigator & { connection?: NetworkInformationLike }).connection
   if (connection?.saveData) return null
   if (connection?.effectiveType && /(^|-)2g$/.test(connection.effectiveType)) return null
   const lite = window.matchMedia('(max-width: 900px)').matches || connection?.effectiveType === '3g'
-  return lite ? '854' : '1280'
+  if (lite) return '854'
+  // The original streams at ~16 Mbps: only when the browser reports its fastest bucket
+  // (or reports nothing, as Safari and Firefox do).
+  const slow = connection?.downlink !== undefined && connection.downlink < 10
+  return hasOriginal && !slow ? 'original' : '1280'
 }
 
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)'
@@ -49,7 +60,7 @@ function subscribeToReducedMotion(onChange: () => void) {
 const getReducedMotion = () => window.matchMedia(REDUCED_MOTION_QUERY).matches
 const getReducedMotionOnServer = () => false
 
-export function HeroVideoBackdrop() {
+export function HeroVideoBackdrop({ hasOriginal = false }: { hasOriginal?: boolean }) {
   const [videoReady, setVideoReady] = useState(false)
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const backdropRef = useRef<HTMLDivElement | null>(null)
@@ -91,7 +102,7 @@ export function HeroVideoBackdrop() {
     let rafId: number | undefined
     const start = () => {
       if (cancelled) return
-      rafId = requestAnimationFrame(() => setRendition(pickRendition()))
+      rafId = requestAnimationFrame(() => setRendition(pickRendition(hasOriginal)))
     }
     const img = backdropRef.current?.querySelector<HTMLImageElement>('img.ll-hero-poster')
     if (img) img.decode().then(start, start)
@@ -100,7 +111,7 @@ export function HeroVideoBackdrop() {
       cancelled = true
       if (rafId !== undefined) cancelAnimationFrame(rafId)
     }
-  }, [reducedMotion])
+  }, [reducedMotion, hasOriginal])
 
   useEffect(() => {
     if (reducedMotion || !rendition) return
@@ -158,7 +169,7 @@ export function HeroVideoBackdrop() {
     }
   }, [reducedMotion, rendition])
 
-  const videoSrc = rendition ? `/videos/hero/client-hero-${rendition}.mp4` : null
+  const videoSrc = rendition ? videoSrcFor(rendition) : null
 
   return (
     <div ref={backdropRef} className="ll-hero-backdrop" aria-hidden="true">
@@ -184,6 +195,10 @@ export function HeroVideoBackdrop() {
           loop
           playsInline
           preload="auto"
+          // Original missing on this server (deleted, or not uploaded): use the 1280 version.
+          onError={() => {
+            if (rendition === 'original') setRendition('1280')
+          }}
           className={`ll-hero-video ${videoReady ? 'is-visible' : ''}`}
         />
       )}
