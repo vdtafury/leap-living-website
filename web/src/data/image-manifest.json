@@ -25,6 +25,36 @@
       }
     ]
   },
+  "/images/client-video-frame-0.jpg": {
+    "width": 1920,
+    "height": 1080,
+    "variants": [
+      {
+        "w": 640,
+        "src": "/images/opt/client-video-frame-0-640.webp"
+      },
+      {
+        "w": 768,
+        "src": "/images/opt/client-video-frame-0-768.webp"
+      },
+      {
+        "w": 960,
+        "src": "/images/opt/client-video-frame-0-960.webp"
+      },
+      {
+        "w": 1280,
+        "src": "/images/opt/client-video-frame-0-1280.webp"
+      },
+      {
+        "w": 1920,
+        "src": "/images/opt/client-video-frame-0-1920.webp"
+      }
+    ],
+    "portrait": {
+      "w": 540,
+      "src": "/images/opt/client-video-frame-0-portrait-540.webp"
+    }
+  },
   "/images/developer-network-skyline-960.jpg": {
     "width": 960,
     "height": 542,

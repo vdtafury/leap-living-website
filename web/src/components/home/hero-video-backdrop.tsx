@@ -12,7 +12,7 @@ import { ResponsiveImg, getPortraitImage, getResponsiveImage } from '@/component
  */
 type Rendition = '1280' | '854'
 
-const HERO_POSTER = '/images/hero-dubai-skyline.jpg'
+const HERO_POSTER = '/images/client-video-frame-0.jpg'
 const PORTRAIT_MEDIA = '(max-width: 700px) and (orientation: portrait)'
 const LANDSCAPE_MEDIA = '(min-width: 701px), (orientation: landscape)'
 
@@ -79,27 +79,8 @@ export function HeroVideoBackdrop() {
 
   useEffect(() => {
     if (reducedMotion) return
-    let idleId: number | undefined
-    let timeoutId: number | undefined
-
-    const enable = () => setRendition(pickRendition())
-    const schedule = () => {
-      // Safari has no requestIdleCallback; fall back to a short timeout.
-      if (typeof window.requestIdleCallback === 'function') {
-        idleId = window.requestIdleCallback(enable, { timeout: 2500 })
-      } else {
-        timeoutId = setTimeout(enable, 600) as unknown as number
-      }
-    }
-
-    if (document.readyState === 'complete') schedule()
-    else window.addEventListener('load', schedule, { once: true })
-
-    return () => {
-      window.removeEventListener('load', schedule)
-      if (idleId !== undefined) window.cancelIdleCallback(idleId)
-      if (timeoutId !== undefined) clearTimeout(timeoutId)
-    }
+    const id = requestAnimationFrame(() => setRendition(pickRendition()))
+    return () => cancelAnimationFrame(id)
   }, [reducedMotion])
 
   useEffect(() => {
