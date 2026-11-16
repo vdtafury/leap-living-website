@@ -64,13 +64,10 @@ if [ -d "$APP/.next/node_modules" ]; then
 fi
 cp -a .next/static "$APP/.next/static"
 mkdir -p "$APP/public"
-# Master videos in public/videos/*.mp4 are unused at runtime (the hero plays videos/hero/*).
-# --no-wildcards-match-slash keeps "*" from also matching videos/hero/*.mp4.
-tar -C public --no-wildcards-match-slash --exclude='./videos/*.mp4' -cf - . | tar -C "$APP/public" -xf -
-hero_src=$(find public/videos/hero -name '*.mp4' | wc -l)
-hero_pkg=$(find "$APP/public/videos/hero" -name '*.mp4' 2>/dev/null | wc -l)
-[ "$hero_src" -gt 0 ] && [ "$hero_src" = "$hero_pkg" ] ||
-  { echo "Hero videos missing from the bundle ($hero_pkg of $hero_src)"; exit 1; }
+# Copy public assets cleanly into the deployment bundle
+tar -C public -cf - . | tar -C "$APP/public" -xf -
+hero_poster=$(find "$APP/public/images" -name 'hero-dubai-skyline.jpg' 2>/dev/null | wc -l)
+[ "$hero_poster" -gt 0 ] || { echo "Hero poster missing from bundle"; exit 1; }
 
 ADDON=$APP/node_modules/better-sqlite3/build/Release/better_sqlite3.node
 if [ "${SKIP_GLIBC_COMPAT:-0}" != 1 ]; then
@@ -125,12 +122,12 @@ for _ in $(seq 1 30); do
   if curl -fsS "http://127.0.0.1:$PORT/api/health" | grep -q '"db":"up"'; then ok=1; break; fi
 done
 home=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$PORT/" || true)
-video=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$PORT/videos/hero/$(ls "$APP/public/videos/hero" | head -1)" || true)
+hero_img=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$PORT/images/hero-dubai-skyline.jpg" || true)
 kill "$SERVER" 2>/dev/null || true
 wait "$SERVER" 2>/dev/null || true
-[ "$ok" = 1 ] && [ "$home" = 200 ] && [ "$video" = 200 ] ||
-  { echo "Smoke test failed (health=$ok, home=$home, video=$video)"; cat "$OUT/smoke.log"; exit 1; }
-echo "health OK, home 200, hero video 200"
+[ "$ok" = 1 ] && [ "$home" = 200 ] && [ "$hero_img" = 200 ] ||
+  { echo "Smoke test failed (health=$ok, home=$home, hero_img=$hero_img)"; cat "$OUT/smoke.log"; exit 1; }
+echo "health OK, home 200, hero image 200"
 rm -rf "$OUT/leapliving-data/storage"/* "$OUT/smoke.log"
 
 log "Zipping"

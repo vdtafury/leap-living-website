@@ -174,8 +174,8 @@
     ]
   },
   "/images/hero-dubai-skyline.jpg": {
-    "width": 1920,
-    "height": 1080,
+    "width": 1280,
+    "height": 720,
     "variants": [
       {
         "w": 640,
@@ -192,15 +192,11 @@
       {
         "w": 1280,
         "src": "/images/opt/hero-dubai-skyline-1280.webp"
-      },
-      {
-        "w": 1920,
-        "src": "/images/opt/hero-dubai-skyline-1920.webp"
       }
     ],
     "portrait": {
-      "w": 540,
-      "src": "/images/opt/hero-dubai-skyline-portrait-540.webp"
+      "w": 432,
+      "src": "/images/opt/hero-dubai-skyline-portrait-432.webp"
     }
   },
   "/images/hero-marina-daylight.jpg": {

@@ -151,15 +151,12 @@ for icon_path in /favicon.ico /brand/favicon-32x32.png /brand/favicon-192x192.pn
   check "GET $icon_path" 200 "$code"
 done
 
-# 8. Hero Video & Statistics Checks
+# 8. Hero Backdrop & Statistics Checks
 check_contains "Stats bar displays 100% Fiduciary" "100% Fiduciary" "$TMP/home.html"
-# The hero plays the web renditions in /videos/hero (HERO_CLIPS in hero-video-backdrop.tsx);
-# the masters in /videos are not used at runtime and are not shipped to the host.
-for clip in beach-turquoise-ocean dubai-palm-jumeirah-sunny beach-aerial-pier luxury-villa-pool-sunny luxury-yacht-waterfront coastal-yacht-bay; do
-  for rendition in 1280 854; do
-    code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE/videos/hero/$clip-$rendition.mp4")
-    check "GET /videos/hero/$clip-$rendition.mp4" 200 "$code"
-  done
+# The hero uses the pre-optimized responsive Palm Jumeirah & skyline image variants
+for img_path in /images/hero-dubai-skyline.jpg /images/opt/hero-dubai-skyline-1280.webp /images/opt/hero-dubai-skyline-portrait-540.webp; do
+  code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE$img_path")
+  check "GET $img_path" 200 "$code"
 done
 
 echo
