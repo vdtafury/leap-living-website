@@ -177,32 +177,6 @@
       }
     ]
   },
-  "/images/hero-dubai-beach-daylight.jpg": {
-    "width": 1920,
-    "height": 1080,
-    "variants": [
-      {
-        "w": 640,
-        "src": "/images/opt/hero-dubai-beach-daylight-640.webp"
-      },
-      {
-        "w": 768,
-        "src": "/images/opt/hero-dubai-beach-daylight-768.webp"
-      },
-      {
-        "w": 960,
-        "src": "/images/opt/hero-dubai-beach-daylight-960.webp"
-      },
-      {
-        "w": 1280,
-        "src": "/images/opt/hero-dubai-beach-daylight-1280.webp"
-      },
-      {
-        "w": 1920,
-        "src": "/images/opt/hero-dubai-beach-daylight-1920.webp"
-      }
-    ]
-  },
   "/images/hero-dubai-skyline.jpg": {
     "width": 1920,
     "height": 1080,
@@ -227,11 +201,7 @@
         "w": 1920,
         "src": "/images/opt/hero-dubai-skyline-1920.webp"
       }
-    ],
-    "portrait": {
-      "w": 540,
-      "src": "/images/opt/hero-dubai-skyline-portrait-540.webp"
-    }
+    ]
   },
   "/images/hero-marina-daylight.jpg": {
     "width": 1920,
