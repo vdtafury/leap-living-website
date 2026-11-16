@@ -119,6 +119,9 @@ check_not_contains "Mod #2 & #3: Founder & removed (escaped)" "Founder &amp; CEO
 check_not_contains "Mod #2 & #3: Founder & removed (plain)" "Founder & CEO" "$TMP/home.html"
 check_contains "Mod #4: Editorial Hero headline" "Unlock your" "$TMP/home.html"
 check_contains "Mod #5: Free Valuation button in Header" "Free Valuation" "$TMP/home.html"
+check_contains "D-23: property card CTA is Know More" "Know More" "$TMP/home.html"
+check_not_contains "D-23: no Commercial tab in hero search" ">Commercial</button>" "$TMP/home.html"
+check_not_contains "D-22: no Executive Leadership section on Home" "ll-leadership-panel" "$TMP/home.html"
 check_contains "Mod #6: Mortgage Calculator link on Home" "Mortgage Calculator" "$TMP/home.html"
 
 for route in /buy /rent /sell /projects /mortgage /about /contact \

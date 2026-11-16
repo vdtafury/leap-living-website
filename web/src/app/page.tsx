@@ -21,10 +21,10 @@ export default async function HomePage() {
   const uniqueSorted = (list: string[]) => Array.from(new Set(list)).sort()
   const communitiesWhere = (match: (p: (typeof PROPERTIES)[number]) => boolean) =>
     uniqueSorted(PROPERTIES.filter(match).map((p) => p.community))
+  // Commercial listings are included in Buy/Rent (no separate Commercial tab).
   const searchCommunities = {
-    BUY: communitiesWhere((p) => p.transactionType === 'BUY' && p.propertyType !== 'Commercial'),
-    RENT: communitiesWhere((p) => p.transactionType === 'RENT' && p.propertyType !== 'Commercial'),
-    COMMERCIAL: communitiesWhere((p) => p.propertyType === 'Commercial'),
+    BUY: communitiesWhere((p) => p.transactionType === 'BUY'),
+    RENT: communitiesWhere((p) => p.transactionType === 'RENT'),
   }
   const featuredSaleProperties = PROPERTIES.filter(
     (item) => item.transactionType === 'BUY' && item.featured,
