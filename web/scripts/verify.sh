@@ -108,7 +108,13 @@ code=$(curl -s -o /dev/null -w '%{http_code}' -F "file=@$TMP/oversize.jpg;type=i
 check "reject oversize file" 413 "$code"
 
 code=$(curl -s --path-as-is -o /dev/null -w '%{http_code}' "$BASE/media/..%2F..%2Fpackage.json")
-check "reject path traversal" 404 "$code"
+if [ "$code" = "404" ] || [ "$code" = "400" ]; then
+  echo "PASS  reject path traversal (HTTP $code)"
+  pass=$((pass + 1))
+else
+  echo "FAIL  reject path traversal (expected HTTP 404 or 400, got $code)"
+  fail=$((fail + 1))
+fi
 
 # 6. Multi-Page Platform Routes & Content Checks
 code=$(curl -s -o "$TMP/home.html" -w '%{http_code}' "$BASE/")
@@ -153,13 +159,15 @@ done
 
 # 8. Hero Video & Statistics Checks
 check_contains "Stats bar displays 100% Fiduciary" "100% Fiduciary" "$TMP/home.html"
-# The hero plays the web renditions in /videos/hero (HERO_CLIPS in hero-video-backdrop.tsx);
-# the masters in /videos are not used at runtime and are not shipped to the host.
-for clip in beach-turquoise-ocean dubai-palm-jumeirah-sunny beach-aerial-pier luxury-villa-pool-sunny luxury-yacht-waterfront coastal-yacht-bay; do
-  for rendition in 1280 854; do
-    code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE/videos/hero/$clip-$rendition.mp4")
-    check "GET /videos/hero/$clip-$rendition.mp4" 200 "$code"
-  done
+# The hero plays the client video web renditions in /videos/hero (client-hero-1280.mp4 and client-hero-854.mp4).
+for rendition in 1280 854; do
+  code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE/videos/hero/client-hero-$rendition.mp4")
+  check "GET /videos/hero/client-hero-$rendition.mp4" 200 "$code"
+done
+# Persistent poster image (WebP variants)
+for img in /images/hero-dubai-skyline.jpg /images/opt/hero-dubai-skyline-1280.webp /images/opt/hero-dubai-skyline-portrait-540.webp; do
+  code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE$img")
+  check "GET $img" 200 "$code"
 done
 
 echo

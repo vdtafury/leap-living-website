@@ -5,34 +5,14 @@ import { preload } from 'react-dom'
 import { ResponsiveImg, getPortraitImage, getResponsiveImage } from '@/components/ui/responsive-img'
 
 /**
- * Hero clips, re-encoded by `scripts/encode-hero-videos.sh` into two silent,
- * 9.6s, faststart H.264 renditions each:
- *   /videos/hero/<name>-1280.mp4  (desktop, ~0.9–2MB)
- *   /videos/hero/<name>-854.mp4   (phones / slow links, ~0.25–0.8MB)
- * The originals in /videos stay as masters.
+ * Official client hero reel provided by the client (1080p aerial footage of Dubai & Palm Jumeirah).
+ * Re-encoded into two lightweight web renditions (+faststart, silent ambient loop):
+ *   /videos/hero/client-hero-1280.mp4 (desktop / large screens, ~19MB)
+ *   /videos/hero/client-hero-854.mp4  (mobile / phones, ~7.2MB)
  */
-const HERO_CLIPS = [
-  'beach-turquoise-ocean',
-  'dubai-palm-jumeirah-sunny',
-  'beach-aerial-pier',
-  'luxury-villa-pool-sunny',
-  'luxury-yacht-waterfront',
-  'coastal-yacht-bay',
-]
-
-/**
- * Official client hero reel provided by the client (1080p, sunny daylight Dubai aerials).
- * If present and available, it takes priority and loops continuously.
- * Otherwise, the component smoothly falls back to the multi-clip rotation above.
- */
-const CLIENT_HERO_VIDEO = '/videos/client-hero-faststart.mp4'
-
 type Rendition = '1280' | '854'
 
-const clipSrc = (name: string, rendition: Rendition) => `/videos/hero/${name}-${rendition}.mp4`
-
 const HERO_POSTER = '/images/hero-dubai-skyline.jpg'
-/** Phones in portrait get a pre-cropped centre strip (sharper and lighter). */
 const PORTRAIT_MEDIA = '(max-width: 700px) and (orientation: portrait)'
 const LANDSCAPE_MEDIA = '(min-width: 701px), (orientation: landscape)'
 
@@ -53,7 +33,6 @@ function pickRendition(): Rendition | null {
   return lite ? '854' : '1280'
 }
 
-const CLIP_DURATION_MS = 9000
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)'
 
 function subscribeToReducedMotion(onChange: () => void) {
@@ -66,20 +45,15 @@ const getReducedMotion = () => window.matchMedia(REDUCED_MOTION_QUERY).matches
 const getReducedMotionOnServer = () => false
 
 export function HeroVideoBackdrop() {
-  const [activeIndex, setActiveIndex] = useState(0)
-  const [previousIndex, setPreviousIndex] = useState<number | null>(null)
-  const [readyClips, setReadyClips] = useState<Record<number, boolean>>({})
-  const [clientVideoReady, setClientVideoReady] = useState(false)
-  const [clientVideoFailed, setClientVideoFailed] = useState(false)
-  const clientVideoRef = useRef<HTMLVideoElement | null>(null)
+  const [videoReady, setVideoReady] = useState(false)
+  const videoRef = useRef<HTMLVideoElement | null>(null)
   const reducedMotion = useSyncExternalStore(
     subscribeToReducedMotion,
     getReducedMotion,
     getReducedMotionOnServer,
   )
-  const videoRefs = useRef<Array<HTMLVideoElement | null>>([])
   // Video stays off until the page has fully loaded and the browser is idle,
-  // so the poster (the LCP element) never competes with megabytes of video.
+  // so the poster (the LCP element) never competes with video bandwidth.
   const [rendition, setRendition] = useState<Rendition | null>(null)
 
   // Hoists high-priority <link rel="preload"> tags for the poster into <head>,
@@ -128,50 +102,20 @@ export function HeroVideoBackdrop() {
     }
   }, [reducedMotion])
 
-  const advanceTo = (nextIdx: number) => {
-    setActiveIndex((current) => {
-      if (current === nextIdx) return current
-      setPreviousIndex(current)
-      return nextIdx
-    })
-  }
-
   useEffect(() => {
     if (reducedMotion || !rendition) return
-
-    // If client master video is active, play it in loop and skip multi-clip rotation
-    if (!clientVideoFailed) {
-      const cv = clientVideoRef.current
-      if (cv) {
-        const p = cv.play()
-        if (p) {
-          p.catch(() => {
-            // Fallback remains visible if autoplay is blocked
-          })
-        }
-      }
-      return
-    }
-
-    const activeVideo = videoRefs.current[activeIndex]
-    if (activeVideo) {
-      activeVideo.currentTime = 0
-      const p = activeVideo.play()
+    const v = videoRef.current
+    if (v) {
+      const p = v.play()
       if (p) {
         p.catch(() => {
           // Poster fallback remains visible if autoplay is restricted
         })
       }
     }
+  }, [reducedMotion, rendition])
 
-    const timer = window.setInterval(() => {
-      advanceTo((activeIndex + 1) % HERO_CLIPS.length)
-    }, CLIP_DURATION_MS)
-
-    return () => window.clearInterval(timer)
-  }, [activeIndex, reducedMotion, rendition, clientVideoFailed])
-
-  const nextIndex = (activeIndex + 1) % HERO_CLIPS.length
+  const videoSrc = rendition ? `/videos/hero/client-hero-${rendition}.mp4` : null
 
   return (
     <div className="ll-hero-backdrop" aria-hidden="true">
@@ -182,66 +126,25 @@ export function HeroVideoBackdrop() {
           src={HERO_POSTER}
           sizes="100vw"
           priority
-          alt="Panoramic Dubai skyline featuring Burj Khalifa"
+          alt="Panoramic Dubai skyline featuring Palm Jumeirah"
           className="ll-hero-poster"
         />
       </picture>
 
-      {/* Primary: official client hero video reel */}
-      {!reducedMotion && rendition && !clientVideoFailed && (
+      {/* Official client hero video reel: loops continuously */}
+      {!reducedMotion && videoSrc && (
         <video
-          ref={clientVideoRef}
-          src={CLIENT_HERO_VIDEO}
+          ref={videoRef}
+          src={videoSrc}
           autoPlay
           muted
           loop
           playsInline
           preload="auto"
-          onCanPlay={() => setClientVideoReady(true)}
-          onError={() => setClientVideoFailed(true)}
-          className={`ll-hero-video ${clientVideoReady ? 'is-visible' : ''}`}
-          style={{ zIndex: 2 }}
+          onCanPlay={() => setVideoReady(true)}
+          className={`ll-hero-video ${videoReady ? 'is-visible' : ''}`}
         />
       )}
-
-      {/* Fallback multi-clip rotation if client video is absent or fails */}
-      {!reducedMotion &&
-        rendition &&
-        clientVideoFailed &&
-        HERO_CLIPS.map((name, idx) => {
-          const isActive = idx === activeIndex
-          const isPrevious = idx === previousIndex
-          const isNext = idx === nextIndex
-          if (!isActive && !isPrevious && !isNext) return null
-
-          const isReady = Boolean(readyClips[idx])
-          const isVisible = isActive ? isReady : isPrevious && !readyClips[activeIndex]
-
-          return (
-            <video
-              key={name}
-              ref={(el) => {
-                videoRefs.current[idx] = el
-              }}
-              src={clipSrc(name, rendition)}
-              autoPlay={isActive}
-              muted
-              loop={false}
-              playsInline
-              preload={isActive || (isNext && rendition === '1280') ? 'auto' : 'metadata'}
-              onCanPlay={() => {
-                setReadyClips((prev) => (prev[idx] ? prev : { ...prev, [idx]: true }))
-              }}
-              onEnded={() => {
-                if (isActive) {
-                  advanceTo((idx + 1) % HERO_CLIPS.length)
-                }
-              }}
-              className={`ll-hero-video ${isVisible ? 'is-visible' : ''}`}
-              style={{ zIndex: isActive ? 2 : 1 }}
-            />
-          )
-        })}
 
       <div className="ll-hero-scrim" />
     </div>
