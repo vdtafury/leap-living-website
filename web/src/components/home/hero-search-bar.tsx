@@ -13,12 +13,11 @@ import {
   SearchIcon,
 } from '@/components/ui/icons'
 
-type SearchMode = 'BUY' | 'RENT' | 'COMMERCIAL'
+type SearchMode = 'BUY' | 'RENT'
 
 const MODES: { id: SearchMode; label: string }[] = [
   { id: 'BUY', label: 'Buy' },
   { id: 'RENT', label: 'Rent' },
-  { id: 'COMMERCIAL', label: 'Commercial' },
 ]
 
 const TYPE_OPTIONS: HeroSelectOption[] = [
@@ -63,9 +62,8 @@ export function HeroSearchBar({ communities }: HeroSearchBarProps) {
   const [beds, setBeds] = useState('ALL')
   const [budget, setBudget] = useState('ALL')
 
-  const isCommercial = mode === 'COMMERCIAL'
   const target = mode === 'BUY' ? '/buy' : '/rent'
-  const budgetOptions = BUDGET_OPTIONS[mode === 'BUY' ? 'BUY' : 'RENT']
+  const budgetOptions = BUDGET_OPTIONS[mode]
 
   const communityOptions: HeroSelectOption[] = [
     { value: 'ALL', label: 'Any community' },
@@ -76,7 +74,6 @@ export function HeroSearchBar({ communities }: HeroSearchBarProps) {
     setMode(next)
     setBudget('ALL')
     setPropertyType('ALL')
-    if (next === 'COMMERCIAL') setBeds('ALL')
     if (community !== 'ALL' && !communities[next].includes(community)) setCommunity('ALL')
   }
 
@@ -84,8 +81,8 @@ export function HeroSearchBar({ communities }: HeroSearchBarProps) {
     const params = new URLSearchParams()
     const values: Record<string, string> = {
       community,
-      type: isCommercial ? 'Commercial' : propertyType,
-      beds: isCommercial ? 'ALL' : beds,
+      type: propertyType,
+      beds,
       budget,
       ...overrides,
     }
@@ -149,19 +146,17 @@ export function HeroSearchBar({ communities }: HeroSearchBarProps) {
           label="Property type"
           shortLabel="Type"
           icon={<LayersIcon size={14} />}
-          value={isCommercial ? 'COMMERCIAL' : propertyType}
-          options={isCommercial ? [{ value: 'COMMERCIAL', label: 'Commercial' }] : TYPE_OPTIONS}
+          value={propertyType}
+          options={TYPE_OPTIONS}
           onChange={setPropertyType}
-          disabled={isCommercial}
         />
         <HeroSelect
           className="ll-hs-f-beds"
           label="Bedrooms"
           icon={<BedIcon size={14} />}
-          value={isCommercial ? 'NA' : beds}
-          options={isCommercial ? [{ value: 'NA', label: 'N/A' }] : BED_OPTIONS}
+          value={beds}
+          options={BED_OPTIONS}
           onChange={setBeds}
-          disabled={isCommercial}
         />
         <HeroSelect
           className="ll-hs-f-budget"
@@ -187,7 +182,7 @@ export function HeroSearchBar({ communities }: HeroSearchBarProps) {
                 key={c}
                 href={buildHref({
                   community: c,
-                  type: isCommercial ? 'Commercial' : 'ALL',
+                  type: 'ALL',
                   beds: 'ALL',
                   budget: 'ALL',
                 })}
