@@ -7,3 +7,6 @@ storage/
 next-env.d.ts
 deploy-out/
 *.mp4
+!public/videos/*.mp4
+!public/videos/hero/*.mp4
+public/videos/client-hero-faststart.mp4
