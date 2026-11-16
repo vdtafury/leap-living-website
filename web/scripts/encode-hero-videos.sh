@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Re-encodes the official client hero video into two lightweight web renditions:
+# Re-encodes the official client hero video into three web renditions:
+#   /videos/hero/client-hero-1080.mp4 (Full HD 1080p 60fps Master, ~85MB, <100MB for GitHub)
 #   /videos/hero/client-hero-1280.mp4 (desktop / large screens, ~19MB)
 #   /videos/hero/client-hero-854.mp4  (mobile / phones, ~7.2MB)
 set -euo pipefail
@@ -12,6 +13,12 @@ command -v "$FFMPEG" >/dev/null || FFMPEG="ffmpeg"
 
 [ -f "$SRC" ] || { echo "Place the master video at web/$SRC first."; exit 1; }
 mkdir -p "$HERO"
+
+echo "Encoding 1080p 60fps master (<100MB for GitHub)..."
+"$FFMPEG" -y -i "$SRC" \
+  -c:v libx264 -preset superfast -threads 6 -b:v 9500k -maxrate 10500k -bufsize 19000k -pix_fmt yuv420p -r 60 \
+  -c:a aac -b:a 128k \
+  -movflags +faststart "$HERO/client-hero-1080.mp4"
 
 echo "Encoding desktop rendition (1280)..."
 "$FFMPEG" -y -i "$SRC" \
