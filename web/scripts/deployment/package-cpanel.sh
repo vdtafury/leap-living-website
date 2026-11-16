@@ -71,6 +71,28 @@ hero_src=$(find public/videos/hero -name '*.mp4' | wc -l)
 hero_pkg=$(find "$APP/public/videos/hero" -name '*.mp4' 2>/dev/null | wc -l)
 [ "$hero_src" -gt 0 ] && [ "$hero_src" = "$hero_pkg" ] ||
   { echo "Hero videos missing from the bundle ($hero_pkg of $hero_src)"; exit 1; }
+# The client's original hero video is git-ignored (over GitHub's 100 MB limit): it ships only if
+# it was placed here with scripts/prepare-hero-original.sh. It must be faststart (index before the
+# media data), or browsers download the whole file before the first frame plays.
+ORIGINAL=public/videos/hero/client-hero-original.mp4
+if [ -f "$ORIGINAL" ]; then
+  node -e "
+    const fs = require('fs'); const fd = fs.openSync(process.argv[1], 'r'); const b = Buffer.alloc(16)
+    let pos = 0; const size = fs.fstatSync(fd).size
+    while (pos < size) {
+      fs.readSync(fd, b, 0, 16, pos)
+      let len = b.readUInt32BE(0); const type = b.toString('latin1', 4, 8)
+      if (len === 1) len = Number(b.readBigUInt64BE(8))
+      if (type === 'moov') process.exit(0)
+      if (type === 'mdat' || len < 8) process.exit(1)
+      pos += len
+    }
+    process.exit(1)
+  " "$ORIGINAL" || { echo "$ORIGINAL is not faststart: run scripts/prepare-hero-original.sh on it"; exit 1; }
+  log "Client original hero video included ($(du -h "$ORIGINAL" | cut -f1)), big screens play it"
+else
+  log "No client original hero video: big screens play client-hero-1280.mp4 (scripts/prepare-hero-original.sh)"
+fi
 
 ADDON=$APP/node_modules/better-sqlite3/build/Release/better_sqlite3.node
 if [ "${SKIP_GLIBC_COMPAT:-0}" != 1 ]; then

@@ -30,6 +30,33 @@ The script does the following:
 | `leapliving-app-<stamp>.zip` | `/home/leaplivi/` → `leapliving-app/app/…` | every deploy |
 | `leapliving-data-initial.zip` | `/home/leaplivi/` → `leapliving-data/leapliving.db` | **first deploy only**. Never extract it over a live database |
 
+### Optional: the client's original hero video (~150 MB)
+
+Big screens with a fast connection can play the client's original file exactly as delivered. It is not in the repository, because GitHub rejects files over 100 MB, so it has to be placed on the machine that builds the zip **before** running `package-cpanel.sh`:
+
+```bash
+cd web
+bash scripts/prepare-hero-original.sh "/path/to/Website Video 1.mp4"
+git add public/images src/data/image-manifest.json && git commit -m "chore(hero): poster from the original video"
+bash scripts/deployment/package-cpanel.sh
+```
+
+`prepare-hero-original.sh` makes no re-encode. It does the following:
+- copies the video stream bit for bit and drops the audio;
+- moves the index to the front (faststart), so playback starts before the download ends;
+- cuts the poster from frame 0 and rebuilds the WebP variants.
+
+It refuses files that browsers cannot play everywhere (anything but H.264 8-bit 4:2:0). `package-cpanel.sh` then logs `Client original hero video included (…)`, and fails if the file is not faststart.
+
+Who gets which file:
+- **Original:** screens wider than 900 px on a fast link. Chrome must report its top speed bucket (10 Mbps); Safari and Firefox report nothing.
+- **`client-hero-1280.mp4`:** slower desktop links.
+- **`client-hero-854.mp4`:** phones and 3G.
+
+If the original is missing on the server, the build falls back to the 1280 file on its own.
+
+Each big-screen visit can download up to the full ~150 MB, so check the hosting bandwidth quota.
+
 ## 2. One-time cPanel setup
 
 1. **Domains → Create A New Domain:** `staging.leapliving.ae`. Untick *Share document root*; document root `/home/leaplivi/staging.leapliving.ae`, outside `public_html`.

@@ -1,3 +1,5 @@
+import fs from 'node:fs'
+import path from 'node:path'
 import Link from 'next/link'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
@@ -10,6 +12,14 @@ import { KeyholeMark } from '@/components/ui/keyhole-mark'
 import { DeveloperShowcase } from '@/components/home/developer-showcase'
 import { ClientExperience } from '@/components/home/client-experience'
 import { CORE_SERVICES, PROJECTS, PROPERTIES } from '@/data/catalog'
+
+// The client's original hero video is git-ignored (over GitHub's 100 MB limit), so it only exists
+// where it was placed with scripts/prepare-hero-original.sh. Checked once, at build time.
+const HERO_ORIGINAL = path.join(
+  /*turbopackIgnore: true*/ process.cwd(),
+  'public/videos/hero/client-hero-original.mp4',
+)
+const hasHeroOriginal = fs.existsSync(HERO_ORIGINAL)
 
 export default function HomePage() {
   // Communities offered by the hero search, per mode, straight from the catalogue.
@@ -32,7 +42,7 @@ export default function HomePage() {
       <main>
         {/* ==================== CINEMATIC HERO ==================== */}
         <section className="ll-hero">
-          <HeroVideoBackdrop />
+          <HeroVideoBackdrop hasOriginal={hasHeroOriginal} />
 
           <div className="ll-container ll-hero-inner">
             <div className="ll-hero-content">
