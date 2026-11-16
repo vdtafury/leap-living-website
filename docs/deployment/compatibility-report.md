@@ -251,3 +251,15 @@ npm view next version && npm view react version && npm view prisma dist-tags --j
 npm view @prisma/client version && npm view sharp version && npm view zod version
 # etc.
 ```
+
+---
+
+## 9. Host update (2026-11-16, owner logged into cPanel)
+
+| # | Check | Result | Evidence / notes |
+|---|---|---|---|
+| 1 | Available Node.js versions | **PASS** | Setup Node.js App lists 6.17.1 → 24.22.3; **22.23.5 is the default ("recommended")**. Stack floor (Node ≥ 20.19) met; app pinned to **22.x** because native modules are built for Node 22's ABI (127). |
+| 7 | Next.js standalone under Passenger | **Prepared, not yet run on host** | Bundle + steps in `docs/deployment/cpanel-staging.md`; produced by `web/scripts/deployment/package-cpanel.sh`. Rehearsed locally with the exact host layout (`leapliving-app/app/server.js`, data outside the app): verify.sh 57/58 (only the known `file` utility check fails). |
+| 9 | Persistent storage outside the release | **Prepared** | `STORAGE_DIR` env var (uploads) + `DATABASE_URL` both point to `/home/leaplivi/leapliving-data/`. |
+
+Native-module portability: `better-sqlite3` built on the dev machine required glibc 2.34 / GLIBCXX 3.4.29, which would fail on CloudLinux 8 (glibc 2.28). The packaging script rebuilds it with pinned symbol versions (`scripts/deployment/glibc-compat/`), so it requires **glibc 2.28 / GLIBCXX 3.4.20**. Sharp's prebuilt binaries already require only glibc 2.28. The host's actual glibc is still to be confirmed (`ldd --version` in cPanel Terminal).
