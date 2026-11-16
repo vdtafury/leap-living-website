@@ -36,6 +36,14 @@ NODE_MAJOR=$(node -p 'process.versions.node.split(".")[0]')
 [ "$NODE_MAJOR" = 22 ] || { echo "Use Node 22 (found $(node -v)); the host app runs Node 22.x."; exit 1; }
 [ -d node_modules ] || { echo "Run npm ci first."; exit 1; }
 
+# A fresh clone has no .env; the build and Prisma only need a placeholder URL here
+# (the host gets its real DATABASE_URL from the cPanel Node.js app screen).
+export DATABASE_URL=${DATABASE_URL:-file:./storage/dev.db}
+if [ ! -d generated ]; then
+  log "Generating Prisma client"
+  npx prisma generate
+fi
+
 rm -rf "$OUT" # also keeps the type-check from seeing an old bundle
 
 log "Building (Next.js standalone)"
