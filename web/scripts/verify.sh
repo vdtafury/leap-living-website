@@ -119,7 +119,8 @@ fi
 # 6. Multi-Page Platform Routes & Content Checks
 code=$(curl -s -o "$TMP/home.html" -w '%{http_code}' "$BASE/")
 check "GET / (Home)" 200 "$code"
-check_contains "Home renders DB readiness marker" "LEAP LIVING — Platform Ready" "$TMP/home.html"
+# Home is static: no database read and no hidden debug marker (DB health is /api/health above).
+check_not_contains "Home has no hidden DB debug marker" "Platform Ready" "$TMP/home.html"
 check_contains "Mod #1: Consultancy service on Home" "Real Estate Consultancy" "$TMP/home.html"
 check_not_contains "Mod #2 & #3: Founder & removed (escaped)" "Founder &amp; CEO" "$TMP/home.html"
 check_not_contains "Mod #2 & #3: Founder & removed (plain)" "Founder & CEO" "$TMP/home.html"
