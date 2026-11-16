@@ -8,9 +8,9 @@ import { PropertyCarousel } from '@/components/property/property-carousel'
 import { ProjectCard } from '@/components/project/project-card'
 import { ArrowRightIcon, ArrowUpRightIcon } from '@/components/ui/icons'
 import { KeyholeMark } from '@/components/ui/keyhole-mark'
-import { ResponsiveImg } from '@/components/ui/responsive-img'
 import { DeveloperShowcase } from '@/components/home/developer-showcase'
-import { CLIENT_PERSPECTIVES, CORE_SERVICES, PROJECTS, PROPERTIES } from '@/data/catalog'
+import { ClientExperience } from '@/components/home/client-experience'
+import { CORE_SERVICES, PROJECTS, PROPERTIES } from '@/data/catalog'
 
 export const dynamic = 'force-dynamic'
 
@@ -178,69 +178,6 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* ==================== EXECUTIVE LEADERSHIP (CEO ONLY, ZERO PEOPLE PHOTOS) ==================== */}
-        <section className="ll-section-image ll-defer-render">
-          <div className="ll-section-image-bg" aria-hidden="true">
-            <ResponsiveImg src="/images/architecture-glass-towers.jpg" sizes="100vw" />
-            <span className="ll-section-image-scrim" />
-          </div>
-          <div className="ll-container">
-            <div className="ll-leadership-glass">
-              <div className="ll-leadership-emblem-card">
-                <KeyholeMark className="ll-keyhole ll-keyhole-emblem" strokeWidth={1.8} />
-                <img
-                  src="/brand/logo-horizontal-white.png"
-                  alt="LEAP LIVING"
-                  className="ll-leadership-emblem-logo"
-                />
-                <div>
-                  <div className="ll-leadership-emblem-kicker">Institutional Leadership</div>
-                  <div className="ll-serif-title ll-leadership-emblem-title">
-                    Two Decades Shaping Prime UAE Developments
-                  </div>
-                </div>
-                <div className="ll-leadership-emblem-foot">
-                  <span>Dubai · UAE</span>
-                  <span>Since 2005</span>
-                </div>
-              </div>
-
-              <div>
-                <div className="ll-eyebrow">
-                  <span className="ll-eyebrow-num">05</span>Executive Leadership
-                </div>
-                <blockquote className="ll-leadership-quote">
-                  &ldquo;Informed decisions create exceptional outcomes. Every property decision
-                  carries financial, strategic, and personal significance. Our responsibility is to
-                  ensure clients have clarity and insight.&rdquo;
-                </blockquote>
-
-                <div className="ll-leadership-meta">
-                  <span className="ll-leadership-name">Mohab Samak</span>
-                  <span className="ll-leadership-title">CEO</span>
-                </div>
-
-                <p className="ll-section-lead ll-leadership-bio">
-                  With over two decades of senior leadership across Emaar Properties, Hamptons
-                  International, Coldwell Banker, Engel &amp; Völkers Dubai, D&amp;B Properties, and
-                  Metropolitan Premium Properties, Mohab Samak directs Leap Living with an emphasis
-                  on analytical precision over short-term sales volume.
-                </p>
-
-                <div className="ll-hero-ctas">
-                  <Link href="/about" className="ll-btn ll-btn-primary">
-                    <span>About Leap Living &amp; Leadership</span>
-                    <ArrowUpRightIcon size={15} />
-                  </Link>
-                  <Link href="/contact" className="ll-btn ll-btn-outline-light">
-                    Request Executive Briefing
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* ==================== DEDICATED TOOLS & VALUATION ENTRY BAND ==================== */}
         <section className="ll-section-teal ll-defer-render">
           <KeyholeMark className="ll-keyhole ll-keyhole-teal-band" strokeWidth={1.6} />
@@ -270,42 +207,7 @@ export default async function HomePage() {
         </section>
 
         {/* ==================== CLIENT PERSPECTIVES ==================== */}
-        <section className="ll-section-muted ll-defer-render">
-          <div className="ll-container">
-            <div className="ll-section-header">
-              <div>
-                <div className="ll-eyebrow">
-                  <span className="ll-eyebrow-num">06</span>Client Perspectives
-                </div>
-                <h2 className="ll-serif-title ll-section-title">Private Client Experience</h2>
-              </div>
-              <Link href="/contact" className="ll-link-arrow">
-                <span>Speak With an Advisor</span>
-                <ArrowUpRightIcon size={15} />
-              </Link>
-            </div>
-
-            <div className="ll-cards-grid">
-              {CLIENT_PERSPECTIVES.map((item) => (
-                <figure key={item.author} className="ll-quote-card">
-                  <span className="ll-quote-mark" aria-hidden="true">
-                    &ldquo;
-                  </span>
-                  <blockquote className="ll-quote-text">{item.quote}</blockquote>
-                  <figcaption className="ll-quote-author">
-                    <span className="ll-monogram" aria-hidden="true">
-                      {item.initials}
-                    </span>
-                    <span>
-                      <span className="ll-quote-name">{item.author}</span>
-                      <span className="ll-quote-role">{item.role}</span>
-                    </span>
-                  </figcaption>
-                </figure>
-              ))}
-            </div>
-          </div>
-        </section>
+        <ClientExperience index="05" />
 
         {/* ==================== INSTITUTIONAL PILLARS ==================== */}
         <section className="ll-stats-section ll-defer-render" aria-label="Institutional Pillars">
