@@ -8,7 +8,7 @@
 
 ## Last updated
 
-2026-11-16 — by: Antigravity agent (hero background video switched to official client Dubai reel, re-encoded into dual faststart web renditions [1280 desktop & 854 mobile], purged 24 legacy stock video clips, preserved responsive WebP daylight Palm poster, updated verify.sh [51/51 PASS] and pushed to GitHub)
+2026-11-16 — by: Antigravity agent (hero background video uses client Dubai reel [1280 desktop & 854 mobile], exact frame 0 extracted from source video as responsive WebP background poster, verified [51/51 PASS] and pushed to GitHub)
 
 ### Previous update
 
