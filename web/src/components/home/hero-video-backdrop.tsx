@@ -5,10 +5,15 @@ import { preload } from 'react-dom'
 import { ResponsiveImg, getPortraitImage, getResponsiveImage } from '@/components/ui/responsive-img'
 
 /**
- * Official client hero reel provided by the client (1080p aerial footage of Dubai & Palm Jumeirah).
- * Re-encoded into two lightweight web renditions (+faststart, silent ambient loop):
- *   /videos/hero/client-hero-1280.mp4 (desktop / large screens, ~19MB)
- *   /videos/hero/client-hero-854.mp4  (mobile / phones, ~7.2MB)
+ * Official client hero reel (Dubai & Palm Jumeirah aerials, 74 s loop), re-encoded by
+ * scripts/encode-hero-videos.sh into two silent, faststart, BT.709-tagged renditions:
+ *   /videos/hero/client-hero-1280.mp4 (desktop, ~9 MB)
+ *   /videos/hero/client-hero-854.mp4  (phones / 3G, ~4 MB)
+ *
+ * Seamless start: the poster IS frame 0 of the rendition the device plays (landscape from the
+ * 1280 file, phone crop from the 854 file), both layers share the same object-fit/position, and
+ * the video is switched on — with no fade — only once it has presented its first frame. So the
+ * still simply starts moving.
  */
 type Rendition = '1280' | '854'
 
@@ -47,13 +52,13 @@ const getReducedMotionOnServer = () => false
 export function HeroVideoBackdrop() {
   const [videoReady, setVideoReady] = useState(false)
   const videoRef = useRef<HTMLVideoElement | null>(null)
+  const backdropRef = useRef<HTMLDivElement | null>(null)
   const reducedMotion = useSyncExternalStore(
     subscribeToReducedMotion,
     getReducedMotion,
     getReducedMotionOnServer,
   )
-  // Video stays off until the page has fully loaded and the browser is idle,
-  // so the poster (the LCP element) never competes with video bandwidth.
+  // Chosen once the poster is painted (Save-Data / 2G → no video).
   const [rendition, setRendition] = useState<Rendition | null>(null)
 
   // Hoists high-priority <link rel="preload"> tags for the poster into <head>,
@@ -77,29 +82,86 @@ export function HeroVideoBackdrop() {
     })
   }
 
+  // The video starts only after the poster has loaded and decoded: otherwise, on slow links,
+  // the video download competes with the poster and the hero shows the bare teal background
+  // until the video pops in. Order is always: poster (frame 0) → video (frame 0 → motion).
   useEffect(() => {
     if (reducedMotion) return
-    const id = requestAnimationFrame(() => setRendition(pickRendition()))
-    return () => cancelAnimationFrame(id)
+    let cancelled = false
+    let rafId: number | undefined
+    const start = () => {
+      if (cancelled) return
+      rafId = requestAnimationFrame(() => setRendition(pickRendition()))
+    }
+    const img = backdropRef.current?.querySelector<HTMLImageElement>('img.ll-hero-poster')
+    if (img) img.decode().then(start, start)
+    else start()
+    return () => {
+      cancelled = true
+      if (rafId !== undefined) cancelAnimationFrame(rafId)
+    }
   }, [reducedMotion])
 
   useEffect(() => {
     if (reducedMotion || !rendition) return
     const v = videoRef.current
-    if (v) {
+    if (!v) return
+    let cancelled = false
+    let frameHandle: number | undefined
+    const play = () => {
       const p = v.play()
       if (p) {
         p.catch(() => {
-          // Poster fallback remains visible if autoplay is restricted
+          // Autoplay blocked: the paused frame 0 / poster (the same picture) simply stays.
         })
       }
+    }
+    const reveal = () => {
+      if (cancelled) return
+      // Straight on the element, in the same frame callback: waiting for a React render
+      // would let the video run a frame or two past the poster before it shows.
+      v.classList.add('is-visible')
+      setVideoReady(true)
+    }
+    // Shown only once the browser has painted a frame — never on `canplay`, which fires before
+    // anything is drawn. If decoding started late and the first painted frame is already past
+    // frame 0, rewind (still hidden) so the first visible frame is exactly the poster.
+    const onFirstFrame = (mediaTime: number) => {
+      if (cancelled) return
+      if (mediaTime < 0.05) return reveal()
+      v.pause()
+      v.addEventListener(
+        'seeked',
+        () => {
+          reveal()
+          requestAnimationFrame(() => {
+            if (!cancelled) play()
+          })
+        },
+        { once: true },
+      )
+      v.currentTime = 0
+    }
+
+    // requestVideoFrameCallback: Chrome/Edge, Safari 15.4+, Firefox 132+.
+    if (typeof v.requestVideoFrameCallback === 'function') {
+      frameHandle = v.requestVideoFrameCallback((_now, meta) => onFirstFrame(meta.mediaTime))
+    } else {
+      v.addEventListener('playing', () => onFirstFrame(v.currentTime), { once: true })
+    }
+
+    // play() (not only the autoPlay attribute) so iOS starts fetching data.
+    play()
+    return () => {
+      cancelled = true
+      if (frameHandle !== undefined) v.cancelVideoFrameCallback(frameHandle)
     }
   }, [reducedMotion, rendition])
 
   const videoSrc = rendition ? `/videos/hero/client-hero-${rendition}.mp4` : null
 
   return (
-    <div className="ll-hero-backdrop" aria-hidden="true">
+    <div ref={backdropRef} className="ll-hero-backdrop" aria-hidden="true">
       {/* Persistent poster: the LCP element. Responsive WebP, fetched first. */}
       <picture>
         {portrait && <source media={PORTRAIT_MEDIA} srcSet={portrait.src} />}
@@ -122,7 +184,6 @@ export function HeroVideoBackdrop() {
           loop
           playsInline
           preload="auto"
-          onCanPlay={() => setVideoReady(true)}
           className={`ll-hero-video ${videoReady ? 'is-visible' : ''}`}
         />
       )}
