@@ -1,7 +1,10 @@
 import path from 'node:path'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 
-export const STORAGE_ROOT = path.resolve(process.cwd(), 'storage')
+// On the host, STORAGE_DIR points outside the release folder so uploads survive redeploys.
+export const STORAGE_ROOT = path.resolve(
+  /*turbopackIgnore: true*/ process.env.STORAGE_DIR || path.join(process.cwd(), 'storage'),
+)
 export const PUBLIC_DIR = path.join(STORAGE_ROOT, 'uploads', 'public')
 
 /**

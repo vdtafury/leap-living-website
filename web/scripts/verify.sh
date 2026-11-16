@@ -153,9 +153,13 @@ done
 
 # 8. Hero Video & Statistics Checks
 check_contains "Stats bar displays 100% Fiduciary" "100% Fiduciary" "$TMP/home.html"
-for vid in dubai-palace-burj-waterfront.mp4 broker-key-handover.mp4 dubai-palm-jumeirah.mp4 executive-skyscraper-meeting.mp4 dubai-marina-skyline.mp4 dubai-downtown-aerial.mp4; do
-  code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE/videos/$vid")
-  check "GET /videos/$vid" 200 "$code"
+# The hero plays the web renditions in /videos/hero (HERO_CLIPS in hero-video-backdrop.tsx);
+# the masters in /videos are not used at runtime and are not shipped to the host.
+for clip in beach-turquoise-ocean dubai-palm-jumeirah-sunny beach-aerial-pier luxury-villa-pool-sunny luxury-yacht-waterfront coastal-yacht-bay; do
+  for rendition in 1280 854; do
+    code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE/videos/hero/$clip-$rendition.mp4")
+    check "GET /videos/hero/$clip-$rendition.mp4" 200 "$code"
+  done
 done
 
 echo
