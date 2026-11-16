@@ -1,41 +1,26 @@
 #!/usr/bin/env bash
-# Re-encodes the homepage hero clips into lightweight web renditions.
-#
-#   FFMPEG=/path/to/ffmpeg bash scripts/encode-hero-videos.sh
-#
-# For each master in public/videos/<name>.mp4 it writes:
-#   public/videos/hero/<name>-1280.mp4   desktop  (CRF 27)
-#   public/videos/hero/<name>-854.mp4    phones / slow links (CRF 29)
-# Silent (-an), trimmed to 9.6s (the hero shows each clip for 9s),
-# 24fps, 2s GOP, +faststart so playback can begin before the file finishes.
-# Clip order/names must match HERO_CLIPS in
-# src/components/home/hero-video-backdrop.tsx.
+# Re-encodes the official client hero video into two lightweight web renditions:
+#   /videos/hero/client-hero-1280.mp4 (desktop / large screens, ~19MB)
+#   /videos/hero/client-hero-854.mp4  (mobile / phones, ~7.2MB)
 set -euo pipefail
 
-FFMPEG="${FFMPEG:-ffmpeg}"
-cd "$(dirname "$0")/../public/videos"
-mkdir -p hero
+cd "$(dirname "$0")/.."
+SRC="Website Video 1.mp4"
+HERO="public/videos/hero"
+FFMPEG="${FFMPEG:-/home/vdta/.hermes/tools/ffmpeg-9.0.1-linux-x64/bin/ffmpeg}"
+command -v "$FFMPEG" >/dev/null || FFMPEG="ffmpeg"
 
-CLIPS=(
-  beach-turquoise-ocean
-  dubai-palm-jumeirah-sunny
-  beach-aerial-pier
-  luxury-villa-pool-sunny
-  luxury-yacht-waterfront
-  coastal-yacht-bay
-)
+[ -f "$SRC" ] || { echo "Place the master video at web/$SRC first."; exit 1; }
+mkdir -p "$HERO"
 
-encode() { # <name> <width> <crf>
-  "$FFMPEG" -v error -y -i "$1.mp4" -t 9.6 -an \
-    -vf "scale=$2:-2:flags=lanczos,fps=24" \
-    -c:v libx264 -preset slow -crf "$3" -profile:v high -pix_fmt yuv420p -g 48 \
-    -movflags +faststart "hero/$1-$2.mp4"
-}
+echo "Encoding desktop rendition (1280)..."
+"$FFMPEG" -y -i "$SRC" \
+  -vf "scale=1280:-2" -c:v libx264 -preset faster -profile:v high -level 4.0 -pix_fmt yuv420p -r 30 -crf 24 \
+  -movflags +faststart -an "$HERO/client-hero-1280.mp4"
 
-for name in "${CLIPS[@]}"; do
-  encode "$name" 1280 27
-  encode "$name" 854 29
-  printf '%-28s 1280: %5s KB   854: %5s KB\n' "$name" \
-    "$(($(stat -c%s "hero/$name-1280.mp4") / 1024))" \
-    "$(($(stat -c%s "hero/$name-854.mp4") / 1024))"
-done
+echo "Encoding mobile rendition (854)..."
+"$FFMPEG" -y -i "$SRC" \
+  -vf "scale=854:-2" -c:v libx264 -preset faster -profile:v main -level 3.1 -pix_fmt yuv420p -r 30 -crf 26 \
+  -movflags +faststart -an "$HERO/client-hero-854.mp4"
+
+echo "Done. Hero video renditions ready in $HERO/."
