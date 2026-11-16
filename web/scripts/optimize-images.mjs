@@ -35,12 +35,27 @@ const PHOTO_QUALITY = 70
  * of a 16:9 photo. Serving that strip directly is both sharper and lighter
  * than shipping the whole landscape frame.
  * `x` is the horizontal focus (0–1), matching the CSS object-position;
- * `width` is the output width of the crop.
+ * `width` is the output width of the crop; `source` (optional, relative to web/)
+ * crops a different file than the landscape photo; `quality` overrides the WebP quality;
+ * `enlarge` lets the crop be upscaled to `width`.
  */
 const CROPS = {
-  // 540×900 still carries ~2.8x the detail a phone saw from the landscape 960w.
-  'hero-dubai-skyline.jpg': { aspect: 0.6, x: 0.5, width: 540 },
-  'client-video-frame-0.jpg': { aspect: 0.6, x: 0.5, width: 540 },
+  // The hero poster must look exactly like the video's first frame on every device, so it
+  // is cut from the same rendition the device plays: client-video-frame-0.jpg is frame 0
+  // of client-hero-1280.mp4, and the phone crop comes from frame 0 of client-hero-854.mp4
+  // (phones get the 854 rendition). Regenerate both when the reel changes
+  // (scripts/encode-hero-videos.sh).
+  'client-video-frame-0.jpg': {
+    aspect: 0.6,
+    x: 0.5,
+    width: 540,
+    source: 'scripts/assets/client-video-frame-0-854.jpg',
+    quality: 85,
+    // The 854 frame only yields a 288 px strip. It is enlarged to 540 so its intrinsic area
+    // stays above the video's (854×480): otherwise Chrome reports the video's first frame as a
+    // new, later LCP. Enlarging adds no detail, so it still looks like the video frame.
+    enlarge: true,
+  },
 }
 
 const isImage = (f) => /\.(jpe?g|png)$/i.test(f)
@@ -83,14 +98,16 @@ async function optimizePhotos(manifest) {
 
     const crop = CROPS[file]
     if (crop) {
-      const cropW = Math.round(meta.height * crop.aspect)
-      const left = Math.round((meta.width - cropW) * crop.x)
-      const outW = Math.min(crop.width, cropW)
+      const cropInput = crop.source ? path.join(ROOT, crop.source) : input
+      const cropMeta = crop.source ? await sharp(cropInput).metadata() : meta
+      const cropW = Math.round(cropMeta.height * crop.aspect)
+      const left = Math.round((cropMeta.width - cropW) * crop.x)
+      const outW = crop.enlarge ? crop.width : Math.min(crop.width, cropW)
       const outName = `${base}-portrait-${outW}.webp`
-      await sharp(input)
-        .extract({ left, top: 0, width: cropW, height: meta.height })
-        .resize({ width: outW })
-        .webp({ quality: PHOTO_QUALITY, effort: 6, smartSubsample: true })
+      await sharp(cropInput)
+        .extract({ left, top: 0, width: cropW, height: cropMeta.height })
+        .resize({ width: outW, kernel: 'lanczos3' })
+        .webp({ quality: crop.quality ?? PHOTO_QUALITY, effort: 6, smartSubsample: true })
         .toFile(path.join(OUT_DIR, outName))
       manifest[`/images/${file}`].portrait = { w: outW, src: `/images/opt/${outName}` }
     }

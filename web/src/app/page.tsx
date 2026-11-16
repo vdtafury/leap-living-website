@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { prisma } from '@/server/db'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { HeroSearchBar } from '@/components/home/hero-search-bar'
@@ -12,11 +11,7 @@ import { DeveloperShowcase } from '@/components/home/developer-showcase'
 import { ClientExperience } from '@/components/home/client-experience'
 import { CORE_SERVICES, PROJECTS, PROPERTIES } from '@/data/catalog'
 
-export const dynamic = 'force-dynamic'
-
-export default async function HomePage() {
-  const mediaAssetCount = await prisma.mediaAsset.count()
-
+export default function HomePage() {
   // Communities offered by the hero search, per mode, straight from the catalogue.
   const uniqueSorted = (list: string[]) => Array.from(new Set(list)).sort()
   const communitiesWhere = (match: (p: (typeof PROPERTIES)[number]) => boolean) =>
@@ -32,10 +27,6 @@ export default async function HomePage() {
 
   return (
     <>
-      <span style={{ display: 'none' }} aria-hidden="true">
-        LEAP LIVING — Platform Ready (DB assets: {mediaAssetCount})
-      </span>
-
       <SiteHeader />
 
       <main>
