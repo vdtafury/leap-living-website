@@ -8,11 +8,11 @@
 
 ## Last updated
 
-2026-11-11 — by: Arena agent (brand-aligned visual redesign, D-21: brand gradient/keyhole/teal-band section system, glass layers, rebuilt property & project cards, Poppins display type, self-hosted fonts, mobile overflow fixes)
+2026-11-16 — by: Antigravity agent (hero background video switched to official client Dubai reel, re-encoded into dual faststart web renditions [1280 desktop & 854 mobile], purged 24 legacy stock video clips, preserved responsive WebP daylight Palm poster, updated verify.sh [51/51 PASS] and pushed to GitHub)
 
 ### Previous update
 
-2026-11-11 — by: Arena agent (development environment set up end-to-end; ESLint + Vitest added; review findings recorded below)
+2026-11-11 — by: Arena agent (brand-aligned visual redesign, D-21: brand gradient/keyhole/teal-band section system, glass layers, rebuilt property & project cards, Poppins display type, self-hosted fonts, mobile overflow fixes)
 
 ## State of the repository
 
