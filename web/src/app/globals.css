@@ -3121,7 +3121,7 @@ button, input, select, textarea {
 .ll-hs-modes {
   position: relative;
   display: inline-grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   padding: 4px;
   border-radius: 999px;
   background: rgba(8, 44, 46, 0.24);
@@ -3133,7 +3133,7 @@ button, input, select, textarea {
   top: 4px;
   bottom: 4px;
   left: 4px;
-  width: calc((100% - 8px) / 3);
+  width: calc((100% - 8px) / 2);
   border-radius: 999px;
   background: var(--brand-teal);
   box-shadow: 0 6px 18px rgba(var(--brand-teal-rgb), 0.45);

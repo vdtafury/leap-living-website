@@ -77,7 +77,7 @@ The CEO approved the second homepage design (`docs/source-materials/homepage-app
    Follow the approved layout (`docs/source-materials/homepage-approved-design.jpg`) across the site:
    - Header (`LEAP LIVING | REAL ESTATE CONSULTANCY`, navigation links, `Free Valuation` + `Private Advisory ↗` buttons)
    - Hero (`CERTAINTY THROUGH PRECISION`, `Unlock your next move`, dual CTAs, Dubai skyline & architectural terrace visual)
-   - Floating Search Bar (`Buy` / `Rent` / `Commercial` tabs, Location/Community, Property Type, Price Range AED, `Search Properties ↗`)
+   - Floating Search Bar (`Buy` / `Rent` / `Commercial` tabs, Location/Community, Property Type, Price Range AED, `Search Properties ↗`) — **`Commercial` tab removed (D-23, 2026-11-16): `Buy` / `Rent` only**
    - 4-Pillar Credentials Strip (`21+ Years`, `AED 12B+`, `100% Fiduciary`, `Direct Access`)
    - Curated `Featured Properties` (3-card luxury grid)
    - `Our Services — End-to-End Real Estate Advisory` (with `Consultancy` added)
@@ -145,7 +145,7 @@ Shared shell for `PropertyCard` and `ProjectCard`:
 
 1. **Media** (`.ll-card-media`): photo with a bottom shade, status chip (teal for `Private Advisory` / `Exclusive Mandate` / project status, glass otherwise), type/developer chip, and location in the media foot.
 2. **Body**: kicker (segment · completion), title, price (with frequency for rentals), then either `ll-card-specs` (beds/baths/area with icons, beds hidden when 0) or `ll-card-facts` (handover + payment plan) for projects.
-3. **Foot**: reference code + `View Property Brief` / `Explore Development` CTA with a circular arrow.
+3. **Foot**: reference code + `Know More` (property, with a screen-reader-only "about <title>" suffix; D-23) / `Explore Development` (project) CTA with a circular arrow.
 
 Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows), `ll-quote-card` (quote mark, text, monogram + author/role), and panels (`ll-form-card`, `ll-key-specs-box`, `ll-mortgage-shell`, `ll-filter-bar`, `ll-leadership-panel`). All use `--radius-md` + `--shadow-card`.
 
@@ -208,8 +208,8 @@ The search lives inside the hero (`.ll-hero-inner` = hero copy + `<HeroSearchBar
 - **Hero overlay (`.ll-hero-scrim`):** a **light** brand-teal wash (owner request, replacing the earlier deep-teal 88% scrim). It runs `rgba(36,112,115,.6)` behind the copy → `#3B9EA1` at 36% → 14% → 6% on the right, plus a soft top/bottom shade (34% / 26%). The hero copy gets a faint `text-shadow`, and "next move." uses `--brand-teal-25`, so text stays legible on the lighter photo. The search's inner fills were lightened to `rgba(8,44,46,.22–.24)`.
 - **Hero size:** `min-height: clamp(520px, 68vh, 690px)` on desktop, matching top-tier Dubai consultancy proportions (e.g. Provident) where the hero occupies ~68% of the viewport and seamlessly reveals the partner/developer network band immediately above the fold. Padding and gaps use `vh` clamps; content can always grow past the minimum.
 - **Panel:** frosted glass (`rgba(255,255,255,.15→.06)`, `blur(22px) saturate(140%)`, 1px white/22% border, 22px radius). Falls back to deep teal `rgba(10,52,54,.82)` where `backdrop-filter` is unsupported.
-- **Modes:** segmented Buy / Rent / Commercial pill with a sliding teal thumb (`--mode-index`).
-- **Bar:** Location (searchable) · Property type · Bedrooms · Price (Annual budget in Rent). Fields are separated by hairlines; the whole field is the click target. Commercial locks type and beds.
+- **Modes:** segmented **Buy / Rent** pill with a sliding teal thumb (`--mode-index`). The `Commercial` tab was removed (D-23); commercial listings appear under the matching Buy/Rent mode.
+- **Bar:** Location (searchable) · Property type · Bedrooms · Price (Annual budget in Rent). Fields are separated by hairlines; the whole field is the click target.
 - **Dropdowns (`HeroSelect`):** custom button + listbox (WAI-ARIA). Keyboard: arrows, Home/End, type-ahead, Enter, Escape, Tab. Opens upward when there is less than 300px below. The popover is **solid white**, because nested `backdrop-filter` lets the copy bleed through.
 - **Submit:** teal, 56px tall, magnifier icon.
 - **Quick chips:** "Popular" communities taken from the catalogue for the current mode, so a chip never leads to an empty result.
