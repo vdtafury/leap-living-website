@@ -74,7 +74,8 @@ export function PropertyCard({ property }: { property: PropertyListing }) {
         <div className="ll-card-foot">
           <span className="ll-card-ref">{property.refCode}</span>
           <Link href={href} className="ll-card-cta">
-            <span>View Property Brief</span>
+            <span>Know More</span>
+            <span className="sr-only"> about {property.title}</span>
             <span className="ll-card-cta-icon" aria-hidden="true">
               <ArrowUpRightIcon size={14} />
             </span>
