@@ -33,6 +33,8 @@ logs/
 backups/
 *.sql
 *.sql.gz
+# Schema (not a dump) used by the cPanel packaging script
+!web/scripts/deployment/schema.sql
 *.dump
 
 # tests
