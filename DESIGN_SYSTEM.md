@@ -81,7 +81,7 @@ The CEO approved the second homepage design (`docs/source-materials/homepage-app
    - 4-Pillar Credentials Strip (`21+ Years`, `AED 12B+`, `100% Fiduciary`, `Direct Access`)
    - Curated `Featured Properties` (3-card luxury grid)
    - `Our Services — End-to-End Real Estate Advisory` (with `Consultancy` added)
-   - `Executive Leadership` (Mohab Samak, `CEO` only, zero human photo, architectural skyline/keyhole graphic)
+   - `Executive Leadership` (Mohab Samak, `CEO` only, zero human photo, architectural skyline/keyhole graphic) — **moved to `/about` only (D-22, 2026-11-14)**; its glass design now hosts Client Perspectives
    - `Mortgage Calculator` (interactive UAE mortgage & upfront cost calculator)
    - `Free Valuation` / Advisory request section
    - `Client Perspectives — What Our Clients Say` (zero human avatars)
@@ -176,11 +176,10 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 3. `02` Featured Properties: light, **carousel with arrows** (see 7.8)
 4. `03` Advisory Scope: gradient bento
 5. `04` Dubai Developments: grey
-6. `05` Executive Leadership: image + glass
-7. Valuation & Mortgage CTA: teal band
-8. `06` Client Perspectives: muted
-9. Institutional Pillars (21+ Years, AED 12B+, ...): teal stats band
-10. Footer
+6. Valuation & Mortgage CTA: teal band
+7. `05` Client Perspectives: image + glass, **one testimonial at a time** (see 7.10)
+8. Institutional Pillars (21+ Years, AED 12B+, ...): teal stats band
+9. Footer
 
 ### 7.9 Media & performance rules
 
@@ -241,3 +240,18 @@ Verified with no horizontal overflow, and with the panel fully in view, at 1920�
 - **Accessibility:** `role="region"` + `aria-roledescription="carousel"`; slides are labelled "n of N". Smooth scrolling is disabled under `prefers-reduced-motion`.
 
 > The four listings added on 2026-11-14 (Jumeirah Bay Island, Bluewaters Island, Business Bay, Tilal Al Ghaf) are **sample showcase mandates**, like the rest of the catalogue. Their photos (`property-jumeirah-bay-mansion.jpg`, `property-bluewaters-residence.jpg`, `property-business-bay-penthouse.jpg`, `property-lagoon-villa.jpg`) are **AI-generated placeholders**. Replace them with real listing photography before launch.
+
+### 7.10 Client Perspectives (`ll-cx-*`, D-22)
+
+Component: `web/src/components/home/client-experience.tsx`. Reuses the former homepage Executive Leadership design: `ll-section-image` (glass towers + scrim) and the `ll-leadership-glass` panel with the emblem card on the left.
+
+| Part | Rule |
+|---|---|
+| Layout | Emblem card (keyhole, white logo, `Client Perspectives`, title `Private Client Experience`) + glass panel with one large quote |
+| Slides | All slides stacked in one grid cell (no height jump); only the active one is visible (fade + 12px rise, 450ms). Inactive slides are `aria-hidden` |
+| Controls | Prev/next glass buttons (44px), `01 / 03` counter, dots (8px visual, 24px hit area, active = 22px pill). Loops; **no autoplay** |
+| Input | Buttons, dots, ←/→ keys when focus is inside the section, touch swipe (40px threshold) |
+| A11y | `aria-roledescription="carousel"`, polite live region announces "Testimonial n of N", `aria-current` on the active dot |
+| Motion | `prefers-reduced-motion` removes transitions |
+| Content | `CLIENT_PERSPECTIVES` in `data/catalog.ts` — still unsourced (STATUS.md), zero human photos (monograms only) |
+

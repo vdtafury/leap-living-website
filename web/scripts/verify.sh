@@ -117,7 +117,6 @@ check_contains "Home renders DB readiness marker" "LEAP LIVING — Platform Read
 check_contains "Mod #1: Consultancy service on Home" "Real Estate Consultancy" "$TMP/home.html"
 check_not_contains "Mod #2 & #3: Founder & removed (escaped)" "Founder &amp; CEO" "$TMP/home.html"
 check_not_contains "Mod #2 & #3: Founder & removed (plain)" "Founder & CEO" "$TMP/home.html"
-check_contains "Mod #3: Mohab Samak CEO title" "Mohab Samak" "$TMP/home.html"
 check_contains "Mod #4: Editorial Hero headline" "Unlock your" "$TMP/home.html"
 check_contains "Mod #5: Free Valuation button in Header" "Free Valuation" "$TMP/home.html"
 check_contains "Mod #6: Mortgage Calculator link on Home" "Mortgage Calculator" "$TMP/home.html"
@@ -129,6 +128,12 @@ for route in /buy /rent /sell /projects /mortgage /about /contact \
   code=$(curl -s -o "$TMP/page.html" -w '%{http_code}' "$BASE$route")
   check "GET $route" 200 "$code"
 done
+
+# Mod #3: the CEO block lives on /about (homepage leadership section removed per owner, 2026-11-14)
+code=$(curl -s -o "$TMP/about.html" -w '%{http_code}' "$BASE/about")
+check "GET /about content" 200 "$code"
+check_contains "Mod #3: Mohab Samak CEO title on About" "Mohab Samak" "$TMP/about.html"
+check_not_contains "Mod #3: no Founder title on About" "Founder" "$TMP/about.html"
 
 code=$(curl -s -o "$TMP/mortgage.html" -w '%{http_code}' "$BASE/mortgage")
 check "GET /mortgage content" 200 "$code"
