@@ -40,6 +40,7 @@ const PHOTO_QUALITY = 70
 const CROPS = {
   // 540×900 still carries ~2.8x the detail a phone saw from the landscape 960w.
   'hero-dubai-skyline.jpg': { aspect: 0.6, x: 0.5, width: 540 },
+  'client-video-frame-0.jpg': { aspect: 0.6, x: 0.5, width: 540 },
 }
 
 const isImage = (f) => /\.(jpe?g|png)$/i.test(f)

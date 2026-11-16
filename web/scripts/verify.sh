@@ -165,7 +165,7 @@ for rendition in 1280 854; do
   check "GET /videos/hero/client-hero-$rendition.mp4" 200 "$code"
 done
 # Persistent poster image (WebP variants)
-for img in /images/hero-dubai-skyline.jpg /images/opt/hero-dubai-skyline-1280.webp /images/opt/hero-dubai-skyline-portrait-540.webp; do
+for img in /images/client-video-frame-0.jpg /images/opt/client-video-frame-0-1280.webp /images/opt/client-video-frame-0-portrait-540.webp; do
   code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE$img")
   check "GET $img" 200 "$code"
 done
