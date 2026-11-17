@@ -1,0 +1,152 @@
+/* ==========================================================================
+   BRAND TYPOGRAPHY: Poppins display (no serif in the LEAP LIVING identity)
+   ========================================================================== */
+.ll-serif-title,
+.ll-page-hero-title,
+.ll-hero-title,
+.ll-service-tile.featured .ll-service-tile-title,
+.ll-summary-figure,
+.ll-leadership-emblem-title {
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+
+.ll-hero-title {
+  line-height: 1.08;
+}
+
+.ll-stat-value {
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+.ll-leadership-quote,
+.ll-quote-text {
+  font-style: normal;
+  font-weight: 300;
+  letter-spacing: -0.005em;
+}
+
+.ll-quote-mark {
+  font-weight: 600;
+}
+
+/* Checklist ticks on dark/teal surfaces: a white disc keeps the tick legible */
+.ll-section-dark .ll-highlight-item svg,
+.ll-section-gradient .ll-highlight-item svg,
+.ll-section-teal .ll-highlight-item svg {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  padding: 4px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.16);
+  color: var(--white);
+}
+
+/* Detail-page heroes: location + glass price panel on the brand gradient */
+.ll-page-hero .ll-property-location {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.ll-page-hero .ll-property-location svg {
+  color: var(--brand-teal-50);
+}
+
+.ll-hero-price {
+  position: relative;
+  z-index: 1;
+  text-align: right;
+  padding: 1.1rem 1.5rem;
+  border-radius: var(--radius-md);
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.ll-hero-price-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brand-teal-50);
+  margin-bottom: 0.3rem;
+}
+
+.ll-hero-price-value {
+  font-size: 1.85rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--white);
+}
+
+.ll-hero-price-freq {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+@media (max-width: 600px) {
+  .ll-hero-price {
+    text-align: left;
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   SURFACE UNIFICATION: one radius + shadow language for every panel
+   ========================================================================== */
+.ll-form-card,
+.ll-key-specs-box,
+.ll-mortgage-shell,
+.ll-filter-bar,
+.ll-leadership-panel {
+  border-radius: var(--radius-md);
+  border-color: rgba(10, 52, 54, 0.08);
+  box-shadow: var(--shadow-card);
+}
+
+.ll-key-specs-box,
+.ll-mortgage-shell {
+  overflow: hidden;
+}
+
+.ll-gallery-main,
+.ll-gallery-main img {
+  border-radius: var(--radius-md);
+}
+
+.ll-gallery-thumb,
+.ll-gallery-thumb img {
+  border-radius: var(--radius-sm);
+}
+
+/* Dark-surface form card (e.g. Sell valuation) gets a soft lift */
+.ll-section-dark .ll-form-card,
+.ll-section-gradient .ll-form-card {
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.45);
+  border-color: transparent;
+}
+
+/* Form grids: never let intrinsic input widths push past the viewport */
+.ll-form-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.ll-two-col {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ll-input,
+.ll-select,
+.ll-textarea {
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (max-width: 600px) {
+  .ll-two-col {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

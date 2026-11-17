@@ -1,0 +1,304 @@
+/* ==================== EXECUTIVE LEADERSHIP ==================== */
+.ll-leadership-panel {
+  background-color: var(--white);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  padding: 2.5rem;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.ll-leadership-emblem {
+  border-radius: 3px;
+  padding: 2rem 1.75rem;
+  min-height: 290px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: var(--white);
+  background:
+    linear-gradient(155deg, rgba(24, 92, 94, 0.94) 0%, rgba(16, 62, 64, 0.88) 65%, rgba(24, 92, 94, 0.95) 100%),
+    url('/images/opt/dubai-sunset-waterfront-1280.webp') center / cover no-repeat;
+}
+
+.ll-leadership-quote {
+  margin: 0 0 1.25rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.18rem, 1.9vw, 1.45rem);
+  line-height: 1.52;
+  color: var(--heading);
+  margin-bottom: 1.25rem;
+}
+
+.ll-leadership-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.75rem;
+}
+
+.ll-leadership-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--heading);
+}
+
+.ll-leadership-title {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dark-teal);
+  background-color: var(--brand-teal-10);
+  padding: 0.2rem 0.65rem;
+  border-radius: 2px;
+}
+
+/* Homepage leadership: glass panel over photography */
+.ll-leadership-glass {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 3rem;
+  align-items: center;
+  padding: 2.75rem;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: 0 40px 80px rgba(4, 28, 30, 0.35);
+}
+
+.ll-leadership-emblem-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 320px;
+  padding: 2rem 1.85rem;
+  border-radius: var(--radius-md);
+  background: var(--brand-gradient);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.ll-leadership-emblem-card > *:not(.ll-keyhole) {
+  position: relative;
+  z-index: 1;
+}
+
+.ll-keyhole-emblem {
+  width: 300px;
+  height: 300px;
+  right: -90px;
+  top: -60px;
+  opacity: 0.18;
+}
+
+.ll-leadership-emblem-logo {
+  height: 34px;
+  width: auto;
+  align-self: flex-start;
+}
+
+.ll-leadership-emblem-kicker {
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--brand-teal-25);
+  margin-bottom: 0.45rem;
+}
+
+.ll-leadership-emblem-title {
+  color: var(--white);
+  font-size: 1.45rem;
+  line-height: 1.3;
+}
+
+.ll-leadership-emblem-foot {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.72rem;
+  color: var(--brand-teal-25);
+}
+
+.ll-section-image .ll-leadership-quote,
+.ll-section-image .ll-leadership-name {
+  color: var(--white);
+}
+
+.ll-section-image .ll-leadership-title {
+  background-color: var(--brand-teal);
+  color: var(--white);
+}
+
+.ll-leadership-bio {
+  margin-bottom: 1.6rem;
+  max-width: 640px;
+}
+
+/* Homepage Client Perspectives: the leadership glass layout reused for one
+   large rotating testimonial (component: home/client-experience.tsx) */
+/* Darker teal tint than the About leadership glass: keeps white quote text at AA (>=4.5:1)
+   where the bright sky shows through the blur */
+.ll-cx-glass {
+  background: linear-gradient(150deg, rgba(8, 52, 56, 0.34) 0%, rgba(6, 40, 43, 0.46) 100%);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.ll-cx {
+  min-width: 0;
+}
+
+/* All slides share one grid cell: the panel keeps the tallest quote's height */
+.ll-cx-slides {
+  display: grid;
+  touch-action: pan-y;
+}
+
+.ll-cx-slide {
+  grid-area: 1 / 1;
+  margin: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity 0.45s ease, transform 0.45s ease, visibility 0s linear 0.45s;
+}
+
+.ll-cx-slide.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.45s ease, transform 0.45s ease, visibility 0s;
+}
+
+.ll-cx-slide .ll-leadership-meta {
+  flex-wrap: wrap;
+  margin-bottom: 0;
+}
+
+.ll-cx-slide .ll-monogram,
+.ll-cx-slide .ll-leadership-title {
+  flex: none;
+}
+
+.ll-cx-slide .ll-leadership-name {
+  white-space: nowrap;
+}
+
+.ll-cx-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  margin: 1.75rem 0 1.85rem;
+  padding-top: 1.35rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.ll-cx-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+/* Light-on-glass variant of the carousel arrow buttons */
+.ll-cx-btn {
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.35);
+  color: var(--white);
+  box-shadow: none;
+}
+
+.ll-cx-btn:focus-visible {
+  outline-color: var(--white);
+}
+
+.ll-cx-count {
+  min-width: 3.6rem;
+  text-align: center;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--white);
+}
+
+.ll-cx-count-total {
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.ll-cx-dots {
+  display: flex;
+  gap: 0.25rem;
+}
+
+/* 24px hit area (WCAG 2.5.8), small visual dot */
+.ll-cx-dot {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.ll-cx-dot::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.4);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.ll-cx-dot.is-active::before {
+  width: 22px;
+  background: var(--white);
+}
+
+.ll-cx-dot:hover::before {
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.ll-cx-dot:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 1px;
+  border-radius: 6px;
+}
+
+/* Own class (not .ll-hero-ctas): the hero hides its CTAs on small screens */
+.ll-cx-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* Single column: the emblem card sizes to its content so the quote stays near the fold */
+@media (max-width: 960px) {
+  .ll-cx-glass .ll-leadership-emblem-card {
+    min-height: 0;
+    gap: 1.1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ll-cx-slide,
+  .ll-cx-slide.is-active {
+    transform: none;
+    transition: none;
+  }
+}

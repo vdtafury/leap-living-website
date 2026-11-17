@@ -1,0 +1,165 @@
+/* ==================== SERVICES ==================== */
+.ll-services-layout {
+  display: grid;
+  grid-template-columns: 1.05fr 2.95fr;
+  gap: 2.25rem;
+  align-items: start;
+}
+
+.ll-services-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.95rem;
+}
+
+.ll-services-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.35rem;
+}
+
+.ll-service-card {
+  background-color: var(--white);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 1.6rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  transition: border-color 0.2s ease;
+}
+
+.ll-service-card.featured {
+  border-color: var(--brand-teal);
+  border-top: 3px solid var(--brand-teal);
+}
+
+.ll-service-card:hover {
+  border-color: var(--brand-teal-75);
+}
+
+.ll-service-num {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--brand-teal);
+}
+
+.ll-service-title {
+  font-size: 0.94rem;
+  font-weight: 600;
+  color: var(--heading);
+}
+
+.ll-service-desc {
+  font-size: 0.8rem;
+  color: var(--body-text);
+  line-height: 1.55;
+}
+
+/* Homepage services bento on the brand gradient */
+.ll-services-bento {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 1400px) {
+  .ll-services-bento {
+    gap: 1.5rem;
+  }
+  .ll-service-tile {
+    padding: 2rem;
+    min-height: 250px;
+  }
+}
+
+.ll-service-tile {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.5rem;
+  min-height: 230px;
+  padding: 1.75rem;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.03) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.ll-service-tile:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.34);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.ll-service-tile.featured {
+  grid-row: span 2;
+  background: linear-gradient(155deg, #45AAAD 0%, #3B9EA1 45%, #287F82 100%);
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 0 30px 60px rgba(4, 28, 30, 0.35);
+}
+
+.ll-keyhole-tile {
+  width: 320px;
+  height: 320px;
+  right: -70px;
+  top: -50px;
+  opacity: 0.2;
+}
+
+.ll-service-bignum {
+  position: relative;
+  z-index: 1;
+  font-size: 3.6rem;
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.92) 80%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.ll-service-tile.featured .ll-service-bignum {
+  font-size: 6rem;
+}
+
+.ll-service-tile-body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
+.ll-service-tile-title {
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.ll-service-tile.featured .ll-service-tile-title {
+  font-family: var(--font-serif);
+  font-size: 1.7rem;
+  line-height: 1.2;
+}
+
+.ll-service-tile-desc {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.ll-service-tile.featured .ll-service-tile-desc {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 340px;
+}

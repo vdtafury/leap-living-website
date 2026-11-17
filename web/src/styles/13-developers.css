@@ -1,0 +1,451 @@
+/* ==================== TESTIMONIALS & DEVELOPERS ==================== */
+.ll-quote-card {
+  position: relative;
+  margin: 0;
+  background-color: var(--white);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 2.25rem 1.85rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ll-quote-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--brand-teal), var(--brand-teal-25));
+}
+
+.ll-quote-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.ll-quote-mark {
+  font-family: var(--font-serif);
+  font-size: 4.5rem;
+  line-height: 0.6;
+  height: 1.6rem;
+  color: var(--brand-teal-50);
+}
+
+.ll-quote-text {
+  margin: 0;
+  flex: 1;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.06rem;
+  line-height: 1.6;
+  color: var(--heading);
+}
+
+.ll-quote-author {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.ll-quote-name {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--heading);
+}
+
+.ll-quote-role {
+  display: block;
+  font-size: 0.76rem;
+  color: var(--body-text);
+}
+
+.ll-monogram {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--brand-gradient);
+  color: var(--white);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Developer network: continuous logo marquee */
+.ll-dev-showcase {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(4.5rem, 5.5vw, 6.5rem) 0 clamp(4rem, 5vw, 5.5rem);
+}
+
+.ll-dev-showcase.ll-section-light {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.ll-dev-showcase-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 2.75rem;
+}
+
+.ll-dev-showcase-lead {
+  margin: 0.35rem 0 0;
+  max-width: 640px;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--body-text);
+}
+
+.ll-marquee-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  background-color: var(--white);
+  color: var(--dark-teal);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+.ll-marquee-toggle:hover {
+  border-color: var(--brand-teal);
+  color: var(--brand-teal);
+}
+
+.ll-marquee-toggle:focus-visible {
+  outline: 2px solid var(--brand-teal);
+  outline-offset: 3px;
+}
+
+.ll-marquee {
+  /* ~3.9s per logo (55s for the original 14) — constant speed for any count */
+  --marquee-duration: calc(var(--marquee-items, 14) * 3.9s);
+  --marquee-gap: 1.25rem;
+  position: relative;
+  overflow: hidden;
+  padding: 0.75rem 0 1.25rem;
+  /* Soft fade at both edges so logos glide in and out. The strip lives inside
+     .ll-container (same edges as the heading), so the fade is kept short. */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+}
+
+.ll-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: ll-marquee-scroll var(--marquee-duration) linear infinite;
+  will-change: transform;
+}
+
+.ll-marquee:hover .ll-marquee-track,
+.ll-marquee:focus-within .ll-marquee-track,
+.ll-marquee.is-paused .ll-marquee-track {
+  animation-play-state: paused;
+}
+
+.ll-marquee-list {
+  display: flex;
+  gap: var(--marquee-gap);
+  margin: 0;
+  /* trailing gap keeps spacing identical across the loop seam */
+  padding: 0 var(--marquee-gap) 0 0;
+  list-style: none;
+}
+
+.ll-marquee-item {
+  /* Bare logos: an invisible fixed-width slot only — no tile, border, fill
+     or shadow — so the marks keep an even rhythm as they glide past. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 200px;
+  height: 72px;
+  padding: 0 1rem;
+}
+
+.ll-marquee-logo {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  /* Logos show in their own brand colours at all times */
+  filter: none;
+  opacity: 1;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.ll-marquee-wordmark {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--heading);
+  transition: color 0.3s ease;
+}
+
+.ll-marquee-item:hover .ll-marquee-logo {
+  transform: scale(1.08);
+}
+
+.ll-marquee-item:hover .ll-marquee-wordmark {
+  color: var(--dark-teal);
+}
+
+/* ---- Brand watermark: large keyhole mark, cropped by the right edge ---- */
+.ll-keyhole-dev {
+  width: 640px;
+  height: 640px;
+  right: -150px;
+  top: 50%;
+  transform: translateY(-50%);
+  /* white mark on the teal tint, as on the Brand Guidelines cover */
+  color: var(--white);
+  opacity: 0.5;
+}
+
+.ll-section-glass .ll-keyhole-dev {
+  color: var(--white);
+  opacity: 0.1;
+}
+
+@media (max-width: 960px) {
+  .ll-keyhole-dev {
+    width: 440px;
+    height: 440px;
+    right: -170px;
+    top: auto;
+    bottom: -70px;
+    transform: none;
+  }
+}
+
+/* ---- Glass surface: skyline photo + teal scrim, bare white logos ---- */
+.ll-dev-showcase.ll-section-glass {
+  background-color: var(--brand-deep);
+  color: var(--white);
+  padding: 6rem 0 5.5rem;
+}
+
+.ll-section-glass > .ll-container,
+.ll-section-glass > .ll-marquee {
+  position: relative;
+  z-index: 1;
+}
+
+.ll-section-glass .ll-section-image-bg img {
+  object-position: center 62%;
+}
+
+.ll-dev-glass-scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 80% at 10% 105%, rgba(59, 158, 161, 0.5) 0%, rgba(59, 158, 161, 0) 62%),
+    linear-gradient(180deg, rgba(7, 43, 45, 1) 0%, rgba(7, 43, 45, 0.86) 14%, rgba(10, 52, 54, 0.6) 44%, rgba(12, 66, 69, 0.38) 72%, rgba(7, 43, 45, 0.72) 100%),
+    linear-gradient(100deg, rgba(10, 52, 54, 0.5) 0%, rgba(24, 92, 94, 0.2) 100%);
+}
+
+.ll-section-glass .ll-section-image-bg img {
+  /* pull the warm sunset toward the brand teal while keeping the skyline readable */
+  filter: grayscale(0.55) sepia(0.25) hue-rotate(130deg) saturate(1.1) brightness(0.95);
+}
+
+/* Clear seam before the (also dark) footer */
+.ll-dev-showcase.ll-section-glass {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.ll-section-glass .ll-section-title {
+  color: var(--white);
+}
+
+.ll-section-glass .ll-eyebrow {
+  color: var(--brand-teal-25);
+}
+
+.ll-section-glass .ll-eyebrow::after {
+  background-color: var(--brand-teal-50);
+}
+
+.ll-section-glass .ll-eyebrow-num {
+  color: var(--white);
+}
+
+.ll-section-glass .ll-dev-showcase-lead {
+  color: rgba(255, 255, 255, 0.74);
+}
+
+.ll-section-glass .ll-marquee-toggle {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.24);
+  color: var(--white);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.ll-section-glass .ll-marquee-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.45);
+  color: var(--white);
+}
+
+.ll-section-glass .ll-marquee-toggle:focus-visible {
+  outline-color: var(--white);
+}
+
+/* Logos read as white marks straight on the photo (no band, no tiles) */
+.ll-section-glass .ll-marquee-logo {
+  filter: brightness(0) invert(1);
+  opacity: 0.82;
+}
+
+.ll-section-glass .ll-marquee-wordmark {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Hover: the white mark brightens (stays white — colour logos would sink into the dark scrim) */
+.ll-section-glass .ll-marquee-item:hover .ll-marquee-logo {
+  opacity: 1;
+}
+
+.ll-section-glass .ll-marquee-item:hover .ll-marquee-wordmark {
+  color: var(--white);
+}
+
+@media (max-width: 960px) {
+  .ll-dev-showcase.ll-section-glass {
+    padding: 4.5rem 0 4.25rem;
+  }
+}
+
+/* ---- Light glass surface: brand-teal tint over the skyline, bare full-colour logos ---- */
+.ll-dev-showcase.ll-section-glass-light {
+  /* Brand teal tints (10% -> 25%), light enough for full-colour logos */
+  background-color: var(--brand-teal-10);
+  padding: clamp(5.25rem, 6.2vw, 7.25rem) 0 clamp(4.75rem, 5.8vw, 6.5rem);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.ll-section-glass-light > .ll-container,
+.ll-section-glass-light > .ll-marquee {
+  position: relative;
+  z-index: 1;
+}
+
+.ll-section-glass-light .ll-section-image-bg img {
+  object-position: center 62%;
+  /* skyline toned toward the brand teal so it reads as a soft brand texture */
+  filter: grayscale(1) sepia(0.45) hue-rotate(128deg) saturate(1.7) contrast(0.88) brightness(1.04);
+}
+
+.ll-section-glass-light .ll-dev-glass-scrim {
+  background:
+    radial-gradient(ellipse 60% 80% at 6% 110%, rgba(59, 158, 161, 0.34) 0%, rgba(59, 158, 161, 0) 65%),
+    radial-gradient(ellipse 50% 70% at 100% 0%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 70%),
+    linear-gradient(180deg, rgba(229, 243, 243, 0.94) 0%, rgba(220, 239, 240, 0.86) 22%, rgba(205, 230, 231, 0.74) 55%, rgba(196, 226, 227, 0.7) 80%, rgba(196, 226, 227, 0.88) 100%),
+    rgba(59, 158, 161, 0.14);
+}
+
+.ll-section-glass-light .ll-dev-showcase-lead {
+  /* darker than --body-text: keeps WCAG AA (>= 4.5:1) on the teal tint */
+  color: #44504F;
+}
+
+.ll-section-glass-light .ll-marquee-toggle {
+  background-color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(10, 52, 54, 0.14);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Logos sit directly on the washed skyline: no frosted band, no tiles */
+.ll-section-glass-light .ll-marquee {
+  padding: 1.25rem 0;
+}
+
+@media (max-width: 960px) {
+  .ll-dev-showcase.ll-section-glass-light {
+    padding: 4.5rem 0 4.25rem;
+  }
+}
+
+@keyframes ll-marquee-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (max-width: 960px) {
+  .ll-dev-showcase {
+    padding: 4rem 0 4.25rem;
+  }
+  .ll-dev-showcase-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .ll-marquee {
+    --marquee-duration: calc(var(--marquee-items, 14) * 3s);
+    --marquee-gap: 0.85rem;
+  }
+  .ll-marquee-item {
+    width: 156px;
+    height: 60px;
+    padding: 0 0.75rem;
+  }
+  .ll-marquee-logo {
+    transform: scale(0.85);
+  }
+}
+
+/* Reduced motion: static, wrapped grid; drop the visual duplicate */
+@media (prefers-reduced-motion: reduce) {
+  .ll-marquee {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .ll-marquee-track {
+    width: auto;
+    animation: none;
+    justify-content: center;
+  }
+  .ll-marquee-list {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0;
+  }
+  .ll-marquee-list[aria-hidden='true'],
+  .ll-marquee-toggle {
+    display: none;
+  }
+}
