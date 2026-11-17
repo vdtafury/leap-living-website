@@ -11,7 +11,6 @@ import { ProjectCard } from '@/components/project/project-card'
 import {
   ArrowRightIcon,
   ArrowUpRightIcon,
-  CalculatorIcon,
   CalendarIcon,
   HomeIcon,
   ShieldCheckIcon,
@@ -200,42 +199,38 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ==================== VALUATION & MORTGAGE (two paths + calculator) ==================== */}
+        {/* ==================== VALUATION & MORTGAGE (one card: owners | buyers) ==================== */}
         <section className="ll-section-tint ll-defer-render" aria-labelledby="ll-advice-title">
           <div className="ll-container">
             <div className="ll-advice">
-              <div className="ll-advice-intro">
+              {/* Owners: section title + valuation request */}
+              <div className="ll-advice-owners">
                 <div className="ll-eyebrow">Owner &amp; Buyer Advisory</div>
                 <h2 id="ll-advice-title" className="ll-serif-title ll-section-title">
                   Free Property Valuation &amp; Mortgage Planning
                 </h2>
-              </div>
-              <div className="ll-advice-paths">
-                <Link href="/sell#valuation-form" className="ll-advice-path is-primary">
-                  <span className="ll-advice-icon">
-                    <HomeIcon size={22} />
-                  </span>
-                  <span className="ll-advice-kicker">For Owners</span>
-                  <span className="ll-advice-label">Request Free Valuation</span>
-                  <span className="ll-advice-arrow" aria-hidden="true">
-                    <ArrowUpRightIcon size={16} />
-                  </span>
-                </Link>
-                <Link href="/#mortgage-calculator" className="ll-advice-path">
-                  <span className="ll-advice-icon">
-                    <CalculatorIcon size={22} />
-                  </span>
-                  <span className="ll-advice-kicker">For Buyers</span>
-                  <span className="ll-advice-label">Open Mortgage Calculator</span>
-                  <span className="ll-advice-arrow" aria-hidden="true">
-                    <ArrowUpRightIcon size={16} />
-                  </span>
-                </Link>
-              </div>
-            </div>
 
-            {/* The navbar "Mortgage Calculator" button scrolls here (D-30) */}
-            <HomeMortgageCalculator />
+                <div className="ll-advice-valuation">
+                  <div className="ll-advice-kicker">
+                    <span className="ll-advice-icon" aria-hidden="true">
+                      <HomeIcon size={18} />
+                    </span>
+                    For Owners
+                  </div>
+                  <h3 className="ll-advice-subtitle">What is your property worth?</h3>
+                  <p className="ll-advice-text">
+                    A free, no-obligation valuation based on recent transactions in your community.
+                  </p>
+                  <Link href="/sell#valuation-form" className="ll-btn ll-btn-primary ll-advice-btn">
+                    <span>Request Free Valuation</span>
+                    <ArrowUpRightIcon size={15} />
+                  </Link>
+                </div>
+              </div>
+
+              {/* Buyers: the calculator (navbar "Mortgage Calculator" scrolls here, D-30) */}
+              <HomeMortgageCalculator />
+            </div>
           </div>
         </section>
 

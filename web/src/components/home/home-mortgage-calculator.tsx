@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useState } from 'react'
 import Link from 'next/link'
-import { ArrowUpRightIcon } from '@/components/ui/icons'
+import { ArrowUpRightIcon, CalculatorIcon } from '@/components/ui/icons'
 import { formatAmountInput, monthlyPayment, parseAmount } from '@/lib/mortgage'
 
 /**
@@ -92,6 +92,12 @@ export function HomeMortgageCalculator() {
 
   return (
     <div id={ANCHOR} className="ll-hmc">
+      <div className="ll-advice-kicker">
+        <span className="ll-advice-icon" aria-hidden="true">
+          <CalculatorIcon size={18} />
+        </span>
+        For Buyers
+      </div>
       <h3 className="ll-hmc-title">Mortgage Calculator</h3>
       <p className="ll-hmc-desc">
         Estimate your monthly repayment in seconds. Adjust the figures to match your plans.
