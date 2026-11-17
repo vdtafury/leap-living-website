@@ -1,0 +1,186 @@
+/* Header */
+.ll-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background-color 0.28s ease, backdrop-filter 0.28s ease,
+    border-color 0.28s ease, box-shadow 0.28s ease;
+}
+
+.ll-header--overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.ll-header--transparent {
+  background-color: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom-color: transparent;
+  box-shadow: none;
+}
+
+.ll-header--glass {
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(18px) saturate(165%);
+  -webkit-backdrop-filter: blur(18px) saturate(165%);
+  border-bottom-color: rgba(221, 221, 221, 0.72);
+  box-shadow: 0 8px 28px rgba(16, 42, 44, 0.08);
+}
+
+.ll-header--transparent .ll-brand-divider {
+  background-color: rgba(255, 255, 255, 0.34);
+}
+
+.ll-header--transparent .ll-brand-sub {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.ll-header--transparent .ll-nav-link {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.ll-header--transparent .ll-nav-link:hover,
+.ll-header--transparent .ll-nav-link.active {
+  color: var(--white);
+}
+
+.ll-header--transparent .ll-nav-link.active::after {
+  background-color: var(--brand-teal-75);
+}
+
+.ll-header--transparent .ll-btn-mortgage {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.36);
+  color: var(--white);
+}
+
+.ll-header--transparent .ll-btn-mortgage svg {
+  color: var(--brand-teal-50);
+}
+
+.ll-header--transparent .ll-btn-mortgage:hover {
+  background-color: rgba(255, 255, 255, 0.16);
+  border-color: var(--white);
+  color: var(--white);
+}
+
+.ll-header--transparent .ll-mobile-menu-btn {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.36);
+  color: var(--white);
+}
+
+.ll-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 82px;
+  gap: 1.25rem;
+}
+
+.ll-brand-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.78rem;
+  flex-shrink: 0;
+}
+
+.ll-brand-divider {
+  width: 1px;
+  height: 28px;
+  background-color: var(--neutral-grey);
+}
+
+.ll-brand-sub {
+  font-size: 0.63rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1.38;
+  color: var(--body-text);
+  text-transform: uppercase;
+}
+
+.ll-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.ll-nav-link {
+  position: relative;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--heading);
+  padding: 0.4rem 0;
+  transition: color 0.18s ease;
+}
+
+.ll-nav-link:hover,
+.ll-nav-link.active {
+  color: var(--dark-teal);
+}
+
+.ll-nav-link.active {
+  font-weight: 600;
+}
+
+.ll-nav-link.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  background-color: var(--brand-teal);
+}
+
+.ll-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.ll-mobile-menu-btn {
+  display: none;
+  background: var(--white);
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px;
+  padding: 0.45rem 0.65rem;
+  color: var(--heading);
+  cursor: pointer;
+}
+
+.ll-mobile-drawer {
+  border-top: 1px solid var(--border-subtle);
+  background-color: var(--white);
+  padding: 1.25rem 0 1.5rem;
+}
+
+.ll-mobile-nav {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.ll-mobile-nav-link {
+  padding: 0.6rem 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--heading);
+  border-bottom: 1px solid var(--page-bg);
+}
+
+.ll-mobile-nav-link.active {
+  color: var(--brand-teal);
+  font-weight: 600;
+}
+
+.ll-mobile-nav-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}

@@ -1,0 +1,95 @@
+:root {
+  color-scheme: light;
+
+  /* 1. Approved Core Brand Colors (BRAND GUIDELINES.pdf p. 15-16) */
+  --brand-teal: #3B9EA1;
+  --brand-teal-rgb: 59, 158, 161;
+  --neutral-grey: #DDDDDD;
+  --white: #FFFFFF;
+
+  /* Brand Teal Tints (BRAND GUIDELINES.pdf p. 16) */
+  --brand-teal-75: #6CB6B8;
+  --brand-teal-50: #9CCECF;
+  --brand-teal-25: #CDE6E7;
+  --brand-teal-10: #EBF5F5;
+
+  /* 2. Approved Supporting Website UI Colors */
+  --dark-teal: #185C5E;
+  --secondary-teal: #287F82;
+  --page-bg: #F5F7F6;
+  --heading: #252B2B;
+  --body-text: #626B69;
+  --border-subtle: #E2E7E5;
+
+  /* Brand depth + signature gradient (BRAND GUIDELINES.pdf cover / closing page) */
+  --brand-deep: #0A3436;
+  --brand-ink: #0F4B4D;
+  --neutral-grey-50: #EEEEEE;
+  --brand-gradient:
+    radial-gradient(85% 120% at 0% 100%, rgba(125, 205, 207, 0.62) 0%, rgba(59, 158, 161, 0) 58%),
+    linear-gradient(125deg, #2C8F92 0%, #13686B 38%, #0A3F41 72%, #072B2D 100%);
+  --teal-band:
+    radial-gradient(70% 140% at 100% 0%, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 60%),
+    linear-gradient(135deg, #3B9EA1 0%, #339497 55%, #287F82 100%);
+  --keyhole-white: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 132 132' fill='none' stroke='white'%3E%3Ccircle cx='66' cy='66' r='62.5' stroke-width='1.6'/%3E%3Cpath d='M56.5 68.5A19 19 0 1 1 75.5 68.5L82 101.5H50Z' stroke-width='1.1'/%3E%3C/svg%3E");
+
+  /* Shape + elevation */
+  --radius-sm: 4px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --shadow-card: 0 1px 2px rgba(16, 42, 44, 0.04), 0 10px 28px rgba(16, 42, 44, 0.06);
+  --shadow-card-hover: 0 2px 6px rgba(16, 42, 44, 0.06), 0 26px 50px rgba(24, 92, 94, 0.16);
+
+  /* Typography */
+  --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Brand display face: the guidelines specify Sony Sketch EF (licence not
+     available) for headlines and Poppins for everything else. There is no
+     serif in the identity, so display titles use Poppins at medium weight
+     with tightened tracking. `--font-serif` is kept as an alias so existing
+     selectors keep working. */
+  --font-display: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-serif: var(--font-display);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  background-color: var(--page-bg);
+  color: var(--body-text);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  color: var(--heading);
+  line-height: 1.15;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}

@@ -1,0 +1,188 @@
+/* Container */
+/* Page width system (expanded, Provident-style; owner-approved 2026-11-17):
+   - one fluid side gutter shared by every section: 20px on phones, up to 64px;
+   - section content grows smoothly with the viewport, from 1220px (laptops) to
+     1560px (>=1800px), with no jumps while resizing. The curve passes through the widths
+     of the original stepped version: ~1290px at 1400px, ~1360px at 1500px, ~1490px at
+     1700px, 1560px from 1800px;
+   - on laptops and mid-size desktops (about 1330-1650px), sections run slightly wider
+     than the navbar's inner edge. That is intentional (it matches providentestate.com);
+   - the navbar keeps its own gutter and runs edge-to-edge (--nav-max: 1920px). */
+:root {
+  --page-gutter: clamp(1.25rem, 4vw, 4rem);
+  --content-max: clamp(1220px, calc(68vw + 336px), 1560px);
+  --nav-gutter: clamp(1.25rem, calc(10vw - 77px), 5rem);
+  --nav-max: 1920px;
+}
+
+.ll-container {
+  width: 100%;
+  max-width: calc(var(--content-max) + 2 * var(--page-gutter));
+  margin: 0 auto;
+  padding: 0 var(--page-gutter);
+}
+
+.ll-container.ll-header-inner,
+.ll-container.ll-mobile-nav {
+  max-width: var(--nav-max);
+  padding: 0 var(--nav-gutter);
+}
+
+/* Eyebrow label */
+.ll-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.875rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dark-teal);
+  margin-bottom: 0.85rem;
+}
+
+.ll-eyebrow::after {
+  content: '';
+  display: inline-block;
+  width: 44px;
+  height: 1.5px;
+  background-color: var(--brand-teal);
+}
+
+.ll-eyebrow-num {
+  font-variant-numeric: tabular-nums;
+  color: var(--brand-teal);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding-right: 0.85rem;
+  border-right: 1px solid currentColor;
+  line-height: 1;
+}
+
+/* Decorative keyhole watermark (traced brand mark) */
+.ll-keyhole {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  color: var(--white);
+}
+
+.ll-eyebrow-light {
+  color: var(--brand-teal-25);
+}
+
+.ll-eyebrow-light::after {
+  background-color: var(--brand-teal-50);
+}
+
+/* Editorial Display Titles */
+.ll-serif-title {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  color: var(--heading);
+  letter-spacing: -0.015em;
+}
+
+/* Crisp Architectural Buttons */
+.ll-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.84rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.ll-btn-primary {
+  background-color: var(--brand-teal);
+  color: var(--white);
+}
+
+.ll-btn-primary:hover {
+  background-color: var(--secondary-teal);
+}
+
+.ll-btn-light {
+  background-color: var(--white);
+  color: var(--dark-teal);
+  font-weight: 600;
+}
+
+.ll-btn-light:hover {
+  background-color: var(--brand-teal-10);
+  color: var(--brand-deep);
+}
+
+.ll-btn-dark {
+  background-color: var(--dark-teal);
+  color: var(--white);
+}
+
+.ll-btn-dark:hover {
+  background-color: var(--secondary-teal);
+}
+
+.ll-btn-outline {
+  background-color: var(--white);
+  color: var(--heading);
+  border-color: var(--neutral-grey);
+}
+
+.ll-btn-outline:hover {
+  border-color: var(--brand-teal);
+  color: var(--dark-teal);
+  background-color: var(--brand-teal-10);
+}
+
+.ll-btn-outline-light {
+  background-color: transparent;
+  color: var(--white);
+  border-color: rgba(255, 255, 255, 0.42);
+}
+
+.ll-btn-outline-light:hover {
+  background-color: var(--white);
+  color: var(--dark-teal);
+  border-color: var(--white);
+}
+
+.ll-btn-valuation {
+  background-color: var(--brand-teal-10);
+  color: var(--dark-teal);
+  border-color: var(--brand-teal);
+  font-weight: 600;
+}
+
+.ll-btn-valuation:hover {
+  background-color: var(--dark-teal);
+  border-color: var(--dark-teal);
+  color: var(--white);
+}
+
+.ll-btn-mortgage {
+  background-color: var(--white);
+  color: var(--heading);
+  border-color: var(--neutral-grey);
+  font-weight: 500;
+}
+
+.ll-btn-mortgage svg {
+  color: var(--brand-teal);
+}
+
+.ll-btn-mortgage:hover {
+  border-color: var(--brand-teal);
+  color: var(--dark-teal);
+  background-color: var(--page-bg);
+}
+
+.ll-btn-full {
+  width: 100%;
+}

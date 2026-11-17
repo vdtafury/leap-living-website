@@ -1,0 +1,225 @@
+/* ==================== SECTIONS & RHYTHM ==================== */
+/* Each section type has a distinct surface so the page reads as clear chapters. */
+.ll-section-light,
+.ll-section-muted,
+.ll-section-grey,
+.ll-section-teal,
+.ll-section-gradient,
+.ll-section-image,
+.ll-section-dark {
+  position: relative;
+  padding: clamp(4.75rem, 6.2vw, 7.25rem) 0;
+}
+
+.ll-section-light {
+  background-color: var(--white);
+}
+
+.ll-section-muted {
+  background-color: var(--page-bg);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.ll-section-grey {
+  overflow: hidden;
+  background:
+    radial-gradient(60% 90% at 100% 0%, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0) 70%),
+    linear-gradient(180deg, #EEF0EF 0%, #E4E8E7 100%);
+}
+
+.ll-keyhole-grey {
+  width: 620px;
+  height: 620px;
+  left: -230px;
+  bottom: -260px;
+  color: var(--brand-teal);
+  opacity: 0.12;
+}
+
+.ll-section-teal {
+  overflow: hidden;
+  background: var(--teal-band);
+  color: var(--white);
+}
+
+.ll-keyhole-teal-band {
+  width: 560px;
+  height: 560px;
+  right: -120px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.16;
+}
+
+.ll-section-gradient,
+.ll-section-dark {
+  overflow: hidden;
+  background: var(--brand-gradient);
+  color: var(--white);
+}
+
+.ll-section-dark::before {
+  content: '';
+  position: absolute;
+  width: 560px;
+  aspect-ratio: 1;
+  right: -140px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--keyhole-white) center / contain no-repeat;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.ll-keyhole-services {
+  width: 760px;
+  height: 760px;
+  right: -260px;
+  top: -220px;
+  opacity: 0.06;
+}
+
+/* Full-bleed photography + brand scrim (same language as the footer) */
+.ll-section-image {
+  overflow: hidden;
+  background-color: var(--brand-deep);
+  color: var(--white);
+}
+
+.ll-section-image-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.ll-section-image-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ll-section-image-scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(100deg, rgba(7, 43, 45, 0.94) 0%, rgba(10, 63, 65, 0.84) 45%, rgba(19, 104, 107, 0.62) 100%),
+    linear-gradient(180deg, rgba(7, 43, 45, 0.4) 0%, rgba(7, 43, 45, 0) 40%, rgba(7, 43, 45, 0.5) 100%);
+}
+
+.ll-section-grey > .ll-container,
+.ll-section-teal > .ll-container,
+.ll-section-gradient > .ll-container,
+.ll-section-image > .ll-container,
+.ll-section-dark > .ll-container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Text on dark / teal surfaces */
+.ll-section-teal .ll-section-title,
+.ll-section-gradient .ll-section-title,
+.ll-section-image .ll-section-title,
+.ll-section-dark .ll-section-title {
+  color: var(--white);
+}
+
+.ll-section-teal .ll-section-lead,
+.ll-section-gradient .ll-section-lead,
+.ll-section-image .ll-section-lead,
+.ll-section-dark .ll-section-lead {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.ll-section-teal .ll-eyebrow,
+.ll-section-gradient .ll-eyebrow,
+.ll-section-image .ll-eyebrow,
+.ll-section-dark .ll-eyebrow,
+.ll-page-hero .ll-eyebrow {
+  color: var(--brand-teal-25);
+}
+
+.ll-section-teal .ll-eyebrow::after,
+.ll-section-gradient .ll-eyebrow::after,
+.ll-section-image .ll-eyebrow::after,
+.ll-section-dark .ll-eyebrow::after,
+.ll-page-hero .ll-eyebrow::after {
+  background-color: rgba(255, 255, 255, 0.55);
+}
+
+.ll-section-teal .ll-eyebrow-num,
+.ll-section-gradient .ll-eyebrow-num,
+.ll-section-image .ll-eyebrow-num,
+.ll-section-dark .ll-eyebrow-num {
+  color: var(--white);
+}
+
+.ll-section-gradient .ll-link-arrow,
+.ll-section-image .ll-link-arrow,
+.ll-section-teal .ll-link-arrow,
+.ll-section-dark .ll-link-arrow {
+  color: var(--white);
+}
+
+.ll-section-gradient .ll-link-arrow:hover,
+.ll-section-image .ll-link-arrow:hover,
+.ll-section-teal .ll-link-arrow:hover,
+.ll-section-dark .ll-link-arrow:hover {
+  color: var(--brand-teal-25);
+  border-bottom-color: var(--brand-teal-25);
+}
+
+.ll-section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.75rem;
+  margin-bottom: clamp(2.5rem, 3.5vw, 3.5rem);
+  flex-wrap: wrap;
+}
+
+.ll-section-title {
+  font-size: clamp(2.05rem, 3.2vw, 2.85rem);
+  letter-spacing: -0.02em;
+}
+
+.ll-section-lead {
+  font-size: clamp(0.95rem, 1.05vw, 1.05rem);
+  color: var(--body-text);
+  max-width: 680px;
+  margin-top: 0.65rem;
+  line-height: 1.65;
+}
+
+.ll-link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--dark-teal);
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: border-color 0.18s ease, color 0.18s ease;
+}
+
+.ll-link-arrow:hover {
+  color: var(--brand-teal);
+  border-bottom-color: var(--brand-teal);
+}
+
+/* Teal call-to-action band */
+.ll-cta-band {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.ll-cta-band-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  justify-content: flex-end;
+}
