@@ -26,8 +26,8 @@
     ]
   },
   "/images/client-video-frame-0.jpg": {
-    "width": 1280,
-    "height": 720,
+    "width": 1920,
+    "height": 1080,
     "variants": [
       {
         "w": 640,
@@ -44,6 +44,10 @@
       {
         "w": 1280,
         "src": "/images/opt/client-video-frame-0-1280.webp"
+      },
+      {
+        "w": 1920,
+        "src": "/images/opt/client-video-frame-0-1920.webp"
       }
     ],
     "portrait": {
