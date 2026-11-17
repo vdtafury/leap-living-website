@@ -84,6 +84,9 @@ Same day, Arena agent: checked the cleanup from a fresh clone. The 88 MB master 
 
 ## Open items (temporary on purpose, to settle at the client meeting)
 
+The full question list for the meeting is in `docs/business/meeting-questions.md` (24 questions).
+
+
 - **Stats:** `21+ Years` / `AED 12B+` do not appear on leapliving.ae; the owner will confirm (O-05).
 - **Testimonials:** Hassan A., Leila K. and Omar N. are placeholders, to be replaced.
 - **Samples:** sample listings, projects and developer names/logos stay until the CRM and permission answers arrive (O-06). No SAMPLE labels for now (owner).
@@ -94,7 +97,7 @@ Same day, Arena agent: checked the cleanup from a fresh clone. The 88 MB master 
 
 ## Next (in order)
 
-1. Client meeting: get answers for the open items above.
+1. Client meeting: get answers to `docs/business/meeting-questions.md`.
 2. Staging on cPanel when the owner resumes it (`docs/deployment/cpanel-staging.md`). Set `ADMIN_USER`, `ADMIN_PASSWORD` and `SITE_URL`.
 3. Production cut-over, only with written approval: set `SITE_URL=https://leapliving.ae` and `SITE_INDEXING=true`.
 
@@ -150,3 +153,4 @@ Same day, Arena agent: checked the cleanup from a fresh clone. The 88 MB master 
 | 2026-11-17 | Arena agent | Homepage sections now alternate tint / white from the stats band down (stats, advisory, valuation and footer on `--surface-tint`), so each section reads as separate (D-28 f) | `tsc` PASS, lint 0 errors, vitest 48/48, build PASS, verify.sh 65/65 |
 | 2026-11-17 | Arena agent | Valuation entry redesigned as a two-path card (owners / buyers), developer strip tightened to about 130px, desktop hero taller so hero + strip fill the first screen (D-29) | `tsc` PASS, lint 0 errors, vitest 48/48, build PASS, verify.sh 65/65; Lighthouse mobile perf 94, LCP 2.9 s |
 | 2026-11-17 | Arena agent | Homepage mortgage calculator from the owner's reference (navbar, buyer tile and footer go to `/#mortgage-calculator`); `/mortgage` page deleted (308 redirect, out of the sitemap); desktop hero search smaller and lower (D-30) | `tsc` PASS, lint 0 errors, vitest 55/55 (7 new), build PASS, verify.sh 67/67; anchor lands under the header in 6/6 cases (desktop, phone); Lighthouse mobile 90–93, desktop 99 |
+| 2026-11-17 | Arena agent | Meeting questions saved in `docs/business/meeting-questions.md` (24, grouped, with O-xx references). Teal status chips use secondary teal `#287F82`: white text now 4.72:1, was 3.19:1 (Lighthouse `color-contrast` fixed) | build PASS, verify.sh 67/67; Lighthouse a11y re-checked |

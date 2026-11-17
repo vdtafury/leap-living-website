@@ -105,7 +105,8 @@
 }
 
 .ll-chip-teal {
-  background-color: var(--brand-teal);
+  /* Secondary teal, not #3B9EA1: white text needs 4.5:1 (#287F82 = 4.72, #3B9EA1 = 3.19) */
+  background-color: var(--secondary-teal);
   color: var(--white);
 }
 

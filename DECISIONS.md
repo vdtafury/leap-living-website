@@ -49,6 +49,8 @@ Single place for accepted decisions, open questions, and known contradictions. W
 
 ## C. Open questions (need an answer; do not guess)
 
+The meeting version of these questions, with space for answers, is `docs/business/meeting-questions.md`.
+
 ### Brand and content
 | ID | Question | Who |
 |---|---|---|

@@ -147,7 +147,7 @@ Dark surfaces automatically re-colour titles, leads, eyebrows, link arrows and c
 
 Shared shell for `PropertyCard` and `ProjectCard`:
 
-1. **Media** (`.ll-card-media`): photo with a bottom shade, status chip (teal for `Private Advisory` / `Exclusive Mandate` / project status, glass otherwise), type/developer chip, and location in the media foot.
+1. **Media** (`.ll-card-media`): photo with a bottom shade, status chip (secondary teal `#287F82` for `Private Advisory` / `Exclusive Mandate` / project status, so white text passes 4.5:1; glass otherwise), type/developer chip, and location in the media foot.
 2. **Body**: kicker (segment · completion), title, price (with frequency for rentals), then either `ll-card-specs` (beds/baths/area with icons, beds hidden when 0) or `ll-card-facts` (handover + payment plan) for projects.
 3. **Foot**: reference code + `Know More` (property, with a screen-reader-only "about <title>" suffix; D-23) / `Explore Development` (project) CTA with a circular arrow.
 
