@@ -17,6 +17,8 @@
   --dark-teal: #185C5E;
   --secondary-teal: #287F82;
   --page-bg: #F5F7F6;
+  /* light brand tint for alternating homepage sections (D-28) */
+  --surface-tint: #F3F8F8;
   --heading: #252B2B;
   --body-text: #626B69;
   --border-subtle: #E2E7E5;

@@ -29,13 +29,13 @@ Same day, Arena agent: checked the cleanup from a fresh clone. The 88 MB master 
   1. header
   2. full-screen hero (client video, Buy/Rent search)
   3. developer marquee (28 developers, client sheet order)
-  4. stats (white, teal icons)
+  4. stats (tint, teal icons)
   5. featured properties carousel
   6. advisory bento (light tint)
   7. projects
-  8. valuation & mortgage panel (white)
+  8. valuation & mortgage panel (tint)
   9. client reviews (Provident-style cards, man / woman avatars)
-  10. footer (light)
+  10. footer (light tint)
 - **Company data:** single source `web/src/data/site.ts`, taken from https://leapliving.ae/ (owner: that site is correct). Footer, contact page and JSON-LD read it.
 - **Hero video:** one file, the client's original as delivered.
   - Path `public/videos/hero/client-hero-original.mp4`, ~150 MB, git-ignored, placed with `scripts/prepare-hero-original.sh`.
@@ -147,3 +147,4 @@ Same day, Arena agent: checked the cleanup from a fresh clone. The 88 MB master 
 | 2026-11-17 | Arena agent | Owner's point-by-point decisions. (1) Hero: 1280/854 renditions and `encode-hero-videos.sh` deleted; only the client's original plays (D-24); rule in `src/lib/hero-video.ts` (10 Mbps, with a 10% band for Chrome's privacy noise: measured 9.1–10 on an unthrottled link). (2) Fluid `--content-max: clamp(1220px, 68vw + 336px, 1560px)` replaces the 1400/1600/1800 steps; sections stay wider than the navbar (Provident reference). (3) `Insights` removed. (4) Company data from leapliving.ae in `src/data/site.ts` (D-27). (5) Forms → `Inquiry` table via `POST /api/inquiries`; admin Basic auth on export, upload, sharp; health hides errors (D-25). (6) Security headers/CSP, noindex default, robots, sitemap, OG image, JSON-LD (D-26); zod set to jitless so the CSP reports no eval. (7) Branded 404 + error page. (8) `globals.css` split into `src/styles/` (21 files). (9) Tests 8 → 47. (10) verify.sh and package-cpanel.sh updated; docs updated | `tsc` PASS, lint 0 errors (3 warnings), vitest 47/47, `next build` PASS, verify.sh 75/75, headless Chrome: 11 routes with no console/CSP errors, form submit 201 + saved row, width 1240 → 1960 grows ≤ 1px per px with no overflow |
 | 2026-11-17 | Arena agent | Homepage simplified (D-27): "Popular" chips removed from the hero search; hero eyebrow + description, developer heading/lead/Pause, numbered eyebrows and section leads removed; Projects, valuation CTA and Client Perspectives now plain white; reviews rebuilt as Provident-style cards in a shared `Carousel` (`components/ui/carousel.tsx`, also used by `PropertyCarousel`); `DeveloperShowcase` is now a server component; ~360 lines of dead CSS removed. Page 5,699 → 4,944 px at 1440 | `tsc` PASS, lint 0 errors, vitest 48/48, build PASS, verify.sh 65/65; Lighthouse mobile perf 90 → 95 (LCP 3.5 → 2.9 s, CLS 0), desktop 99 |
 | 2026-11-17 | Arena agent | Light homepage design (D-28): stats moved to third (white, teal icons, 2 x 2 on phones), Advisory on a light tint with white tiles, light footer (no background photo), reviews with generic man / woman avatars (Provident style). Hero and Developer strip unchanged; homepage calculator on hold | `tsc` PASS, lint 0 errors, vitest 48/48, build PASS, verify.sh 65/65; Lighthouse desktop 99, mobile 89–94 across runs (LCP = hero poster, unchanged) |
+| 2026-11-17 | Arena agent | Homepage sections now alternate tint / white from the stats band down (stats, advisory, valuation and footer on `--surface-tint`), so each section reads as separate (D-28 f) | `tsc` PASS, lint 0 errors, vitest 48/48, build PASS, verify.sh 65/65 |

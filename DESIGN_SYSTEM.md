@@ -128,7 +128,7 @@ Each section gets one surface class. Adjacent sections must never share a surfac
 | `ll-section-grey` | neutral-grey wash + faint keyhole | listings blocks |
 | `ll-section-teal` | flat teal band, white text | CTA bands |
 | `ll-section-plain` | plain white, no decoration; consecutive plain sections share one gap | homepage lower half: Projects, valuation panel, reviews (D-27) |
-| `ll-section-tint` | very light tint `#F3F8F8` + hairlines | homepage Advisory bento (D-28) |
+| `ll-section-tint` | very light tint `--surface-tint` (`#F3F8F8`) + hairlines | homepage Advisory and Valuation (D-28); the stats band and footer use the same tint |
 | `ll-section-gradient` | `--brand-gradient`, white text | featured/service blocks |
 | `ll-section-image` | photo (`.ll-section-image-bg`) + teal scrim + glass panel | leadership/editorial (not used on the homepage) |
 | `ll-section-dark` | gradient, white text | forms on dark (Sell valuation) |
@@ -175,13 +175,15 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 
 1. Full-screen hero (video) with the glass search **inside** it (see 7.7)
 2. Developer Network: light glass logo marquee, logos only
-3. Institutional Pillars (21+ Years, AED 12B+, ...): white, teal line icons, hairline dividers; 2 x 2 on phones (D-28)
+3. Institutional Pillars (21+ Years, AED 12B+, ...): light tint, teal line icons, hairline dividers; 2 x 2 on phones (D-28)
 4. Featured Properties: white, **carousel with arrows** (see 7.8)
 5. Advisory: bento on the light tint (`ll-section-tint`), white tiles, lead tile Teal 10%
 6. Selected Projects: plain white
-7. Valuation & Mortgage: plain white, hairline panel with the two buttons
+7. Valuation & Mortgage: light tint, white hairline panel with the two buttons
 8. Client reviews: plain white, **row of review cards** (see 7.10)
-9. Footer: light (white, coloured logo, hairlines)
+9. Footer: light tint (coloured logo, hairlines)
+
+**Rule (D-28):** from the stats band down, surfaces alternate tint / white so neighbouring sections never share a background.
 
 ### 7.9 Media & performance rules
 

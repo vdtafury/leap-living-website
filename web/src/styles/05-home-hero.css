@@ -154,7 +154,7 @@
 .ll-stats-section {
   position: relative;
   padding: clamp(2.75rem, 3.6vw, 3.75rem) 0;
-  background-color: var(--white);
+  background-color: var(--surface-tint);
   color: var(--heading);
   border-bottom: 1px solid var(--border-subtle);
 }

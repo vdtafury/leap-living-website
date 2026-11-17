@@ -198,7 +198,7 @@ export default function HomePage() {
         </section>
 
         {/* ==================== VALUATION & MORTGAGE ENTRY ==================== */}
-        <section className="ll-section-plain ll-defer-render" aria-labelledby="ll-advice-title">
+        <section className="ll-section-tint ll-defer-render" aria-labelledby="ll-advice-title">
           <div className="ll-container">
             <div className="ll-cta-panel">
               <div>

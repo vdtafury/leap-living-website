@@ -1,18 +1,15 @@
 /* ==========================================================================
    LIGHT HOMEPAGE (approved light design, owner 2026-11-17)
-   Below the hero and the developer strip every section is white or a very
-   light tint: no photography, dark gradients or watermarks. Separation comes
-   from whitespace, hairlines, the light tint and the cards themselves.
+   From the stats band down, sections ALTERNATE between the light tint and
+   white, so every section reads as separate from its neighbours:
+   stats (tint) / featured (white) / advisory (tint) / projects (white) /
+   valuation (tint) / reviews (white) / footer (tint).
+   No photography, dark gradients or watermarks.
    ========================================================================== */
 .ll-section-plain {
   position: relative;
   padding: clamp(4.75rem, 6.2vw, 7.25rem) 0;
   background-color: var(--white);
-}
-
-/* Consecutive white sections share one gap instead of stacking two */
-.ll-section-plain + .ll-section-plain {
-  padding-top: 0;
 }
 
 /* ---------- Valuation & mortgage entry: a quiet hairline panel ---------- */
@@ -143,7 +140,7 @@
 .ll-section-tint {
   position: relative;
   padding: clamp(4.75rem, 6.2vw, 7.25rem) 0;
-  background-color: #F3F8F8;
+  background-color: var(--surface-tint);
   border-top: 1px solid var(--border-subtle);
   border-bottom: 1px solid var(--border-subtle);
 }
@@ -162,9 +159,6 @@
   .ll-section-plain,
   .ll-section-tint {
     padding: 4.25rem 0;
-  }
-  .ll-section-plain + .ll-section-plain {
-    padding-top: 0;
   }
   .ll-cta-panel {
     grid-template-columns: minmax(0, 1fr);

@@ -14,7 +14,7 @@
 /* Light footer, as in the approved light homepage design (owner, 2026-11-17) */
 .ll-footer {
   position: relative;
-  background-color: var(--white);
+  background-color: var(--surface-tint);
   color: var(--heading);
   border-top: 1px solid var(--border-subtle);
   padding: 4rem 0 2.25rem;
