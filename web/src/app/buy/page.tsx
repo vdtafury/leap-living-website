@@ -1,16 +1,18 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/seo'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { PropertyListingBrowser } from '@/components/property/property-listing-browser'
 import { ChevronRightIcon } from '@/components/ui/icons'
 import { PROPERTIES } from '@/data/catalog'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Properties for Sale | LEAP LIVING Dubai',
   description:
     'Browse prime luxury villas, penthouses, and investment residences for sale across Dubai with institutional advisory by Leap Living.',
-}
+  path: '/buy',
+})
 
 export default async function BuyPage({
   searchParams,
@@ -36,8 +38,8 @@ export default async function BuyPage({
             <h1 className="ll-page-hero-title">Properties for Sale in Dubai</h1>
             <p className="ll-page-hero-desc">
               Vetted residential estates, sky penthouses, and primary development opportunities
-              across Dubai&apos;s established prime districts. Click any property to inspect
-              full specifications and model your financing.
+              across Dubai&apos;s established prime districts. Click any property to inspect full
+              specifications and model your financing.
             </p>
           </div>
         </section>
@@ -60,4 +62,3 @@ export default async function BuyPage({
     </>
   )
 }
-

@@ -1,16 +1,19 @@
 import Link from 'next/link'
 import { ResponsiveImg } from '@/components/ui/responsive-img'
 import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/seo'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { ConsultationForm } from '@/components/forms/consultation-form'
 import { ChevronRightIcon, MailIcon, MapPinIcon, PhoneIcon } from '@/components/ui/icons'
+import { SITE } from '@/data/site'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Contact Us | LEAP LIVING Real Estate Consultancy — Dubai',
   description:
     'Connect directly with Leap Living Real Estate Consultancy in Dubai for private advisory, acquisitions, sales, or property valuations.',
-}
+  path: '/contact',
+})
 
 export default function ContactPage() {
   return (
@@ -55,10 +58,10 @@ export default function ContactPage() {
                       Direct Line / WhatsApp
                     </div>
                     <a
-                      href="tel:+971521459888"
+                      href={SITE.phone.href}
                       style={{ fontWeight: 600, fontSize: '1.05rem', color: 'var(--heading)' }}
                     >
-                      +971 52 145 9888
+                      {SITE.phone.display}
                     </a>
                   </div>
                 </div>
@@ -70,10 +73,10 @@ export default function ContactPage() {
                       Advisory Desk Email
                     </div>
                     <a
-                      href="mailto:contact@leapliving.ae"
+                      href={`mailto:${SITE.email}`}
                       style={{ fontWeight: 600, fontSize: '1.05rem', color: 'var(--heading)' }}
                     >
-                      contact@leapliving.ae
+                      {SITE.email}
                     </a>
                   </div>
                 </div>
@@ -82,11 +85,16 @@ export default function ContactPage() {
                   <MapPinIcon size={18} style={{ color: 'var(--brand-teal)', marginTop: '3px' }} />
                   <div>
                     <div className="ll-field-label" style={{ marginBottom: '0.15rem' }}>
-                      Jurisdiction
+                      Office
                     </div>
-                    <span style={{ fontWeight: 600, color: 'var(--heading)' }}>
-                      Dubai, United Arab Emirates
-                    </span>
+                    <address
+                      style={{ fontStyle: 'normal', fontWeight: 600, color: 'var(--heading)' }}
+                    >
+                      {SITE.address.lines.map((line) => (
+                        <div key={line}>{line}</div>
+                      ))}
+                      <div>Dubai, United Arab Emirates</div>
+                    </address>
                   </div>
                 </div>
               </div>

@@ -1,16 +1,18 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/seo'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { ProjectListingBrowser } from '@/components/project/project-listing-browser'
 import { ChevronRightIcon } from '@/components/ui/icons'
 import { PROJECTS } from '@/data/catalog'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Real Estate Projects in Dubai | LEAP LIVING',
   description:
     'Selected off-plan, master-planned, and flagship Dubai real estate developments curated by Leap Living.',
-}
+  path: '/projects',
+})
 
 export default async function ProjectsPage({
   searchParams,
@@ -34,9 +36,9 @@ export default async function ProjectsPage({
             <div className="ll-eyebrow">New Developments</div>
             <h1 className="ll-page-hero-title">Featured Real Estate Projects</h1>
             <p className="ll-page-hero-desc">
-              Curated primary market developments evaluated on developer track record,
-              payment structure, floorplan efficiency, and long-term capital resilience. Select
-              any development for complete specifications and milestone schedules.
+              Curated primary market developments evaluated on developer track record, payment
+              structure, floorplan efficiency, and long-term capital resilience. Select any
+              development for complete specifications and milestone schedules.
             </p>
           </div>
         </section>
@@ -56,4 +58,3 @@ export default async function ProjectsPage({
     </>
   )
 }
-
