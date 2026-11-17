@@ -182,7 +182,7 @@ leap-living/
 │   │   │                    seo, settings, audit-logs, analytics
 │   │   ├── api/v1/…           and api/health, api/auth
 │   │   ├── media/[...path]/route.ts
-│   │   └── robots.ts  sitemap.ts  globals.css
+│   │   └── robots.ts  sitemap.ts  globals.css (import list only; styles in src/styles/)
 │   ├── modules/<name>/{domain,application,infrastructure,presentation}/ + index.ts
 │   ├── components/{ui,layout,forms,feedback,shared}
 │   ├── server/{database,authentication,authorization,email,storage,security,cache,jobs,observability}

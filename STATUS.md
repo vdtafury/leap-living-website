@@ -4,71 +4,97 @@
 
 ## Current phase
 
-**Phase 0 — Multi-Page Public Platform Foundation & Pre-Meeting Delivery** (refactored `poc/` → `web/`, elevated multi-page Next.js App Router architecture inspired by Provident Estate, regenerated brand lockups from client PNG, sourced high-res people-free internet photography; cPanel host verification pending credentials)
+**Phase 0 — Multi-page public platform, pre-meeting delivery.** The public site is built and hardened: forms are saved to the database, admin endpoints are locked, and security headers and SEO are in place. Staging deployment on the client's Tasjeel cPanel is prepared but **on hold** (owner, 2026-11-17). ROADMAP is a guide, not a contract: quality comes first (owner).
 
 ## Last updated
 
-2026-11-17 — by: Antigravity agent (responsive layout expansion matching Provident Estate: dynamic `--content-max` scaling up to 1560px on wide/ultra-wide screens, expanded property cards & carousel sizing, luxury fluid section padding, navbar left completely untouched; verified 51/51 PASS)
-
-### Previous update
-
-2026-11-16 — by: Arena agent (review fixes on the client hero reel: skyline photo restored, renditions ~50% lighter, homepage static; then a seamless poster → video start, with the poster cut from frame 0 of each rendition)
+2026-11-17 — by: Arena agent. Applied the owner's point-by-point decisions: hero original only, fluid width, Insights removed, leapliving.ae data, forms → database, locked APIs, security headers, SEO, branded 404, CSS split, tests 8 → 47.
 
 ## State of the repository
 
-- Clean consolidated repository layout at `/home/vdta/Desktop/leaplivingwebsite` with Next.js application housed in `web/` (`leap-living-web` v1.0.0).
-- **Multi-Page Public Architecture (`web/src/app/`):**
-  - `/` (`page.tsx`) — Standalone curated Homepage with editorial split hero, search routing bar (`Buy` / `Rent` / `Projects`), 4-pillar credentials strip, featured properties preview, `Real Estate Consultancy` services overview, selected Dubai projects preview, `Mohab Samak / CEO` leadership panel (zero people photos), owner valuation & mortgage entry CTA, client perspectives, and UAE developers bar.
-  - `/buy` & `/rent` — Filterable property portfolios linking directly to individual `/properties/[slug]` pages.
-  - `/properties/[slug]` — Individual property dossier pages (multi-photo architectural gallery, specs, highlights, interactive Mortgage Calculator prefilled to property price, private viewing inquiry form).
-  - `/projects` & `/projects/[slug]` — Dubai off-plan & landmark developments catalogue linking to complete project detail pages.
-  - `/sell` — Seller advisory methodology & confidential Free Property Valuation page (linked from the `Free Valuation` button in Header).
-  - `/mortgage` — Dedicated interactive UAE Mortgage Calculator page (Provident Estate inspired).
-  - `/about` & `/contact` — Company overview, Vision/Mission, full 9 Core Services (`Real Estate Consultancy` lead), executive leadership (`CEO` title only), and direct consultation intake.
-- **Visual & Brand Discipline:**
-  - `web/public/brand/` contains crisp horizontal, stacked, mark, and wordmark logo lockups (`-brand`, `-teal`, `-dark`, `-white`) generated exclusively from the owner-uploaded `leap-living-logo.png`.
-  - `web/public/images/` contains 11 high-resolution architectural and Dubai skyline images sourced externally with zero people and zero crops from reference concept images.
-  - Design eliminates AI-template clichés (no emojis, crisp `1px` architectural borders, `tabular-nums`, refined editorial spacing).
+- **Repository:** `https://github.com/vdtafury/leap-living-website`. It is **public**, so never commit `.env`, databases, uploads or the original hero video. Working branch `feat/multi-page-platform`; the Next.js app lives in `web/`.
+- **Pages (`web/src/app/`):**
+  - `/`, `/buy`, `/rent`, `/properties/[slug]`;
+  - `/projects`, `/projects/[slug]`;
+  - `/sell`, `/mortgage`, `/about`, `/contact`;
+  - a branded 404 (`not-found.tsx`) and error page (`error.tsx`);
+  - `robots.txt`, `sitemap.xml`.
+- **Homepage order:**
+  1. header
+  2. full-screen hero (client video, Buy/Rent search)
+  3. developer marquee (28 developers, client sheet order)
+  4. featured properties carousel
+  5. advisory bento
+  6. projects
+  7. teal CTA band
+  8. client perspectives (one testimonial at a time)
+  9. stats
+  10. footer
+- **Company data:** single source `web/src/data/site.ts`, taken from https://leapliving.ae/ (owner: that site is correct). Footer, contact page and JSON-LD read it.
+- **Hero video:** one file, the client's original as delivered.
+  - Path `public/videos/hero/client-hero-original.mp4`, ~150 MB, git-ignored, placed with `scripts/prepare-hero-original.sh`.
+  - No renditions, no trimming (D-24).
+  - The poster is frame 0.
+- **Styles:** `web/src/styles/01-…21-*.css`, imported in order by `web/src/app/globals.css` (was one 84 KB file). Content width is fluid, 1220 → 1560px (`DESIGN_SYSTEM.md` §6).
+- **Server (`web/src/server/`):**
+  - SQLite via Prisma + better-sqlite3; models `MediaAsset` and `Inquiry`.
+  - Tables are created on the first request (`schema.ts`). A test checks them against `prisma/schema.prisma`.
+- **APIs:**
+  - `POST /api/inquiries`: the public form endpoint. It runs validation, a honeypot and a same-origin check, caps bodies at 16 KB, and saves at most 5 submissions per IP per 10 minutes.
+  - Admin only: `GET /api/inquiries[?format=csv]`, `POST /api/upload`, `GET /api/sharp`.
+    - Basic auth with `ADMIN_USER`/`ADMIN_PASSWORD` (password ≥ 12 characters).
+    - These answer 404 when either variable is unset.
+  - `GET /api/health`: returns `{status, db}`; error details go to the server log only.
+- **Environment variables:** listed in `web/.env.example`:
+  - `DATABASE_URL`, `STORAGE_DIR`;
+  - `ADMIN_USER`, `ADMIN_PASSWORD`, `IP_HASH_SECRET`;
+  - `SITE_URL`, `SITE_INDEXING`;
+  - `ALLOW_FRAMING` (preview only).
+- **Checks:**
+  1. `npx tsc --noEmit`
+  2. `npx eslint .`
+  3. `npx vitest run` (12 files)
+  4. `npm run build`
+  5. `ADMIN_USER=… ADMIN_PASSWORD=… BASE=http://localhost:3000 bash scripts/verify.sh`, against `next start` running with the same env.
 
 ## Done
 
-- [x] Renamed `poc/` → `web/`, updated package metadata, `.env`, `.gitignore`, and removed duplicate root PDFs
-- [x] Restored full brand logo asset suite (`horizontal`, `stacked`, `mark`, `wordmark`) from client-supplied `leap-living-logo.png`
-- [x] Sourced & visually inspected 11 high-resolution people-free architectural photographs
-- [x] Implemented Provident-inspired multi-page navigation and dedicated detail routes (`/buy`, `/rent`, `/sell`, `/projects`, `/projects/[slug]`, `/properties/[slug]`, `/mortgage`, `/about`, `/contact`)
-- [x] Verified Prisma Client generation, TypeScript strict check (`tsc --noEmit`), and Next.js production build (`next build`)
-- [x] Added interactive [`ImageGallery`](web/src/components/ui/image-gallery.tsx) on property and project detail pages
-- [x] Brand visual layer (D-21): section surfaces, keyhole watermark, glass panels, rebuilt `PropertyCard`/`ProjectCard`, Poppins display type, self-hosted fonts (`DESIGN_SYSTEM.md` §7)
-- [x] Developer network: continuous logo marquee with 13 developer logos + Meydan wordmark, pause control, reduced-motion fallback (`DESIGN_SYSTEM.md` §7.5)
-- [x] Fixed mobile horizontal overflow on detail pages and `/mortgage` (grid `minmax(0, 1fr)`)
-- [x] Connected GitHub repository (`https://github.com/vdtafury/leap-living-website.git`, branch `feat/multi-page-platform`)
+- [x] Multi-page platform and brand layer (D-21)
+- [x] Developer marquee (28 developers)
+- [x] Hero search inside a full-screen hero
+- [x] Featured carousel and Client Experience slider
+- [x] Hero: client's original video with a seamless poster → video start (poster vs frame 0 ≈ 3/255, first visible frame within one 60 fps frame of t=0)
+- [x] Forms saved to the database; admin export as CSV (Excel-safe)
+- [x] `/api/upload` and `/api/sharp` locked
+- [x] Security headers and CSP; noindex by default
+- [x] SEO: metadata on every page, canonical URLs, sitemap, robots, OG image, JSON-LD
+- [x] Branded 404 and error pages
+- [x] `Insights` removed from the navbar
+- [x] YouTube removed (not on the real site); Facebook and TikTok added
+- [x] Fluid content width (no jumps at 1400/1600/1800)
+- [x] CSS split into 21 files
+- [x] Tests 8 → 47, covering API, auth, rate limit, validation, CSV, schema, SEO and hero rules
 
-## Open review findings (2026-11-11, not yet fixed — need owner decision)
+## Open items (temporary on purpose, to settle at the client meeting)
 
-- Homepage hero rotates two clips that show people (`broker-key-handover.mp4`, `executive-skyscraper-meeting.mp4`) — conflicts with `D-16`.
-- `CLIENT_PERSPECTIVES` testimonials (Hassan A., Leila K., Omar N.) have no client source — `AGENTS.md` §2.4.
-- Credentials strip (`21+ Years`, `AED 12B+`, `100% Fiduciary`) still UNVERIFIED (`O-05`); years are inconsistent (21+ / since 2005 / 22 in brand story).
-- Sample properties and projects carry real developer names (Emaar, Meraas, Omniyat, Nakheel) with no visible `SAMPLE` label; developer bar implies partnership (`O-06`).
-- `ConsultationForm` shows "Advisory Request Recorded" without persisting anything (rule §2.7).
-- Header shows `Mortgage Calculator` + `Free Valuation`; `D-18` asks for `Free Valuation` alongside `Private Advisory`. On mobile the CTA is only inside the drawer.
-- ~~`/` is `force-dynamic` only to render a hidden debug line from the database.~~ Fixed 2026-11-16: the line is gone and `/` is static.
-- `/api/upload` and `/api/sharp` are unauthenticated and not rate-limited; `/api/health` returns raw DB error messages; no security headers/CSP.
-- Nav label `Insights` points to `/projects`; social icons and Privacy/Terms link to `/contact`.
-- Media weight: hero reel is 9.1 MB (desktop) / 3.8 MB (phones) for 74 s, loaded after hydration; a 2.2 MB PNG; images use plain `<img>` (14 lint warnings).
-- `docs/source-materials/` (approved homepage design, brand PDFs, logo PNG) is git-ignored and absent from fresh clones — needed for design work.
+- **Stats:** `21+ Years` / `AED 12B+` do not appear on leapliving.ae; the owner will confirm (O-05).
+- **Testimonials:** Hassan A., Leila K. and Omar N. are placeholders, to be replaced.
+- **Samples:** sample listings, projects and developer names/logos stay until the CRM and permission answers arrive (O-06). No SAMPLE labels for now (owner).
+- **Links:** Privacy, Terms and some other links point to `/contact` (O-08).
+- **Forms:** the CRM link and email notification are undecided (O-19). Until then, read submissions via `GET /api/inquiries?format=csv`.
+- **WhatsApp:** a possible WhatsApp option next to `Know More` on property cards, after the meeting.
+- **Source materials:** `docs/source-materials/` is git-ignored and absent from fresh clones.
 
 ## Next (in order)
 
-1. Review the multi-page website (`web/`) with the client/CEO and open/merge PR from `feat/multi-page-platform` to `main` once approved.
-2. Obtain Tasjeel cPanel / SSH / MySQL credentials to complete Phase 0 host verification (`INFRASTRUCTURE.md`) and proceed into Phase 1 Admin CMS/CRM & persistent inquiry database writes.
+1. Client meeting: get answers for the open items above.
+2. Staging on cPanel when the owner resumes it (`docs/deployment/cpanel-staging.md`). Set `ADMIN_USER`, `ADMIN_PASSWORD` and `SITE_URL`.
+3. Production cut-over, only with written approval: set `SITE_URL=https://leapliving.ae` and `SITE_INDEXING=true`.
 
-- Client to confirm developer logo usage permission (O-06) and supply an official Meydan logo.
-- Client to confirm the D-21 typography change (Poppins display vs. the serif in the approved homepage design).
+## Blocked / waiting
 
-## Blocked / waiting on client & environment
-
-- **Hosting access:** No cPanel login, SSH key, API token, or DB credentials → 16 of 17 host checklist items remain UNKNOWN.
-- **Content/legal items:** O-04 exact office address & social links, O-06 developer logo permissions, O-08 legal pages text & permit numbers, O-19 SMTP path.
+- **Hosting:** staging is on hold (owner). The host OS/glibc is still unverified; better-sqlite3 needs glibc ≥ 2.28.
+- **Content/legal:** O-05 stats, O-06 developer logo permissions, O-08 legal pages, O-19 SMTP / CRM.
 
 ## Session log
 
@@ -111,3 +137,4 @@
 | 2026-11-16 | Arena agent | Review fixes on the client hero reel. (1) The poster commit had overwritten `hero-dubai-skyline.jpg` (and the unused duplicate `hero-dubai-beach-daylight.jpg`) with the reel's first frame, so the *Burj District Private Collection* project and four property galleries showed Palm Jumeirah; the original skyline photo and its WebP variants are restored, the orphan duplicate and the skyline portrait crop removed. (2) `client-hero-1280/854.mp4` re-encoded from the 1080p master at 24 fps, CRF 31/33, preset slow: 19.3 → 9.1 MB and 7.5 → 3.8 MB, same 74 s, first frame still matches the poster. `encode-hero-videos.sh` no longer hard-codes a local ffmpeg path. (3) Homepage hidden `Platform Ready (DB assets)` line and `force-dynamic` removed: `/` is prerendered and no longer returns 500 when the database is unavailable; verify.sh checks the marker is gone. (4) `src/data/media-assets.test.ts`: fails on byte-identical photos, missing manifest variants, or missing catalogue images. DESIGN_SYSTEM hero-video note rewritten | `tsc` PASS, lint 0 errors (3 warnings), tests 8/8, `next build` PASS (`/` static), verify.sh 50/51 (only the known `file` utility check fails), `/` returns 200 with the database directory removed; mobile 4G LCP 2.7 s (unchanged); project page and hero checked in headless Chrome |
 | 2026-11-16 | Arena agent | Hero: seamless poster → video (owner request: "first frame as the background until the video plays, with no feeling of a transition"). Measured in headless Chrome, the old start differed from the video's first frame by 19.6/255 on desktop. Causes: the poster sat at `object-position: center 35%` against the video's `center`, a 1.15 s crossfade ran over a moving shot, the video was revealed on `canplay` and so showed already advanced (t≈0.1–0.4 s), and the renditions carried no colour tags. Changes: (1) poster regenerated from frame 0 of each rendition (1280 landscape, phone crop from the 854 file, enlarged to 540 so it stays the LCP); (2) same object-position on both layers; (3) video revealed with no fade on its first painted frame, rewound to 0 while hidden if needed; (4) video requested only after the poster decodes, because on slow links it had been racing the poster; (5) renditions tagged BT.709; (6) `encode-hero-videos.sh` now cuts the posters and runs `images:optimize` | Poster vs video frame 0: 1.4/255 desktop (1366/1440/1920), 2.0 phone, 3.1 tablet. First visible video frame t=0.000 s in 5 of 5 runs (desktop and phone, throttled and not). Phone 4G LCP stays the poster, 1.8–2.5 s (was 2.7 s). `tsc` PASS, lint 0 errors (3 warnings), tests 8/8, `next build` PASS, verify.sh 50/51 (only the known `file` utility check fails) |
 | 2026-11-16 | Arena agent | Hero: the client's original video file (~150 MB) can now be used as delivered (owner request). GitHub rejects files over 100 MB, so it is git-ignored and lives on the build machine and the server. `scripts/prepare-hero-original.sh` copies the H.264 stream bit for bit (`-c:v copy`), drops the audio, applies faststart, adds BT.709 tags only if missing, and cuts the poster from frame 0. It refuses non-H.264, non-8-bit files. `package-cpanel.sh` ships the file if present and fails if it is not faststart. `page.tsx` checks at build time whether it exists (`hasOriginal`). Screens wider than 900 px on a fast link (Chrome `downlink` ≥ 10, or unknown) get the original; slower desktop links and a missing file fall back to 1280, and phones keep 854 | Stand-in test (an 88 MB re-mux with the index at the end and an audio track): output faststart, audio dropped, video frames md5-identical to the source. In headless Chrome, 1440/1920 fast play the original with the first visible frame at t=0.000 and poster vs frame 0 1.4–1.7/255. A 5 Mbps desktop gets 1280, a phone gets 854, and a missing file falls back to 1280. Without the file, no request is made for it. `tsc` PASS, lint 0 errors, tests 8/8, build PASS, verify.sh 50/51 (known `file` check). The stand-in poster was not committed |
+| 2026-11-17 | Arena agent | Owner's point-by-point decisions. (1) Hero: 1280/854 renditions and `encode-hero-videos.sh` deleted; only the client's original plays (D-24); rule in `src/lib/hero-video.ts` (10 Mbps, with a 10% band for Chrome's privacy noise: measured 9.1–10 on an unthrottled link). (2) Fluid `--content-max: clamp(1220px, 68vw + 336px, 1560px)` replaces the 1400/1600/1800 steps; sections stay wider than the navbar (Provident reference). (3) `Insights` removed. (4) Company data from leapliving.ae in `src/data/site.ts` (D-27). (5) Forms → `Inquiry` table via `POST /api/inquiries`; admin Basic auth on export, upload, sharp; health hides errors (D-25). (6) Security headers/CSP, noindex default, robots, sitemap, OG image, JSON-LD (D-26); zod set to jitless so the CSP reports no eval. (7) Branded 404 + error page. (8) `globals.css` split into `src/styles/` (21 files). (9) Tests 8 → 47. (10) verify.sh and package-cpanel.sh updated; docs updated | `tsc` PASS, lint 0 errors (3 warnings), vitest 47/47, `next build` PASS, verify.sh 75/75, headless Chrome: 11 routes with no console/CSP errors, form submit 201 + saved row, width 1240 → 1960 grows ≤ 1px per px with no overflow |
