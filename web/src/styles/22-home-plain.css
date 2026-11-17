@@ -1,0 +1,175 @@
+/* ==========================================================================
+   PLAIN WHITE SECTIONS (homepage lower half, owner 2026-11-17)
+   Projects, the valuation / mortgage entry and client reviews sit on plain
+   white: no photography, gradients or watermarks. Separation comes from
+   whitespace, a hairline panel and the cards themselves.
+   ========================================================================== */
+.ll-section-plain {
+  position: relative;
+  padding: clamp(4.75rem, 6.2vw, 7.25rem) 0;
+  background-color: var(--white);
+}
+
+/* Consecutive white sections share one gap instead of stacking two */
+.ll-section-plain + .ll-section-plain {
+  padding-top: 0;
+}
+
+/* ---------- Valuation & mortgage entry: a quiet hairline panel ---------- */
+.ll-cta-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem 3rem;
+  padding: clamp(2rem, 3.6vw, 3.25rem) clamp(1.75rem, 4vw, 3.75rem);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background-color: var(--white);
+}
+
+.ll-cta-panel .ll-section-title {
+  font-size: clamp(1.65rem, 2.4vw, 2.25rem);
+  max-width: 22ch;
+}
+
+.ll-cta-panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  justify-content: flex-end;
+}
+
+/* ---------- Client reviews: a row of cards (reference: providentestate.com) ---------- */
+.ll-review {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+  padding: clamp(1.75rem, 2.2vw, 2.25rem);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background-color: var(--white);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ll-review:hover {
+  border-color: var(--brand-teal-25);
+  box-shadow: var(--shadow-card);
+}
+
+.ll-review-mark {
+  display: block;
+  flex-shrink: 0;
+  margin-bottom: 1.5rem;
+  color: var(--brand-teal-50);
+}
+
+.ll-review-title {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.05rem, 1.15vw, 1.15rem);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: var(--heading);
+}
+
+.ll-review-quote {
+  flex: 1;
+  margin: 0 0 1.75rem;
+}
+
+.ll-review-quote p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--body-text);
+  /* long reviews never stretch the row: clamp to six lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ll-review-author {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding-top: 1.35rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.ll-review-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--brand-teal-10);
+  color: var(--dark-teal);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.ll-review-person {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ll-review-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--heading);
+}
+
+.ll-review-role {
+  font-size: 0.8rem;
+  color: var(--body-text);
+}
+
+/* ---------- Developer strip: logos only now, so a slimmer band ---------- */
+.ll-dev-showcase.ll-section-glass-light {
+  padding: clamp(2.5rem, 3.4vw, 3.75rem) 0;
+}
+
+@media (max-width: 960px) {
+  .ll-section-plain {
+    padding: 4.25rem 0;
+  }
+  .ll-section-plain + .ll-section-plain {
+    padding-top: 0;
+  }
+  .ll-cta-panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ll-cta-panel-actions {
+    justify-content: flex-start;
+  }
+  .ll-dev-showcase.ll-section-glass-light {
+    padding: 2.25rem 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .ll-cta-panel {
+    padding: 1.75rem 1.35rem;
+  }
+  .ll-cta-panel-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .ll-cta-panel-actions .ll-btn {
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ll-review {
+    transition: none;
+  }
+}

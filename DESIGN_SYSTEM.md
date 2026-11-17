@@ -126,7 +126,8 @@ Each section gets one surface class. Adjacent sections must never share a surfac
 | `ll-section-light` | white | default content |
 | `ll-section-muted` | `#F5F7F6` | alternating content |
 | `ll-section-grey` | neutral-grey wash + faint keyhole | listings blocks |
-| `ll-section-teal` | flat teal band, white text | CTA bands (`ll-cta-band`) |
+| `ll-section-teal` | flat teal band, white text | CTA bands |
+| `ll-section-plain` | plain white, no decoration; consecutive plain sections share one gap | homepage lower half: Projects, valuation panel, reviews (D-27) |
 | `ll-section-gradient` | `--brand-gradient`, white text | featured/service blocks |
 | `ll-section-image` | photo (`.ll-section-image-bg`) + teal scrim + glass panel | leadership/editorial, same language as the footer |
 | `ll-section-dark` | gradient, white text | forms on dark (Sell valuation) |
@@ -135,8 +136,8 @@ Dark surfaces automatically re-colour titles, leads, eyebrows, link arrows and c
 
 ### 7.3 Labels & motifs
 
-- `ll-eyebrow-num`: index number + hairline + label, e.g. `01 | CURATED PORTFOLIO ——`.
-- `KeyholeMark` (`web/src/components/ui/keyhole-mark.tsx`): inline SVG of the logo keyhole (circle r 62.5, viewBox 132), `aria-hidden`. Positioned with `.ll-keyhole` plus a variant (`-stats`, `-grey`, `-teal-band`, `-services`, `-tile`, `-emblem`). Watermark only: never recoloured, distorted, or used in place of the logo.
+- `ll-eyebrow-num`: index number + hairline + label, e.g. `01 | CURATED PORTFOLIO ——`. **Not used on the homepage** (D-27): homepage sections open with the title only.
+- `KeyholeMark` (`web/src/components/ui/keyhole-mark.tsx`): inline SVG of the logo keyhole (circle r 62.5, viewBox 132), `aria-hidden`. Positioned with `.ll-keyhole` plus a variant (`-stats`, `-services`, `-tile`, `-emblem`, `-dev`). Watermark only: never recoloured, distorted, or used in place of the logo.
 - Large faded index numbers (`.ll-service-bignum`) in the services bento.
 
 ### 7.4 Cards (`ll-card-*`)
@@ -151,9 +152,9 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 
 ### 7.5 Developer network marquee
 
-`DeveloperShowcase` (`web/src/components/home/developer-showcase.tsx`), used on `/` (index `01`, directly under the hero search) and `/about`.
+`DeveloperShowcase` (`web/src/components/home/developer-showcase.tsx`), used on `/` (directly under the hero) and `/about`. **Logos only** (D-27): no eyebrow, title, lead or Pause button; the section is named by `aria-label="Developers we work with"`. It has no state, so it is a server component (no client JavaScript).
 
-- Default surface **`glass-light`**: the Dubai sunset skyline (`public/images/developer-network-skyline.jpg`) **toned toward the brand teal** under a teal-tint scrim. The scrim runs from Teal 10% (`--brand-teal-10`) at the top to Teal 25% at the bottom, with a teal glow bottom-left and a soft white highlight top-right. The section reads in the brand colour, not white, while staying light enough for full-colour logos (owner request, 2026-11-14). The lead text uses `#44504F` here to keep WCAG AA (5.7:1); measured contrast is eyebrow 6.0, title 10.3, Pause 6.8. Logos scroll **bare, straight on the skyline**: no tiles, no borders/frames, no frosted band (owner request, 2026-11-14). They show in their **original brand colours at all times**; hover gives a gentle 1.08 scale.
+- Default surface **`glass-light`**: the Dubai sunset skyline (`public/images/developer-network-skyline.jpg`) **toned toward the brand teal** under a teal-tint scrim. The scrim runs from Teal 10% (`--brand-teal-10`) at the top to Teal 25% at the bottom, with a teal glow bottom-left and a soft white highlight top-right. The section reads in the brand colour, not white, while staying light enough for full-colour logos (owner request, 2026-11-14). The lead text uses `#44504F` here to keep WCAG AA (5.7:1); Logos scroll **bare, straight on the skyline**: no tiles, no borders/frames, no frosted band (owner request, 2026-11-14). They show in their **original brand colours at all times**; hover gives a gentle 1.08 scale.
 - The section starts directly under the full-screen hero (the search now lives inside the hero, see 7.7).
 - Other surfaces: `glass` (same photo under a deep-teal scrim, bare white logos that brighten on hover) and flat `light` / `muted`.
 
@@ -166,18 +167,18 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 - **Brand watermark:** a large Leap Living keyhole mark (`<KeyholeMark className="ll-keyhole ll-keyhole-dev">`) sits behind the content, cropped by the right edge of the section like the Brand Guidelines cover. It is 640 px, **white at 50%** on the teal tint, as on the Brand Guidelines cover (white at 10% on the dark `glass` surface); at ≤960 px it shrinks to 440 px and anchors bottom-right behind the logos (owner request, 2026-11-14).
 - **Contained strip:** the marquee sits inside `.ll-container`, so it starts and ends exactly where the heading and every other section's content do (same `--content-max` and `--page-gutter`). It is **not** full-bleed (owner request, 2026-11-14). Logos fade in and out over the outer 6% of that box.
 - Slots: each logo sits in an invisible fixed-width slot, 200×72 (156×60 on mobile), so the spacing stays even. **Do not reintroduce tile backgrounds, borders, shadows or a band.** Logos are full colour on light and flat surfaces; only the dark `glass` variant renders them white.
-- Motion: CSS-only `translateX(-50%)` loop over a duplicated list (the duplicate is `aria-hidden`), 55s per loop (42s on mobile), edge fade mask. Pauses on hover, on keyboard focus, and via a **Pause/Play** button (WCAG 2.2.2). `prefers-reduced-motion` turns it into a static wrapped grid.
+- Motion: CSS-only `translateX(-50%)` loop over a duplicated list (the duplicate is `aria-hidden`), 55s per loop (42s on mobile), edge fade mask. Pauses on hover and on keyboard focus. `prefers-reduced-motion` turns it into a static wrapped grid.
 - Logos are third-party trademarks. Usage permission is still open (`DECISIONS.md` O-06) and must be confirmed before launch.
 
 ### 7.6 Homepage section order
 
 1. Full-screen hero (video) with the glass search **inside** it (see 7.7)
-2. `01` Developer Network: light glass logo marquee
-3. `02` Featured Properties: light, **carousel with arrows** (see 7.8)
-4. `03` Advisory Scope: gradient bento
-5. `04` Dubai Developments: grey
-6. Valuation & Mortgage CTA: teal band
-7. `05` Client Perspectives: image + glass, **one testimonial at a time** (see 7.10)
+2. Developer Network: light glass logo marquee, logos only
+3. Featured Properties: light, **carousel with arrows** (see 7.8)
+4. Advisory: gradient bento
+5. Selected Projects: plain white
+6. Valuation & Mortgage: plain white, hairline panel with the two buttons
+7. Client reviews: plain white, **row of review cards** (see 7.10)
 8. Institutional Pillars (21+ Years, AED 12B+, ...): teal stats band
 9. Footer
 
@@ -212,26 +213,24 @@ The search lives inside the hero (`.ll-hero-inner` = hero copy + `<HeroSearchBar
 - **Bar:** Location (searchable) · Property type · Bedrooms · Price (Annual budget in Rent). Fields are separated by hairlines; the whole field is the click target.
 - **Dropdowns (`HeroSelect`):** custom button + listbox (WAI-ARIA). Keyboard: arrows, Home/End, type-ahead, Enter, Escape, Tab. Opens upward when there is less than 300px below. The popover is **solid white**, because nested `backdrop-filter` lets the copy bleed through.
 - **Submit:** teal, 56px tall, magnifier icon.
-- **Quick chips:** "Popular" communities taken from the catalogue for the current mode, so a chip never leads to an empty result.
 - **Routing:** `/buy` or `/rent` with `community`, `type`, `beds`, `budget`; listing pages pre-fill all four (`initialBeds`).
 
 | Viewport | Layout |
 |---|---|
 | > 900px | single-row bar, hairline dividers |
 | ≤ 900px | 2-column tiles, full-width Search |
-| ≤ 600px | Location full width; Type + Beds; Price + Search; chips swipe in one row; hero CTAs hidden; description clamped to 3 lines |
+| ≤ 600px | Location full width; Type + Beds; Price + Search; hero CTAs hidden |
 | ≤ 400px | shorter "Type" label, tighter field padding |
 | desktop, height ≤ 820px | hero CTAs hidden (search is the primary action) |
 | desktop, height ≤ 720px | compact spacing and title |
-| desktop, height ≤ 620px | description and chips hidden |
-| phone, height ≤ 700px | eyebrow and description hidden |
+| phone, height ≤ 700px | compact top padding |
 | landscape, height ≤ 520px | title on one line; 4 fields + icon-only Search in one row |
 
 Verified with no horizontal overflow, and with the panel fully in view, at 1920×1080, 1440×900, 1366×650, 1280×600, 1024×1366, 768×1024, 390×844, 360×640 and 844×390.
 
 ### 7.8 Featured properties carousel (`ll-carousel-*`)
 
-`PropertyCarousel` (`web/src/components/property/property-carousel.tsx`) replaces the fixed 3-card grid on the homepage. It shows every `featured: true` BUY listing (currently 8).
+`PropertyCarousel` (`web/src/components/property/property-carousel.tsx`) is a thin wrapper over the shared `Carousel` (`web/src/components/ui/carousel.tsx`), which the client reviews also use. Slides are rendered on the server and passed in, so the cards ship no JavaScript. It replaces the fixed 3-card grid on the homepage. It shows every `featured: true` BUY listing (currently 8).
 
 - **Track:** a native horizontal scroll-snap list, so touch swipe and trackpad work natively. Cards keep the standard `ll-card` design. The track has internal padding so the hover lift and shadow are not clipped.
 - **Controls (header, right):** "View All" link, a counter (`01–03 / 08`, announced via `aria-live`), and round prev/next buttons (48px; 44px on mobile). Each click moves exactly one card; the button is disabled at either end. Hover turns it solid teal. ←/→ keys work when focus is inside the carousel.
@@ -241,17 +240,14 @@ Verified with no horizontal overflow, and with the panel fully in view, at 1920�
 
 > The four listings added on 2026-11-14 (Jumeirah Bay Island, Bluewaters Island, Business Bay, Tilal Al Ghaf) are **sample showcase mandates**, like the rest of the catalogue. Their photos (`property-jumeirah-bay-mansion.jpg`, `property-bluewaters-residence.jpg`, `property-business-bay-penthouse.jpg`, `property-lagoon-villa.jpg`) are **AI-generated placeholders**. Replace them with real listing photography before launch.
 
-### 7.10 Client Perspectives (`ll-cx-*`, D-22)
+### 7.10 Client reviews (`ll-review-*`, D-27)
 
-Component: `web/src/components/home/client-experience.tsx`. Reuses the former homepage Executive Leadership design: `ll-section-image` (glass towers + scrim) and the `ll-leadership-glass` panel with the emblem card on the left.
+Component: `web/src/components/home/client-experience.tsx` (server component). Reference: providentestate.com "Why Our Clients Trust Us", rebuilt cleaner.
 
 | Part | Rule |
 |---|---|
-| Layout | Emblem card (keyhole, white logo, `Client Perspectives`, title `Private Client Experience`) + glass panel with one large quote |
-| Slides | All slides stacked in one grid cell (no height jump); only the active one is visible (fade + 12px rise, 450ms). Inactive slides are `aria-hidden` |
-| Controls | Prev/next glass buttons (44px), `01 / 03` counter, dots (8px visual, 24px hit area, active = 22px pill). Loops; **no autoplay** |
-| Input | Buttons, dots, ←/→ keys when focus is inside the section, touch swipe (40px threshold) |
-| A11y | `aria-roledescription="carousel"`, polite live region announces "Testimonial n of N", `aria-current` on the active dot |
-| Motion | `prefers-reduced-motion` removes transitions |
-| Content | `CLIENT_PERSPECTIVES` in `data/catalog.ts` — still unsourced (STATUS.md), zero human photos (monograms only) |
-
+| Section | `ll-section-plain` (white). Header: title `Why Clients Trust Leap Living` + `Speak With an Advisor` link, counter and arrows |
+| Card | White, 1px `--border-subtle`, `--radius-lg`. Teal-50 quote mark → bold headline → quote (clamped to 6 lines) → hairline → initials avatar (48px, Teal 10%) + name + role. Hover: Teal 25% border + card shadow, no movement |
+| Carousel | Shared `Carousel`: 3 per view above 1120px, 2 below, 1 + peek at 700px and below; swipe, arrows (one card per click), ←/→ keys, counter, progress hairline. **No autoplay** |
+| A11y | Each card is a `figure` with `blockquote` + `figcaption`; slides are labelled "n of N"; buttons read "Previous/Next review" |
+| Content | `CLIENT_PERSPECTIVES` in `data/catalog.ts` (`title`, `quote`, `author`, `role`, `initials`): **placeholders** until the client sends real reviews. No star ratings and no dates until real, verifiable reviews exist. Zero human photos (initials only) |

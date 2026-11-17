@@ -101,14 +101,6 @@
   font-weight: 600;
 }
 
-.ll-hero-desc {
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.9);
-  max-width: 520px;
-  margin-bottom: clamp(0.75rem, 1.8vh, 1.25rem);
-  line-height: 1.62;
-}
-
 .ll-hero-ctas {
   display: flex;
   flex-wrap: wrap;
