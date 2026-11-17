@@ -8,11 +8,11 @@
 
 ## Last updated
 
-2026-11-16 — by: Arena agent (review fixes on the client hero reel: skyline photo restored, renditions ~50% lighter, homepage static; then a seamless poster → video start, with the poster cut from frame 0 of each rendition)
+2026-11-17 — by: Antigravity agent (responsive layout expansion matching Provident Estate: dynamic `--content-max` scaling up to 1560px on wide/ultra-wide screens, expanded property cards & carousel sizing, luxury fluid section padding, navbar left completely untouched; verified 51/51 PASS)
 
 ### Previous update
 
-2026-11-16 — by: Antigravity agent (hero background video uses client Dubai reel [1280 desktop & 854 mobile], exact frame 0 extracted from source video as responsive WebP background poster, verified [51/51 PASS] and pushed to GitHub)
+2026-11-16 — by: Arena agent (review fixes on the client hero reel: skyline photo restored, renditions ~50% lighter, homepage static; then a seamless poster → video start, with the poster cut from frame 0 of each rendition)
 
 ## State of the repository
 
