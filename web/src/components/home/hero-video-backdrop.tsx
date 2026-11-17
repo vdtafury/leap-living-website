@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { preload } from 'react-dom'
 import { ResponsiveImg, getPortraitImage, getResponsiveImage } from '@/components/ui/responsive-img'
-import { HERO_VIDEO_SRC, shouldPlayHeroVideo } from '@/lib/hero-video'
+import { HERO_MOBILE_QUERY, HERO_VIDEO_SRC, shouldPlayHeroVideo } from '@/lib/hero-video'
 
 /**
  * Official client hero reel (Dubai & Palm Jumeirah aerials, 74 s loop), played from the client's
@@ -28,14 +28,13 @@ interface NetworkInformationLike {
 
 function canPlayHere(hasVideo: boolean): boolean {
   const connection = (navigator as Navigator & { connection?: NetworkInformationLike }).connection
-  const isMobile = window.matchMedia('(max-width: 700px)').matches
   return shouldPlayHeroVideo({
     hasVideo,
     saveData: connection?.saveData,
     effectiveType: connection?.effectiveType,
     downlink: connection?.downlink,
     hostname: window.location.hostname,
-    isMobile,
+    isMobile: window.matchMedia(HERO_MOBILE_QUERY).matches,
   })
 }
 

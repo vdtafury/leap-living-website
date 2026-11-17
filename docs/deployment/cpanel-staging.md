@@ -49,8 +49,8 @@ bash scripts/deployment/package-cpanel.sh
 It refuses files that browsers cannot play everywhere (anything but H.264 8-bit 4:2:0). `package-cpanel.sh` stops if the file is missing (override with `ALLOW_NO_HERO_VIDEO=1`, poster only) or not faststart.
 
 Who sees the video (`src/lib/hero-video.ts`):
-- **Plays:** any screen size, unless one of the rules below applies. The file streams at ~16 Mbps.
-- **Poster only (frame 0, same picture):** Save-Data on, Chrome reporting 2G/3G, Chrome reporting under 10 Mbps (Chrome caps the value at 10 and adds ±10% privacy noise, so 9–10 counts as 10), or reduced-motion. Safari and Firefox report no speed, so they play it.
+- **Plays:** tablets, laptops and desktops, unless one of the rules below applies. The file streams at ~16 Mbps.
+- **Poster only (frame 0, same picture):** phones, upright or turned sideways (`HERO_MOBILE_QUERY`: narrower than 701 px, or a touch screen shorter than 501 px), Save-Data on, Chrome reporting 2G/3G, Chrome reporting under 10 Mbps (Chrome caps the value at 10 and adds ±10% privacy noise, so 9–10 counts as 10), or reduced-motion. Safari and Firefox report no speed, so they play it.
 
 Each visit that plays the video can download up to the full ~150 MB, so check the hosting bandwidth quota.
 
