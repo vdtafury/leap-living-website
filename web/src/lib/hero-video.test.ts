@@ -20,6 +20,13 @@ describe('shouldPlayHeroVideo', () => {
     )
   })
 
+  it('skips on mobile viewports to save data and battery', () => {
+    expect(shouldPlayHeroVideo({ ...site, isMobile: true })).toBe(false)
+    expect(shouldPlayHeroVideo({ hasVideo: true, hostname: 'localhost', isMobile: true })).toBe(
+      false,
+    )
+  })
+
   it('skips 2G and 3G', () => {
     for (const effectiveType of ['slow-2g', '2g', '3g']) {
       expect(shouldPlayHeroVideo({ ...site, effectiveType })).toBe(false)

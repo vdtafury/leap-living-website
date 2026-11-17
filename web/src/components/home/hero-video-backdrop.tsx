@@ -28,12 +28,14 @@ interface NetworkInformationLike {
 
 function canPlayHere(hasVideo: boolean): boolean {
   const connection = (navigator as Navigator & { connection?: NetworkInformationLike }).connection
+  const isMobile = window.matchMedia('(max-width: 700px)').matches
   return shouldPlayHeroVideo({
     hasVideo,
     saveData: connection?.saveData,
     effectiveType: connection?.effectiveType,
     downlink: connection?.downlink,
     hostname: window.location.hostname,
+    isMobile,
   })
 }
 

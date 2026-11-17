@@ -29,6 +29,8 @@ export interface HeroVideoContext {
   effectiveType?: string
   downlink?: number
   hostname?: string
+  /** Whether running on a mobile viewport / device (phones stay on the 84KB WebP poster). */
+  isMobile?: boolean
 }
 
 const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]'])
@@ -39,6 +41,7 @@ const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]'])
  */
 export function shouldPlayHeroVideo(ctx: HeroVideoContext): boolean {
   if (!ctx.hasVideo) return false
+  if (ctx.isMobile) return false
   if (ctx.saveData) return false
   // Development machines always play it, whatever Chrome guesses about the link.
   if (ctx.hostname && LOCAL_HOSTS.has(ctx.hostname)) return true
