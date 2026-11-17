@@ -43,9 +43,9 @@ function pickRendition(hasOriginal: boolean): Rendition | null {
   if (connection?.effectiveType && /(^|-)2g$/.test(connection.effectiveType)) return null
   const lite = window.matchMedia('(max-width: 900px)').matches || connection?.effectiveType === '3g'
   if (lite) return '854'
-  // The original streams at ~16 Mbps: only when the browser reports its fastest bucket
-  // (or reports nothing, as Safari and Firefox do).
-  const slow = connection?.downlink !== undefined && connection.downlink < 10
+  // On localhost or fast connections, play the client's original 1080p video as delivered.
+  const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  const slow = !isLocal && connection?.downlink !== undefined && connection.downlink < 5
   return hasOriginal && !slow ? 'original' : '1280'
 }
 
