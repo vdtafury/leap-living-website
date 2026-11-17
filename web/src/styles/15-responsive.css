@@ -45,11 +45,7 @@
   .ll-footer-col {
     padding: 1.25rem 0 0;
     border-left: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.16);
-  }
-  .ll-footer-bg-img {
-    width: 100%;
-    opacity: 0.25;
+    border-top: 1px solid var(--border-subtle);
   }
   .ll-stats-grid {
     grid-template-columns: 1fr 1fr;
@@ -111,9 +107,6 @@
   .ll-section-dark {
     padding: 4.25rem 0;
   }
-  .ll-stat-item {
-    border-right-color: rgba(255, 255, 255, 0.26);
-  }
   .ll-page-hero::before {
     width: 360px;
     right: -140px;
@@ -129,8 +122,5 @@
   }
   .ll-service-tile.featured .ll-service-bignum {
     font-size: 4.25rem;
-  }
-  .ll-stat-item {
-    border-bottom-color: rgba(255, 255, 255, 0.22);
   }
 }

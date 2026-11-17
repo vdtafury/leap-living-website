@@ -718,11 +718,12 @@ export const DEVELOPER_BRANDS: DeveloperBrand[] = [
 
 /**
  * Homepage reviews. PLACEHOLDERS (owner, 2026-11-17): to be replaced with real client reviews
- * after the client meeting. Keep the shape: `title` is the review headline.
+ * after the client meeting. Keep the shape: `title` is the review headline, `avatar` picks the
+ * generic man / woman icon (no photos of people on the homepage).
  */
 export const CLIENT_PERSPECTIVES = [
   {
-    initials: 'HA',
+    avatar: 'man' as const,
     title: 'A Seamless Dubai Acquisition',
     quote:
       'Leap Living brought a level of market insight and disciplined precision that made our Dubai acquisition completely seamless.',
@@ -730,7 +731,7 @@ export const CLIENT_PERSPECTIVES = [
     role: 'Private Investor',
   },
   {
-    initials: 'LK',
+    avatar: 'woman' as const,
     title: 'A Trusted Advisory Partner',
     quote:
       'Strategic, transparent, and deeply analytical. A trusted advisory partner across every decision in our regional portfolio.',
@@ -738,7 +739,7 @@ export const CLIENT_PERSPECTIVES = [
     role: 'Family Office Director',
   },
   {
-    initials: 'ON',
+    avatar: 'man' as const,
     title: 'Access Beyond the Portals',
     quote:
       'Their market intelligence and direct executive relationships unlocked opportunities that simply never reach public portals.',
@@ -746,7 +747,7 @@ export const CLIENT_PERSPECTIVES = [
     role: 'Real Estate Investor',
   },
   {
-    initials: 'SM',
+    avatar: 'woman' as const,
     title: 'Relocation Made Simple',
     quote:
       'Moving our family to Dubai felt overwhelming until Leap Living mapped every community against our priorities. We found the right villa within weeks.',
@@ -754,7 +755,7 @@ export const CLIENT_PERSPECTIVES = [
     role: 'Relocating Executive',
   },
   {
-    initials: 'DR',
+    avatar: 'man' as const,
     title: 'An Honest, Data-Led Valuation',
     quote:
       'The valuation was grounded in real transaction data, not optimism. We listed at the right price and closed with a qualified buyer in under a month.',
@@ -762,7 +763,7 @@ export const CLIENT_PERSPECTIVES = [
     role: 'Property Owner',
   },
   {
-    initials: 'FS',
+    avatar: 'woman' as const,
     title: 'Clear Advice for a First Purchase',
     quote:
       'As a first-time buyer I valued how clearly every step was explained, from mortgage pre-approval to handover. No pressure, just sound advice.',

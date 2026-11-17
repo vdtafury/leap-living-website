@@ -149,26 +149,20 @@
 }
 
 /* ==================== 4-PILLAR CREDENTIALS BAR ==================== */
+/* Third on the homepage, right under the developer strip: white, teal line icons, hairline
+   dividers (approved light design, owner 2026-11-17) */
 .ll-stats-section {
   position: relative;
-  overflow: hidden;
-  padding: 3.75rem 0 4.25rem;
-  background: linear-gradient(180deg, #3B9EA1 0%, #338F92 100%);
-  color: var(--white);
+  padding: clamp(2.75rem, 3.6vw, 3.75rem) 0;
+  background-color: var(--white);
+  color: var(--heading);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
-.ll-stats-section > .ll-container {
-  position: relative;
-  z-index: 1;
-}
-
-.ll-keyhole-stats {
-  width: 420px;
-  height: 420px;
-  right: -150px;
-  top: 50%;
-  transform: translateY(-50%);
-  opacity: 0.12;
+.ll-stat-icon {
+  display: inline-flex;
+  margin-bottom: 0.9rem;
+  color: var(--brand-teal);
 }
 
 .ll-stats-grid {
@@ -178,7 +172,7 @@
 
 .ll-stat-item {
   padding: 0.5rem 2rem;
-  border-right: 1px solid rgba(255, 255, 255, 0.26);
+  border-right: 1px solid var(--border-subtle);
 }
 
 .ll-stat-item:first-child {
@@ -194,13 +188,13 @@
   font-family: var(--font-serif);
   font-size: 2.05rem;
   font-weight: 600;
-  color: var(--white);
+  color: var(--heading);
   letter-spacing: -0.015em;
   margin-bottom: 0.5rem;
 }
 
 .ll-stat-desc {
   font-size: 0.84rem;
-  color: rgba(255, 255, 255, 0.84);
+  color: var(--body-text);
   line-height: 1.58;
 }

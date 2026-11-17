@@ -29,13 +29,13 @@ Same day, Arena agent: checked the cleanup from a fresh clone. The 88 MB master 
   1. header
   2. full-screen hero (client video, Buy/Rent search)
   3. developer marquee (28 developers, client sheet order)
-  4. featured properties carousel
-  5. advisory bento
-  6. projects
-  7. valuation & mortgage panel (white)
-  8. client reviews (row of review cards, white)
-  9. stats
-  10. footer
+  4. stats (white, teal icons)
+  5. featured properties carousel
+  6. advisory bento (light tint)
+  7. projects
+  8. valuation & mortgage panel (white)
+  9. client reviews (Provident-style cards, man / woman avatars)
+  10. footer (light)
 - **Company data:** single source `web/src/data/site.ts`, taken from https://leapliving.ae/ (owner: that site is correct). Footer, contact page and JSON-LD read it.
 - **Hero video:** one file, the client's original as delivered.
   - Path `public/videos/hero/client-hero-original.mp4`, ~150 MB, git-ignored, placed with `scripts/prepare-hero-original.sh`.
@@ -146,3 +146,4 @@ Same day, Arena agent: checked the cleanup from a fresh clone. The 88 MB master 
 | 2026-11-16 | Arena agent | Hero: the client's original video file (~150 MB) can now be used as delivered (owner request). GitHub rejects files over 100 MB, so it is git-ignored and lives on the build machine and the server. `scripts/prepare-hero-original.sh` copies the H.264 stream bit for bit (`-c:v copy`), drops the audio, applies faststart, adds BT.709 tags only if missing, and cuts the poster from frame 0. It refuses non-H.264, non-8-bit files. `package-cpanel.sh` ships the file if present and fails if it is not faststart. `page.tsx` checks at build time whether it exists (`hasOriginal`). Screens wider than 900 px on a fast link (Chrome `downlink` ≥ 10, or unknown) get the original; slower desktop links and a missing file fall back to 1280, and phones keep 854 | Stand-in test (an 88 MB re-mux with the index at the end and an audio track): output faststart, audio dropped, video frames md5-identical to the source. In headless Chrome, 1440/1920 fast play the original with the first visible frame at t=0.000 and poster vs frame 0 1.4–1.7/255. A 5 Mbps desktop gets 1280, a phone gets 854, and a missing file falls back to 1280. Without the file, no request is made for it. `tsc` PASS, lint 0 errors, tests 8/8, build PASS, verify.sh 50/51 (known `file` check). The stand-in poster was not committed |
 | 2026-11-17 | Arena agent | Owner's point-by-point decisions. (1) Hero: 1280/854 renditions and `encode-hero-videos.sh` deleted; only the client's original plays (D-24); rule in `src/lib/hero-video.ts` (10 Mbps, with a 10% band for Chrome's privacy noise: measured 9.1–10 on an unthrottled link). (2) Fluid `--content-max: clamp(1220px, 68vw + 336px, 1560px)` replaces the 1400/1600/1800 steps; sections stay wider than the navbar (Provident reference). (3) `Insights` removed. (4) Company data from leapliving.ae in `src/data/site.ts` (D-27). (5) Forms → `Inquiry` table via `POST /api/inquiries`; admin Basic auth on export, upload, sharp; health hides errors (D-25). (6) Security headers/CSP, noindex default, robots, sitemap, OG image, JSON-LD (D-26); zod set to jitless so the CSP reports no eval. (7) Branded 404 + error page. (8) `globals.css` split into `src/styles/` (21 files). (9) Tests 8 → 47. (10) verify.sh and package-cpanel.sh updated; docs updated | `tsc` PASS, lint 0 errors (3 warnings), vitest 47/47, `next build` PASS, verify.sh 75/75, headless Chrome: 11 routes with no console/CSP errors, form submit 201 + saved row, width 1240 → 1960 grows ≤ 1px per px with no overflow |
 | 2026-11-17 | Arena agent | Homepage simplified (D-27): "Popular" chips removed from the hero search; hero eyebrow + description, developer heading/lead/Pause, numbered eyebrows and section leads removed; Projects, valuation CTA and Client Perspectives now plain white; reviews rebuilt as Provident-style cards in a shared `Carousel` (`components/ui/carousel.tsx`, also used by `PropertyCarousel`); `DeveloperShowcase` is now a server component; ~360 lines of dead CSS removed. Page 5,699 → 4,944 px at 1440 | `tsc` PASS, lint 0 errors, vitest 48/48, build PASS, verify.sh 65/65; Lighthouse mobile perf 90 → 95 (LCP 3.5 → 2.9 s, CLS 0), desktop 99 |
+| 2026-11-17 | Arena agent | Light homepage design (D-28): stats moved to third (white, teal icons, 2 x 2 on phones), Advisory on a light tint with white tiles, light footer (no background photo), reviews with generic man / woman avatars (Provident style). Hero and Developer strip unchanged; homepage calculator on hold | `tsc` PASS, lint 0 errors, vitest 48/48, build PASS, verify.sh 65/65; Lighthouse desktop 99, mobile 89–94 across runs (LCP = hero poster, unchanged) |

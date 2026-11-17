@@ -54,14 +54,6 @@
   pointer-events: none;
 }
 
-.ll-keyhole-services {
-  width: 760px;
-  height: 760px;
-  right: -260px;
-  top: -220px;
-  opacity: 0.06;
-}
-
 /* Full-bleed photography + brand scrim (same language as the footer) */
 .ll-section-image {
   overflow: hidden;

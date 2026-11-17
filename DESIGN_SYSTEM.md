@@ -128,8 +128,9 @@ Each section gets one surface class. Adjacent sections must never share a surfac
 | `ll-section-grey` | neutral-grey wash + faint keyhole | listings blocks |
 | `ll-section-teal` | flat teal band, white text | CTA bands |
 | `ll-section-plain` | plain white, no decoration; consecutive plain sections share one gap | homepage lower half: Projects, valuation panel, reviews (D-27) |
+| `ll-section-tint` | very light tint `#F3F8F8` + hairlines | homepage Advisory bento (D-28) |
 | `ll-section-gradient` | `--brand-gradient`, white text | featured/service blocks |
-| `ll-section-image` | photo (`.ll-section-image-bg`) + teal scrim + glass panel | leadership/editorial, same language as the footer |
+| `ll-section-image` | photo (`.ll-section-image-bg`) + teal scrim + glass panel | leadership/editorial (not used on the homepage) |
 | `ll-section-dark` | gradient, white text | forms on dark (Sell valuation) |
 
 Dark surfaces automatically re-colour titles, leads, eyebrows, link arrows and checklist ticks. Inner-page heroes (`ll-page-hero`) use the brand gradient + keyhole watermark; detail pages show the price in a glass `.ll-hero-price` panel.
@@ -137,7 +138,7 @@ Dark surfaces automatically re-colour titles, leads, eyebrows, link arrows and c
 ### 7.3 Labels & motifs
 
 - `ll-eyebrow-num`: index number + hairline + label, e.g. `01 | CURATED PORTFOLIO ——`. **Not used on the homepage** (D-27): homepage sections open with the title only.
-- `KeyholeMark` (`web/src/components/ui/keyhole-mark.tsx`): inline SVG of the logo keyhole (circle r 62.5, viewBox 132), `aria-hidden`. Positioned with `.ll-keyhole` plus a variant (`-stats`, `-services`, `-tile`, `-emblem`, `-dev`). Watermark only: never recoloured, distorted, or used in place of the logo.
+- `KeyholeMark` (`web/src/components/ui/keyhole-mark.tsx`): inline SVG of the logo keyhole (circle r 62.5, viewBox 132), `aria-hidden`. Positioned with `.ll-keyhole` plus a variant (`-emblem`, `-dev`; the light homepage sections carry none, D-28). Watermark only: never recoloured, distorted, or used in place of the logo.
 - Large faded index numbers (`.ll-service-bignum`) in the services bento.
 
 ### 7.4 Cards (`ll-card-*`)
@@ -174,13 +175,13 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 
 1. Full-screen hero (video) with the glass search **inside** it (see 7.7)
 2. Developer Network: light glass logo marquee, logos only
-3. Featured Properties: light, **carousel with arrows** (see 7.8)
-4. Advisory: gradient bento
-5. Selected Projects: plain white
-6. Valuation & Mortgage: plain white, hairline panel with the two buttons
-7. Client reviews: plain white, **row of review cards** (see 7.10)
-8. Institutional Pillars (21+ Years, AED 12B+, ...): teal stats band
-9. Footer
+3. Institutional Pillars (21+ Years, AED 12B+, ...): white, teal line icons, hairline dividers; 2 x 2 on phones (D-28)
+4. Featured Properties: white, **carousel with arrows** (see 7.8)
+5. Advisory: bento on the light tint (`ll-section-tint`), white tiles, lead tile Teal 10%
+6. Selected Projects: plain white
+7. Valuation & Mortgage: plain white, hairline panel with the two buttons
+8. Client reviews: plain white, **row of review cards** (see 7.10)
+9. Footer: light (white, coloured logo, hairlines)
 
 ### 7.9 Media & performance rules
 
@@ -247,7 +248,8 @@ Component: `web/src/components/home/client-experience.tsx` (server component). R
 | Part | Rule |
 |---|---|
 | Section | `ll-section-plain` (white). Header: title `Why Clients Trust Leap Living` + `Speak With an Advisor` link, counter and arrows |
-| Card | White, 1px `--border-subtle`, `--radius-lg`. Teal-50 quote mark → bold headline → quote (clamped to 6 lines) → hairline → initials avatar (48px, Teal 10%) + name + role. Hover: Teal 25% border + card shadow, no movement |
+| Card | White, 1px `--border-subtle`, `--radius-lg`. As on Provident: reviewer row first (60px round **man / woman avatar** + name + role) → bold headline → text (clamped to 5 lines). Hover: Teal 25% border + card shadow, no movement |
+| Avatar | `AvatarIcon` (`components/ui/icons.tsx`): inline SVG silhouette, short hair (man) or long hair (woman), in brand teals on Teal 10%. Not a photo, so the no-people-photos rule (D-17) holds. Chosen per review by `avatar: 'man' \| 'woman'` |
 | Carousel | Shared `Carousel`: 3 per view above 1120px, 2 below, 1 + peek at 700px and below; swipe, arrows (one card per click), ←/→ keys, counter, progress hairline. **No autoplay** |
-| A11y | Each card is a `figure` with `blockquote` + `figcaption`; slides are labelled "n of N"; buttons read "Previous/Next review" |
-| Content | `CLIENT_PERSPECTIVES` in `data/catalog.ts` (`title`, `quote`, `author`, `role`, `initials`): **placeholders** until the client sends real reviews. No star ratings and no dates until real, verifiable reviews exist. Zero human photos (initials only) |
+| A11y | Each card is a `figure` with `figcaption` (reviewer) + `blockquote`; avatars are `aria-hidden`; slides are labelled "n of N"; buttons read "Previous/Next review" |
+| Content | `CLIENT_PERSPECTIVES` in `data/catalog.ts` (`avatar`, `title`, `quote`, `author`, `role`): **placeholders** until the client sends real reviews. No star ratings and no dates until real, verifiable reviews exist |

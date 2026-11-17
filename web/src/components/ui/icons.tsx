@@ -450,3 +450,107 @@ export function ArrowLeftIcon({ size = 16, ...props }: IconProps) {
     </svg>
   )
 }
+
+/* ---- Credential icons (homepage stats band) ---- */
+function LineIcon({ size = 24, children, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+      {...props}
+    >
+      {children}
+    </svg>
+  )
+}
+
+export function CalendarIcon(props: IconProps) {
+  return (
+    <LineIcon {...props}>
+      <rect x="3.5" y="5" width="17" height="15.5" rx="2" />
+      <path d="M3.5 10h17M8 3v4M16 3v4" />
+    </LineIcon>
+  )
+}
+
+export function StackIcon(props: IconProps) {
+  return (
+    <LineIcon {...props}>
+      <path d="M12 3 2.5 8 12 13l9.5-5L12 3Z" />
+      <path d="m2.5 12 9.5 5 9.5-5" />
+      <path d="m2.5 16 9.5 5 9.5-5" />
+    </LineIcon>
+  )
+}
+
+export function ShieldCheckIcon(props: IconProps) {
+  return (
+    <LineIcon {...props}>
+      <path d="M12 3 4.5 6v5.5c0 4.6 3.1 8.3 7.5 9.5 4.4-1.2 7.5-4.9 7.5-9.5V6L12 3Z" />
+      <path d="m8.75 12 2.25 2.25 4.25-4.5" />
+    </LineIcon>
+  )
+}
+
+export function UsersIcon(props: IconProps) {
+  return (
+    <LineIcon {...props}>
+      <circle cx="9" cy="8" r="3.5" />
+      <path d="M2.5 20c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5" />
+      <circle cx="17" cy="9" r="2.75" />
+      <path d="M17.25 13.6c2.5.3 4.25 2.6 4.25 5.4" />
+    </LineIcon>
+  )
+}
+
+/**
+ * Generic reviewer avatars (no photos of people on the homepage, D-17), in the spirit of the
+ * man / woman icons on providentestate.com. The parent clips them to a circle.
+ */
+export function AvatarIcon({ variant, size = 60 }: { variant: 'man' | 'woman'; size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 70 70"
+      aria-hidden="true"
+      focusable="false"
+      className="ll-avatar-svg"
+    >
+      <rect width="70" height="70" className="ll-avatar-bg" />
+      {variant === 'man' ? (
+        <>
+          <path className="ll-avatar-body" d="M8 72c0-15 12-25 27-25s27 10 27 25Z" />
+          <path className="ll-avatar-skin" d="M30 38h10v11.5c-2.9 2.6-7.1 2.6-10 0Z" />
+          <circle className="ll-avatar-skin" cx="35" cy="28" r="13" />
+          <path
+            className="ll-avatar-hair"
+            d="M22 27.5C21.3 18.6 26.8 13 35 13c8.4 0 13.8 5.7 13 14.5-1.5-4.8-4.3-7-8-7.9-3.5 2-9 2.8-14 1.7-2.1 1.4-3.1 3.4-4 6.2Z"
+          />
+        </>
+      ) : (
+        <>
+          <path
+            className="ll-avatar-hair"
+            d="M20 31c0-11 6.6-18.5 15-18.5S50 20 50 31v15c0 2.4-1.5 3.8-3.9 3.8H23.9c-2.4 0-3.9-1.4-3.9-3.8Z"
+          />
+          <path className="ll-avatar-body" d="M9 72c0-14.5 11.6-24.5 26-24.5S61 57.5 61 72Z" />
+          <path className="ll-avatar-skin" d="M30.5 39h9v10.5c-2.6 2.4-6.4 2.4-9 0Z" />
+          <circle className="ll-avatar-skin" cx="35" cy="29.5" r="12" />
+          <path
+            className="ll-avatar-hair"
+            d="M23 29c.4-8 5.3-13 12-13 7 0 11.8 5.1 12 13-3.7-1.3-8.1-4.1-11.1-8.1-2.9 3.7-7.3 6.7-12.9 8.1Z"
+          />
+        </>
+      )}
+    </svg>
+  )
+}

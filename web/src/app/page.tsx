@@ -7,8 +7,14 @@ import { HeroSearchBar } from '@/components/home/hero-search-bar'
 import { HeroVideoBackdrop } from '@/components/home/hero-video-backdrop'
 import { PropertyCarousel } from '@/components/property/property-carousel'
 import { ProjectCard } from '@/components/project/project-card'
-import { ArrowRightIcon, ArrowUpRightIcon } from '@/components/ui/icons'
-import { KeyholeMark } from '@/components/ui/keyhole-mark'
+import {
+  ArrowRightIcon,
+  ArrowUpRightIcon,
+  CalendarIcon,
+  ShieldCheckIcon,
+  StackIcon,
+  UsersIcon,
+} from '@/components/ui/icons'
 import { DeveloperShowcase } from '@/components/home/developer-showcase'
 import { ClientExperience } from '@/components/home/client-experience'
 import { CORE_SERVICES, PROJECTS, PROPERTIES } from '@/data/catalog'
@@ -70,6 +76,54 @@ export default function HomePage() {
         {/* ==================== DEVELOPER NETWORK (logo marquee) ==================== */}
         <DeveloperShowcase />
 
+        {/* ==================== INSTITUTIONAL PILLARS ==================== */}
+        <section className="ll-stats-section ll-defer-render" aria-label="Institutional Pillars">
+          <div className="ll-container">
+            <div className="ll-stats-grid">
+              <div className="ll-stat-item">
+                <span className="ll-stat-icon">
+                  <CalendarIcon size={28} />
+                </span>
+                <div className="ll-stat-value">21+ Years</div>
+                <p className="ll-stat-desc">
+                  Executive leadership across Dubai&apos;s residential and commercial cycles since
+                  2005.
+                </p>
+              </div>
+              <div className="ll-stat-item">
+                <span className="ll-stat-icon">
+                  <StackIcon size={28} />
+                </span>
+                <div className="ll-stat-value">AED 12B+</div>
+                <p className="ll-stat-desc">
+                  Commercialisation, pricing strategy, and landmark project stewardship across the
+                  UAE.
+                </p>
+              </div>
+              <div className="ll-stat-item">
+                <span className="ll-stat-icon">
+                  <ShieldCheckIcon size={28} />
+                </span>
+                <div className="ll-stat-value">100% Fiduciary</div>
+                <p className="ll-stat-desc">
+                  Client-aligned counsel structured around long-term value over short-term brokerage
+                  volume.
+                </p>
+              </div>
+              <div className="ll-stat-item">
+                <span className="ll-stat-icon">
+                  <UsersIcon size={28} />
+                </span>
+                <div className="ll-stat-value">Direct Access</div>
+                <p className="ll-stat-desc">
+                  Executive relationships across Tier-1 master developers, family offices, and
+                  private owners.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ==================== FEATURED BUY PORTFOLIO PREVIEW ==================== */}
         <section className="ll-section-light ll-defer-render">
           <div className="ll-container">
@@ -92,8 +146,7 @@ export default function HomePage() {
         </section>
 
         {/* ==================== SERVICES OVERVIEW (WITH CONSULTANCY) ==================== */}
-        <section className="ll-section-gradient ll-defer-render">
-          <KeyholeMark className="ll-keyhole ll-keyhole-services" strokeWidth={1.6} />
+        <section className="ll-section-tint ll-defer-render">
           <div className="ll-container">
             <div className="ll-section-header">
               <h2 className="ll-serif-title ll-section-title">End-to-End Real Estate Advisory</h2>
@@ -109,9 +162,6 @@ export default function HomePage() {
                   key={service.id}
                   className={`ll-service-tile ${service.featured ? 'featured' : ''}`}
                 >
-                  {service.featured && (
-                    <KeyholeMark className="ll-keyhole ll-keyhole-tile" strokeWidth={1.8} />
-                  )}
                   <div className="ll-service-bignum" aria-hidden="true">
                     0{index + 1}
                   </div>
@@ -172,43 +222,6 @@ export default function HomePage() {
 
         {/* ==================== CLIENT PERSPECTIVES ==================== */}
         <ClientExperience />
-
-        {/* ==================== INSTITUTIONAL PILLARS ==================== */}
-        <section className="ll-stats-section ll-defer-render" aria-label="Institutional Pillars">
-          <KeyholeMark className="ll-keyhole ll-keyhole-stats" />
-          <div className="ll-container">
-            <div className="ll-stats-grid">
-              <div className="ll-stat-item">
-                <div className="ll-stat-value">21+ Years</div>
-                <p className="ll-stat-desc">
-                  Executive leadership across Dubai&apos;s residential and commercial cycles since
-                  2005.
-                </p>
-              </div>
-              <div className="ll-stat-item">
-                <div className="ll-stat-value">AED 12B+</div>
-                <p className="ll-stat-desc">
-                  Commercialisation, pricing strategy, and landmark project stewardship across the
-                  UAE.
-                </p>
-              </div>
-              <div className="ll-stat-item">
-                <div className="ll-stat-value">100% Fiduciary</div>
-                <p className="ll-stat-desc">
-                  Client-aligned counsel structured around long-term value over short-term brokerage
-                  volume.
-                </p>
-              </div>
-              <div className="ll-stat-item">
-                <div className="ll-stat-value">Direct Access</div>
-                <p className="ll-stat-desc">
-                  Executive relationships across Tier-1 master developers, family offices, and
-                  private owners.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
       </main>
 
       <SiteFooter />
