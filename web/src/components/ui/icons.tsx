@@ -554,3 +554,13 @@ export function AvatarIcon({ variant, size = 60 }: { variant: 'man' | 'woman'; s
     </svg>
   )
 }
+
+export function HomeIcon(props: IconProps) {
+  return (
+    <LineIcon {...props}>
+      <path d="M3.5 10.5 12 4l8.5 6.5" />
+      <path d="M5.5 9v11h13V9" />
+      <path d="M10 20v-5.5h4V20" />
+    </LineIcon>
+  )
+}
