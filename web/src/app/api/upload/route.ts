@@ -1,8 +1,9 @@
 import { randomUUID } from 'node:crypto'
 import path from 'node:path'
 import { NextResponse } from 'next/server'
+import { checkAdmin } from '@/server/admin-auth'
 import { z } from 'zod'
-import { prisma } from '@/server/db'
+import { ensureSchema, prisma } from '@/server/db'
 import { savePublicFile } from '@/server/storage'
 import { getImageMetadata } from '@/server/images'
 import {
@@ -17,6 +18,10 @@ const uploadSchema = z.object({
 })
 
 export async function POST(request: Request) {
+  // Admin only (HTTP Basic, ADMIN_USER / ADMIN_PASSWORD); switched off when those are unset.
+  const auth = checkAdmin(request)
+  if (!auth.ok) return auth.response
+
   const formData = await request.formData()
   const parsed = uploadSchema.safeParse(Object.fromEntries(formData))
 
@@ -47,6 +52,7 @@ export async function POST(request: Request) {
   const storagePath = await savePublicFile(filename, buffer)
   const metadata = await getImageMetadata(buffer)
 
+  await ensureSchema()
   const asset = await prisma.mediaAsset.create({
     data: {
       filename,

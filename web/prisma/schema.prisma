@@ -21,3 +21,28 @@ model MediaAsset {
 
   @@index([createdAt])
 }
+
+/// Form submissions (consultation, valuation, viewing and project requests).
+/// Saved first, so nothing is lost; a CRM hand-off can read from here later.
+model Inquiry {
+  id        String   @id @default(cuid())
+  /// CONSULTATION | VALUATION | PROPERTY_INQUIRY | PROJECT_BRIEFING
+  type      String
+  name      String
+  email     String
+  phone     String
+  interest  String
+  notes     String   @default("")
+  /// The property or project the visitor asked about, if any.
+  context   String?
+  pagePath  String?
+  /// NEW until someone follows it up (no admin UI yet).
+  status    String   @default("NEW")
+  /// SHA-256 of the client IP (abuse tracing without storing the address).
+  ipHash    String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([type, createdAt])
+}

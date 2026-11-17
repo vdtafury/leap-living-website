@@ -1,8 +1,13 @@
 import { NextResponse } from 'next/server'
+import { checkAdmin } from '@/server/admin-auth'
 import { getImageMetadata, resizeImage } from '@/server/images'
 import { MAX_UPLOAD_BYTES, sniffImageMime } from '@/lib/validation'
 
 export async function POST(request: Request) {
+  // Admin only (HTTP Basic, ADMIN_USER / ADMIN_PASSWORD); switched off when those are unset.
+  const auth = checkAdmin(request)
+  if (!auth.ok) return auth.response
+
   const formData = await request.formData()
   const file = formData.get('file')
 
