@@ -8,6 +8,10 @@
 
 ## Last updated
 
+2026-11-17 — by: Antigravity agent. Mobile data optimization (phones stay on lightweight 84KB WebP frame-0 poster instead of loading 150MB video); cleaned Git history with `git-filter-repo` dropping pack size from 333MB to 23.8MB; verified 75/75 PASS and force-pushed to `feat/multi-page-platform`.
+
+### Previous update
+
 2026-11-17 — by: Arena agent. Applied the owner's point-by-point decisions: hero original only, fluid width, Insights removed, leapliving.ae data, forms → database, locked APIs, security headers, SEO, branded 404, CSS split, tests 8 → 47.
 
 ## State of the repository
