@@ -3,25 +3,18 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { preload } from 'react-dom'
 import { ResponsiveImg, getPortraitImage, getResponsiveImage } from '@/components/ui/responsive-img'
+import { HERO_VIDEO_SRC, shouldPlayHeroVideo } from '@/lib/hero-video'
 
 /**
- * Official client hero reel (Dubai & Palm Jumeirah aerials, 74 s loop):
- *   /videos/hero/client-hero-original.mp4  the client's file as delivered (~150 MB, 1080p60),
- *       only on big screens with a fast link. Prepared by scripts/prepare-hero-original.sh
- *       (bit-for-bit copy, faststart). Git-ignored (over GitHub's 100 MB limit), so it exists
- *       only where it was placed: the build checks for it (`hasOriginal`).
- *   /videos/hero/client-hero-1280.mp4      desktop fallback (~9 MB)
- *   /videos/hero/client-hero-854.mp4       phones / 3G (~4 MB)
+ * Official client hero reel (Dubai & Palm Jumeirah aerials, 74 s loop), played from the client's
+ * original file exactly as delivered (see `@/lib/hero-video`).
  *
- * Seamless start: the poster IS frame 0 of the rendition the device plays (landscape from the
- * 1280 file, phone crop from the 854 file), both layers share the same object-fit/position, and
- * the video is switched on — with no fade — only once it has presented its first frame. So the
- * still simply starts moving.
+ * Seamless start: the poster IS frame 0 of that file (scripts/prepare-hero-original.sh cuts it,
+ * landscape and phone crop), both layers share the same object-fit/position, and the video is
+ * switched on, with no fade, only once it has presented its first frame. So the still simply
+ * starts moving. With no video (file missing, Save-Data, slow link, reduced motion, playback
+ * error) the poster stays: the same picture, in full quality.
  */
-type Rendition = 'original' | '1280' | '854'
-
-const videoSrcFor = (rendition: Rendition) => `/videos/hero/client-hero-${rendition}.mp4`
-
 const HERO_POSTER = '/images/client-video-frame-0.jpg'
 const PORTRAIT_MEDIA = '(max-width: 700px) and (orientation: portrait)'
 const LANDSCAPE_MEDIA = '(min-width: 701px), (orientation: landscape)'
@@ -33,20 +26,15 @@ interface NetworkInformationLike {
   downlink?: number
 }
 
-/**
- * Decides whether — and at what size — the background video may load.
- * Returns null when video should be skipped entirely (Save-Data, 2G).
- */
-function pickRendition(hasOriginal: boolean): Rendition | null {
+function canPlayHere(hasVideo: boolean): boolean {
   const connection = (navigator as Navigator & { connection?: NetworkInformationLike }).connection
-  if (connection?.saveData) return null
-  if (connection?.effectiveType && /(^|-)2g$/.test(connection.effectiveType)) return null
-  const lite = window.matchMedia('(max-width: 900px)').matches || connection?.effectiveType === '3g'
-  if (lite) return '854'
-  // On localhost or fast connections, play the client's original 1080p video as delivered.
-  const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-  const slow = !isLocal && connection?.downlink !== undefined && connection.downlink < 5
-  return hasOriginal && !slow ? 'original' : '1280'
+  return shouldPlayHeroVideo({
+    hasVideo,
+    saveData: connection?.saveData,
+    effectiveType: connection?.effectiveType,
+    downlink: connection?.downlink,
+    hostname: window.location.hostname,
+  })
 }
 
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)'
@@ -60,7 +48,7 @@ function subscribeToReducedMotion(onChange: () => void) {
 const getReducedMotion = () => window.matchMedia(REDUCED_MOTION_QUERY).matches
 const getReducedMotionOnServer = () => false
 
-export function HeroVideoBackdrop({ hasOriginal = false }: { hasOriginal?: boolean }) {
+export function HeroVideoBackdrop({ hasVideo = false }: { hasVideo?: boolean }) {
   const [videoReady, setVideoReady] = useState(false)
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const backdropRef = useRef<HTMLDivElement | null>(null)
@@ -69,8 +57,8 @@ export function HeroVideoBackdrop({ hasOriginal = false }: { hasOriginal?: boole
     getReducedMotion,
     getReducedMotionOnServer,
   )
-  // Chosen once the poster is painted (Save-Data / 2G → no video).
-  const [rendition, setRendition] = useState<Rendition | null>(null)
+  // Decided once the poster is painted; false = the poster stays.
+  const [playVideo, setPlayVideo] = useState(false)
 
   // Hoists high-priority <link rel="preload"> tags for the poster into <head>,
   // one per art-directed source, so each device fetches exactly one file.
@@ -102,7 +90,7 @@ export function HeroVideoBackdrop({ hasOriginal = false }: { hasOriginal?: boole
     let rafId: number | undefined
     const start = () => {
       if (cancelled) return
-      rafId = requestAnimationFrame(() => setRendition(pickRendition(hasOriginal)))
+      rafId = requestAnimationFrame(() => setPlayVideo(canPlayHere(hasVideo)))
     }
     const img = backdropRef.current?.querySelector<HTMLImageElement>('img.ll-hero-poster')
     if (img) img.decode().then(start, start)
@@ -111,10 +99,10 @@ export function HeroVideoBackdrop({ hasOriginal = false }: { hasOriginal?: boole
       cancelled = true
       if (rafId !== undefined) cancelAnimationFrame(rafId)
     }
-  }, [reducedMotion, hasOriginal])
+  }, [reducedMotion, hasVideo])
 
   useEffect(() => {
-    if (reducedMotion || !rendition) return
+    if (reducedMotion || !playVideo) return
     const v = videoRef.current
     if (!v) return
     let cancelled = false
@@ -167,9 +155,7 @@ export function HeroVideoBackdrop({ hasOriginal = false }: { hasOriginal?: boole
       cancelled = true
       if (frameHandle !== undefined) v.cancelVideoFrameCallback(frameHandle)
     }
-  }, [reducedMotion, rendition])
-
-  const videoSrc = rendition ? videoSrcFor(rendition) : null
+  }, [reducedMotion, playVideo])
 
   return (
     <div ref={backdropRef} className="ll-hero-backdrop" aria-hidden="true">
@@ -186,19 +172,17 @@ export function HeroVideoBackdrop({ hasOriginal = false }: { hasOriginal?: boole
       </picture>
 
       {/* Official client hero video reel: loops continuously */}
-      {!reducedMotion && videoSrc && (
+      {!reducedMotion && playVideo && (
         <video
           ref={videoRef}
-          src={videoSrc}
+          src={HERO_VIDEO_SRC}
           autoPlay
           muted
           loop
           playsInline
           preload="auto"
-          // Original missing on this server (deleted, or not uploaded): use the 1280 version.
-          onError={() => {
-            if (rendition === 'original') setRendition('1280')
-          }}
+          // File missing on this server, or not playable: the poster (same picture) stays.
+          onError={() => setPlayVideo(false)}
           className={`ll-hero-video ${videoReady ? 'is-visible' : ''}`}
         />
       )}
