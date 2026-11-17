@@ -21,6 +21,14 @@ export const HERO_MIN_DOWNLINK_MBPS = 10
  */
 const DOWNLINK_NOISE = 0.1
 
+/**
+ * Phones stay on the frame-0 poster (84 KB WebP) instead of the ~150 MB video, to save data
+ * and battery (owner, 2026-11-17). A phone is a narrow screen (portrait), or a touch screen
+ * that is short (the same phone turned sideways: 844x390, 932x430). Tablets (768x1024,
+ * 1024x768) and desktops still play the video.
+ */
+export const HERO_MOBILE_QUERY = '(max-width: 700px), (pointer: coarse) and (max-height: 500px)'
+
 export interface HeroVideoContext {
   /** Whether the video file exists on this server (checked at build time). */
   hasVideo: boolean
@@ -29,7 +37,7 @@ export interface HeroVideoContext {
   effectiveType?: string
   downlink?: number
   hostname?: string
-  /** Whether running on a mobile viewport / device (phones stay on the 84KB WebP poster). */
+  /** Whether `HERO_MOBILE_QUERY` matches: phones keep the poster. */
   isMobile?: boolean
 }
 
@@ -46,6 +54,7 @@ export function shouldPlayHeroVideo(ctx: HeroVideoContext): boolean {
   // Development machines always play it, whatever Chrome guesses about the link.
   if (ctx.hostname && LOCAL_HOSTS.has(ctx.hostname)) return true
   if (ctx.effectiveType && /(^|-)(2g|3g)$/.test(ctx.effectiveType)) return false
-  if (ctx.downlink !== undefined && ctx.downlink < HERO_MIN_DOWNLINK_MBPS * (1 - DOWNLINK_NOISE)) return false
+  if (ctx.downlink !== undefined && ctx.downlink < HERO_MIN_DOWNLINK_MBPS * (1 - DOWNLINK_NOISE))
+    return false
   return true
 }

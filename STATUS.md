@@ -10,6 +10,8 @@
 
 2026-11-17 — by: Antigravity agent. Mobile data optimization (phones stay on lightweight 84KB WebP frame-0 poster instead of loading 150MB video); cleaned Git history with `git-filter-repo` dropping pack size from 333MB to 23.8MB; verified 75/75 PASS and force-pushed to `feat/multi-page-platform`.
 
+Same day, Arena agent: checked the cleanup from a fresh clone. The 88 MB master is gone from every branch (three old branches that still held it were deleted by the owner). `feat/multi-page-platform` alone is 23.8 MB; a full clone is still ~86 MB because 11 merged `arena/*` branches (PRs #1–#13) keep the pre-rewrite history with the old stock clips. Deleting them brings a full clone to ~24 MB. Phones turned sideways now also keep the poster (they loaded the 150 MB video before), docs updated.
+
 ### Previous update
 
 2026-11-17 — by: Arena agent. Applied the owner's point-by-point decisions: hero original only, fluid width, Insights removed, leapliving.ae data, forms → database, locked APIs, security headers, SEO, branded 404, CSS split, tests 8 → 47.
@@ -39,6 +41,7 @@
   - Path `public/videos/hero/client-hero-original.mp4`, ~150 MB, git-ignored, placed with `scripts/prepare-hero-original.sh`.
   - No renditions, no trimming (D-24).
   - The poster is frame 0.
+  - Phones (upright or sideways) keep the poster only; tablets and desktops play the video (`HERO_MOBILE_QUERY`).
 - **Styles:** `web/src/styles/01-…21-*.css`, imported in order by `web/src/app/globals.css` (was one 84 KB file). Content width is fluid, 1220 → 1560px (`DESIGN_SYSTEM.md` §6).
 - **Server (`web/src/server/`):**
   - SQLite via Prisma + better-sqlite3; models `MediaAsset` and `Inquiry`.
