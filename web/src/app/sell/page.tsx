@@ -1,16 +1,18 @@
 import Link from 'next/link'
 import { ResponsiveImg } from '@/components/ui/responsive-img'
 import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/seo'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { ConsultationForm } from '@/components/forms/consultation-form'
 import { CheckIcon, ChevronRightIcon } from '@/components/ui/icons'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Sell With Us & Free Property Valuation | LEAP LIVING Dubai',
   description:
     'Confidential valuation, strategic pricing, and discreet disposition advisory for Dubai property owners.',
-}
+  path: '/sell',
+})
 
 export default function SellPage() {
   return (

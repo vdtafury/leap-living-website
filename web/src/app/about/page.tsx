@@ -1,17 +1,19 @@
 import Link from 'next/link'
 import { ResponsiveImg } from '@/components/ui/responsive-img'
 import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/seo'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { ArrowUpRightIcon, ChevronRightIcon } from '@/components/ui/icons'
 import { FULL_SERVICE_CATALOG } from '@/data/catalog'
 import { DeveloperShowcase } from '@/components/home/developer-showcase'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'About Us & Real Estate Consultancy | LEAP LIVING Dubai',
   description:
     'Leap Living brings over two decades of Dubai real estate leadership, independent Real Estate Consultancy, and institutional advisory.',
-}
+  path: '/about',
+})
 
 export default function AboutPage() {
   return (
