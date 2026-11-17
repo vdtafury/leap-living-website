@@ -95,18 +95,39 @@ button, input, select, textarea {
 }
 
 /* Container */
-/* Page width system (Provident-style):
-   - one fluid side gutter shared by everything (20px on phones, up to 80px);
-   - section content capped at 1220px and centred;
-   - the navbar is NOT capped by the content width: it runs nearly
-     edge-to-edge (up to 1760px on ultra-wide screens). */
+/* Page width system (expanded Provident-style):
+   - fluid side gutter shared by sections (20px on phones, up to 64px on wide screens);
+   - section content scales dynamically with viewport:
+       * default (laptops/compact desktops): 1220px
+       * >=1400px: 1360px
+       * >=1600px (1080p full/standard wide): 1480px
+       * >=1800px (2K/ultra-wide): 1560px
+   - the navbar is untouched and remains edge-to-edge (--nav-max: 1920px). */
 :root {
-  --page-gutter: clamp(1.25rem, 5vw, 5rem);
+  --page-gutter: clamp(1.25rem, 4vw, 4rem);
   --content-max: 1220px;
   /* Navbar gutter is always <= the content gutter, so the bar reads wider
      than the sections: 80px at >=1568px, ~51px at 1280px, 20px on phones. */
   --nav-gutter: clamp(1.25rem, calc(10vw - 77px), 5rem);
   --nav-max: 1920px;
+}
+
+@media (min-width: 1400px) {
+  :root {
+    --content-max: 1360px;
+  }
+}
+
+@media (min-width: 1600px) {
+  :root {
+    --content-max: 1480px;
+  }
+}
+
+@media (min-width: 1800px) {
+  :root {
+    --content-max: 1560px;
+  }
 }
 
 .ll-container {
@@ -761,7 +782,7 @@ button, input, select, textarea {
 .ll-section-image,
 .ll-section-dark {
   position: relative;
-  padding: 5.5rem 0;
+  padding: clamp(4.75rem, 6.2vw, 7.25rem) 0;
 }
 
 .ll-section-light {
@@ -927,20 +948,22 @@ button, input, select, textarea {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 1.5rem;
-  margin-bottom: 2.75rem;
+  gap: 1.75rem;
+  margin-bottom: clamp(2.5rem, 3.5vw, 3.5rem);
   flex-wrap: wrap;
 }
 
 .ll-section-title {
-  font-size: clamp(1.9rem, 3vw, 2.5rem);
+  font-size: clamp(2.05rem, 3.2vw, 2.85rem);
+  letter-spacing: -0.02em;
 }
 
 .ll-section-lead {
-  font-size: 0.95rem;
+  font-size: clamp(0.95rem, 1.05vw, 1.05rem);
   color: var(--body-text);
-  max-width: 600px;
-  margin-top: 0.55rem;
+  max-width: 680px;
+  margin-top: 0.65rem;
+  line-height: 1.65;
 }
 
 .ll-link-arrow {
@@ -980,6 +1003,18 @@ button, input, select, textarea {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.75rem;
+}
+
+@media (min-width: 1400px) {
+  .ll-cards-grid {
+    gap: 2rem;
+  }
+}
+
+@media (min-width: 1600px) {
+  .ll-cards-grid {
+    gap: 2.25rem;
+  }
 }
 
 .ll-card {
@@ -1104,6 +1139,19 @@ button, input, select, textarea {
   flex-direction: column;
   gap: 0.5rem;
   flex: 1;
+}
+
+@media (min-width: 1440px) {
+  .ll-card-body {
+    padding: 1.55rem 1.65rem 1.4rem;
+    gap: 0.6rem;
+  }
+  .ll-card-title {
+    font-size: 1.18rem;
+  }
+  .ll-card-price {
+    font-size: 1.42rem;
+  }
 }
 
 .ll-card-kicker {
@@ -1363,6 +1411,16 @@ button, input, select, textarea {
   display: grid;
   grid-template-columns: 1.2fr 1fr 1fr;
   gap: 1.25rem;
+}
+
+@media (min-width: 1400px) {
+  .ll-services-bento {
+    gap: 1.5rem;
+  }
+  .ll-service-tile {
+    padding: 2rem;
+    min-height: 250px;
+  }
 }
 
 .ll-service-tile {
@@ -2227,7 +2285,7 @@ button, input, select, textarea {
 .ll-dev-showcase {
   position: relative;
   overflow: hidden;
-  padding: 5rem 0 4.25rem;
+  padding: clamp(4.5rem, 5.5vw, 6.5rem) 0 clamp(4rem, 5vw, 5.5rem);
 }
 
 .ll-dev-showcase.ll-section-light {
@@ -2486,7 +2544,7 @@ button, input, select, textarea {
 .ll-dev-showcase.ll-section-glass-light {
   /* Brand teal tints (10% -> 25%), light enough for full-colour logos */
   background-color: var(--brand-teal-10);
-  padding: 6rem 0 5.5rem;
+  padding: clamp(5.25rem, 6.2vw, 7.25rem) 0 clamp(4.75rem, 5.8vw, 6.5rem);
   border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -3786,6 +3844,18 @@ button, input, select, textarea {
   position: relative;
 }
 
+@media (min-width: 1400px) {
+  .ll-carousel {
+    --carousel-gap: 2rem;
+  }
+}
+
+@media (min-width: 1600px) {
+  .ll-carousel {
+    --carousel-gap: 2.25rem;
+  }
+}
+
 .ll-carousel-actions {
   display: flex;
   align-items: center;
@@ -3846,6 +3916,16 @@ button, input, select, textarea {
   opacity: 0.38;
   cursor: default;
   box-shadow: none;
+}
+
+@media (min-width: 1440px) {
+  .ll-carousel-btn {
+    width: 52px;
+    height: 52px;
+  }
+  .ll-carousel-count {
+    font-size: 0.92rem;
+  }
 }
 
 /* Native scroll-snap track: swipe, trackpad and keyboard all work */
