@@ -77,15 +77,9 @@ export function HeroSearchBar({ communities }: HeroSearchBarProps) {
     if (community !== 'ALL' && !communities[next].includes(community)) setCommunity('ALL')
   }
 
-  const buildHref = (overrides: Record<string, string> = {}) => {
+  const buildHref = () => {
     const params = new URLSearchParams()
-    const values: Record<string, string> = {
-      community,
-      type: propertyType,
-      beds,
-      budget,
-      ...overrides,
-    }
+    const values: Record<string, string> = { community, type: propertyType, beds, budget }
     for (const [key, val] of Object.entries(values)) {
       if (val && val !== 'ALL') params.set(key, val)
     }
@@ -99,8 +93,6 @@ export function HeroSearchBar({ communities }: HeroSearchBarProps) {
   }
 
   const modeIndex = MODES.findIndex((m) => m.id === mode)
-  // Quick chips always point at communities that have listings in this mode.
-  const quickCommunities = communities[mode].slice(0, 4)
 
   return (
     <form onSubmit={handleSearch} className="ll-hs" role="search" aria-label="Property search">
@@ -172,28 +164,6 @@ export function HeroSearchBar({ communities }: HeroSearchBarProps) {
           <span>Search</span>
         </button>
       </div>
-
-      {quickCommunities.length > 0 && (
-        <div className="ll-hs-quick" aria-label="Popular communities">
-          <span className="ll-hs-quick-label">Popular</span>
-          <div className="ll-hs-chips">
-            {quickCommunities.map((c) => (
-              <Link
-                key={c}
-                href={buildHref({
-                  community: c,
-                  type: 'ALL',
-                  beds: 'ALL',
-                  budget: 'ALL',
-                })}
-                className="ll-hs-chip"
-              >
-                {c}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
     </form>
   )
 }

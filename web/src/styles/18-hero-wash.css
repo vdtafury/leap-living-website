@@ -2,7 +2,6 @@
    LIGHT HERO WASH: legibility on the lighter brand-teal overlay
    ========================================================================== */
 .ll-hero-title,
-.ll-hero-desc,
 .ll-hero .ll-eyebrow {
   text-shadow: 0 2px 20px rgba(7, 43, 45, 0.42);
 }
@@ -14,10 +13,6 @@
 
 .ll-hero .ll-eyebrow {
   color: rgba(255, 255, 255, 0.94);
-}
-
-.ll-hero-desc {
-  color: rgba(255, 255, 255, 0.95);
 }
 
 .ll-hero .ll-eyebrow::after {

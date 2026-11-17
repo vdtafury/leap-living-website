@@ -1,8 +1,5 @@
-'use client'
-
-import { useState, type CSSProperties } from 'react'
+import type { CSSProperties } from 'react'
 import { DEVELOPER_BRANDS, type DeveloperBrand } from '@/data/catalog'
-import { PauseIcon, PlayIcon } from '@/components/ui/icons'
 import { KeyholeMark } from '@/components/ui/keyhole-mark'
 import { ResponsiveImg } from '@/components/ui/responsive-img'
 
@@ -15,9 +12,6 @@ interface DeveloperShowcaseProps {
    * - `light` / `muted`: flat surfaces.
    */
   surface?: 'glass-light' | 'glass' | 'light' | 'muted'
-  /** Optional index shown in the numbered eyebrow (e.g. "06"). */
-  index?: string
-  title?: string
 }
 
 function DeveloperTile({ brand }: { brand: DeveloperBrand }) {
@@ -43,23 +37,17 @@ function DeveloperTile({ brand }: { brand: DeveloperBrand }) {
 }
 
 /**
- * Continuously scrolling developer logo strip.
+ * Continuously scrolling developer logo strip, logos only (owner, 2026-11-17: no heading,
+ * description or Pause button).
  * - Pure CSS animation (transform only), list rendered twice for a seamless loop.
- * - Pauses on hover / keyboard focus, and via an explicit Pause button
- *   (WCAG 2.2.2 Pause, Stop, Hide).
+ * - Pauses while hovered or focused, so a logo can be read.
  * - Honours prefers-reduced-motion: becomes a static wrapped grid.
  */
-export function DeveloperShowcase({
-  surface = 'glass-light',
-  index,
-  title = 'Developers We Work With Across the UAE',
-}: DeveloperShowcaseProps) {
-  const [paused, setPaused] = useState(false)
-
+export function DeveloperShowcase({ surface = 'glass-light' }: DeveloperShowcaseProps) {
   return (
     <section
       className={`ll-dev-showcase ll-section-${surface}`}
-      aria-labelledby="ll-dev-showcase-title"
+      aria-label="Developers we work with"
     >
       {(surface === 'glass' || surface === 'glass-light') && (
         <div className="ll-section-image-bg" aria-hidden="true">
@@ -70,41 +58,16 @@ export function DeveloperShowcase({
       {/* Brand watermark: the Leap Living keyhole mark, large and cropped by the
           section edge, the way the Brand Guidelines use it on the cover. */}
       <KeyholeMark className="ll-keyhole ll-keyhole-dev" strokeWidth={1.4} />
-      <div className="ll-container ll-dev-showcase-head">
-        <div>
-          <div className="ll-eyebrow">
-            {index && <span className="ll-eyebrow-num">{index}</span>}
-            Developer Network
-          </div>
-          <h2 id="ll-dev-showcase-title" className="ll-serif-title ll-section-title">
-            {title}
-          </h2>
-          <p className="ll-dev-showcase-lead">
-            Executive relationships across Tier-1 master developers in Dubai and Abu Dhabi.
-          </p>
-        </div>
 
-        <button
-          type="button"
-          className="ll-marquee-toggle"
-          onClick={() => setPaused((p) => !p)}
-          aria-pressed={paused}
-          aria-label={paused ? 'Play developer logo animation' : 'Pause developer logo animation'}
-        >
-          {paused ? <PlayIcon /> : <PauseIcon />}
-          <span>{paused ? 'Play' : 'Pause'}</span>
-        </button>
-      </div>
-
-      {/* Contained like every other section: same width and gutters as the heading. */}
+      {/* Contained like every other section: same width and gutters as the page content. */}
       <div className="ll-container">
         {/* Loop length scales with the logo count so the glide speed stays constant. */}
         <div
-          className={`ll-marquee${paused ? ' is-paused' : ''}`}
+          className="ll-marquee"
           style={{ '--marquee-items': DEVELOPER_BRANDS.length } as CSSProperties}
         >
           <div className="ll-marquee-track">
-            <ul className="ll-marquee-list" aria-label="Developers we work with">
+            <ul className="ll-marquee-list">
               {DEVELOPER_BRANDS.map((brand) => (
                 <DeveloperTile key={brand.name} brand={brand} />
               ))}

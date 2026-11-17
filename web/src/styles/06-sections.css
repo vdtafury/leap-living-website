@@ -28,28 +28,10 @@
     linear-gradient(180deg, #EEF0EF 0%, #E4E8E7 100%);
 }
 
-.ll-keyhole-grey {
-  width: 620px;
-  height: 620px;
-  left: -230px;
-  bottom: -260px;
-  color: var(--brand-teal);
-  opacity: 0.12;
-}
-
 .ll-section-teal {
   overflow: hidden;
   background: var(--teal-band);
   color: var(--white);
-}
-
-.ll-keyhole-teal-band {
-  width: 560px;
-  height: 560px;
-  right: -120px;
-  top: 50%;
-  transform: translateY(-50%);
-  opacity: 0.16;
 }
 
 .ll-section-gradient,
@@ -70,14 +52,6 @@
   background: var(--keyhole-white) center / contain no-repeat;
   opacity: 0.1;
   pointer-events: none;
-}
-
-.ll-keyhole-services {
-  width: 760px;
-  height: 760px;
-  right: -260px;
-  top: -220px;
-  opacity: 0.06;
 }
 
 /* Full-bleed photography + brand scrim (same language as the footer) */
@@ -209,17 +183,3 @@
   border-bottom-color: var(--brand-teal);
 }
 
-/* Teal call-to-action band */
-.ll-cta-band {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: 2.5rem;
-  align-items: center;
-}
-
-.ll-cta-band-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.85rem;
-  justify-content: flex-end;
-}

@@ -7,8 +7,16 @@ import { HeroSearchBar } from '@/components/home/hero-search-bar'
 import { HeroVideoBackdrop } from '@/components/home/hero-video-backdrop'
 import { PropertyCarousel } from '@/components/property/property-carousel'
 import { ProjectCard } from '@/components/project/project-card'
-import { ArrowRightIcon, ArrowUpRightIcon } from '@/components/ui/icons'
-import { KeyholeMark } from '@/components/ui/keyhole-mark'
+import {
+  ArrowRightIcon,
+  ArrowUpRightIcon,
+  CalculatorIcon,
+  CalendarIcon,
+  HomeIcon,
+  ShieldCheckIcon,
+  StackIcon,
+  UsersIcon,
+} from '@/components/ui/icons'
 import { DeveloperShowcase } from '@/components/home/developer-showcase'
 import { ClientExperience } from '@/components/home/client-experience'
 import { CORE_SERVICES, PROJECTS, PROPERTIES } from '@/data/catalog'
@@ -47,16 +55,10 @@ export default function HomePage() {
 
           <div className="ll-container ll-hero-inner">
             <div className="ll-hero-content">
-              <div className="ll-eyebrow ll-eyebrow-light">CERTAINTY THROUGH PRECISION</div>
               <h1 className="ll-hero-title">
                 Unlock your
                 <span>next move.</span>
               </h1>
-              <p className="ll-hero-desc">
-                In a market driven by noise and speculation, Leap Living brings institutional
-                clarity, strategic foresight, and over two decades of Dubai real estate leadership
-                to high-value property decisions.
-              </p>
               <div className="ll-hero-ctas">
                 <Link href="/buy" className="ll-btn ll-btn-primary">
                   <span>Explore Properties</span>
@@ -74,7 +76,55 @@ export default function HomePage() {
         </section>
 
         {/* ==================== DEVELOPER NETWORK (logo marquee) ==================== */}
-        <DeveloperShowcase index="01" />
+        <DeveloperShowcase />
+
+        {/* ==================== INSTITUTIONAL PILLARS ==================== */}
+        <section className="ll-stats-section ll-defer-render" aria-label="Institutional Pillars">
+          <div className="ll-container">
+            <div className="ll-stats-grid">
+              <div className="ll-stat-item">
+                <span className="ll-stat-icon">
+                  <CalendarIcon size={28} />
+                </span>
+                <div className="ll-stat-value">21+ Years</div>
+                <p className="ll-stat-desc">
+                  Executive leadership across Dubai&apos;s residential and commercial cycles since
+                  2005.
+                </p>
+              </div>
+              <div className="ll-stat-item">
+                <span className="ll-stat-icon">
+                  <StackIcon size={28} />
+                </span>
+                <div className="ll-stat-value">AED 12B+</div>
+                <p className="ll-stat-desc">
+                  Commercialisation, pricing strategy, and landmark project stewardship across the
+                  UAE.
+                </p>
+              </div>
+              <div className="ll-stat-item">
+                <span className="ll-stat-icon">
+                  <ShieldCheckIcon size={28} />
+                </span>
+                <div className="ll-stat-value">100% Fiduciary</div>
+                <p className="ll-stat-desc">
+                  Client-aligned counsel structured around long-term value over short-term brokerage
+                  volume.
+                </p>
+              </div>
+              <div className="ll-stat-item">
+                <span className="ll-stat-icon">
+                  <UsersIcon size={28} />
+                </span>
+                <div className="ll-stat-value">Direct Access</div>
+                <p className="ll-stat-desc">
+                  Executive relationships across Tier-1 master developers, family offices, and
+                  private owners.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* ==================== FEATURED BUY PORTFOLIO PREVIEW ==================== */}
         <section className="ll-section-light ll-defer-render">
@@ -92,34 +142,16 @@ export default function HomePage() {
                 </Link>
               }
             >
-              <div className="ll-eyebrow">
-                <span className="ll-eyebrow-num">02</span>Curated Portfolio
-              </div>
               <h2 className="ll-serif-title ll-section-title">Featured Properties for Sale</h2>
-              <p className="ll-section-lead">
-                Representative residences across Dubai&apos;s most sought-after addresses, from Palm
-                Jumeirah and Downtown to Jumeirah Bay Island. Use the arrows to browse, then select
-                any mandate for full specifications and financing analysis.
-              </p>
             </PropertyCarousel>
           </div>
         </section>
 
         {/* ==================== SERVICES OVERVIEW (WITH CONSULTANCY) ==================== */}
-        <section className="ll-section-gradient ll-defer-render">
-          <KeyholeMark className="ll-keyhole ll-keyhole-services" strokeWidth={1.6} />
+        <section className="ll-section-tint ll-defer-render">
           <div className="ll-container">
             <div className="ll-section-header">
-              <div>
-                <div className="ll-eyebrow">
-                  <span className="ll-eyebrow-num">03</span>Advisory Scope
-                </div>
-                <h2 className="ll-serif-title ll-section-title">End-to-End Real Estate Advisory</h2>
-                <p className="ll-section-lead">
-                  Led by independent Real Estate Consultancy, our practice supports acquisition,
-                  leasing, investment structuring, development evaluation, and confidential exits.
-                </p>
-              </div>
+              <h2 className="ll-serif-title ll-section-title">End-to-End Real Estate Advisory</h2>
               <Link href="/about#services" className="ll-link-arrow">
                 <span>Explore Full Service Scope</span>
                 <ArrowUpRightIcon size={15} />
@@ -132,9 +164,6 @@ export default function HomePage() {
                   key={service.id}
                   className={`ll-service-tile ${service.featured ? 'featured' : ''}`}
                 >
-                  {service.featured && (
-                    <KeyholeMark className="ll-keyhole ll-keyhole-tile" strokeWidth={1.8} />
-                  )}
                   <div className="ll-service-bignum" aria-hidden="true">
                     0{index + 1}
                   </div>
@@ -152,20 +181,10 @@ export default function HomePage() {
         </section>
 
         {/* ==================== SIGNATURE PROJECTS PREVIEW ==================== */}
-        <section className="ll-section-grey ll-defer-render">
-          <KeyholeMark className="ll-keyhole ll-keyhole-grey" strokeWidth={1.6} />
+        <section className="ll-section-plain ll-defer-render">
           <div className="ll-container">
             <div className="ll-section-header">
-              <div>
-                <div className="ll-eyebrow">
-                  <span className="ll-eyebrow-num">04</span>Dubai Developments
-                </div>
-                <h2 className="ll-serif-title ll-section-title">Selected Real Estate Projects</h2>
-                <p className="ll-section-lead">
-                  Institutional insight into upcoming master-planned waterfront and golfside
-                  developments across Dubai.
-                </p>
-              </div>
+              <h2 className="ll-serif-title ll-section-title">Selected Real Estate Projects</h2>
               <Link href="/projects" className="ll-link-arrow">
                 <span>Browse All Projects</span>
                 <ArrowUpRightIcon size={15} />
@@ -180,73 +199,44 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ==================== DEDICATED TOOLS & VALUATION ENTRY BAND ==================== */}
-        <section className="ll-section-teal ll-defer-render">
-          <KeyholeMark className="ll-keyhole ll-keyhole-teal-band" strokeWidth={1.6} />
-          <div className="ll-container ll-cta-band">
-            <div>
-              <div className="ll-eyebrow">Owner &amp; Buyer Advisory</div>
-              <h2 className="ll-serif-title ll-section-title">
-                Free Property Valuation &amp; Mortgage Planning
-              </h2>
-              <p className="ll-section-lead">
-                Whether benchmarking the market value of an existing Dubai asset prior to exit or
-                structuring UAE bank financing prior to acquisition, our dedicated advisory pages
-                provide direct analytical tools and senior consultation.
-              </p>
-            </div>
-
-            <div className="ll-cta-band-actions">
-              <Link href="/sell#valuation-form" className="ll-btn ll-btn-light">
-                <span>Request Free Valuation</span>
-                <ArrowUpRightIcon size={15} />
-              </Link>
-              <Link href="/mortgage" className="ll-btn ll-btn-outline-light">
-                Open Mortgage Calculator
-              </Link>
+        {/* ==================== VALUATION & MORTGAGE ENTRY ==================== */}
+        <section className="ll-section-tint ll-defer-render" aria-labelledby="ll-advice-title">
+          <div className="ll-container">
+            <div className="ll-advice">
+              <div className="ll-advice-intro">
+                <div className="ll-eyebrow">Owner &amp; Buyer Advisory</div>
+                <h2 id="ll-advice-title" className="ll-serif-title ll-section-title">
+                  Free Property Valuation &amp; Mortgage Planning
+                </h2>
+              </div>
+              <div className="ll-advice-paths">
+                <Link href="/sell#valuation-form" className="ll-advice-path is-primary">
+                  <span className="ll-advice-icon">
+                    <HomeIcon size={22} />
+                  </span>
+                  <span className="ll-advice-kicker">For Owners</span>
+                  <span className="ll-advice-label">Request Free Valuation</span>
+                  <span className="ll-advice-arrow" aria-hidden="true">
+                    <ArrowUpRightIcon size={16} />
+                  </span>
+                </Link>
+                <Link href="/mortgage" className="ll-advice-path">
+                  <span className="ll-advice-icon">
+                    <CalculatorIcon size={22} />
+                  </span>
+                  <span className="ll-advice-kicker">For Buyers</span>
+                  <span className="ll-advice-label">Open Mortgage Calculator</span>
+                  <span className="ll-advice-arrow" aria-hidden="true">
+                    <ArrowUpRightIcon size={16} />
+                  </span>
+                </Link>
+              </div>
             </div>
           </div>
         </section>
 
         {/* ==================== CLIENT PERSPECTIVES ==================== */}
-        <ClientExperience index="05" />
-
-        {/* ==================== INSTITUTIONAL PILLARS ==================== */}
-        <section className="ll-stats-section ll-defer-render" aria-label="Institutional Pillars">
-          <KeyholeMark className="ll-keyhole ll-keyhole-stats" />
-          <div className="ll-container">
-            <div className="ll-stats-grid">
-              <div className="ll-stat-item">
-                <div className="ll-stat-value">21+ Years</div>
-                <p className="ll-stat-desc">
-                  Executive leadership across Dubai&apos;s residential and commercial cycles since
-                  2005.
-                </p>
-              </div>
-              <div className="ll-stat-item">
-                <div className="ll-stat-value">AED 12B+</div>
-                <p className="ll-stat-desc">
-                  Commercialisation, pricing strategy, and landmark project stewardship across the
-                  UAE.
-                </p>
-              </div>
-              <div className="ll-stat-item">
-                <div className="ll-stat-value">100% Fiduciary</div>
-                <p className="ll-stat-desc">
-                  Client-aligned counsel structured around long-term value over short-term brokerage
-                  volume.
-                </p>
-              </div>
-              <div className="ll-stat-item">
-                <div className="ll-stat-value">Direct Access</div>
-                <p className="ll-stat-desc">
-                  Executive relationships across Tier-1 master developers, family offices, and
-                  private owners.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+        <ClientExperience />
       </main>
 
       <SiteFooter />

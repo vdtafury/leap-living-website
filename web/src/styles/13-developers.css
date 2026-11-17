@@ -94,51 +94,6 @@
   border-top: 1px solid var(--border-subtle);
 }
 
-.ll-dev-showcase-head {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 2rem;
-  margin-bottom: 2.75rem;
-}
-
-.ll-dev-showcase-lead {
-  margin: 0.35rem 0 0;
-  max-width: 640px;
-  font-size: 0.95rem;
-  line-height: 1.7;
-  color: var(--body-text);
-}
-
-.ll-marquee-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-shrink: 0;
-  padding: 0.55rem 1rem;
-  border: 1px solid var(--border-subtle);
-  border-radius: 999px;
-  background-color: var(--white);
-  color: var(--dark-teal);
-  font: inherit;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
-}
-
-.ll-marquee-toggle:hover {
-  border-color: var(--brand-teal);
-  color: var(--brand-teal);
-}
-
-.ll-marquee-toggle:focus-visible {
-  outline: 2px solid var(--brand-teal);
-  outline-offset: 3px;
-}
-
 .ll-marquee {
   /* ~3.9s per logo (55s for the original 14) — constant speed for any count */
   --marquee-duration: calc(var(--marquee-items, 14) * 3.9s);
@@ -160,8 +115,7 @@
 }
 
 .ll-marquee:hover .ll-marquee-track,
-.ll-marquee:focus-within .ll-marquee-track,
-.ll-marquee.is-paused .ll-marquee-track {
+.ll-marquee:focus-within .ll-marquee-track {
   animation-play-state: paused;
 }
 
@@ -295,28 +249,6 @@
   color: var(--white);
 }
 
-.ll-section-glass .ll-dev-showcase-lead {
-  color: rgba(255, 255, 255, 0.74);
-}
-
-.ll-section-glass .ll-marquee-toggle {
-  background-color: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.24);
-  color: var(--white);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
-.ll-section-glass .ll-marquee-toggle:hover {
-  background-color: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.45);
-  color: var(--white);
-}
-
-.ll-section-glass .ll-marquee-toggle:focus-visible {
-  outline-color: var(--white);
-}
-
 /* Logos read as white marks straight on the photo (no band, no tiles) */
 .ll-section-glass .ll-marquee-logo {
   filter: brightness(0) invert(1);
@@ -370,18 +302,6 @@
     rgba(59, 158, 161, 0.14);
 }
 
-.ll-section-glass-light .ll-dev-showcase-lead {
-  /* darker than --body-text: keeps WCAG AA (>= 4.5:1) on the teal tint */
-  color: #44504F;
-}
-
-.ll-section-glass-light .ll-marquee-toggle {
-  background-color: rgba(255, 255, 255, 0.7);
-  border-color: rgba(10, 52, 54, 0.14);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
 /* Logos sit directly on the washed skyline: no frosted band, no tiles */
 .ll-section-glass-light .ll-marquee {
   padding: 1.25rem 0;
@@ -405,11 +325,6 @@
 @media (max-width: 960px) {
   .ll-dev-showcase {
     padding: 4rem 0 4.25rem;
-  }
-  .ll-dev-showcase-head {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1.25rem;
   }
 }
 

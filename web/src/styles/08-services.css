@@ -58,7 +58,7 @@
   line-height: 1.55;
 }
 
-/* Homepage services bento on the brand gradient */
+/* Homepage services bento on the light tint (approved light design, owner 2026-11-17) */
 .ll-services-bento {
   display: grid;
   grid-template-columns: 1.2fr 1fr 1fr;
@@ -85,32 +85,23 @@
   min-height: 230px;
   padding: 1.75rem;
   border-radius: var(--radius-lg);
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.03) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+  background-color: var(--white);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 1px 2px rgba(16, 42, 44, 0.03);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .ll-service-tile:hover {
   transform: translateY(-4px);
-  border-color: rgba(255, 255, 255, 0.34);
-  background-color: rgba(255, 255, 255, 0.05);
+  border-color: var(--brand-teal-25);
+  box-shadow: var(--shadow-card);
 }
 
 .ll-service-tile.featured {
   grid-row: span 2;
-  background: linear-gradient(155deg, #45AAAD 0%, #3B9EA1 45%, #287F82 100%);
-  border-color: rgba(255, 255, 255, 0.28);
-  box-shadow: 0 30px 60px rgba(4, 28, 30, 0.35);
-}
-
-.ll-keyhole-tile {
-  width: 320px;
-  height: 320px;
-  right: -70px;
-  top: -50px;
-  opacity: 0.2;
+  /* the lead service stands out with the softest brand tint, not a dark fill */
+  background-color: var(--brand-teal-10);
+  border-color: var(--brand-teal-25);
 }
 
 .ll-service-bignum {
@@ -121,7 +112,7 @@
   line-height: 0.9;
   letter-spacing: -0.04em;
   font-variant-numeric: tabular-nums;
-  background: linear-gradient(100deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.92) 80%);
+  background: linear-gradient(100deg, var(--brand-teal-25) 0%, var(--brand-teal) 85%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -143,7 +134,7 @@
 .ll-service-tile-title {
   font-size: 1.08rem;
   font-weight: 600;
-  color: var(--white);
+  color: var(--heading);
 }
 
 .ll-service-tile.featured .ll-service-tile-title {
@@ -155,11 +146,11 @@
 .ll-service-tile-desc {
   font-size: 0.85rem;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.76);
+  color: var(--body-text);
 }
 
 .ll-service-tile.featured .ll-service-tile-desc {
   font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--body-text);
   max-width: 340px;
 }
