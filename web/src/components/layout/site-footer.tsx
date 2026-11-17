@@ -1,13 +1,22 @@
 import Link from 'next/link'
 import { ResponsiveImg } from '@/components/ui/responsive-img'
 import {
+  FacebookIcon,
   InstagramIcon,
   LinkedInIcon,
   MailIcon,
   MapPinIcon,
   PhoneIcon,
-  YouTubeIcon,
+  TikTokIcon,
 } from '@/components/ui/icons'
+import { SITE } from '@/data/site'
+
+const SOCIAL_LINKS = [
+  { href: SITE.socials.instagram, label: 'Instagram', Icon: InstagramIcon, size: 16 },
+  { href: SITE.socials.linkedin, label: 'LinkedIn', Icon: LinkedInIcon, size: 16 },
+  { href: SITE.socials.facebook, label: 'Facebook', Icon: FacebookIcon, size: 16 },
+  { href: SITE.socials.tiktok, label: 'TikTok', Icon: TikTokIcon, size: 15 },
+]
 
 export function SiteFooter() {
   return (
@@ -41,30 +50,29 @@ export function SiteFooter() {
             <p className="ll-footer-tagline">Certainty through precision.</p>
 
             <div className="ll-footer-contact">
-              <a href="tel:+971521459888" className="ll-footer-contact-row">
+              <a href={SITE.phone.href} className="ll-footer-contact-row">
                 <PhoneIcon size={14} />
-                <span>+971 52 145 9888</span>
+                <span>{SITE.phone.display}</span>
               </a>
-              <a href="mailto:contact@leapliving.ae" className="ll-footer-contact-row">
+              <a href={`mailto:${SITE.email}`} className="ll-footer-contact-row">
                 <MailIcon size={14} />
-                <span>contact@leapliving.ae</span>
+                <span>{SITE.email}</span>
               </a>
             </div>
 
             <div className="ll-footer-socials" aria-label="Social Media Channels">
-              <Link href="/contact" aria-label="LEAP LIVING on LinkedIn" className="ll-social-link">
-                <LinkedInIcon size={16} />
-              </Link>
-              <Link
-                href="/contact"
-                aria-label="LEAP LIVING on Instagram"
-                className="ll-social-link"
-              >
-                <InstagramIcon size={16} />
-              </Link>
-              <Link href="/contact" aria-label="LEAP LIVING on YouTube" className="ll-social-link">
-                <YouTubeIcon size={17} />
-              </Link>
+              {SOCIAL_LINKS.map(({ href, label, Icon, size }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`LEAP LIVING on ${label}`}
+                  className="ll-social-link"
+                >
+                  <Icon size={size} />
+                </a>
+              ))}
             </div>
           </div>
 
@@ -105,6 +113,9 @@ export function SiteFooter() {
             <div className="ll-footer-location">
               <MapPinIcon size={15} />
               <div>
+                {SITE.address.lines.map((line) => (
+                  <div key={line}>{line}</div>
+                ))}
                 <div>Dubai, United Arab Emirates</div>
               </div>
             </div>

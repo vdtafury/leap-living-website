@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/seo'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { ConsultationForm } from '@/components/forms/consultation-form'
@@ -22,10 +23,11 @@ export async function generateMetadata({
   const property = PROPERTIES.find((p) => p.slug === slug)
   if (!property) return { title: 'Property Not Found | LEAP LIVING' }
 
-  return {
+  return pageMetadata({
     title: `${property.title} — ${property.community} | LEAP LIVING`,
     description: property.subtitle,
-  }
+    path: `/properties/${property.slug}`,
+  })
 }
 
 export default async function PropertyDetailPage({
@@ -87,10 +89,7 @@ export default async function PropertyDetailPage({
                 <div className="ll-hero-price-value tabular-nums">
                   {property.priceLabel}
                   {property.priceFrequency && (
-                    <span className="ll-hero-price-freq">
-                      {' '}
-                      {property.priceFrequency}
-                    </span>
+                    <span className="ll-hero-price-freq"> {property.priceFrequency}</span>
                   )}
                 </div>
               </div>
@@ -126,7 +125,10 @@ export default async function PropertyDetailPage({
 
               <div className="ll-form-card" style={{ marginBottom: '2rem' }}>
                 <div className="ll-eyebrow">Property Dossier</div>
-                <h2 className="ll-serif-title" style={{ fontSize: '1.55rem', marginBottom: '0.85rem' }}>
+                <h2
+                  className="ll-serif-title"
+                  style={{ fontSize: '1.55rem', marginBottom: '0.85rem' }}
+                >
                   {property.subtitle}
                 </h2>
                 <p style={{ fontSize: '0.94rem', lineHeight: 1.75, marginBottom: '1.5rem' }}>
@@ -166,7 +168,10 @@ export default async function PropertyDetailPage({
 
             <div style={{ position: 'sticky', top: '104px' }}>
               <div style={{ marginBottom: '1rem' }}>
-                <h2 className="ll-serif-title" style={{ fontSize: '1.4rem', marginBottom: '0.35rem' }}>
+                <h2
+                  className="ll-serif-title"
+                  style={{ fontSize: '1.4rem', marginBottom: '0.35rem' }}
+                >
                   Arrange Private Viewing
                 </h2>
                 <p style={{ fontSize: '0.85rem' }}>
@@ -183,4 +188,3 @@ export default async function PropertyDetailPage({
     </>
   )
 }
-

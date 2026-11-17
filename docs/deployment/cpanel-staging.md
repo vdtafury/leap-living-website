@@ -21,8 +21,8 @@ bash scripts/deployment/package-cpanel.sh
 The script does the following:
 - builds the standalone bundle;
 - rebuilds `better-sqlite3` so it only needs **glibc 2.28** (CloudLinux 8+), using `scripts/deployment/glibc-compat/`;
-- creates the initial database from `scripts/deployment/schema.sql`;
-- smoke-tests health, home and a hero video;
+- creates an empty database; the smoke test's first `/api/health` request creates the tables (`src/server/schema.ts`, the same statements run on any server that starts without them);
+- smoke-tests health, home, a ranged (206) request for the hero video, and that the `MediaAsset` and `Inquiry` tables exist;
 - writes two archives to `web/deploy-out/`.
 
 | Archive | Extract in | When |
@@ -30,9 +30,9 @@ The script does the following:
 | `leapliving-app-<stamp>.zip` | `/home/leaplivi/` → `leapliving-app/app/…` | every deploy |
 | `leapliving-data-initial.zip` | `/home/leaplivi/` → `leapliving-data/leapliving.db` | **first deploy only**. Never extract it over a live database |
 
-### Optional: the client's original hero video (~150 MB)
+### The client's hero video (~150 MB, required)
 
-Big screens with a fast connection can play the client's original file exactly as delivered. It is not in the repository, because GitHub rejects files over 100 MB, so it has to be placed on the machine that builds the zip **before** running `package-cpanel.sh`:
+The homepage plays **one** video: the client's original file exactly as delivered (owner decision 2026-11-17: no lighter or re-encoded versions, no trimming). It is not in the repository, because GitHub rejects files over 100 MB, so it has to be placed on the machine that builds the zip **before** running `package-cpanel.sh`:
 
 ```bash
 cd web
@@ -46,22 +46,19 @@ bash scripts/deployment/package-cpanel.sh
 - moves the index to the front (faststart), so playback starts before the download ends;
 - cuts the poster from frame 0 and rebuilds the WebP variants.
 
-It refuses files that browsers cannot play everywhere (anything but H.264 8-bit 4:2:0). `package-cpanel.sh` then logs `Client original hero video included (…)`, and fails if the file is not faststart.
+It refuses files that browsers cannot play everywhere (anything but H.264 8-bit 4:2:0). `package-cpanel.sh` stops if the file is missing (override with `ALLOW_NO_HERO_VIDEO=1`, poster only) or not faststart.
 
-Who gets which file:
-- **Original:** screens wider than 900 px on a fast link. Chrome must report its top speed bucket (10 Mbps); Safari and Firefox report nothing.
-- **`client-hero-1280.mp4`:** slower desktop links.
-- **`client-hero-854.mp4`:** phones and 3G.
+Who sees the video (`src/lib/hero-video.ts`):
+- **Plays:** any screen size, unless one of the rules below applies. The file streams at ~16 Mbps.
+- **Poster only (frame 0, same picture):** Save-Data on, Chrome reporting 2G/3G, Chrome reporting under 10 Mbps (Chrome caps the value at 10 and adds ±10% privacy noise, so 9–10 counts as 10), or reduced-motion. Safari and Firefox report no speed, so they play it.
 
-If the original is missing on the server, the build falls back to the 1280 file on its own.
-
-Each big-screen visit can download up to the full ~150 MB, so check the hosting bandwidth quota.
+Each visit that plays the video can download up to the full ~150 MB, so check the hosting bandwidth quota.
 
 ## 2. One-time cPanel setup
 
 1. **Domains → Create A New Domain:** `staging.leapliving.ae`. Untick *Share document root*; document root `/home/leaplivi/staging.leapliving.ae`, outside `public_html`.
 2. **SSL/TLS Status → Run AutoSSL** for the subdomain.
-3. **Directory Privacy:** password-protect `/home/leaplivi/staging.leapliving.ae`. Staging must not be public or indexed, and `/api/upload` is still unauthenticated.
+3. **Directory Privacy:** password-protect `/home/leaplivi/staging.leapliving.ae`. Staging must not be public. It is also kept out of search engines by default: without `SITE_INDEXING=true` every response carries `X-Robots-Tag: noindex` and robots.txt disallows everything.
 4. **Setup Node.js App → Create:**
 
 | Field | Value |
@@ -80,6 +77,14 @@ Environment variables:
 | `NODE_ENV` | `production` |
 | `DATABASE_URL` | `file:/home/leaplivi/leapliving-data/leapliving.db` |
 | `STORAGE_DIR` | `/home/leaplivi/leapliving-data/storage` |
+| `SITE_URL` | `https://staging.leapliving.ae` |
+| `ADMIN_USER` | an admin username (needed to read form submissions) |
+| `ADMIN_PASSWORD` | at least 12 characters; keep it out of chat and the repository |
+
+Do **not** set `SITE_INDEXING` on staging. Do **not** set `ALLOW_FRAMING` anywhere on the host.
+
+Form submissions are stored in the `Inquiry` table. Export them with
+`curl -u "$ADMIN_USER:$ADMIN_PASSWORD" "https://staging.leapliving.ae/api/inquiries?format=csv" -o inquiries.csv` (opens in Excel; UTF-8 with BOM, formula-safe cells). Through the browser, staging's Directory Privacy prompt comes first, then the admin prompt.
 
 **Do not press "Run NPM Install".** The bundle already contains its `node_modules`, one level down in `app/`, so it does not clash with CloudLinux's own `node_modules` symlink in the application root.
 
@@ -99,7 +104,8 @@ Rollback: keep the previous app zip, extract it again, then Restart. Data in `le
 | `GLIBC_2.xx not found` | Host older than glibc 2.28. Send `ldd --version` output; rebuild per host |
 | `NODE_MODULE_VERSION` mismatch | App not on Node 22.x |
 | `DATABASE_URL is not set` | Env var missing in the Node.js app screen; Restart after editing |
-| Health `db: down` | `leapliving-data/leapliving.db` missing or not writable by the account |
+| Health `db: down` | `leapliving-data/` missing or not writable by the account (details go to the Passenger log only, never to the response) |
+| `/api/inquiries` GET returns 404 | `ADMIN_USER` / `ADMIN_PASSWORD` not set, or the password is under 12 characters; Restart after editing |
 
 ## 5. Production cut-over (later, explicit written approval only)
 
@@ -107,7 +113,6 @@ Rollback: keep the previous app zip, extract it again, then Restart. Data in `le
 2. Point the Node.js app's URL at `leapliving.ae` and configure `www`. The certificate already exists.
 3. Keep WordPress restorable until the new site has been verified live.
 4. Before cut-over:
-   - forms must persist and send email;
-   - `/api/upload` must be authenticated;
-   - security headers must be added;
-   - the homepage debug DB line must be removed (`STATUS.md`).
+   - set `SITE_URL=https://leapliving.ae` and `SITE_INDEXING=true` (only on production);
+   - forms already persist (2026-11-17); email notification is still open (O-19, CRM link to be decided);
+   - done 2026-11-17: `/api/upload` and `/api/sharp` require admin auth, security headers are on, the homepage debug DB line is gone.

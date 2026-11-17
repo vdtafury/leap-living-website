@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/seo'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { ConsultationForm } from '@/components/forms/consultation-form'
@@ -21,17 +22,14 @@ export async function generateMetadata({
   const project = PROJECTS.find((p) => p.slug === slug)
   if (!project) return { title: 'Project Not Found | LEAP LIVING' }
 
-  return {
+  return pageMetadata({
     title: `${project.title} — ${project.community} | LEAP LIVING`,
     description: project.overview,
-  }
+    path: `/projects/${project.slug}`,
+  })
 }
 
-export default async function ProjectDetailPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
+export default async function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const project = PROJECTS.find((p) => p.slug === slug)
 
@@ -75,12 +73,8 @@ export default async function ProjectDetailPage({
               </div>
 
               <div className="ll-hero-price">
-                <div className="ll-hero-price-label">
-                  Guide Pricing
-                </div>
-                <div className="ll-hero-price-value tabular-nums">
-                  {project.startingPriceLabel}
-                </div>
+                <div className="ll-hero-price-label">Guide Pricing</div>
+                <div className="ll-hero-price-value tabular-nums">{project.startingPriceLabel}</div>
               </div>
             </div>
           </div>
@@ -102,7 +96,10 @@ export default async function ProjectDetailPage({
 
               <div className="ll-form-card" style={{ marginBottom: '1.5rem' }}>
                 <div className="ll-eyebrow">Development Briefing</div>
-                <h2 className="ll-serif-title" style={{ fontSize: '1.55rem', marginBottom: '0.85rem' }}>
+                <h2
+                  className="ll-serif-title"
+                  style={{ fontSize: '1.55rem', marginBottom: '0.85rem' }}
+                >
                   Architectural &amp; Investment Overview
                 </h2>
                 <p style={{ fontSize: '0.94rem', lineHeight: 1.75, marginBottom: '1.5rem' }}>
@@ -130,7 +127,10 @@ export default async function ProjectDetailPage({
 
             <div style={{ position: 'sticky', top: '104px' }}>
               <div style={{ marginBottom: '1rem' }}>
-                <h2 className="ll-serif-title" style={{ fontSize: '1.4rem', marginBottom: '0.35rem' }}>
+                <h2
+                  className="ll-serif-title"
+                  style={{ fontSize: '1.4rem', marginBottom: '0.35rem' }}
+                >
                   Register for Project Dossier
                 </h2>
                 <p style={{ fontSize: '0.85rem' }}>
@@ -147,4 +147,3 @@ export default async function ProjectDetailPage({
     </>
   )
 }
-

@@ -1,0 +1,47 @@
+import { describe, expect, it } from 'vitest'
+import { HERO_MIN_DOWNLINK_MBPS, shouldPlayHeroVideo } from './hero-video'
+
+describe('shouldPlayHeroVideo', () => {
+  const site = { hasVideo: true, hostname: 'leapliving.ae' }
+
+  it('plays when the browser reports nothing (Safari, Firefox)', () => {
+    expect(shouldPlayHeroVideo(site)).toBe(true)
+  })
+
+  it('never plays when the file is not on the server', () => {
+    expect(shouldPlayHeroVideo({ ...site, hasVideo: false })).toBe(false)
+    expect(shouldPlayHeroVideo({ hasVideo: false, hostname: 'localhost' })).toBe(false)
+  })
+
+  it('respects Save-Data, even on localhost', () => {
+    expect(shouldPlayHeroVideo({ ...site, saveData: true })).toBe(false)
+    expect(shouldPlayHeroVideo({ hasVideo: true, hostname: 'localhost', saveData: true })).toBe(
+      false,
+    )
+  })
+
+  it('skips 2G and 3G', () => {
+    for (const effectiveType of ['slow-2g', '2g', '3g']) {
+      expect(shouldPlayHeroVideo({ ...site, effectiveType })).toBe(false)
+    }
+    expect(shouldPlayHeroVideo({ ...site, effectiveType: '4g', downlink: 10 })).toBe(true)
+  })
+
+  it(`needs Chrome's top speed bucket (${HERO_MIN_DOWNLINK_MBPS} Mbps): the file streams at ~16 Mbps`, () => {
+    expect(HERO_MIN_DOWNLINK_MBPS).toBe(10)
+    // Chrome's ±10% privacy noise on a capped 10: still counts as a fast link.
+    expect(shouldPlayHeroVideo({ ...site, downlink: 9.9 })).toBe(true)
+    expect(shouldPlayHeroVideo({ ...site, downlink: 9.1 })).toBe(true)
+    expect(shouldPlayHeroVideo({ ...site, downlink: 8.5 })).toBe(false)
+    expect(shouldPlayHeroVideo({ ...site, downlink: 5 })).toBe(false)
+    expect(shouldPlayHeroVideo({ ...site, downlink: 10 })).toBe(true)
+  })
+
+  it('always plays on a development machine, whatever the speed estimate', () => {
+    for (const hostname of ['localhost', '127.0.0.1']) {
+      expect(
+        shouldPlayHeroVideo({ hasVideo: true, hostname, downlink: 1.2, effectiveType: '3g' }),
+      ).toBe(true)
+    }
+  })
+})

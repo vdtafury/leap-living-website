@@ -1,15 +1,17 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/seo'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { MortgageCalculator } from '@/components/tools/mortgage-calculator'
 import { ChevronRightIcon } from '@/components/ui/icons'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Dubai Mortgage Calculator | LEAP LIVING',
   description:
     'Interactive UAE mortgage repayment and Dubai Land Department (DLD) acquisition cost calculator.',
-}
+  path: '/mortgage',
+})
 
 export default function MortgagePage() {
   return (
@@ -44,4 +46,3 @@ export default function MortgagePage() {
     </>
   )
 }
-

@@ -1,0 +1,49 @@
+/* ==========================================================================
+   NAVBAR LAYOUT: logo left, 6 navigation links in the exact center,
+   action buttons on the right, without divider hairline.
+   ========================================================================== */
+.ll-header-inner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: clamp(1rem, 1.8vw, 2.5rem);
+}
+
+.ll-brand-group {
+  justify-self: start;
+}
+
+.ll-nav {
+  justify-self: center;
+  margin: 0 auto;
+  gap: clamp(1.1rem, 1.6vw, 1.85rem);
+}
+
+.ll-header-actions {
+  justify-self: end;
+  border-left: none;
+  padding-left: 0;
+}
+
+.ll-header--transparent .ll-header-actions {
+  border-left: none;
+}
+
+/* Switch to the menu button before the full bar can get cramped */
+@media (max-width: 1200px) {
+  .ll-header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .ll-nav,
+  .ll-header-actions {
+    display: none;
+  }
+  .ll-mobile-menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+  }
+}

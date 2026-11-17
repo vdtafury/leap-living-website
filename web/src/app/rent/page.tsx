@@ -1,16 +1,18 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { pageMetadata } from '@/lib/seo'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { PropertyListingBrowser } from '@/components/property/property-listing-browser'
 import { ChevronRightIcon } from '@/components/ui/icons'
 import { PROPERTIES } from '@/data/catalog'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Properties for Rent | LEAP LIVING Dubai',
   description:
     'Residential and Grade-A commercial leasing across Dubai Marina, Jumeirah Islands, and DIFC curated by Leap Living.',
-}
+  path: '/rent',
+})
 
 export default async function RentPage({
   searchParams,
@@ -59,4 +61,3 @@ export default async function RentPage({
     </>
   )
 }
-

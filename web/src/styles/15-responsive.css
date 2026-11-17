@@ -1,0 +1,150 @@
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 1180px) {
+  .ll-nav {
+    gap: 1.05rem;
+  }
+}
+
+@media (max-width: 1120px) {
+  .ll-nav,
+  .ll-header-actions {
+    display: none;
+  }
+  .ll-mobile-menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ll-services-layout {
+    grid-template-columns: 1fr;
+  }
+  .ll-services-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 960px) {
+  .ll-stats-grid,
+  .ll-cards-grid,
+  .ll-services-catalog-grid,
+  .ll-leadership-panel,
+  .ll-mortgage-shell,
+  .ll-filter-bar,
+  .ll-detail-layout {
+    /* minmax(0, 1fr) lets wide children (gallery, sliders) shrink instead of
+       pushing the page wider than the viewport */
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ll-footer-grid {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+  .ll-footer-brand-col {
+    padding-right: 0;
+  }
+  .ll-footer-col {
+    padding: 1.25rem 0 0;
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+  }
+  .ll-footer-bg-img {
+    width: 100%;
+    opacity: 0.25;
+  }
+  .ll-stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem 0;
+  }
+  .ll-stat-item {
+    padding: 0.5rem 1.25rem;
+  }
+  .ll-stat-item:nth-child(2n) {
+    border-right: none;
+  }
+  .ll-key-specs-box {
+    grid-template-columns: 1fr 1fr;
+  }
+  .ll-services-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .ll-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  .ll-stat-item {
+    padding: 1rem 0;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .ll-stat-item:last-child {
+    border-bottom: none;
+  }
+  .ll-mobile-nav-actions {
+    grid-template-columns: 1fr;
+  }
+  .ll-two-col,
+  .ll-services-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==================== RESPONSIVE: BRAND LAYER ==================== */
+@media (max-width: 1120px) {
+  .ll-services-bento {
+    grid-template-columns: 1fr 1fr;
+  }
+  .ll-service-tile.featured {
+    grid-row: auto;
+    grid-column: 1 / -1;
+  }
+  .ll-leadership-glass {
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 960px) {
+  .ll-section-light,
+  .ll-section-muted,
+  .ll-section-grey,
+  .ll-section-teal,
+  .ll-section-gradient,
+  .ll-section-image,
+  .ll-section-dark {
+    padding: 4.25rem 0;
+  }
+  .ll-leadership-glass,
+  .ll-cta-band {
+    grid-template-columns: 1fr;
+  }
+  .ll-leadership-glass {
+    padding: 1.75rem;
+  }
+  .ll-cta-band-actions {
+    justify-content: flex-start;
+  }
+  .ll-stat-item {
+    border-right-color: rgba(255, 255, 255, 0.26);
+  }
+  .ll-page-hero::before {
+    width: 360px;
+    right: -140px;
+  }
+}
+
+@media (max-width: 600px) {
+  .ll-services-bento {
+    grid-template-columns: 1fr;
+  }
+  .ll-service-tile {
+    min-height: 0;
+  }
+  .ll-service-tile.featured .ll-service-bignum {
+    font-size: 4.25rem;
+  }
+  .ll-stat-item {
+    border-bottom-color: rgba(255, 255, 255, 0.22);
+  }
+}

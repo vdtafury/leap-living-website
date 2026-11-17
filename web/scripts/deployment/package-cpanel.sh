@@ -18,6 +18,13 @@
 #
 # better-sqlite3 is rebuilt so it only needs glibc 2.28 / GLIBCXX 3.4.20 (CloudLinux 8+),
 # instead of the build machine's glibc. Set SKIP_GLIBC_COMPAT=1 to keep the local build.
+#
+# Build-time settings (baked into the zip, so build one zip per environment):
+#   SITE_URL=https://staging.leapliving.ae   public origin (default https://leapliving.ae)
+#   SITE_INDEXING=true                       ONLY for the live production site; without it
+#                                            search engines are kept out (robots + noindex)
+# The hero video (public/videos/hero/client-hero-original.mp4, git-ignored) must be placed with
+# scripts/prepare-hero-original.sh first; ALLOW_NO_HERO_VIDEO=1 builds without it (poster only).
 set -euo pipefail
 
 cd "$(dirname "$0")/../.."
@@ -35,6 +42,15 @@ log() { printf '\n== %s\n' "$*"; }
 NODE_MAJOR=$(node -p 'process.versions.node.split(".")[0]')
 [ "$NODE_MAJOR" = 22 ] || { echo "Use Node 22 (found $(node -v)); the host app runs Node 22.x."; exit 1; }
 [ -d node_modules ] || { echo "Run npm ci first."; exit 1; }
+[ "${ALLOW_FRAMING:-}" != 1 ] || { echo "ALLOW_FRAMING=1 is for preview builds only, never for a deploy."; exit 1; }
+
+HERO=public/videos/hero/client-hero-original.mp4
+if [ ! -f "$HERO" ] && [ "${ALLOW_NO_HERO_VIDEO:-0}" != 1 ]; then
+  echo "Hero video missing: $HERO"
+  echo "Run: bash scripts/prepare-hero-original.sh \"/path/to/the client's video.mp4\""
+  echo "(or ALLOW_NO_HERO_VIDEO=1 to build a zip whose hero shows the still poster only)."
+  exit 1
+fi
 
 # A fresh clone has no .env; the build and Prisma only need a placeholder URL here
 # (the host gets its real DATABASE_URL from the cPanel Node.js app screen).
@@ -46,7 +62,7 @@ fi
 
 rm -rf "$OUT" # also keeps the type-check from seeing an old bundle
 
-log "Building (Next.js standalone)"
+log "Building (Next.js standalone) for ${SITE_URL:-https://leapliving.ae}, indexing: ${SITE_INDEXING:-off}"
 NEXT_STANDALONE=1 npm run build
 
 log "Assembling $APP"
@@ -67,15 +83,11 @@ mkdir -p "$APP/public"
 # Master videos in public/videos/*.mp4 are unused at runtime (the hero plays videos/hero/*).
 # --no-wildcards-match-slash keeps "*" from also matching videos/hero/*.mp4.
 tar -C public --no-wildcards-match-slash --exclude='./videos/*.mp4' -cf - . | tar -C "$APP/public" -xf -
-hero_src=$(find public/videos/hero -name '*.mp4' | wc -l)
-hero_pkg=$(find "$APP/public/videos/hero" -name '*.mp4' 2>/dev/null | wc -l)
-[ "$hero_src" -gt 0 ] && [ "$hero_src" = "$hero_pkg" ] ||
-  { echo "Hero videos missing from the bundle ($hero_pkg of $hero_src)"; exit 1; }
-# The client's original hero video is git-ignored (over GitHub's 100 MB limit): it ships only if
-# it was placed here with scripts/prepare-hero-original.sh. It must be faststart (index before the
+# The client's hero video is git-ignored (over GitHub's 100 MB limit): it ships only if it was
+# placed here with scripts/prepare-hero-original.sh. It must be faststart (index before the
 # media data), or browsers download the whole file before the first frame plays.
-ORIGINAL=public/videos/hero/client-hero-original.mp4
-if [ -f "$ORIGINAL" ]; then
+if [ -f "$HERO" ]; then
+  cmp -s "$HERO" "$APP/$HERO" || { echo "Hero video missing from the bundle"; exit 1; }
   node -e "
     const fs = require('fs'); const fd = fs.openSync(process.argv[1], 'r'); const b = Buffer.alloc(16)
     let pos = 0; const size = fs.fstatSync(fd).size
@@ -88,10 +100,10 @@ if [ -f "$ORIGINAL" ]; then
       pos += len
     }
     process.exit(1)
-  " "$ORIGINAL" || { echo "$ORIGINAL is not faststart: run scripts/prepare-hero-original.sh on it"; exit 1; }
-  log "Client original hero video included ($(du -h "$ORIGINAL" | cut -f1)), big screens play it"
+  " "$HERO" || { echo "$HERO is not faststart: run scripts/prepare-hero-original.sh on it"; exit 1; }
+  log "Hero video included ($(du -h "$HERO" | cut -f1))"
 else
-  log "No client original hero video: big screens play client-hero-1280.mp4 (scripts/prepare-hero-original.sh)"
+  log "No hero video (ALLOW_NO_HERO_VIDEO=1): the hero shows the still poster"
 fi
 
 ADDON=$APP/node_modules/better-sqlite3/build/Release/better_sqlite3.node
@@ -127,32 +139,39 @@ fi
 (cd "$APP" && node -e "const D=require('better-sqlite3');new D(':memory:').prepare('select 1').get();require('sharp');console.log('native modules load OK')")
 
 log "Creating initial database"
-node -e "
-const D = require('better-sqlite3')
-const db = new D(process.argv[1])
-db.exec(require('fs').readFileSync(process.argv[2], 'utf8'))
-db.close()
-" "$OUT/leapliving-data/leapliving.db" "$HERE/schema.sql"
+# The app creates its own tables on first use (src/server/schema.ts, all IF NOT EXISTS); the
+# smoke test below is that first use, so the zipped database already has every table.
+rm -f "$OUT/leapliving-data/leapliving.db"
 mkdir -p "$OUT/leapliving-data/storage"
 
 log "Smoke test"
 PORT=$((20000 + RANDOM % 20000))
 (cd "$PKG" && NODE_ENV=production PORT=$PORT HOSTNAME=127.0.0.1 \
   DATABASE_URL="file:$OUT/leapliving-data/leapliving.db" STORAGE_DIR="$OUT/leapliving-data/storage" \
-  node app/server.js >"$OUT/smoke.log" 2>&1) &
-SERVER=$!
+  exec node app/server.js >"$OUT/smoke.log" 2>&1) &
+SERVER=$! # exec: $! is node itself, so the kill below really stops it
 ok=0
 for _ in $(seq 1 30); do
   sleep 1
   if curl -fsS "http://127.0.0.1:$PORT/api/health" | grep -q '"db":"up"'; then ok=1; break; fi
 done
 home=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$PORT/" || true)
-video=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$PORT/videos/hero/$(ls "$APP/public/videos/hero" | head -1)" || true)
+if [ -f "$HERO" ]; then
+  video=$(curl -s -o /dev/null -r 0-1023 -w '%{http_code}' "http://127.0.0.1:$PORT/${HERO#public/}" || true)
+else
+  video=206 # nothing to fetch
+fi
 kill "$SERVER" 2>/dev/null || true
 wait "$SERVER" 2>/dev/null || true
-[ "$ok" = 1 ] && [ "$home" = 200 ] && [ "$video" = 200 ] ||
+[ "$ok" = 1 ] && [ "$home" = 200 ] && [ "$video" = 206 ] ||
   { echo "Smoke test failed (health=$ok, home=$home, video=$video)"; cat "$OUT/smoke.log"; exit 1; }
-echo "health OK, home 200, hero video 200"
+node -e "
+const D = require('better-sqlite3')
+const db = new D(process.argv[1], { readonly: true })
+const names = db.prepare(\"SELECT name FROM sqlite_master WHERE type = 'table'\").all().map((t) => t.name)
+for (const t of ['MediaAsset', 'Inquiry']) if (!names.includes(t)) { console.error('missing table ' + t); process.exit(1) }
+" "$OUT/leapliving-data/leapliving.db" || { echo "Initial database is missing tables"; exit 1; }
+echo "health OK, home 200, hero video OK, database tables OK"
 rm -rf "$OUT/leapliving-data/storage"/* "$OUT/smoke.log"
 
 log "Zipping"

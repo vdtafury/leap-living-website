@@ -12,14 +12,14 @@ import { KeyholeMark } from '@/components/ui/keyhole-mark'
 import { DeveloperShowcase } from '@/components/home/developer-showcase'
 import { ClientExperience } from '@/components/home/client-experience'
 import { CORE_SERVICES, PROJECTS, PROPERTIES } from '@/data/catalog'
+import { HERO_VIDEO_SRC } from '@/lib/hero-video'
+import { OrganizationJsonLd } from '@/components/seo/organization-json-ld'
 
-// The client's original hero video is git-ignored (over GitHub's 100 MB limit), so it only exists
-// where it was placed with scripts/prepare-hero-original.sh. Checked once, at build time.
-const HERO_ORIGINAL = path.join(
-  /*turbopackIgnore: true*/ process.cwd(),
-  'public/videos/hero/client-hero-original.mp4',
+// The client's hero video is git-ignored (over GitHub's 100 MB limit), so it only exists where it
+// was placed with scripts/prepare-hero-original.sh. Checked once, at build time.
+const hasHeroVideo = fs.existsSync(
+  path.join(/*turbopackIgnore: true*/ process.cwd(), 'public', HERO_VIDEO_SRC),
 )
-const hasHeroOriginal = fs.existsSync(HERO_ORIGINAL)
 
 export default function HomePage() {
   // Communities offered by the hero search, per mode, straight from the catalogue.
@@ -37,12 +37,13 @@ export default function HomePage() {
 
   return (
     <>
+      <OrganizationJsonLd />
       <SiteHeader />
 
       <main>
         {/* ==================== CINEMATIC HERO ==================== */}
         <section className="ll-hero">
-          <HeroVideoBackdrop hasOriginal={hasHeroOriginal} />
+          <HeroVideoBackdrop hasVideo={hasHeroVideo} />
 
           <div className="ll-container ll-hero-inner">
             <div className="ll-hero-content">

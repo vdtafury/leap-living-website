@@ -1,0 +1,67 @@
+/* ==================== PAGE HEADER BAND ==================== */
+.ll-page-hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--brand-gradient);
+  color: var(--white);
+  padding: 4.5rem 0 4.25rem;
+}
+
+.ll-page-hero::before {
+  content: '';
+  position: absolute;
+  width: 520px;
+  aspect-ratio: 1;
+  right: -90px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--keyhole-white) center / contain no-repeat;
+  opacity: 0.13;
+  pointer-events: none;
+}
+
+.ll-page-hero > .ll-container {
+  position: relative;
+  z-index: 1;
+}
+
+.ll-page-hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.15rem, 3.8vw, 3.2rem);
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 0.85rem;
+}
+
+.ll-page-hero-desc {
+  font-size: 0.98rem;
+  color: rgba(255, 255, 255, 0.82);
+  max-width: 680px;
+  line-height: 1.7;
+}
+
+.ll-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.68);
+  margin-bottom: 1.1rem;
+}
+
+.ll-breadcrumbs a:hover {
+  color: var(--white);
+}
+
+.ll-hero-media {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 30px 60px rgba(4, 28, 30, 0.35);
+}
+
+.ll-hero-media img {
+  width: 100%;
+  object-fit: cover;
+  display: block;
+}

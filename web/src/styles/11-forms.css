@@ -1,0 +1,144 @@
+/* ==================== FORMS & FILTER BARS ==================== */
+.ll-filter-bar {
+  background-color: var(--white);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) auto;
+  gap: 1rem;
+  align-items: end;
+}
+
+.ll-form-card {
+  background-color: var(--white);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  padding: 2rem;
+}
+
+.ll-form-card.on-dark {
+  border-color: transparent;
+}
+
+.ll-form-switcher {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  background-color: var(--page-bg);
+  padding: 0.3rem;
+  border-radius: 3px;
+  margin-bottom: 1.25rem;
+}
+
+.ll-switch-tab {
+  padding: 0.55rem 0.75rem;
+  border: none;
+  border-radius: 2px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--body-text);
+  background: transparent;
+  cursor: pointer;
+}
+
+.ll-switch-tab.active {
+  background-color: var(--brand-teal);
+  color: var(--white);
+}
+
+.ll-form-context {
+  padding: 0.65rem 0.9rem;
+  background-color: var(--brand-teal-10);
+  border-left: 3px solid var(--brand-teal);
+  font-size: 0.82rem;
+  margin-bottom: 1.15rem;
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.ll-form-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.ll-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.ll-input {
+  width: 100%;
+  border: 1px solid var(--neutral-grey);
+  border-radius: 3px;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.86rem;
+  color: var(--heading);
+  background-color: var(--white);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.ll-input:focus {
+  border-color: var(--brand-teal);
+}
+
+.ll-textarea {
+  resize: vertical;
+  min-height: 84px;
+}
+
+/* Validation (the form card is always white: #B42318 on white is 6.5:1) */
+.ll-input[aria-invalid='true'] {
+  border-color: #b42318;
+}
+
+.ll-field-error,
+.ll-form-error {
+  margin-top: 0.35rem;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: #b42318;
+}
+
+.ll-form-error {
+  margin-top: 0;
+  padding: 0.6rem 0.8rem;
+  border-radius: 3px;
+  background-color: #fef3f2;
+  border: 1px solid #fecdca;
+}
+
+.ll-btn[disabled] {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+/* Honeypot field: off-screen, never visible or focusable for people */
+.ll-hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.ll-form-success {
+  text-align: center;
+  padding: 1.5rem 0.5rem;
+}
+
+.ll-form-success-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--brand-teal-10);
+  color: var(--dark-teal);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.85rem;
+}
