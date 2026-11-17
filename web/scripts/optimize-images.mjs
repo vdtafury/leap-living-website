@@ -40,21 +40,15 @@ const PHOTO_QUALITY = 70
  * `enlarge` lets the crop be upscaled to `width`.
  */
 const CROPS = {
-  // The hero poster must look exactly like the video's first frame on every device, so it
-  // is cut from the same rendition the device plays: client-video-frame-0.jpg is frame 0
-  // of client-hero-1280.mp4, and the phone crop comes from frame 0 of client-hero-854.mp4
-  // (phones get the 854 rendition). Regenerate both when the reel changes
-  // (scripts/encode-hero-videos.sh).
+  // The hero poster must look exactly like the video's first frame on every device.
+  // client-video-frame-0.jpg is frame 0 of the client's original hero video (cut by
+  // scripts/prepare-hero-original.sh), and every device plays that same file, so the phone
+  // crop is cut from it too. The 1080 px tall frame yields a 648 px strip, scaled to 540.
   'client-video-frame-0.jpg': {
     aspect: 0.6,
     x: 0.5,
     width: 540,
-    source: 'scripts/assets/client-video-frame-0-854.jpg',
     quality: 85,
-    // The 854 frame only yields a 288 px strip. It is enlarged to 540 so its intrinsic area
-    // stays above the video's (854×480): otherwise Chrome reports the video's first frame as a
-    // new, later LCP. Enlarging adds no detail, so it still looks like the video frame.
-    enlarge: true,
   },
 }
 

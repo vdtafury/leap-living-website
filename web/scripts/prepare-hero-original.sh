@@ -9,8 +9,8 @@
 #     whole file before the first frame can play,
 #   - writes BT.709 colour tags only if the file has none, so browsers convert colours the same
 #     way as the poster,
-#   - cuts the poster from the file's frame 0 and rebuilds the WebP variants, so the hero still
-#     switches from poster to video invisibly.
+#   - cuts the poster from the file's frame 0 and rebuilds the WebP variants (landscape and the
+#     phone crop), so the hero still switches from poster to video invisibly.
 #
 # Output: public/videos/hero/client-hero-original.mp4. The file is git-ignored because GitHub
 # rejects files over 100 MB. It stays on this machine, and package-cpanel.sh ships it in the
@@ -36,7 +36,9 @@ space=$(probe color_space)
 # Browsers only play H.264 8-bit 4:2:0 everywhere. Anything else would need a re-encode.
 if [ "$codec" != h264 ] || [ "$pix" != yuv420p ]; then
   echo "This file is $codec / $pix. Browsers need H.264 yuv420p, so it cannot be used as-is."
-  echo "Use scripts/encode-hero-videos.sh (re-encode) instead."
+  echo "Ask the client for an H.264 MP4 export, or convert it at near-lossless quality with:"
+  echo "  $FFMPEG -i \"$SRC\" -c:v libx264 -preset slow -crf 16 -pix_fmt yuv420p -an converted.mp4"
+  echo "and run this script on converted.mp4."
   exit 1
 fi
 
@@ -49,7 +51,7 @@ fi
 mkdir -p "$(dirname "$OUT")"
 "$FFMPEG" -v error -y -i "$SRC" -map 0:v:0 -c:v copy "${tags[@]}" -an -movflags +faststart "$OUT"
 
-# Poster: frame 0 of the file the big screens play.
+# Poster: frame 0 of the file every device plays.
 tmp="$(mktemp --suffix=.png)"
 "$FFMPEG" -v error -y -i "$OUT" -frames:v 1 \
   -vf "scale=in_color_matrix=$space:in_range=tv:out_range=pc:flags=accurate_rnd+full_chroma_int,format=rgb24" \
@@ -67,6 +69,6 @@ const [size, dur, res] = process.argv.slice(1)
 const mbps = (size * 8) / dur / 1e6
 console.log('Ready: $OUT')
 console.log('  ' + (size / 1048576).toFixed(0) + ' MB, ' + (+dur).toFixed(1) + ' s, ' + res + ', ' + mbps.toFixed(1) + ' Mbps')
-console.log('  Plays without stalling on connections above ~' + Math.ceil(mbps) + ' Mbps; slower links keep the 1280 version.')
+console.log('  Plays without stalling on connections above ~' + Math.ceil(mbps) + ' Mbps; on slower links the poster (frame 0) stays.')
 " "$size" "$dur" "$res"
 echo "Next: commit the poster files (git status), then build the zip with scripts/deployment/package-cpanel.sh."
