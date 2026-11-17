@@ -10,6 +10,13 @@
   contain-intrinsic-size: auto 760px;
 }
 
+/* Set before scrolling to an in-page anchor (homepage calculator): render every
+   section so the scroll runs on real heights, not the 760px estimates. */
+.ll-render-all .ll-defer-render,
+.ll-render-all .ll-footer {
+  content-visibility: visible;
+}
+
 /* ==================== FOOTER ==================== */
 /* Light footer, as in the approved light homepage design (owner, 2026-11-17) */
 .ll-footer {

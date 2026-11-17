@@ -7,7 +7,7 @@ Premium English-only real-estate consultancy platform for Dubai (`leapliving.ae`
 | Path | Purpose |
 |---|---|
 | `web/` | Main Next.js (App Router + TypeScript strict + Prisma + Sharp) web application |
-| `web/src/app/` | Multi-page public routes (`/`, `/buy`, `/rent`, `/sell`, `/projects`, `/projects/[slug]`, `/properties/[slug]`, `/mortgage`, `/about`, `/contact`) and infrastructure API routes |
+| `web/src/app/` | Multi-page public routes (`/`, `/buy`, `/rent`, `/sell`, `/projects`, `/projects/[slug]`, `/properties/[slug]`, `/about`, `/contact`) and infrastructure API routes. The mortgage calculator is on the homepage (`/#mortgage-calculator`); `/mortgage` redirects there |
 | `web/src/components/` | Modular UI components organized by domain (`layout`, `home`, `property`, `project`, `tools`, `forms`, `ui`) |
 | `web/src/data/` | Typed portfolio showcase & service catalog (`catalog.ts`) |
 | `web/public/brand/` | Brand logo lockups derived strictly from the client-supplied `leap-living-logo.png` |

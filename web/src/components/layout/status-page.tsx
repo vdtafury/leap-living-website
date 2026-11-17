@@ -8,7 +8,7 @@ const QUICK_LINKS = [
   { href: '/rent', label: 'Properties for rent' },
   { href: '/projects', label: 'Dubai projects' },
   { href: '/sell', label: 'Free property valuation' },
-  { href: '/mortgage', label: 'Mortgage calculator' },
+  { href: '/#mortgage-calculator', label: 'Mortgage calculator' },
   { href: '/contact', label: 'Contact our advisors' },
 ]
 

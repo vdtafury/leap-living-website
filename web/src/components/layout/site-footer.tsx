@@ -91,7 +91,7 @@ export function SiteFooter() {
               <Link href="/about">Company Profile</Link>
               <Link href="/about#leadership">Executive Leadership</Link>
               <Link href="/sell#valuation-form">Free Property Valuation</Link>
-              <Link href="/mortgage">Mortgage Calculator</Link>
+              <Link href="/#mortgage-calculator">Mortgage Calculator</Link>
               <Link href="/contact?topic=privacy">Privacy Policy</Link>
               <Link href="/contact?topic=terms">Terms of Use</Link>
             </div>

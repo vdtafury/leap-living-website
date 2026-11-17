@@ -166,7 +166,7 @@ check_not_contains "D-23: no Commercial tab in hero search" ">Commercial</button
 check_not_contains "D-22: no Executive Leadership section on Home" "ll-leadership-panel" "$TMP/home.html"
 check_contains "Mod #6: Mortgage Calculator link on Home" "Mortgage Calculator" "$TMP/home.html"
 
-for route in /buy /rent /sell /projects /mortgage /about /contact \
+for route in /buy /rent /sell /projects /about /contact \
   /properties/palm-jumeirah-waterfront-sky-villa \
   /properties/downtown-boulevard-sky-penthouse \
   /projects/the-peninsula-harbour-residences; do
@@ -180,9 +180,15 @@ check "GET /about content" 200 "$code"
 check_contains "Mod #3: Mohab Samak CEO title on About" "Mohab Samak" "$TMP/about.html"
 check_not_contains "Mod #3: no Founder title on About" "Founder" "$TMP/about.html"
 
-code=$(curl -s -o "$TMP/mortgage.html" -w '%{http_code}' "$BASE/mortgage")
-check "GET /mortgage content" 200 "$code"
-check_contains "Mortgage page contains calculator" "UAE Mortgage Calculator" "$TMP/mortgage.html"
+# D-30: the calculator lives on the homepage; /mortgage redirects to it
+check_contains "D-30: homepage calculator anchor" 'id="mortgage-calculator"' "$TMP/home.html"
+check_contains "D-30: homepage calculator inputs" "Loan Period (Years)" "$TMP/home.html"
+check_contains "D-30: navbar button targets the homepage calculator" 'href="/#mortgage-calculator"' "$TMP/home.html"
+code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE/mortgage")
+check "D-30: /mortgage redirects permanently" 308 "$code"
+location=$(curl -s -o /dev/null -w '%{redirect_url}' "$BASE/mortgage")
+echo "$location" > "$TMP/mortgage-location.txt"
+check_contains "D-30: /mortgage redirect target" "/#mortgage-calculator" "$TMP/mortgage-location.txt"
 
 # 7. Favicon Configuration & Asset Checks
 check_not_contains "Head has no broken logo-mark.svg reference" "logo-mark.svg" "$TMP/home.html"

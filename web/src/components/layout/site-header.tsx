@@ -78,7 +78,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="ll-header-actions">
-          <Link href="/mortgage" className="ll-btn ll-btn-mortgage">
+          <Link href="/#mortgage-calculator" className="ll-btn ll-btn-mortgage">
             <CalculatorIcon size={15} />
             <span>Mortgage Calculator</span>
           </Link>
@@ -114,7 +114,7 @@ export function SiteHeader() {
             ))}
             <div className="ll-mobile-nav-actions">
               <Link
-                href="/mortgage"
+                href="/#mortgage-calculator"
                 onClick={() => setMobileOpen(false)}
                 className="ll-btn ll-btn-mortgage"
               >

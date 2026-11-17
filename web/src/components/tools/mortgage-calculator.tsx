@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { ArrowUpRightIcon } from '@/components/ui/icons'
+import { monthlyPayment as monthlyPaymentFor } from '@/lib/mortgage'
 
 interface MortgageCalculatorProps {
   initialPrice?: number
@@ -25,18 +26,14 @@ export function MortgageCalculator({
   const calculation = useMemo(() => {
     const downPaymentAed = Math.round((propertyPrice * downPaymentPercent) / 100)
     const loanAmount = Math.max(0, propertyPrice - downPaymentAed)
-    const monthlyRate = interestRate / 100 / 12
     const totalMonths = loanYears * 12
-
-    let monthlyPayment = 0
-    if (loanAmount > 0 && totalMonths > 0) {
-      if (monthlyRate === 0) {
-        monthlyPayment = loanAmount / totalMonths
-      } else {
-        const factor = Math.pow(1 + monthlyRate, totalMonths)
-        monthlyPayment = (loanAmount * (monthlyRate * factor)) / (factor - 1)
-      }
-    }
+    const monthlyPayment =
+      monthlyPaymentFor({
+        price: propertyPrice,
+        downPaymentPercent,
+        interestRatePercent: interestRate,
+        years: loanYears,
+      }) ?? 0
 
     const totalRepayment = Math.round(monthlyPayment * totalMonths)
     const totalInterest = Math.max(0, totalRepayment - loanAmount)
@@ -262,12 +259,11 @@ export function MortgageCalculator({
             <ArrowUpRightIcon size={15} />
           </Link>
           <p className="ll-summary-note">
-            Indicative planning illustration subject to UAE Central Bank LTV regulations and
-            lender underwriting.
+            Indicative planning illustration subject to UAE Central Bank LTV regulations and lender
+            underwriting.
           </p>
         </div>
       </div>
     </div>
   )
 }
-

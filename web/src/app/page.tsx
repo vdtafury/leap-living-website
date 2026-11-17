@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { HeroSearchBar } from '@/components/home/hero-search-bar'
+import { HomeMortgageCalculator } from '@/components/home/home-mortgage-calculator'
 import { HeroVideoBackdrop } from '@/components/home/hero-video-backdrop'
 import { PropertyCarousel } from '@/components/property/property-carousel'
 import { ProjectCard } from '@/components/project/project-card'
@@ -199,7 +200,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ==================== VALUATION & MORTGAGE ENTRY ==================== */}
+        {/* ==================== VALUATION & MORTGAGE (two paths + calculator) ==================== */}
         <section className="ll-section-tint ll-defer-render" aria-labelledby="ll-advice-title">
           <div className="ll-container">
             <div className="ll-advice">
@@ -220,7 +221,7 @@ export default function HomePage() {
                     <ArrowUpRightIcon size={16} />
                   </span>
                 </Link>
-                <Link href="/mortgage" className="ll-advice-path">
+                <Link href="/#mortgage-calculator" className="ll-advice-path">
                   <span className="ll-advice-icon">
                     <CalculatorIcon size={22} />
                   </span>
@@ -232,6 +233,9 @@ export default function HomePage() {
                 </Link>
               </div>
             </div>
+
+            {/* The navbar "Mortgage Calculator" button scrolls here (D-30) */}
+            <HomeMortgageCalculator />
           </div>
         </section>
 

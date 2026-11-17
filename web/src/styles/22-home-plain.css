@@ -155,6 +155,146 @@
   color: var(--white);
 }
 
+/* ---------- Homepage mortgage calculator (owner's reference, D-30) ----------
+   Sits under the two-path card in the same tint section. White card, four
+   inputs in a row, monthly payment + consultation button, "Apply" link. */
+.ll-hmc {
+  margin-top: clamp(1.25rem, 2vw, 1.75rem);
+  padding: clamp(1.75rem, 3.4vw, 3rem);
+  border: 1px solid var(--border-subtle);
+  border-radius: 22px;
+  background-color: var(--white);
+  box-shadow: var(--shadow-card);
+  scroll-margin-top: calc(76px + 1.5rem); /* fixed header */
+}
+
+.ll-hmc-title {
+  font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--heading);
+}
+
+.ll-hmc-desc {
+  margin-top: 0.6rem;
+  font-size: 0.95rem;
+  color: var(--body-text);
+}
+
+.ll-hmc-fields {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: clamp(1.5rem, 2.6vw, 2.25rem);
+}
+
+.ll-hmc-field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--heading);
+}
+
+.ll-hmc-field input {
+  width: 100%;
+  height: 50px;
+  padding: 0 1rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background-color: var(--surface-tint);
+  color: var(--heading);
+  font: inherit;
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.ll-hmc-field input:hover {
+  border-color: var(--brand-teal-25);
+}
+
+.ll-hmc-field input:focus {
+  outline: none;
+  border-color: var(--brand-teal);
+  background-color: var(--white);
+  box-shadow: 0 0 0 3px rgba(var(--brand-teal-rgb), 0.16);
+}
+
+.ll-hmc-result-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.ll-hmc-result-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--body-text);
+}
+
+.ll-hmc-result-figure {
+  margin-top: 0.35rem;
+  font-size: clamp(1.35rem, 1.9vw, 1.65rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--dark-teal);
+}
+
+.ll-hmc-result-figure span {
+  font-size: 0.6em;
+  font-weight: 500;
+  color: var(--body-text);
+}
+
+.ll-hmc-cta {
+  flex-shrink: 0;
+  background-color: var(--dark-teal);
+  color: var(--white);
+}
+
+.ll-hmc-cta:hover {
+  background-color: var(--secondary-teal);
+}
+
+.ll-hmc-apply {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 1rem;
+  margin-top: 1.4rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 0.9rem;
+  color: var(--body-text);
+}
+
+.ll-hmc-apply a {
+  font-weight: 500;
+  color: var(--heading);
+  text-decoration: underline;
+  text-decoration-color: var(--brand-teal);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 5px;
+}
+
+.ll-hmc-apply a:hover {
+  color: var(--secondary-teal);
+}
+
+.ll-hmc-apply svg {
+  color: var(--secondary-teal);
+}
+
+.ll-hmc-note {
+  margin-top: 0.85rem;
+  font-size: 0.75rem;
+  color: var(--body-text);
+}
+
 /* ---------- Client reviews: Provident-style cards ---------- */
 .ll-review {
   display: flex;
@@ -290,9 +430,41 @@
   .ll-hero {
     min-height: clamp(560px, calc(100svh - var(--dev-strip-h)), 860px);
   }
+
+  /* Hero search: a little smaller and set lower, with clear air under the
+     headline and buttons (owner, 2026-11-17, D-30) */
+  .ll-hs {
+    max-width: 1040px;
+    margin-top: clamp(1.25rem, 5.5vh, 3.5rem);
+    padding: 0.7rem;
+    border-radius: 20px;
+  }
+  .ll-hs-top {
+    padding-bottom: 0.6rem;
+  }
+  .ll-hs-mode {
+    min-width: 5.6rem;
+    padding: 0.45rem 1rem;
+    font-size: 0.8rem;
+  }
+  .ll-hs-field {
+    padding: 0.55rem 1rem 0.58rem;
+  }
+  .ll-hs-trigger {
+    margin-top: 0.2rem;
+    font-size: 0.9rem;
+  }
+  .ll-hs-submit {
+    min-height: 50px;
+    padding: 0 1.6rem;
+    font-size: 0.88rem;
+  }
 }
 
 @media (max-width: 960px) {
+  .ll-hmc-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   .ll-section-plain,
   .ll-section-tint {
     padding: 4.25rem 0;
@@ -313,6 +485,25 @@
 }
 
 @media (max-width: 600px) {
+  .ll-hmc {
+    padding: 1.6rem 1.25rem;
+  }
+  .ll-hmc-fields {
+    gap: 0.85rem 0.75rem;
+  }
+  .ll-hmc-field label {
+    font-size: 0.74rem;
+  }
+  .ll-hmc-result-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .ll-hmc-cta {
+    justify-content: center;
+  }
+  .ll-hmc-apply svg {
+    display: none; /* would wrap onto a line of its own */
+  }
   /* Stats: compact 2 x 2 on phones instead of four tall rows */
   .ll-stats-section .ll-stats-grid {
     grid-template-columns: 1fr 1fr;

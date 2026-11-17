@@ -128,6 +128,7 @@ Each section gets one surface class. Adjacent sections must never share a surfac
 | `ll-section-grey` | neutral-grey wash + faint keyhole | listings blocks |
 | `ll-section-teal` | flat teal band, white text | CTA bands |
 | `ll-section-plain` | plain white, no decoration; consecutive plain sections share one gap | homepage lower half: Projects, valuation panel, reviews (D-27) |
+| `ll-hmc` | white calculator card, inputs on `--surface-tint`, teal focus ring | homepage mortgage calculator (D-30) |
 | `ll-advice` | white card, intro + two path tiles (`ll-advice-path`, `.is-primary` = dark teal) | homepage valuation & mortgage entry (D-29) |
 | `ll-section-tint` | very light tint `--surface-tint` (`#F3F8F8`) + hairlines | homepage Advisory and Valuation (D-28); the stats band and footer use the same tint |
 | `ll-section-gradient` | `--brand-gradient`, white text | featured/service blocks |
@@ -174,13 +175,13 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 
 ### 7.6 Homepage section order
 
-1. Full-screen hero (video) with the glass search **inside** it (see 7.7); on desktop its height is `100svh - 130px` (560–860px), so hero + developer strip fill the first screen (D-29)
+1. Full-screen hero (video) with the glass search **inside** it (see 7.7); on desktop the search is at most 1040px wide and sits lower under the buttons (D-30); on desktop its height is `100svh - 130px` (560–860px), so hero + developer strip fill the first screen (D-29)
 2. Developer Network: light glass logo marquee, logos only; a tight band of about 130px (104px on phones) (D-29)
 3. Institutional Pillars (21+ Years, AED 12B+, ...): light tint, teal line icons, hairline dividers; 2 x 2 on phones (D-28)
 4. Featured Properties: white, **carousel with arrows** (see 7.8)
 5. Advisory: bento on the light tint (`ll-section-tint`), white tiles, lead tile Teal 10%
 6. Selected Projects: plain white
-7. Valuation & Mortgage: light tint, a **two-path card** (`ll-advice`): intro on a soft teal gradient, then For Owners (dark teal) and For Buyers (white) tiles with icon, kicker, label and arrow; the tiles stack as rows on phones (D-29)
+7. Valuation & Mortgage: light tint, a **two-path card** (`ll-advice`): intro on a soft teal gradient, then For Owners (dark teal) and For Buyers (white) tiles with icon, kicker, label and arrow; the tiles stack as rows on phones (D-29); under it, the **mortgage calculator** card (`ll-hmc`, `#mortgage-calculator`, D-30): 4 inputs in a row (2 x 2 on tablets and phones), monthly payment, dark-teal consultation button, "Apply For Home Loan" link
 8. Client reviews: plain white, **row of review cards** (see 7.10)
 9. Footer: light tint (coloured logo, hairlines)
 
