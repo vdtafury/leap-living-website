@@ -1,13 +1,17 @@
 'use client'
 
 import { useState, type FormEvent } from 'react'
+import { usePathname } from 'next/navigation'
 import { ArrowUpRightIcon, CheckIcon } from '@/components/ui/icons'
+import { fieldErrors, inquirySchema, type InquiryType } from '@/lib/inquiry'
 
 interface ConsultationFormProps {
-  mode?: 'VALUATION' | 'CONSULTATION' | 'PROPERTY_INQUIRY' | 'PROJECT_BRIEFING'
+  mode?: InquiryType
   contextTitle?: string
   darkSurface?: boolean
 }
+
+const FALLBACK_ERROR = 'We could not send your request. Please try again, or call +971 52 145 9888.'
 
 export function ConsultationForm({
   mode = 'CONSULTATION',
@@ -17,12 +21,67 @@ export function ConsultationForm({
   const [selectedType, setSelectedType] = useState<'VALUATION' | 'CONSULTATION'>(
     mode === 'VALUATION' ? 'VALUATION' : 'CONSULTATION',
   )
+  const pathname = usePathname()
   const [submitted, setSubmitted] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [formError, setFormError] = useState<string | null>(null)
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  // Saved in the database by /api/inquiries; success is shown only once the server confirms.
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    setSubmitted(true)
+    if (sending) return
+    const form = new FormData(event.currentTarget)
+    const text = (name: string) => String(form.get(name) ?? '')
+    const payload = {
+      type: mode === 'VALUATION' || mode === 'CONSULTATION' ? selectedType : mode,
+      name: text('name'),
+      phone: text('phone'),
+      email: text('email'),
+      interest: text('interest'),
+      notes: text('notes'),
+      context: contextTitle,
+      pagePath: pathname,
+      website: text('website'),
+    }
+    const checked = inquirySchema.safeParse(payload)
+    if (!checked.success) {
+      setErrors(fieldErrors(checked.error))
+      return
+    }
+    setErrors({})
+    setFormError(null)
+    setSending(true)
+    try {
+      const response = await fetch('/api/inquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      const result = (await response.json().catch(() => ({}))) as {
+        error?: string
+        fields?: Record<string, string>
+      }
+      if (response.ok) {
+        setSubmitted(true)
+      } else {
+        if (result.fields) setErrors(result.fields)
+        setFormError(result.error && !result.fields ? result.error : FALLBACK_ERROR)
+      }
+    } catch {
+      setFormError(FALLBACK_ERROR)
+    } finally {
+      setSending(false)
+    }
   }
+
+  const describedBy = (field: string) => (errors[field] ? `cf-${field}-error` : undefined)
+  const fieldError = (field: string) =>
+    errors[field] ? (
+      <p id={`cf-${field}-error`} className="ll-field-error">
+        {errors[field]}
+      </p>
+    ) : null
 
   if (submitted) {
     return (
@@ -81,7 +140,13 @@ export function ConsultationForm({
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="ll-form-grid">
+      <form onSubmit={handleSubmit} className="ll-form-grid" noValidate>
+        {/* Honeypot: invisible to people (and to screen readers), filled only by bots. */}
+        <div className="ll-hp" aria-hidden="true">
+          <label htmlFor="cf-website">Website</label>
+          <input id="cf-website" name="website" tabIndex={-1} autoComplete="off" />
+        </div>
+
         <div className="ll-two-col">
           <div>
             <label htmlFor="cf-name" className="ll-field-label">
@@ -89,10 +154,16 @@ export function ConsultationForm({
             </label>
             <input
               id="cf-name"
+              name="name"
               required
+              autoComplete="name"
+              maxLength={120}
               placeholder="Your full name"
               className="ll-input"
+              aria-invalid={Boolean(errors.name)}
+              aria-describedby={describedBy('name')}
             />
+            {fieldError('name')}
           </div>
           <div>
             <label htmlFor="cf-phone" className="ll-field-label">
@@ -100,10 +171,17 @@ export function ConsultationForm({
             </label>
             <input
               id="cf-phone"
+              name="phone"
+              type="tel"
               required
+              autoComplete="tel"
+              maxLength={40}
               placeholder="+971 5X XXX XXXX"
               className="ll-input"
+              aria-invalid={Boolean(errors.phone)}
+              aria-describedby={describedBy('phone')}
             />
+            {fieldError('phone')}
           </div>
         </div>
 
@@ -114,11 +192,17 @@ export function ConsultationForm({
             </label>
             <input
               id="cf-email"
+              name="email"
               type="email"
               required
+              autoComplete="email"
+              maxLength={254}
               placeholder="name@company.com"
               className="ll-input"
+              aria-invalid={Boolean(errors.email)}
+              aria-describedby={describedBy('email')}
             />
+            {fieldError('email')}
           </div>
           <div>
             <label htmlFor="cf-community" className="ll-field-label">
@@ -126,11 +210,16 @@ export function ConsultationForm({
             </label>
             <input
               id="cf-community"
+              name="interest"
               required
+              maxLength={200}
               defaultValue={contextTitle ?? ''}
               placeholder="e.g. Palm Jumeirah Villa"
               className="ll-input"
+              aria-invalid={Boolean(errors.interest)}
+              aria-describedby={describedBy('interest')}
             />
+            {fieldError('interest')}
           </div>
         </div>
 
@@ -140,21 +229,36 @@ export function ConsultationForm({
           </label>
           <textarea
             id="cf-notes"
+            name="notes"
             rows={3}
+            maxLength={2000}
             placeholder="Share target timelines, unit preferences, or asset valuation questions..."
             className="ll-input ll-textarea"
           />
         </div>
 
-        <button type="submit" className="ll-btn ll-btn-primary ll-btn-full">
+        {formError && (
+          <p className="ll-form-error" role="alert">
+            {formError}
+          </p>
+        )}
+
+        <button
+          type="submit"
+          className="ll-btn ll-btn-primary ll-btn-full"
+          disabled={sending}
+          aria-busy={sending}
+        >
           <span>
-            {mode === 'PROPERTY_INQUIRY'
-              ? 'Request Private Viewing & Dossier'
-              : mode === 'PROJECT_BRIEFING'
-                ? 'Request Developer Floorplans & Availability'
-                : selectedType === 'VALUATION'
-                  ? 'Submit Valuation Request'
-                  : 'Schedule Private Consultation'}
+            {sending
+              ? 'Sending…'
+              : mode === 'PROPERTY_INQUIRY'
+                ? 'Request Private Viewing & Dossier'
+                : mode === 'PROJECT_BRIEFING'
+                  ? 'Request Developer Floorplans & Availability'
+                  : selectedType === 'VALUATION'
+                    ? 'Submit Valuation Request'
+                    : 'Schedule Private Consultation'}
           </span>
           <ArrowUpRightIcon size={15} />
         </button>
@@ -162,4 +266,3 @@ export function ConsultationForm({
     </div>
   )
 }
-
