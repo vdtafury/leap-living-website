@@ -300,7 +300,14 @@ export function CurrencyIcon({ size = 15, ...props }: IconProps) {
 
 export function LinkedInIcon({ size = 17, ...props }: IconProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      {...props}
+    >
       <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
     </svg>
   )
@@ -325,18 +332,46 @@ export function InstagramIcon({ size = 17, ...props }: IconProps) {
   )
 }
 
-export function YouTubeIcon({ size = 18, ...props }: IconProps) {
+export function FacebookIcon({ size = 17, ...props }: IconProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
-      <path d="M21.58 7.19a2.75 2.75 0 0 0-1.94-1.94C17.93 4.78 12 4.78 12 4.78s-5.93 0-7.64.47a2.75 2.75 0 0 0-1.94 1.94C2 8.91 2 12.5 2 12.5s0 3.59.42 5.31a2.75 2.75 0 0 0 1.94 1.94c1.71.47 7.64.47 7.64.47s5.93 0 7.64-.47a2.75 2.75 0 0 0 1.94-1.94c.42-1.72.42-5.31.42-5.31s0-3.59-.42-5.31ZM10 15.6V9.4l5.4 3.1-5.4 3.1Z" />
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M13.5 21v-7.6h2.56l.38-2.97H13.5V8.54c0-.86.24-1.45 1.47-1.45h1.57V4.44A21 21 0 0 0 14.25 4.3c-2.27 0-3.82 1.39-3.82 3.93v2.2H7.86v2.97h2.57V21h3.07z" />
     </svg>
   )
 }
 
+export function TikTokIcon({ size = 16, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M16.6 3c.32 2.1 1.53 3.45 3.65 3.6v2.73a6.6 6.6 0 0 1-3.6-1.05v5.65c0 3.83-4.14 6.22-7.46 4.31-3.65-2.1-2.85-7.82 1.42-8.75.5-.11 1.03-.13 1.55-.07v2.9a2.55 2.55 0 0 0-2.95 2.09 2.58 2.58 0 0 0 4.9 1.38c.14-.33.2-.69.19-1.05V3h2.3z" />
+    </svg>
+  )
+}
 
 export function PauseIcon({ size = 14, ...props }: IconProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      {...props}
+    >
       <rect x="6" y="5" width="4" height="14" />
       <rect x="14" y="5" width="4" height="14" />
     </svg>
@@ -345,7 +380,14 @@ export function PauseIcon({ size = 14, ...props }: IconProps) {
 
 export function PlayIcon({ size = 14, ...props }: IconProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      {...props}
+    >
       <path d="M7 4.5v15l12.5-7.5z" />
     </svg>
   )
