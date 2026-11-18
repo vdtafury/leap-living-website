@@ -275,7 +275,7 @@
 }
 
 /* ---- Light surface: brand-teal tint gradient, bare full-colour logos ----
-   Owner, 2026-11-18: no skyline photo and no keyhole watermark, same colour. The gradient is
+   Owner, 2026-11-18: no skyline photo, same colour; the white keyhole watermark stays. The gradient is
    the old scrim with opaque stops, so the band keeps the tone it had over the photo. */
 .ll-dev-showcase.ll-section-glass-light {
   background-color: var(--brand-teal-10);

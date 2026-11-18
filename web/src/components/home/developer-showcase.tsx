@@ -6,9 +6,9 @@ import { ResponsiveImg } from '@/components/ui/responsive-img'
 interface DeveloperShowcaseProps {
   /**
    * Section surface.
-   * - `glass-light` (default): flat brand-teal tint gradient, no photo or watermark
-   *   (owner, 2026-11-18); bare full-colour logos glide across it.
-   * - `glass`: skyline photo under a deep-teal scrim, bare white logos.
+   * - `glass-light` (default): flat brand-teal tint gradient with the white keyhole watermark,
+   *   no photo (owner, 2026-11-18); bare full-colour logos glide across it.
+   * - `glass`: skyline photo under a deep-teal scrim plus the watermark, bare white logos.
    * - `light` / `muted`: flat surfaces.
    */
   surface?: 'glass-light' | 'glass' | 'light' | 'muted'
@@ -53,14 +53,14 @@ export function DeveloperShowcase({ surface = 'glass-light', brands }: Developer
       aria-label="Developers we work with"
     >
       {surface === 'glass' && (
-        <>
-          <div className="ll-section-image-bg" aria-hidden="true">
-            <ResponsiveImg src="/images/developer-network-skyline.jpg" sizes="100vw" />
-            <div className="ll-dev-glass-scrim" />
-          </div>
-          {/* Brand watermark: the keyhole mark, large and cropped by the section edge. */}
-          <KeyholeMark className="ll-keyhole ll-keyhole-dev" strokeWidth={1.4} />
-        </>
+        <div className="ll-section-image-bg" aria-hidden="true">
+          <ResponsiveImg src="/images/developer-network-skyline.jpg" sizes="100vw" />
+          <div className="ll-dev-glass-scrim" />
+        </div>
+      )}
+      {(surface === 'glass' || surface === 'glass-light') && (
+        // Brand watermark: the keyhole mark, large and cropped by the section edge.
+        <KeyholeMark className="ll-keyhole ll-keyhole-dev" strokeWidth={1.4} />
       )}
 
       {/* Contained like every other section: same width and gutters as the page content. */}

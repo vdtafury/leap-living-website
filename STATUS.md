@@ -27,7 +27,7 @@
 - **Homepage order:**
   1. header
   2. full-screen hero (client video, Buy/Rent search)
-  3. developer strip (from the Developers module, in its order; flat teal tint, no photo, D-39)
+  3. developer strip (from the Developers module, in its order; flat teal tint plus keyhole watermark, no photo, D-39)
   4. stats (tint, teal icons)
   5. featured properties carousel
   6. advisory bento (tint)
@@ -163,4 +163,4 @@ The full question list for the meeting is in `docs/business/meeting-questions.md
 | 2026-11-18 | Arena agent | Item 4 closed; Phase 1 + 2 built (D-31 … D-36): admin with DB sessions, RBAC, audit log; property/project CRUD with images; public site from the DB with starter import; forms + email outbox; CMS (home, about, settings) with preview, publish and revisions; developers; users; form requests; email queue. Fixed on the way: same-site check without Origin (Chrome), admin forms no longer reset on error, `sitemap.xml`/`robots.txt` dynamic | tsc PASS, lint 0 errors, vitest 102/102, build PASS, `verify.sh` 80/80, browser run: login → forced password change → edit price → public updated → draft hidden → preview → publish → public updated; 0 console errors |
 | 2026-11-18 | Arena agent | Owner hit "You do not have permission" in the admin preview: his browser blocked the framed session cookie. Signed-out message, full-page-load login check with a notice and "open in its own tab" link (D-37) | tsc PASS, lint 0 errors, vitest 102/102, build PASS, verify.sh 80/80; headless Chrome: normal sign-in, blocked cookie → notice, sign-in inside a cross-site iframe works |
 | 2026-11-18 | Arena agent | Buttons and hero search moved to action teal `#287F82` (owner: try it, D-38): one token `--action-teal`, hover dark teal; brand `#3B9EA1` kept for accents | Computed in headless Chrome: header/hero/form buttons, search button and active tab all `rgb(40,127,130)`, white text 4.72:1 (was 3.18:1); build PASS, verify.sh 80/80 |
-| 2026-11-18 | Arena agent | Section polish 1, developer strip: skyline photo and keyhole watermark removed, same teal tint and logos (D-39); hero search shadow tightened so it no longer shades the strip | Screenshots 1440 and 390 (home, about); measured strip top row uniform (235/235); build PASS |
+| 2026-11-18 | Arena agent | Section polish 1, developer strip: skyline photo removed, same teal tint, logos and keyhole watermark (watermark restored on owner request) (D-39); hero search shadow tightened so it no longer shades the strip | Screenshots 1440 and 390 (home, about); measured strip top row uniform (235/235); build PASS |
