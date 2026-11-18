@@ -3,7 +3,10 @@ import { PrismaClient } from '../../generated/client'
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
 import { SCHEMA_STATEMENTS } from './schema'
 
-const url = process.env.DATABASE_URL || 'file:/tmp/dev.db'
+// On Vercel Serverless (Lambda), only /tmp is writable.
+const url = process.env.VERCEL
+  ? 'file:/tmp/leap_dev.db'
+  : (process.env.DATABASE_URL || 'file:./storage/dev.db')
 
 const adapter = new PrismaBetterSqlite3({ url })
 
