@@ -1,5 +1,7 @@
 /* ==========================================================================
-   PROPERTY CAROUSEL (homepage featured properties)
+   PROPERTY CAROUSEL (homepage featured properties, D-47)
+   Next card peeks in at the screen edge under a tall "N more" tab; one segment per card
+   underneath; mouse drag; a closing "View all" card. No round buttons in the header.
    ========================================================================== */
 .sr-only {
   position: absolute;
@@ -17,9 +19,23 @@
   /* 28px up to ~1366px, growing smoothly to 36px at ~1600px (same as .ll-cards-grid) */
   --carousel-gap: clamp(1.75rem, calc(3.42vw - 18.7px), 2.25rem);
   --carousel-per-view: 3;
-  /* How much of the next card must show, at least (D-46: "more than three" at a glance) */
+  /* How much of the next card must show, at least ("more than three" at a glance) */
   --carousel-peek: 130px;
+  --carousel-bleed: 0px;
+  --carousel-room: max(0px, calc(var(--carousel-peek) - var(--carousel-bleed)));
   position: relative;
+}
+
+/* Bleed: the row runs on to the right edge of the screen. The space between the container and
+   the screen edge, from the section width (100cqw, section = size container) and the same
+   formula as .ll-container. */
+.ll-carousel--bleed {
+  --carousel-bleed: calc((100cqw - min(100cqw - 2 * var(--page-gutter), var(--content-max))) / 2);
+}
+
+.ll-carousel-bleed-host {
+  container-type: inline-size;
+  overflow-x: clip;
 }
 
 .ll-carousel-head {
@@ -30,102 +46,28 @@
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  flex-wrap: wrap;
 }
 
-.ll-carousel-nav {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
+/* ---------- Stage + track ---------- */
+.ll-carousel-stage {
+  position: relative;
+  margin-right: calc(-1 * var(--carousel-bleed));
 }
 
-.ll-carousel-count {
-  min-width: 4.5rem;
-  margin-right: 0.35rem;
-  font-size: 0.86rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--heading);
-  text-align: right;
-}
-
-.ll-carousel-count-total {
-  font-weight: 400;
-  color: var(--body-text);
-}
-
-.ll-carousel-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  border: 1.5px solid #c3cfcd;
-  background: var(--white);
-  color: var(--dark-teal);
-  cursor: pointer;
-  box-shadow: 0 6px 18px rgba(16, 42, 44, 0.08);
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease,
-    opacity 0.2s ease;
-}
-
-/* "Next" is the main action: filled, so the eye goes to it first */
-.ll-carousel-btn--next:not(:disabled) {
-  background: var(--action-teal);
-  border-color: var(--action-teal);
-  color: var(--white);
-  box-shadow: 0 10px 24px -8px rgba(40, 127, 130, 0.6);
-}
-
-.ll-carousel-btn--next:hover:not(:disabled) {
-  background: var(--dark-teal);
-  border-color: var(--dark-teal);
-}
-
-.ll-carousel-btn:hover:not(:disabled) {
-  background: var(--action-teal);
-  border-color: var(--action-teal);
-  color: var(--white);
-  transform: translateY(-1px);
-}
-
-.ll-carousel-btn:focus-visible {
-  outline: 2px solid var(--brand-teal);
-  outline-offset: 3px;
-}
-
-.ll-carousel-btn:disabled {
-  opacity: 0.35;
-  cursor: default;
-  box-shadow: none;
-}
-
-@media (min-width: 1440px) {
-  .ll-carousel-btn {
-    width: 56px;
-    height: 56px;
-  }
-  .ll-carousel-count {
-    font-size: 0.92rem;
-  }
-}
-
-/* Native scroll-snap track: swipe, trackpad and keyboard all work */
+/* Native scroll-snap track: swipe, trackpad, keyboard and (below) mouse drag */
 .ll-carousel-track {
   display: grid;
   grid-auto-flow: column;
+  /* Sized from the container (content box), so the next card always peeks in */
   grid-auto-columns: calc(
-    (100% - (var(--carousel-per-view) - 1) * var(--carousel-gap)) / var(--carousel-per-view)
+    (100% - (var(--carousel-per-view) - 1) * var(--carousel-gap) - var(--carousel-room)) /
+      var(--carousel-per-view)
   );
   column-gap: var(--carousel-gap);
   list-style: none;
-  margin: -8px -12px -28px;
-  padding: 8px 12px 28px; /* room for card lift + shadow inside the scroller */
+  margin: -8px 0 -28px -12px;
+  /* room for card lift + shadow inside the scroller; the bleed on the right */
+  padding: 8px var(--carousel-bleed) 28px 12px;
   scroll-padding-inline: 12px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
@@ -134,27 +76,24 @@
   -webkit-overflow-scrolling: touch;
 }
 
-/* Bleed (D-46): the track runs on to the right edge of the screen and the cards are sized so
-   the next one always peeks in (at least --carousel-peek). Needs a size container on the section
-   (.ll-carousel-bleed-host); 100cqw = section width, 100% = container width. */
-.ll-carousel--bleed .ll-carousel-track {
-  --carousel-bleed: calc((100cqw - 100%) / 2);
-  --carousel-room: max(0px, calc(var(--carousel-peek) - var(--carousel-bleed)));
-  grid-auto-columns: calc(
-    (100% - (var(--carousel-per-view) - 1) * var(--carousel-gap) - var(--carousel-room)) /
-      var(--carousel-per-view)
-  );
-  margin-right: calc((100% - 100cqw) / 2);
-  padding-right: calc((100cqw - 100%) / 2);
-}
-
-.ll-carousel-bleed-host {
-  container-type: inline-size;
-  overflow-x: clip;
-}
-
 .ll-carousel-track::-webkit-scrollbar {
   display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ll-carousel-track {
+    cursor: grab;
+  }
+}
+
+.ll-carousel-track[data-dragging='true'] {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  user-select: none;
+}
+
+.ll-carousel-track[data-dragging='true'] > * {
+  pointer-events: none;
 }
 
 .ll-carousel-slide {
@@ -163,30 +102,290 @@
   scroll-snap-align: start;
 }
 
-.ll-carousel-slide > .ll-card {
+.ll-carousel-slide > .ll-card,
+.ll-carousel-slide > .ll-carousel-endcard {
   flex: 1;
   min-width: 0;
 }
 
-.ll-carousel-progress {
-  position: relative;
-  height: 3px;
-  margin-top: 1.5rem;
-  border-radius: 2px;
-  background: var(--border-subtle);
-  overflow: hidden;
-}
-
-.ll-carousel-progress-thumb {
+/* ---------- Edge tabs ---------- */
+.ll-carousel-edge {
   position: absolute;
-  inset: 0 auto 0 0;
-  border-radius: inherit;
-  background: var(--brand-teal);
+  top: 0;
+  bottom: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
   transition:
-    transform 0.15s linear,
-    width 0.2s ease;
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
+/* Next: covers exactly the peeking card (+ the gap), fading it out towards the screen edge */
+.ll-carousel-edge--next {
+  right: 0;
+  width: calc(var(--carousel-bleed) + var(--carousel-room));
+  justify-content: center;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.72) 38%,
+    rgba(255, 255, 255, 0.94) 100%
+  );
+}
+
+/* Previous: a narrower fade over the first card's left edge, only once scrolled */
+.ll-carousel-edge--prev {
+  left: 0;
+  width: 112px;
+  justify-content: flex-start;
+  padding-left: 14px;
+  background: linear-gradient(
+    270deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.85) 70%,
+    rgba(255, 255, 255, 0.94) 100%
+  );
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+.ll-carousel-edge[data-show='false'] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ll-carousel-edge--next[data-show='false'] {
+  transform: translateX(12px);
+}
+
+.ll-carousel-edge--prev[data-show='false'] {
+  transform: translateX(-12px);
+}
+
+/* The tab: tall rounded rectangle (not a circle), arrow + "5 more" */
+.ll-carousel-tab {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  width: 64px;
+  min-height: 132px;
+  padding: 0.85rem 0.4rem;
+  border-radius: 14px;
+  background-color: var(--action-teal);
+  color: var(--white);
+  box-shadow: 0 16px 34px -14px rgba(24, 92, 94, 0.75);
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.ll-carousel-tab svg {
+  transition: transform 0.25s ease;
+}
+
+.ll-carousel-tab-text {
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+.ll-carousel-edge--next:hover .ll-carousel-tab {
+  background-color: var(--dark-teal);
+}
+
+.ll-carousel-edge--next:hover .ll-carousel-tab svg {
+  transform: translateX(4px);
+}
+
+.ll-carousel-edge--prev .ll-carousel-tab {
+  width: 52px;
+  min-height: 112px;
+  background-color: var(--white);
+  color: var(--dark-teal);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 12px 28px -14px rgba(16, 42, 44, 0.45);
+}
+
+.ll-carousel-edge--prev:hover .ll-carousel-tab {
+  border-color: var(--action-teal);
+}
+
+.ll-carousel-edge--prev:hover .ll-carousel-tab svg {
+  transform: translateX(-4px);
+}
+
+.ll-carousel-edge:focus-visible {
+  outline: none;
+}
+
+.ll-carousel-edge:focus-visible .ll-carousel-tab {
+  outline: 2px solid var(--brand-teal);
+  outline-offset: 3px;
+}
+
+/* ---------- Segments + count ---------- */
+.ll-carousel-foot {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 1.4rem;
+}
+
+.ll-carousel-segments {
+  display: flex;
+  flex: 1;
+  gap: 6px;
+  min-width: 0;
+}
+
+.ll-carousel-seg {
+  flex: 1;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.ll-carousel-seg::before {
+  content: '';
+  display: block;
+  height: 4px;
+  border-radius: 2px;
+  background-color: #dfe5e3;
+  transition: background-color 0.25s ease;
+}
+
+.ll-carousel-seg:hover::before {
+  background-color: #b9c6c3;
+}
+
+.ll-carousel-seg[data-on='true']::before {
+  background-color: var(--action-teal);
+}
+
+.ll-carousel-seg:focus-visible {
+  outline: 2px solid var(--brand-teal);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.ll-carousel-count {
+  flex-shrink: 0;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--heading);
+}
+
+.ll-carousel-count-total {
+  font-weight: 400;
+  color: var(--body-text);
+}
+
+/* ---------- Closing "View all" card ---------- */
+.ll-carousel-endcard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: clamp(1.6rem, 2.4vw, 2.3rem);
+  border-radius: var(--radius-md);
+  background:
+    radial-gradient(120% 80% at 100% 0%, rgba(59, 158, 161, 0.35) 0%, rgba(59, 158, 161, 0) 60%),
+    linear-gradient(160deg, #20716f 0%, #185c5e 100%);
+  color: var(--white);
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.ll-carousel-endcard > :not(.ll-keyhole) {
+  position: relative;
+  z-index: 1;
+}
+
+/* Brand keyhole watermark, large and cropped by the card edge (as on the developer strip) */
+.ll-carousel-endcard-mark {
+  width: 120%;
+  height: auto;
+  aspect-ratio: 1;
+  right: -38%;
+  bottom: -22%;
+  opacity: 0.13;
+  transition: transform 0.6s ease;
+}
+
+.ll-carousel-endcard:hover .ll-carousel-endcard-mark {
+  transform: rotate(-8deg) scale(1.04);
+}
+
+.ll-carousel-endcard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.ll-carousel-endcard-num {
+  font-size: clamp(3.5rem, 6vw, 5rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.ll-carousel-endcard-text {
+  margin-top: -0.75rem;
+  max-width: 16rem;
+  font-size: 1.05rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.ll-carousel-endcard-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: auto;
+  padding-top: 1.1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.ll-carousel-endcard-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background-color: var(--white);
+  color: var(--dark-teal);
+  transition: transform 0.25s ease;
+}
+
+.ll-carousel-endcard:hover .ll-carousel-endcard-icon {
+  transform: translateX(4px);
+}
+
+.ll-carousel-endcard:focus-visible {
+  outline: 2px solid var(--brand-teal);
+  outline-offset: 3px;
+}
+
+/* ---------- Sizes ---------- */
 @media (max-width: 1120px) {
   .ll-carousel {
     --carousel-per-view: 2;
@@ -199,8 +398,11 @@
 }
 
 @media (max-width: 700px) {
+  /* One card with a peek of the next; swipe does the rest, so no edge tabs */
   .ll-carousel {
     --carousel-gap: 1rem;
+    --carousel-per-view: 1;
+    --carousel-peek: 64px;
   }
   .ll-carousel .ll-label-long {
     position: absolute;
@@ -213,28 +415,15 @@
   .ll-carousel .ll-label-short {
     display: inline;
   }
-  .ll-carousel-actions {
-    flex-wrap: nowrap;
+  .ll-carousel-edge {
+    display: none;
   }
-  /* One card with a peek of the next to invite swiping */
-  .ll-carousel {
-    --carousel-per-view: 1;
-    --carousel-peek: 64px;
-  }
-  .ll-carousel-track {
-    grid-auto-columns: calc(100% - 2.75rem);
-  }
-  .ll-carousel-actions {
-    width: 100%;
-    justify-content: space-between;
+  .ll-carousel-foot {
+    margin-top: 1.1rem;
     gap: 1rem;
   }
-  .ll-carousel-btn {
-    width: 46px;
-    height: 46px;
-  }
-  .ll-carousel-progress {
-    margin-top: 1.25rem;
+  .ll-carousel-segments {
+    gap: 4px;
   }
 }
 
@@ -246,8 +435,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ll-carousel-btn,
-  .ll-carousel-progress-thumb {
+  .ll-carousel-edge,
+  .ll-carousel-tab,
+  .ll-carousel-tab svg,
+  .ll-carousel-seg::before,
+  .ll-carousel-endcard,
+  .ll-carousel-endcard-mark,
+  .ll-carousel-endcard-icon {
     transition: none;
   }
 }

@@ -131,6 +131,11 @@ export function HomeView({
             <PropertyCarousel
               items={featuredSaleProperties}
               label="Featured properties for sale"
+              viewAll={{
+                href: '/buy',
+                label: featured.linkLabel,
+                total: properties.filter((item) => item.transactionType === 'BUY').length,
+              }}
               action={
                 <Link href="/buy" className="ll-link-arrow">
                   <span className="ll-label-long">{featured.linkLabel}</span>

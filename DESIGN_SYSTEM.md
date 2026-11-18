@@ -178,7 +178,7 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 1. Full-screen hero (video) with the glass search **inside** it (see 7.7); on desktop the search is at most 1040px wide, centred, and sits lower under the buttons (D-30); on desktop its height is `100svh - 130px` (560–860px), so hero + developer strip fill the first screen (D-29)
 2. Developer Network: light glass logo marquee, logos only; a tight band of about 130px (104px on phones) (D-29)
 3. Institutional Pillars (21+ Years, AED 12B+, ...): light tint, teal line icons, hairline dividers; 2 x 2 on phones (D-28)
-4. Featured Properties: white, **carousel with arrows** (see 7.8)
+4. Featured Properties: white, **carousel with an edge tab, segments and a View all card** (see 7.8)
 5. Advisory: bento on the light tint (`ll-section-tint`), white tiles, lead tile Teal 10%
 6. Selected Projects: plain white
 7. Valuation & Mortgage: light tint, **one card** (`ll-advice`, D-30). Left half: eyebrow, section title, then For Owners ("What is your property worth?" + Request Free Valuation). Right half: For Buyers, the mortgage calculator (`#mortgage-calculator`). One action per side; the halves stack on tablets and phones
@@ -238,10 +238,13 @@ Verified with no horizontal overflow, and with the panel fully in view, at 1920�
 `PropertyCarousel` (`web/src/components/property/property-carousel.tsx`) is a thin wrapper over the shared `Carousel` (`web/src/components/ui/carousel.tsx`). Only the listings use it (the reviews stopped using it in D-42, so no two homepage sections look alike). Slides are rendered on the server and passed in, so the cards ship no JavaScript. It replaces the fixed 3-card grid on the homepage. It shows every `featured: true` BUY listing (currently 8).
 
 - **Track:** a native horizontal scroll-snap list (touch swipe and trackpad). It **bleeds** to the right edge of the screen (`ll-carousel--bleed`, section `ll-carousel-bleed-host`), and the cards are sized so the next one always peeks in (`--carousel-peek`: 130px desktop/tablet, 64px phones, 48px at 360px and below), D-46. The track has internal padding so the hover lift and shadow are not clipped.
-- **Controls (header, right):** "View All" link, a counter (`01–03 / 08`, announced via `aria-live`), and round buttons: *previous* white with a 1.5px `#C3CFCD` outline, *next* filled action teal with a teal shadow (56px at 1440px+, 52px, 46px on phones). Each click moves exactly one card; disabled at either end (35% opacity). ←/→ keys work when focus is inside the carousel.
-- **Progress:** a 3px line under the track, 1.5rem below (1.25rem on phones), with a teal thumb sized to the visible fraction.
+- **No buttons in the header (D-47, owner: \"no round buttons up in the corner; something creative that needs no thinking\").** The header keeps only the title and the *View All Properties for Sale* text link.
+- **Edge tab (after Netflix rows):** the peeking card on the right is faded with a white gradient and carries a tall rounded tab (64 × 132px, action teal, white arrow + **\"5 more\"**; not a circle), centred on the card height. One click turns a whole page (as many cards as are fully in view); the arrow nudges right on hover, the tab turns dark teal. Once the row has moved, a white tab with **\"3 back\"** appears over the left edge. When the last card is in view the right tab fades out. Hidden at 700px and below, where the peek + swipe say the same thing.
+- **Segments (after Apple / Instagram stories):** under the track, one 4px segment per property (22px tall hit area); the cards in view are teal, the rest grey; a click goes to that card. To the right a counter **\"1–3 of 8\"** (`aria-live`).
+- **Mouse drag:** on devices with a fine pointer the track shows a grab cursor and can be dragged (6px threshold, then it settles on the next card in the drag direction). A drag never opens a card, and any text selection is cleared. Touch and pen keep the native swipe.
+- **End card:** after the last property, a dark-teal *View all* card (`ll-carousel-endcard`) with the number of properties for sale, the brand keyhole watermark and *View All Properties for Sale* + white arrow tile, linking to `/buy`. It is not counted in the segments.
 - **Per view:** 3 above 1120px; 2 at 1120px and below; 1 at 700px and below, always plus the peek. On mobile the link shortens to "View all".
-- **Accessibility:** `role="region"` + `aria-roledescription="carousel"`; slides are labelled "n of N". Smooth scrolling is disabled under `prefers-reduced-motion`.
+- **Accessibility:** `role="region"` + `aria-roledescription="carousel"`; slides are labelled "n of N"; ←/→ move one card when focus is inside; the tabs are real buttons ("Next properties, 5 more"), removed from the tab order and from assistive tech while hidden; segments are buttons labelled "Show property n of N" with `aria-current`. Smooth scrolling and all motion are disabled under `prefers-reduced-motion`.
 
 ### 7.8.1 Property card (`property-card.tsx`, `27-property-card.css`, `ll-pc-*`, D-46)
 
@@ -250,7 +253,7 @@ Verified with no horizontal overflow, and with the panel fully in view, at 1920�
 | Image | 4:3 (owner: bigger photo), status + type chips, heart, location on the photo |
 | 1 | *Residential · Ready* (teal kicker) ... reference (grey) |
 | 2 | Title, one line with an ellipsis |
-| 3 | Price (dark teal, 700) ... *Know More* + round arrow |
+| 3 | Price (dark teal, 700) ... *Know More* + round arrow (the arrow is dropped on cards 300px wide and narrower, and the row may wrap, so a full price such as *AED 1,100,000 / year* is never clipped) |
 | 4 | Hairline, then beds · baths · area spread across the width, values bold |
 | 5 | *WhatsApp* (green icon) · *Call* · *Email*: equal 40px buttons, 1px border, hover = tint; WhatsApp opens a new tab with a message naming the listing |
 
