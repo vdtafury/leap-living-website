@@ -47,8 +47,9 @@ check_not_contains() {
   fi
 }
 
-# Fixtures
-convert -size 800x600 xc:'#3B9EA1' "$TMP/test.jpg"
+# Fixtures: a small teal JPEG, embedded so no image tool is needed (CI runners have no
+# ImageMagick). The upload check only needs a real image file.
+echo '/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAgDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAH/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAABQb/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCgFUM//9k=' | base64 -d > "$TMP/test.jpg"
 
 # 1. Health endpoint
 code=$(curl -s -o "$TMP/health.json" -w '%{http_code}' "$BASE/api/health")
@@ -146,6 +147,8 @@ check_not_contains "D-47: old round carousel buttons are gone" "ll-carousel-btn"
 check_contains "D-44: all reviews at once on a review wall, not a carousel" "ll-rw-grid" "$TMP/home.html"
 check_contains "D-44: visitors can write a review" "href=\"/account/review\"" "$TMP/home.html"
 check_contains "D-45: projects as expanding panels" "ll-xp-panel" "$TMP/home.html"
+check_contains "D-48: services as heading block + cards" "ll-svc-card" "$TMP/home.html"
+check_contains "D-48: every service is in the server HTML" "Portfolio Advisory" "$TMP/home.html"
 check_not_contains "D-23: no Commercial tab in hero search" ">Commercial</button>" "$TMP/home.html"
 check_not_contains "D-22: no Executive Leadership section on Home" "ll-leadership-panel" "$TMP/home.html"
 check_contains "Mod #6: Mortgage Calculator link on Home" "Mortgage Calculator" "$TMP/home.html"

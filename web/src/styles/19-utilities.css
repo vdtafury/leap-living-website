@@ -1,0 +1,16 @@
+/* ==========================================================================
+   UTILITIES (shared). Visually hidden text for screen readers. Split out of
+   home/19-carousel.css (D-49); kept at the same point in the global order.
+   ========================================================================== */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

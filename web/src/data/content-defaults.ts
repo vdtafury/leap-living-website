@@ -1,4 +1,4 @@
-import { CLIENT_PERSPECTIVES, CORE_SERVICES, FULL_SERVICE_CATALOG } from './catalog'
+import { CLIENT_PERSPECTIVES, FULL_SERVICE_CATALOG, HOME_SERVICES } from './catalog'
 import { SITE } from './site'
 
 /**
@@ -119,14 +119,18 @@ export const DEFAULT_HOME = {
     linkLabel: 'View All Properties for Sale',
   },
   services: {
+    eyebrow: 'Our Services',
     title: 'End-to-End Real Estate Advisory',
+    intro:
+      "A comprehensive, client-first approach to buying, selling, renting, and investing in Dubai's prime real estate.",
     linkLabel: 'Explore Full Service Scope',
     linkHref: '/about#services',
-    items: CORE_SERVICES.map((s) => ({
+    items: HOME_SERVICES.map((s) => ({
+      icon: s.icon as string,
       title: s.title,
       desc: s.desc,
-      tag: s.tag ?? '',
-      featured: s.featured,
+      tag: '',
+      featured: false,
     })),
   },
   projects: {

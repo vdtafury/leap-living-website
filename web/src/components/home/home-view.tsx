@@ -6,6 +6,7 @@ import { MortgageCalculator } from '@/components/tools/mortgage-calculator'
 import { HeroVideoBackdrop } from '@/components/home/hero-video-backdrop'
 import { PropertyCarousel } from '@/components/property/property-carousel'
 import { ProjectPanels } from '@/components/home/project-panels'
+import { ServiceCards } from '@/components/home/service-cards'
 import {
   ArrowRightIcon,
   ArrowUpRightIcon,
@@ -26,6 +27,8 @@ import {
   type ReviewStats,
 } from '@/modules/reviews'
 import type { ReactNode } from 'react'
+// Homepage-only styles (D-49): this page and its admin preview, not the rest of the site.
+import '@/styles/home/index.css'
 
 export interface HomeViewProps {
   content: HomeContent
@@ -154,33 +157,8 @@ export function HomeView({
         {/* ==================== SERVICES OVERVIEW (WITH CONSULTANCY) ==================== */}
         <section className="ll-section-tint ll-defer-render">
           <div className="ll-container">
-            <div className="ll-section-header">
-              <h2 className="ll-serif-title ll-section-title">{services.title}</h2>
-              <Link href={services.linkHref} className="ll-link-arrow">
-                <span>{services.linkLabel}</span>
-                <ArrowUpRightIcon size={15} />
-              </Link>
-            </div>
-
-            <div className="ll-services-bento">
-              {services.items.map((service, index) => (
-                <div
-                  key={`${service.title}-${index}`}
-                  className={`ll-service-tile ${service.featured ? 'featured' : ''}`}
-                >
-                  <div className="ll-service-bignum" aria-hidden="true">
-                    {String(index + 1).padStart(2, '0')}
-                  </div>
-                  <div className="ll-service-tile-body">
-                    {service.featured && service.tag && (
-                      <span className="ll-chip ll-chip-light">{service.tag}</span>
-                    )}
-                    <h3 className="ll-service-tile-title">{service.title}</h3>
-                    <p className="ll-service-tile-desc">{service.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            {/* Heading block + one card per service (D-48, owner's design) */}
+            <ServiceCards {...services} />
           </div>
         </section>
 

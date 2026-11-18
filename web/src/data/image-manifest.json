@@ -55,50 +55,6 @@
       "src": "/images/opt/client-video-frame-0-portrait-540.webp"
     }
   },
-  "/images/developer-network-skyline-960.jpg": {
-    "width": 960,
-    "height": 542,
-    "variants": [
-      {
-        "w": 640,
-        "src": "/images/opt/developer-network-skyline-960-640.webp"
-      },
-      {
-        "w": 768,
-        "src": "/images/opt/developer-network-skyline-960-768.webp"
-      },
-      {
-        "w": 960,
-        "src": "/images/opt/developer-network-skyline-960-960.webp"
-      }
-    ]
-  },
-  "/images/developer-network-skyline.jpg": {
-    "width": 1920,
-    "height": 1084,
-    "variants": [
-      {
-        "w": 640,
-        "src": "/images/opt/developer-network-skyline-640.webp"
-      },
-      {
-        "w": 768,
-        "src": "/images/opt/developer-network-skyline-768.webp"
-      },
-      {
-        "w": 960,
-        "src": "/images/opt/developer-network-skyline-960.webp"
-      },
-      {
-        "w": 1280,
-        "src": "/images/opt/developer-network-skyline-1280.webp"
-      },
-      {
-        "w": 1920,
-        "src": "/images/opt/developer-network-skyline-1920.webp"
-      }
-    ]
-  },
   "/images/dubai-marina-commercial.jpg": {
     "width": 1920,
     "height": 1280,
@@ -148,32 +104,6 @@
       {
         "w": 1920,
         "src": "/images/opt/dubai-sunset-waterfront-1920.webp"
-      }
-    ]
-  },
-  "/images/footer-glass-facade.jpg": {
-    "width": 1920,
-    "height": 1280,
-    "variants": [
-      {
-        "w": 640,
-        "src": "/images/opt/footer-glass-facade-640.webp"
-      },
-      {
-        "w": 768,
-        "src": "/images/opt/footer-glass-facade-768.webp"
-      },
-      {
-        "w": 960,
-        "src": "/images/opt/footer-glass-facade-960.webp"
-      },
-      {
-        "w": 1280,
-        "src": "/images/opt/footer-glass-facade-1280.webp"
-      },
-      {
-        "w": 1920,
-        "src": "/images/opt/footer-glass-facade-1920.webp"
       }
     ]
   },

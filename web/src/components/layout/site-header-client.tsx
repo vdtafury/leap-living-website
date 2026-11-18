@@ -56,6 +56,8 @@ export function SiteHeaderClient({
           className="ll-brand-group"
           aria-label="LEAP LIVING Real Estate Consultancy, home"
         >
+          {/* Plain <img> on purpose: static logo, and next/image needs sharp at runtime (cPanel host). */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={
               isTransparent
@@ -63,6 +65,8 @@ export function SiteHeaderClient({
                 : '/brand/logo-horizontal-brand.png'
             }
             alt="LEAP LIVING"
+            width={132}
+            height={38}
             style={{ height: '38px', width: 'auto', display: 'block' }}
           />
           <span className="ll-brand-divider" aria-hidden="true" />

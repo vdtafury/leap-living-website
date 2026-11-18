@@ -49,16 +49,6 @@
   background-color: var(--brand-teal);
 }
 
-.ll-eyebrow-num {
-  font-variant-numeric: tabular-nums;
-  color: var(--brand-teal);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  padding-right: 0.85rem;
-  border-right: 1px solid currentColor;
-  line-height: 1;
-}
-
 /* Decorative keyhole watermark (traced brand mark) */
 .ll-keyhole {
   position: absolute;
@@ -120,15 +110,6 @@
   color: var(--brand-deep);
 }
 
-.ll-btn-dark {
-  background-color: var(--dark-teal);
-  color: var(--white);
-}
-
-.ll-btn-dark:hover {
-  background-color: var(--secondary-teal);
-}
-
 .ll-btn-outline {
   background-color: var(--white);
   color: var(--heading);
@@ -151,19 +132,6 @@
   background-color: var(--white);
   color: var(--dark-teal);
   border-color: var(--white);
-}
-
-.ll-btn-valuation {
-  background-color: var(--brand-teal-10);
-  color: var(--dark-teal);
-  border-color: var(--brand-teal);
-  font-weight: 600;
-}
-
-.ll-btn-valuation:hover {
-  background-color: var(--dark-teal);
-  border-color: var(--dark-teal);
-  color: var(--white);
 }
 
 .ll-btn-mortgage {

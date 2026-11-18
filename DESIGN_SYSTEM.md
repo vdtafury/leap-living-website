@@ -10,7 +10,7 @@ Reference inspiration: [Provident Estate](https://providentestate.com/).
 
 ## 2. Logo
 
-- Brand lockup variations in `web/public/brand/` are derived exclusively from the official transparent PNG uploaded by the client (`docs/source-materials/leap-living-logo.png`):
+- Brand lockup variations (full set in `docs/client-assets/brand-kit/`; only the files the site uses are published from `web/public/brand/`: header/footer horizontal logos, favicons, the JSON-LD logo and the link-preview image) are derived exclusively from the official transparent PNG uploaded by the client (`docs/source-materials/leap-living-logo.png`):
   - **Horizontal Lockup** (`logo-horizontal-brand.png`, `logo-horizontal-teal.png`, `logo-horizontal-dark.png`, `logo-horizontal-white.png`): circular keyhole icon to the left of stacked `LEAP / LIVING` (used in Header, Footer, and Dark Executive panels).
   - **Stacked Lockup** (`logo-stacked-teal.png`, `logo-stacked-dark.png`, `logo-stacked-white.png`): circular keyhole icon above `LEAP / LIVING` wordmark.
   - **Brand Mark** (`logo-mark-teal.png`, `logo-mark-white.png`): circular keyhole icon only (used for favicon and graphic marks).
@@ -180,7 +180,7 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 2. Developer Network: light glass logo marquee, logos only; a tight band of about 130px (104px on phones) (D-29)
 3. Institutional Pillars (21+ Years, AED 12B+, ...): light tint, teal line icons, hairline dividers; 2 x 2 on phones (D-28)
 4. Featured Properties: white, **carousel with an edge tab, segments and a View all card** (see 7.8)
-5. Advisory: bento on the light tint (`ll-section-tint`), white tiles, lead tile Teal 10%
+5. Advisory: light tint (`ll-section-tint`), **heading block + white service cards** (see 7.14, D-48)
 6. Selected Projects: plain white
 7. Valuation & Mortgage: light tint, **one card** (`ll-advice`, D-30). Left half: eyebrow, section title, then For Owners ("What is your property worth?" + Request Free Valuation). Right half: For Buyers, the mortgage calculator (`#mortgage-calculator`). One action per side; the halves stack on tablets and phones
 8. Client reviews: plain white, **client index + one large review** (see 7.10, D-42)
@@ -240,7 +240,7 @@ Verified with no horizontal overflow, and with the panel fully in view, at 1920�
 
 - **Track:** a native horizontal scroll-snap list (touch swipe and trackpad). It **bleeds** to the right edge of the screen (`ll-carousel--bleed`, section `ll-carousel-bleed-host`), and the cards are sized so the next one always peeks in (`--carousel-peek`: 130px desktop/tablet, 64px phones, 48px at 360px and below), D-46. The track has internal padding so the hover lift and shadow are not clipped.
 - **No buttons in the header (D-47, owner: \"no round buttons up in the corner; something creative that needs no thinking\").** The header keeps only the title and the *View All Properties for Sale* text link.
-- **Edge tab (after Netflix rows):** the peeking card on the right is faded with a white gradient and carries a tall rounded tab (64 × 132px, action teal, white arrow + **\"5 more\"**; not a circle), centred on the card height. One click turns a whole page (as many cards as are fully in view); the arrow nudges right on hover, the tab turns dark teal. Once the row has moved, a white tab with **"3 back"** appears on the left. The track **bleeds to both screen edges** (`--carousel-side`), so the card before peeks in from the left exactly as the next one does on the right; the left fade covers only that screen-edge strip, never the first card in view. The tabs sit in a stage that is exactly as tall as the cards (`display: flow-root`). When the last card is in view the right tab fades out. Hidden at 700px and below, where the peek + swipe say the same thing.
+- **Edge tab (after Netflix rows):** the peeking card on the right fades out towards the screen edge and carries a tall rounded tab (64 × 132px, action teal, white arrow + **\"5 more\"**; not a circle), centred on the card height. One click turns a whole page (as many cards as are fully in view); the arrow nudges right on hover, the tab turns dark teal. Once the row has moved, a white tab with **"3 back"** appears on the left. The track **bleeds to both screen edges** (`--carousel-side`), so the card before peeks in from the left exactly as the next one does on the right; **Fades are a CSS mask on the track itself** (`mask-image`, widths `--ll-fade-l` / `--ll-fade-r`, registered with `@property` so they animate), not boxes laid over it: a card lifted or zoomed on hover, and its shadow, fade exactly like the rest, so there is no hard edge anywhere. Each fade runs from the screen edge to the outer edge of the cards fully in view (measured in `measure()`), capped at the right-hand peek width, so a card in full view is never faded and both sides use the same curve. No fades on phones. The tabs sit in a stage that is exactly as tall as the cards (`display: flow-root`). When the last card is in view the right tab fades out. Hidden at 700px and below, where the peek + swipe say the same thing.
 - **Segments (after Apple / Instagram stories):** under the track, one 4px segment per property (22px tall hit area); the cards in view are teal, the rest grey; a click goes to that card. To the right a counter **\"1–3 of 8\"** (`aria-live`).
 - **Mouse drag:** on devices with a fine pointer the track shows a grab cursor and can be dragged (6px threshold, then it settles on the next card in the drag direction). A drag never opens a card, and any text selection is cleared. Touch and pen keep the native swipe.
 - **End card:** after the last property, a dark-teal *View all* card (`ll-carousel-endcard`) with the number of properties for sale, the brand keyhole watermark and *View All Properties for Sale* + white arrow tile, linking to `/buy`. It is not counted in the segments.
@@ -262,16 +262,24 @@ Narrow cards (container query on the card: 360, 300 and 270px) shrink type and g
 
 > The four listings added on 2026-11-14 (Jumeirah Bay Island, Bluewaters Island, Business Bay, Tilal Al Ghaf) are **sample showcase mandates**, like the rest of the catalogue. Their photos (`property-jumeirah-bay-mansion.jpg`, `property-bluewaters-residence.jpg`, `property-business-bay-penthouse.jpg`, `property-lagoon-villa.jpg`) are **AI-generated placeholders**. Replace them with real listing photography before launch.
 
+### 7.9b Icons and stylesheets (D-49)
+
+| Part | Rule |
+|---|---|
+| Icons | Add the shape to `components/ui/icon-glyphs.tsx` (24×24, geometry only) and a component in `icons.tsx` that renders `<svg …stroke…><use href="#ll-i-name" /></svg>`. Never put `strokeWidth`, `className` or `style` on the shapes: they must inherit from the `<use>` side. `icons.test.ts` checks both lists match |
+| Styles | Shared rules in `src/styles/NN-*.css` via `app/globals.css`. Homepage-only rules in `src/styles/home/` (loaded by `home-view.tsx`), account pages in `src/styles/account/` (loaded by `app/account/layout.tsx`). Route bundles load after the global file, and stay in the page after in-app navigation, so their selectors must be scoped to their own sections |
+
 ### 7.10 Client reviews: review wall (`client-experience.tsx`, `ll-rw-*`, D-44)
 
-Replaces the D-42 client index (owner: all reviews visible at once, like the big sites).
+Replaces the D-42 client index. Since D-49 (owner): the first six reviews, then *Show more reviews* (six more per click).
 
 | Part | Rule |
 |---|---|
 | Header | Title; below it the summary when there are 3+ real reviews (score 2.6rem, stars, "Based on N client reviews", 5-to-1 gold bars); actions on the right (*Share your experience* primary + *Speak With an Advisor* link) |
 | Grid | 3 columns > 1100px, 2 columns > 640px, 1 column on phones; reading order (newest first); even rows, author pinned to the card bottom |
 | Card | White, 1px border, radius 12; stars 16px + faint teal quote mark; headline 600; text 0.92rem / 1.7, clamped to 5 lines with *Read more* when longer than 240 characters; avatar 44px + name + role; hover = teal border + soft shadow |
-| Phones | First 3 cards, then a full-width *Show all N reviews* button |
+| More | *Show more reviews*: white outlined button centred under the grid, adds six cards per click and disappears when all are shown |
+| Phones | First 3 cards, then the same button full width (first click shows cards 4–6, then six at a time) |
 | Must not look like | The listings carousel: no arrows, counter, progress bar or photos |
 
 ### 7.11 Page changes (`page-transitions.tsx`, `24-page-transitions.css`, D-43)
@@ -284,7 +292,7 @@ Replaces the D-42 client index (owner: all reviews visible at once, like the big
 | Not animated | Same-page links (hash, filters), the admin, back / forward, new-tab clicks, browsers without View Transitions, `prefers-reduced-motion` |
 | Not used | React `<ViewTransition>`: it holds the old page until the new page's images load (up to 1.8s) |
 
-### 7.12 Projects: expanding panels (`project-panels.tsx`, `25-project-panels.css`, D-45)
+### 7.12 Projects: expanding panels (`project-panels.tsx`, `home/25-project-panels.css`, D-45)
 
 | Part | Rule |
 |---|---|
@@ -295,7 +303,7 @@ Replaces the D-42 client index (owner: all reviews visible at once, like the big
 | Phones ≤ 899px | Swipe slider: cards 86% wide, scroll-snap, all open, dots below (current = 24px teal pill); stronger bottom gradient |
 | Must not look like | The featured-properties carousel (white cards, arrows, counter) |
 
-### 7.13 Stars and reviews (`stars.tsx`, `26-reviews.css`, D-44)
+### 7.13 Stars and reviews (`stars.tsx`, `26-stars.css`, `home/26-review-wall.css`, `account/26-review-form.css`, D-44)
 
 | Part | Rule |
 |---|---|
@@ -304,3 +312,12 @@ Replaces the D-42 client index (owner: all reviews visible at once, like the big
 | Form | Five 42px star radios (real inputs, keyboard + focus ring), word next to them (*Poor* … *Excellent*), man / woman picture as pill radios, live "Shown as *Mona A.*" line, character counter |
 | Status | Left border + chip: waiting = gold, published = teal, hidden = grey |
 
+### 7.14 Services: heading block + cards (`service-cards.tsx`, `home/28-service-cards.css`, `ll-svc-*`, D-48)
+
+| Part | Rule |
+|---|---|
+| Layout | ≥ 1101px: heading block 1.05fr / cards 2.6fr, vertically centred; below: heading block above the cards |
+| Heading block | *OUR SERVICES* label (0.72rem, tracked, action teal) + 44px teal rule; heading 2–2.6rem; intro 0.92rem (max 24rem); link |
+| Card | White, 1px subtle border, radius 18, soft shadow; teal line icon 36px, title 1.08rem / 600, description 0.86rem; hover: teal-25 border + deeper shadow (no lift: the property cards lift) |
+| Columns | 1–4 cards in one row, 5–6 in rows of three; 2 per row ≤ 760px, 1 ≤ 360px |
+| Icons | `home`, `chart`, `handshake`, `layers`, `compass`, `key`, `shield`, or `auto` (from the title) |

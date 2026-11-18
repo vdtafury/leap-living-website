@@ -2,39 +2,15 @@
    BRAND TYPOGRAPHY: Poppins display (no serif in the LEAP LIVING identity)
    ========================================================================== */
 .ll-serif-title,
-.ll-page-hero-title,
-.ll-hero-title,
-.ll-service-tile.featured .ll-service-tile-title,
-.ll-summary-figure,
-.ll-leadership-emblem-title {
+.ll-page-hero-title {
   font-weight: 500;
   letter-spacing: -0.025em;
 }
 
-.ll-hero-title {
-  line-height: 1.08;
-}
-
-.ll-stat-value {
-  font-weight: 500;
-  letter-spacing: -0.03em;
-}
-
-.ll-leadership-quote,
-.ll-quote-text {
-  font-style: normal;
-  font-weight: 300;
-  letter-spacing: -0.005em;
-}
-
-.ll-quote-mark {
-  font-weight: 600;
-}
+/* The homepage hero title and stat figures: home/16-brand-type.css (D-49) */
 
 /* Checklist ticks on dark/teal surfaces: a white disc keeps the tick legible */
-.ll-section-dark .ll-highlight-item svg,
-.ll-section-gradient .ll-highlight-item svg,
-.ll-section-teal .ll-highlight-item svg {
+.ll-section-dark .ll-highlight-item svg {
   flex-shrink: 0;
   width: 22px;
   height: 22px;
@@ -121,8 +97,7 @@
 }
 
 /* Dark-surface form card (e.g. Sell valuation) gets a soft lift */
-.ll-section-dark .ll-form-card,
-.ll-section-gradient .ll-form-card {
+.ll-section-dark .ll-form-card {
   box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.45);
   border-color: transparent;
 }

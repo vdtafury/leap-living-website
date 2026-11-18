@@ -1,0 +1,12 @@
+/* Homepage stylesheet bundle (D-49), imported by components/home/home-view.tsx, so it
+ * loads on the homepage and its admin preview only. Loads after app/globals.css.
+ * ORDER MATTERS, as in globals.css (the numbers keep the original global order). */
+@import './05-home-hero.css';
+@import './16-brand-type.css';
+@import './17-hero-search.css';
+@import './18-hero-wash.css';
+@import './19-carousel.css';
+@import './22-home-plain.css';
+@import './25-project-panels.css';
+@import './26-review-wall.css';
+@import './28-service-cards.css';

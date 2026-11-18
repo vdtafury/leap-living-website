@@ -118,11 +118,6 @@
   -webkit-backdrop-filter: blur(10px);
 }
 
-.ll-chip-light {
-  background-color: rgba(255, 255, 255, 0.95);
-  color: var(--dark-teal);
-}
-
 .ll-card-body {
   padding: 1.4rem 1.45rem 1.25rem;
   display: flex;
@@ -188,59 +183,6 @@
   font-weight: 700;
   color: var(--dark-teal);
   letter-spacing: -0.01em;
-}
-
-.ll-card-price-freq {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--body-text);
-}
-
-.ll-card-specs {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  margin: 0.6rem 0 0;
-  padding: 0.9rem 0;
-  border-top: 1px solid var(--border-subtle);
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.ll-card-spec {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-areas: 'icon value' 'icon label';
-  column-gap: 0.55rem;
-  align-items: center;
-  padding: 0 0.75rem;
-  border-left: 1px solid var(--border-subtle);
-}
-
-.ll-card-spec:first-child {
-  padding-left: 0;
-  border-left: none;
-}
-
-.ll-card-spec svg {
-  grid-area: icon;
-  color: var(--brand-teal);
-}
-
-.ll-card-spec dt {
-  grid-area: label;
-  font-size: 0.66rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--body-text);
-}
-
-.ll-card-spec dd {
-  grid-area: value;
-  margin: 0;
-  font-size: 0.86rem;
-  font-weight: 600;
-  color: var(--heading);
-  white-space: nowrap;
 }
 
 .ll-card-facts {
