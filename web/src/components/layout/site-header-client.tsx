@@ -73,11 +73,15 @@ export function SiteHeaderClient({
           </span>
         </Link>
 
+        {/* `prefetch`: the pages are dynamic, so by default Next.js prefetches almost nothing and
+            every click waits for the server. Full prefetch loads the menu pages in the background
+            (kept 5 minutes), so a click shows the page at once (D-43). */}
         <nav className="ll-nav" aria-label="Primary Navigation">
           {NAV_LINKS.map((item) => (
             <Link
               key={`${item.label}-${item.href}`}
               href={item.href}
+              prefetch
               className={`ll-nav-link ${isActive(item.href) ? 'active' : ''}`}
             >
               {item.label}
@@ -118,6 +122,7 @@ export function SiteHeaderClient({
               <Link
                 key={`${item.label}-${item.href}`}
                 href={item.href}
+                prefetch
                 onClick={() => setMobileOpen(false)}
                 className={`ll-mobile-nav-link ${isActive(item.href) ? 'active' : ''}`}
               >

@@ -259,12 +259,11 @@ Component: `web/src/components/home/client-experience.tsx` (small client compone
 | A11y | WAI-ARIA tabs: `tablist` (vertical) of `tab` buttons with roving tabindex; ↑/↓/←/→ wrap, Home/End jump. Each review is a `tabpanel` `figure` (`blockquote` + `figcaption`); inactive panels are `visibility: hidden` + `aria-hidden`. Every review is in the server HTML |
 | Content | `CLIENT_PERSPECTIVES` in `data/catalog.ts` (`avatar`, `title`, `quote`, `author`, `role`): **placeholders** until the client sends real reviews. No star ratings and no dates until real, verifiable reviews exist |
 
-### 7.11 Page transitions (`template.tsx`, `24-page-transitions.css`, D-43)
+### 7.11 Page changes (`template.tsx`, `24-page-transitions.css`, D-43)
 
 | Part | Rule |
 |---|---|
-| Old page | Fades out, 160ms, ease-in |
-| New page | Fades in 260ms (starts at 120ms) and rises 12px over 420ms, ease-out |
-| Header | `view-transition-name: site-header`, never animates; it sits above the pages during the swap |
-| Not animated | Query-string changes (listing filters), the admin, `prefers-reduced-motion` |
-| Wrapper | `div.ll-page` around every page so React names the page, not the header |
+| Speed first | The new page is on screen as soon as it is ready; no animation ever delays it. Navbar links are fully prefetched |
+| New page | Its sections (not the header) fade in and rise 6px, 200ms, ease-out, `backwards` fill (nothing left on the elements afterwards) |
+| Not animated | The landing page, query-string changes (listing filters), the admin, `prefers-reduced-motion` |
+| Not used | `<ViewTransition>`: it waits for the new page's images before showing it (measured up to 1.8s) |
