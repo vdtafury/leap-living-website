@@ -26,6 +26,28 @@ beforeAll(async () => {
 })
 
 describe('section registry', () => {
+  it('keeps services saved before the icon and intro fields existed (D-48)', () => {
+    const old = structuredClone(DEFAULT_HOME) as Record<string, unknown>
+    old.services = {
+      title: 'End-to-End Real Estate Advisory',
+      linkLabel: 'Explore Full Service Scope',
+      linkHref: '/about#services',
+      items: [{ title: 'Real Estate Consultancy', desc: 'Old text', featured: true, tag: 'Core' }],
+    }
+    const parsed = parseDocument('home', withDefaults(DEFAULT_HOME, old))
+    expect(parsed.ok).toBe(true)
+    if (!parsed.ok) return
+    expect(parsed.data.services.items[0].icon).toBe('auto')
+    expect(parsed.data.services.items[0].title).toBe('Real Estate Consultancy')
+    expect(parsed.data.services.intro).toBe(DEFAULT_HOME.services.intro)
+  })
+
+  it('rejects an unknown service icon', () => {
+    const bad = structuredClone(DEFAULT_HOME)
+    bad.services.items[0].icon = 'rocket'
+    expect(parseDocument('home', bad).ok).toBe(false)
+  })
+
   it('accepts the current site text', () => {
     expect(parseDocument('home', DEFAULT_HOME).ok).toBe(true)
     expect(parseDocument('about', DEFAULT_ABOUT).ok).toBe(true)

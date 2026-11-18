@@ -180,7 +180,7 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 2. Developer Network: light glass logo marquee, logos only; a tight band of about 130px (104px on phones) (D-29)
 3. Institutional Pillars (21+ Years, AED 12B+, ...): light tint, teal line icons, hairline dividers; 2 x 2 on phones (D-28)
 4. Featured Properties: white, **carousel with an edge tab, segments and a View all card** (see 7.8)
-5. Advisory: light tint (`ll-section-tint`), **editorial index** of hairline rows (see 7.14, D-48)
+5. Advisory: light tint (`ll-section-tint`), **heading block + white service cards** (see 7.14, D-48)
 6. Selected Projects: plain white
 7. Valuation & Mortgage: light tint, **one card** (`ll-advice`, D-30). Left half: eyebrow, section title, then For Owners ("What is your property worth?" + Request Free Valuation). Right half: For Buyers, the mortgage calculator (`#mortgage-calculator`). One action per side; the halves stack on tablets and phones
 8. Client reviews: plain white, **client index + one large review** (see 7.10, D-42)
@@ -304,12 +304,12 @@ Replaces the D-42 client index (owner: all reviews visible at once, like the big
 | Form | Five 42px star radios (real inputs, keyboard + focus ring), word next to them (*Poor* … *Excellent*), man / woman picture as pill radios, live "Shown as *Mona A.*" line, character counter |
 | Status | Left border + chip: waiting = gold, published = teal, hidden = grey |
 
-### 7.14 Services: editorial index (`service-index.tsx`, `28-service-index.css`, `ll-si-*`, D-48)
+### 7.14 Services: heading block + cards (`service-cards.tsx`, `28-service-cards.css`, `ll-svc-*`, D-48)
 
 | Part | Rule |
 |---|---|
-| Idea | Professional through simplicity: one quiet row per service, like a consultancy's list of practices |
-| Row | Grid `5.5rem / 1fr / 1.1fr`: number (teal, 0.82rem, tracked), title (Poppins 500, 1.25–1.6rem) + optional tag chip, description (0.95rem, max 34rem); hairline above each row and below the last |
-| Hover | A teal rule draws along the row's top hairline (0.6s), title moves 6px right; no pointer, rows are not links |
-| Narrow (container ≤ 760px) | Number + title on one line, description under the title |
-| Must not | Become cards, carry icons, or animate on its own |
+| Layout | ≥ 1101px: heading block 1.05fr / cards 2.6fr, vertically centred; below: heading block above the cards |
+| Heading block | *OUR SERVICES* label (0.72rem, tracked, action teal) + 44px teal rule; heading 2–2.6rem; intro 0.92rem (max 24rem); link |
+| Card | White, 1px subtle border, radius 18, soft shadow; teal line icon 36px, title 1.08rem / 600, description 0.86rem; hover: teal-25 border + deeper shadow (no lift: the property cards lift) |
+| Columns | 1–4 cards in one row, 5–6 in rows of three; 2 per row ≤ 760px, 1 ≤ 360px |
+| Icons | `home`, `chart`, `handshake`, `layers`, `compass`, `key`, `shield`, or `auto` (from the title) |

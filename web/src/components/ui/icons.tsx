@@ -626,3 +626,51 @@ export function StarIcon({ size = 16, ...props }: IconProps) {
     </svg>
   )
 }
+
+/* ---- Service cards (D-48). Handshake, compass and key paths after Lucide (ISC licence). ---- */
+
+export function ChartUpIcon(props: IconProps) {
+  return (
+    <LineIcon {...props}>
+      <path d="M5 20v-4" />
+      <path d="M10 20v-6.5" />
+      <path d="M15 20v-5" />
+      <path d="M20 20v-8.5" />
+      <path d="m4 11 5-4 4 2.5L20 4" />
+      <path d="M16 4h4v4" />
+    </LineIcon>
+  )
+}
+
+export function HandshakeIcon(props: IconProps) {
+  return (
+    <LineIcon {...props}>
+      <path d="m11 17 2 2a1 1 0 1 0 3-3" />
+      <path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4" />
+      <path d="m21 3 1 11h-2" />
+      <path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3" />
+      <path d="M3 4h8" />
+    </LineIcon>
+  )
+}
+
+export function CompassIcon(props: IconProps) {
+  return (
+    <LineIcon {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="m15.5 8.5-1.6 4.8a1 1 0 0 1-.6.6l-4.8 1.6 1.6-4.8a1 1 0 0 1 .6-.6l4.8-1.6Z" />
+    </LineIcon>
+  )
+}
+
+export function KeyIcon(props: IconProps) {
+  return (
+    <LineIcon {...props}>
+      <circle cx="15.5" cy="8.5" r="5" />
+      <path d="M11.9 12.1 3.5 20.5" />
+      <path d="m6 18 2.5 2.5" />
+      <path d="m8.5 15.5 2 2" />
+      <circle cx="16.5" cy="7.5" r="0.6" fill="currentColor" />
+    </LineIcon>
+  )
+}

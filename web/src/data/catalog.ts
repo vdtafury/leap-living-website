@@ -548,37 +548,27 @@ export const PROJECTS: ProjectItem[] = [
   },
 ]
 
-export const CORE_SERVICES = [
+/** Homepage service cards (owner's design, 2026-11-18). Icons: see SERVICE_ICONS in service-cards.tsx. */
+export const HOME_SERVICES = [
   {
-    id: 'consultancy',
-    title: 'Real Estate Consultancy',
-    desc: 'Independent, research-backed consultancy, feasibility guidance, and market intelligence for high-value decisions.',
-    featured: true,
-    tag: 'Core Practice',
-  },
-  {
-    id: 'acquisition',
+    icon: 'home',
     title: 'Acquisition Advisory',
-    desc: 'Source, evaluate, and negotiate exceptional prime, ready, and off-market properties across Dubai.',
-    featured: false,
+    desc: 'Source and secure exceptional properties.',
   },
   {
-    id: 'investment',
+    icon: 'chart',
     title: 'Investment Strategy',
-    desc: 'Data-led capital allocation, net yield modelling, and risk-adjusted portfolio planning.',
-    featured: false,
+    desc: 'Data-led analysis and portfolio planning.',
   },
   {
-    id: 'disposition',
+    icon: 'handshake',
     title: 'Disposition & Sales',
-    desc: 'Institutional positioning, discreet buyer qualification, and strategic exit execution.',
-    featured: false,
+    desc: 'Maximize value through strategic positioning.',
   },
   {
-    id: 'portfolio',
+    icon: 'layers',
     title: 'Portfolio Advisory',
-    desc: 'Long-term, multi-asset portfolio structuring and lifecycle governance for private investors and family offices.',
-    featured: false,
+    desc: 'Long-term, institutional-grade guidance.',
   },
 ]
 

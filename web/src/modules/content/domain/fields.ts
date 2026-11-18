@@ -13,7 +13,14 @@ export type Field =
   | { kind: 'email'; label: string }
   | { kind: 'number'; label: string; min: number; max: number; step?: number; help?: string }
   | { kind: 'boolean'; label: string; help?: string }
-  | { kind: 'select'; label: string; options: { value: string; label: string }[] }
+  | {
+      kind: 'select'
+      label: string
+      options: { value: string; label: string }[]
+      /** Used when the saved value is missing (a select added after content was saved). */
+      default?: string
+      help?: string
+    }
   | {
       kind: 'list'
       label: string
@@ -73,8 +80,10 @@ function fieldSchema(field: Field): z.ZodType {
         .max(field.max, `${field.label}: at most ${field.max}.`)
     case 'boolean':
       return z.boolean()
-    case 'select':
-      return z.enum(field.options.map((o) => o.value) as [string, ...string[]])
+    case 'select': {
+      const choice = z.enum(field.options.map((o) => o.value) as [string, ...string[]])
+      return field.default ? choice.default(field.default) : choice
+    }
     case 'list': {
       const item = isFieldMap(field.item) ? objectSchema(field.item) : fieldSchema(field.item)
       return z

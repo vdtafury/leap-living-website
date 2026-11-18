@@ -297,7 +297,7 @@
   color: var(--body-text);
 }
 
-/* ---------- Light tint surface (homepage services index) ---------- */
+/* ---------- Light tint surface (homepage services) ---------- */
 .ll-section-tint {
   position: relative;
   padding: clamp(4.75rem, 6.2vw, 7.25rem) 0;

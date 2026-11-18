@@ -6,7 +6,7 @@ import { MortgageCalculator } from '@/components/tools/mortgage-calculator'
 import { HeroVideoBackdrop } from '@/components/home/hero-video-backdrop'
 import { PropertyCarousel } from '@/components/property/property-carousel'
 import { ProjectPanels } from '@/components/home/project-panels'
-import { ServiceIndex } from '@/components/home/service-index'
+import { ServiceCards } from '@/components/home/service-cards'
 import {
   ArrowRightIcon,
   ArrowUpRightIcon,
@@ -155,16 +155,8 @@ export function HomeView({
         {/* ==================== SERVICES OVERVIEW (WITH CONSULTANCY) ==================== */}
         <section className="ll-section-tint ll-defer-render">
           <div className="ll-container">
-            <div className="ll-section-header">
-              <h2 className="ll-serif-title ll-section-title">{services.title}</h2>
-              <Link href={services.linkHref} className="ll-link-arrow">
-                <span>{services.linkLabel}</span>
-                <ArrowUpRightIcon size={15} />
-              </Link>
-            </div>
-
-            {/* Editorial index: one quiet row per service (D-48) */}
-            <ServiceIndex items={services.items} />
+            {/* Heading block + one card per service (D-48, owner's design) */}
+            <ServiceCards {...services} />
           </div>
         </section>
 
