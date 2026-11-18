@@ -7,6 +7,7 @@ import { AboutView } from '@/components/about/about-view'
 import { HERO_VIDEO_SRC } from '@/lib/hero-video'
 import { getDraftContent } from '@/modules/content'
 import { listVisibleDevelopers } from '@/modules/developers'
+import { listPublishedReviews } from '@/modules/reviews'
 import { listPublishedProjects, listPublishedProperties } from '@/modules/listings'
 
 export const metadata = { title: 'Preview', robots: { index: false, follow: false } }
@@ -40,11 +41,12 @@ export default async function PreviewPage({ params }: { params: Promise<{ key: s
   )
 
   if (key === 'home') {
-    const [content, properties, projects, developers] = await Promise.all([
+    const [content, properties, projects, developers, publishedReviews] = await Promise.all([
       getDraftContent(actor, 'home'),
       listPublishedProperties(),
       listPublishedProjects({ featured: true }),
       listVisibleDevelopers(),
+      listPublishedReviews(),
     ])
     const hasHeroVideo = fs.existsSync(
       path.join(/*turbopackIgnore: true*/ process.cwd(), 'public', HERO_VIDEO_SRC),
@@ -57,6 +59,7 @@ export default async function PreviewPage({ params }: { params: Promise<{ key: s
           projects={projects}
           developers={developers}
           hasHeroVideo={hasHeroVideo}
+          publishedReviews={publishedReviews}
         />
         {banner}
       </>

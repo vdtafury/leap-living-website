@@ -24,6 +24,7 @@ import {
   unlinkCustomerInquiries,
 } from '@/modules/inquiries'
 import type { RequestInfo } from '@/modules/users'
+import { deleteCustomerReview } from '@/modules/reviews'
 import {
   emailSchema,
   firstName,
@@ -503,6 +504,8 @@ export async function deleteAccount(
     await tx.customerToken.deleteMany({ where: { customerId: actor.id } })
     await tx.customerSession.deleteMany({ where: { customerId: actor.id } })
     await unlinkCustomerInquiries(actor.id, tx)
+    // Their review (published or not) goes with the account (D-44).
+    await deleteCustomerReview(actor.id, tx)
     await tx.customer.delete({ where: { id: actor.id } })
     await recordAudit(
       {

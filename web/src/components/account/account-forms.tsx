@@ -19,9 +19,11 @@ import {
   signInAction,
   signOutAction,
   signUpAction,
+  submitReviewAction,
   updateProfileAction,
   type AccountActionState,
 } from '@/app/account/actions'
+import { AvatarIcon, StarIcon } from '@/components/ui/icons'
 
 type Action = (prev: AccountActionState, formData: FormData) => Promise<AccountActionState>
 
@@ -474,6 +476,155 @@ export function DeleteAccountForm({ csrf }: { csrf: string }) {
       </label>
       <Submit busy={busy} variant="danger">
         {busy ? 'Deleting…' : 'Delete my account'}
+      </Submit>
+    </form>
+  )
+}
+
+const RATING_WORDS = ['', 'Poor', 'Fair', 'Good', 'Very good', 'Excellent']
+const REVIEW_MAX = 700
+
+/**
+ * Client review (D-44). Stars are real radio buttons (keyboard: arrow keys; works without
+ * JavaScript); the picture is the generic man / woman avatar, never a photo (D-17).
+ */
+export function ReviewForm({
+  csrf,
+  shownAs,
+  initial,
+}: {
+  csrf: string
+  shownAs: string
+  initial: { rating: number; title: string; body: string; role: string; avatar: string } | null
+}) {
+  const { state, busy, formProps, jsFlag } = useAccountForm(submitReviewAction)
+  const f = state?.fields ?? {}
+  const [rating, setRating] = useState(initial?.rating ?? 0)
+  const [hover, setHover] = useState(0)
+  const [length, setLength] = useState(initial?.body.length ?? 0)
+  const shown = hover || rating
+  const ratingId = useId()
+  return (
+    <form {...formProps} className="ll-acc-form ll-review-form">
+      {jsFlag}
+      <Csrf token={csrf} />
+      <Notice state={state} />
+
+      <fieldset
+        className="ll-acc-field ll-review-rating"
+        aria-describedby={f.rating ? `${ratingId}-error` : undefined}
+      >
+        <legend className="ll-field-label">Your rating</legend>
+        <div className="ll-review-stars" onMouseLeave={() => setHover(0)}>
+          {[1, 2, 3, 4, 5].map((n) => (
+            <label
+              key={n}
+              className={`ll-review-star${n <= shown ? ' is-on' : ''}`}
+              onMouseEnter={() => setHover(n)}
+            >
+              <input
+                type="radio"
+                name="rating"
+                value={n}
+                defaultChecked={initial?.rating === n}
+                onChange={() => setRating(n)}
+                aria-label={`${n} ${n === 1 ? 'star' : 'stars'}: ${RATING_WORDS[n]}`}
+              />
+              <StarIcon size={30} />
+            </label>
+          ))}
+          <span className="ll-review-rating-word" aria-hidden="true">
+            {shown ? RATING_WORDS[shown] : 'Tap a star'}
+          </span>
+        </div>
+        {f.rating && (
+          <p id={`${ratingId}-error`} className="ll-field-error">
+            {f.rating}
+          </p>
+        )}
+      </fieldset>
+
+      <Field label="Headline" name="title" error={f.title}>
+        {(p) => (
+          <input
+            {...p}
+            className="ll-input"
+            name="title"
+            defaultValue={initial?.title}
+            required
+            maxLength={80}
+            placeholder="e.g. Clear advice from the first call to handover"
+          />
+        )}
+      </Field>
+
+      <Field
+        label="Your review"
+        name="body"
+        error={f.body}
+        hint={
+          <>
+            What did we do for you, and how did it go?{' '}
+            <span className="tabular-nums">
+              {length} / {REVIEW_MAX}
+            </span>
+          </>
+        }
+      >
+        {(p) => (
+          <textarea
+            {...p}
+            className="ll-input ll-textarea"
+            name="body"
+            rows={6}
+            defaultValue={initial?.body}
+            required
+            maxLength={REVIEW_MAX}
+            onChange={(e) => setLength(e.currentTarget.value.length)}
+          />
+        )}
+      </Field>
+
+      <Field label="About you (optional)" name="role" error={f.role} hint="Shown under your name.">
+        {(p) => (
+          <input
+            {...p}
+            className="ll-input"
+            name="role"
+            defaultValue={initial?.role}
+            maxLength={60}
+            placeholder="e.g. Bought a villa in Dubai Hills"
+          />
+        )}
+      </Field>
+
+      <fieldset className="ll-acc-field ll-review-avatars">
+        <legend className="ll-field-label">Picture next to your review</legend>
+        <div className="ll-review-avatar-row">
+          {(['man', 'woman'] as const).map((variant) => (
+            <label key={variant} className="ll-review-avatar-opt">
+              <input
+                type="radio"
+                name="avatar"
+                value={variant}
+                defaultChecked={(initial?.avatar ?? 'man') === variant}
+              />
+              <span className="ll-reviews-avatar">
+                <AvatarIcon variant={variant} size={48} />
+              </span>
+              <span>{variant === 'man' ? 'Man' : 'Woman'}</span>
+            </label>
+          ))}
+        </div>
+        {f.avatar && <p className="ll-field-error">{f.avatar}</p>}
+      </fieldset>
+
+      <p className="ll-acc-hint ll-review-shown">
+        Shown as <strong>{shownAs}</strong>. Your email and phone are never published.
+      </p>
+
+      <Submit busy={busy}>
+        {busy ? 'Sending…' : initial ? 'Send the new version' : 'Send review'}
       </Submit>
     </form>
   )

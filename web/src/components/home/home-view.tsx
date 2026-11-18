@@ -5,7 +5,7 @@ import { HeroSearchBar } from '@/components/home/hero-search-bar'
 import { MortgageCalculator } from '@/components/tools/mortgage-calculator'
 import { HeroVideoBackdrop } from '@/components/home/hero-video-backdrop'
 import { PropertyCarousel } from '@/components/property/property-carousel'
-import { ProjectCard } from '@/components/project/project-card'
+import { ProjectPanels } from '@/components/home/project-panels'
 import {
   ArrowRightIcon,
   ArrowUpRightIcon,
@@ -19,6 +19,7 @@ import { DeveloperShowcase } from '@/components/home/developer-showcase'
 import { ClientExperience } from '@/components/home/client-experience'
 import type { DeveloperBrand, ProjectItem, PropertyListing } from '@/data/catalog'
 import type { HomeContent } from '@/data/content-defaults'
+import { homepageReviews, type HomepageReview } from '@/modules/reviews'
 import type { ReactNode } from 'react'
 
 export interface HomeViewProps {
@@ -31,6 +32,8 @@ export interface HomeViewProps {
   hasHeroVideo: boolean
   /** JSON-LD needs the published settings; the admin preview leaves it out */
   jsonLd?: ReactNode
+  /** Approved client reviews (D-44); the sample reviews from the CMS fill in until there are 3 */
+  publishedReviews?: { items: HomepageReview[]; stats: { count: number; ratingSum: number } }
 }
 
 /**
@@ -45,6 +48,7 @@ export function HomeView({
   developers,
   hasHeroVideo,
   jsonLd,
+  publishedReviews = { items: [], stats: { count: 0, ratingSum: 0 } },
 }: HomeViewProps) {
   const { hero, stats, featured, services, advice, calculator, reviews } = content
   // Communities offered by the hero search, per mode, straight from the listings.
@@ -181,11 +185,8 @@ export function HomeView({
               </Link>
             </div>
 
-            <div className="ll-cards-grid">
-              {projects.map((project) => (
-                <ProjectCard key={project.slug} project={project} />
-              ))}
-            </div>
+            {/* Expanding photo panels: unlike the property cards above (owner, 2026-11-18) */}
+            <ProjectPanels projects={projects} developers={developers} />
           </div>
         </section>
 
@@ -230,7 +231,12 @@ export function HomeView({
         </section>
 
         {/* ==================== CLIENT PERSPECTIVES ==================== */}
-        <ClientExperience {...reviews} />
+        <ClientExperience
+          title={reviews.title}
+          linkLabel={reviews.linkLabel}
+          linkHref={reviews.linkHref}
+          {...homepageReviews(publishedReviews.items, reviews.items, publishedReviews.stats)}
+        />
       </main>
 
       <SiteFooter />

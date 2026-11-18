@@ -27,6 +27,7 @@ import {
   type CustomerActor,
 } from '@/modules/customers'
 import { login as teamLogin } from '@/modules/users'
+import { submitReview } from '@/modules/reviews'
 
 export type AccountActionState = {
   error?: string
@@ -257,4 +258,24 @@ export async function toggleFavoriteAction(
     console.error('[account] save failed', error)
     return { ok: false, error: 'Could not save right now.' }
   }
+}
+
+/** Client review (D-44): saved as pending; the team approves it before it is published. */
+export async function submitReviewAction(
+  _prev: AccountActionState,
+  formData: FormData,
+): Promise<AccountActionState> {
+  const result = await asCustomer(formData, async (customer) => {
+    const saved = await submitReview(customer, {
+      rating: text(formData, 'rating'),
+      title: text(formData, 'title'),
+      body: text(formData, 'body'),
+      role: text(formData, 'role'),
+      avatar: text(formData, 'avatar') as 'man' | 'woman',
+    })
+    return saved.ok ? { ok: 'sent' } : { error: saved.error, fields: saved.fields }
+  })
+  // Outside the try in asCustomer: a server redirect must not be caught as an error.
+  if (result?.ok !== 'sent') return result
+  return go('/account/review?sent=1', formData)
 }

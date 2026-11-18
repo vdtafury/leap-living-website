@@ -36,6 +36,8 @@ export default async function SignInPage({ searchParams }: { searchParams: Searc
           </p>
         ) : save ? (
           <p>Sign in or create a free account to add this to your shortlist.</p>
+        ) : next === '/account/review' ? (
+          <p>Sign in or create a free account to share your experience with Leap Living.</p>
         ) : (
           <p>Sign in to see your shortlist and follow your requests.</p>
         )

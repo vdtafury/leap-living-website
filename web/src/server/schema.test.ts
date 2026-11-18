@@ -39,6 +39,7 @@ const EXPECTED_MODELS = [
   'Permission',
   'Project',
   'Property',
+  'Review',
   'Role',
   'RolePermission',
   'Session',

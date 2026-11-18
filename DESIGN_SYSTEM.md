@@ -268,3 +268,24 @@ Component: `web/src/components/home/client-experience.tsx` (small client compone
 | Speed | Navbar links are fully prefetched, so the new page renders from memory |
 | Not animated | Same-page links (hash, filters), the admin, back / forward, new-tab clicks, browsers without View Transitions, `prefers-reduced-motion` |
 | Not used | React `<ViewTransition>`: it holds the old page until the new page's images load (up to 1.8s) |
+
+### 7.12 Projects: expanding panels (`project-panels.tsx`, `25-project-panels.css`, D-45)
+
+| Part | Rule |
+|---|---|
+| Layout | Up to 5 photo panels in a row, 500–600px tall; the open one grows to `count + 1` times a closed one (0.7s ease-out) |
+| Closed panel | Even teal wash, number top-left, name + community written bottom-to-top |
+| Open panel | Dark gradient behind the text only; status chip, white developer logo, pin + community · segment, name, unit types, facts (starting price, handover, payment plan), *Explore Development* + round arrow; heart top-right |
+| Interaction | Hover, focus or tap opens; the open panel is one link; text has a fixed width so it never reflows while the panel widens |
+| Phones ≤ 899px | Swipe slider: cards 86% wide, scroll-snap, all open, dots below (current = 24px teal pill); stronger bottom gradient |
+| Must not look like | The featured-properties carousel (white cards, arrows, counter) |
+
+### 7.13 Stars and reviews (`stars.tsx`, `26-reviews.css`, D-44)
+
+| Part | Rule |
+|---|---|
+| Star colour | Gold `#d4a43b` filled, `#dfe4e2` empty; partial stars by width clip (average) |
+| Homepage | Stars above the headline in the big review, small stars in each client tab (hidden ≤ 960px), average + count next to the title from 3 real reviews; *Share your experience* (primary) + *Speak With an Advisor* (link) |
+| Form | Five 42px star radios (real inputs, keyboard + focus ring), word next to them (*Poor* … *Excellent*), man / woman picture as pill radios, live "Shown as *Mona A.*" line, character counter |
+| Status | Left border + chip: waiting = gold, published = teal, hidden = grey |
+

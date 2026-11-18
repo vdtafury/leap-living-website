@@ -2,8 +2,22 @@
 
 import Link from 'next/link'
 import { useRef, useState, type KeyboardEvent } from 'react'
-import type { HomeContent } from '@/data/content-defaults'
+import type { HomepageReview } from '@/modules/reviews'
 import { ArrowUpRightIcon, AvatarIcon } from '@/components/ui/icons'
+import { Stars } from '@/components/ui/stars'
+
+interface ClientExperienceProps {
+  title: string
+  linkLabel: string
+  linkHref: string
+  /** Published reviews first, then the samples while there are fewer than 3 real ones (D-44) */
+  items: HomepageReview[]
+  /** Average and count of the published reviews; null while the samples are shown */
+  summary: { average: number; count: number } | null
+}
+
+/** Signed out, this page sends the visitor to sign in and comes back (D-44). */
+const WRITE_HREF = '/account/review'
 
 /**
  * Homepage client reviews as a "client index" (owner, 2026-11-18: no section may look like
@@ -13,7 +27,13 @@ import { ArrowUpRightIcon, AvatarIcon } from '@/components/ui/icons'
  * Every review is in the HTML (search engines, no JavaScript); panels share one grid cell so the
  * panel keeps the height of the longest review and never jumps when switching.
  */
-export function ClientExperience({ title, linkLabel, linkHref, items }: HomeContent['reviews']) {
+export function ClientExperience({
+  title,
+  linkLabel,
+  linkHref,
+  items,
+  summary,
+}: ClientExperienceProps) {
   const [active, setActive] = useState(0)
   const tabs = useRef<(HTMLButtonElement | null)[]>([])
   if (items.length === 0) return null
@@ -44,9 +64,22 @@ export function ClientExperience({ title, linkLabel, linkHref, items }: HomeCont
       aria-labelledby="ll-reviews-title"
     >
       <div className="ll-container ll-reviews-layout">
-        <h2 id="ll-reviews-title" className="ll-serif-title ll-section-title ll-reviews-heading">
-          {title}
-        </h2>
+        <div className="ll-reviews-heading">
+          <h2 id="ll-reviews-title" className="ll-serif-title ll-section-title">
+            {title}
+          </h2>
+          {summary && (
+            <p className="ll-reviews-summary">
+              <span className="ll-reviews-summary-score tabular-nums">
+                {summary.average.toFixed(1)}
+              </span>
+              <Stars rating={summary.average} size={17} />
+              <span className="ll-reviews-summary-count">
+                from {summary.count} client {summary.count === 1 ? 'review' : 'reviews'}
+              </span>
+            </p>
+          )}
+        </div>
         <div className="ll-reviews-side">
           <div
             className="ll-reviews-index"
@@ -75,16 +108,22 @@ export function ClientExperience({ title, linkLabel, linkHref, items }: HomeCont
                 </span>
                 <span className="ll-reviews-who">
                   <span className="ll-reviews-name">{review.author}</span>
-                  <span className="ll-reviews-role">{review.role}</span>
+                  {review.role && <span className="ll-reviews-role">{review.role}</span>}
                 </span>
+                <Stars rating={review.rating} size={12} className="ll-reviews-mini-stars" />
               </button>
             ))}
           </div>
 
-          <Link href={linkHref} className="ll-link-arrow ll-reviews-link">
-            {linkLabel}
-            <ArrowUpRightIcon size={15} />
-          </Link>
+          <div className="ll-reviews-link">
+            <Link href={WRITE_HREF} className="ll-btn ll-btn-primary ll-reviews-write">
+              Share your experience
+            </Link>
+            <Link href={linkHref} className="ll-link-arrow">
+              {linkLabel}
+              <ArrowUpRightIcon size={15} />
+            </Link>
+          </div>
         </div>
 
         <div className="ll-reviews-stage">
@@ -98,6 +137,7 @@ export function ClientExperience({ title, linkLabel, linkHref, items }: HomeCont
               data-active={index === active}
               className="ll-reviews-panel"
             >
+              <Stars rating={review.rating} size={19} className="ll-reviews-stars" />
               <h3 className="ll-reviews-title">{review.title}</h3>
               <blockquote className="ll-reviews-quote">
                 <p>{review.quote}</p>
@@ -108,7 +148,7 @@ export function ClientExperience({ title, linkLabel, linkHref, items }: HomeCont
                 </span>
                 <span className="ll-reviews-who">
                   <span className="ll-reviews-name">{review.author}</span>
-                  <span className="ll-reviews-role">{review.role}</span>
+                  {review.role && <span className="ll-reviews-role">{review.role}</span>}
                 </span>
               </figcaption>
             </figure>

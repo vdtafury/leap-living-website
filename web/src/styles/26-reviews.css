@@ -1,0 +1,340 @@
+/* ==========================================================================
+   Client reviews (D-44): stars, the homepage summary and "Share your experience",
+   the review form and /account/review.
+   ========================================================================== */
+
+/* ---------- Stars ---------- */
+.ll-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  line-height: 0;
+  vertical-align: middle;
+}
+
+.ll-star {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.ll-star svg {
+  display: block;
+}
+
+.ll-star-empty {
+  color: #dfe4e2;
+}
+
+.ll-star-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  overflow: hidden;
+  color: #d4a43b;
+}
+
+/* ---------- Homepage section ---------- */
+.ll-reviews-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+}
+
+.ll-reviews-heading .ll-section-title {
+  margin-bottom: 0;
+}
+
+.ll-reviews-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 0.35rem;
+  font-size: 0.88rem;
+  color: var(--body-text);
+}
+
+.ll-reviews-summary-score {
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--heading);
+}
+
+.ll-reviews-mini-stars {
+  margin-left: auto;
+  padding-left: 0.5rem;
+}
+
+.ll-reviews-person[aria-selected='false'] .ll-reviews-mini-stars {
+  opacity: 0.55;
+}
+
+.ll-reviews-stars {
+  margin-bottom: 1rem;
+}
+
+.ll-reviews-link {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+}
+
+.ll-reviews-write {
+  padding-inline: 1.4rem;
+}
+
+@media (max-width: 960px) {
+  .ll-reviews-mini-stars {
+    display: none;
+  }
+}
+
+/* ---------- Review form ---------- */
+.ll-review-rating,
+.ll-review-avatars {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.ll-review-rating legend,
+.ll-review-avatars legend {
+  padding: 0;
+  margin-bottom: 0.45rem;
+}
+
+.ll-review-stars {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.ll-review-star {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  color: #dfe4e2;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.ll-review-star.is-on {
+  color: #d4a43b;
+}
+
+.ll-review-star:hover {
+  transform: scale(1.1);
+}
+
+/* Real radio buttons, visually hidden: keyboard and no-JS still work */
+.ll-review-star input,
+.ll-review-avatar-opt input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+}
+
+.ll-review-star:has(input:focus-visible) {
+  outline: 2px solid var(--action-teal);
+  outline-offset: 1px;
+}
+
+.ll-review-rating-word {
+  margin-left: 0.6rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--heading);
+}
+
+.ll-review-avatar-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.ll-review-avatar-opt {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.45rem 1.1rem 0.45rem 0.45rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--heading);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.ll-review-avatar-opt .ll-reviews-avatar {
+  width: 48px;
+  height: 48px;
+}
+
+.ll-review-avatar-opt:has(input:checked) {
+  border-color: var(--action-teal);
+  background-color: var(--brand-teal-10);
+}
+
+.ll-review-avatar-opt:has(input:focus-visible) {
+  outline: 2px solid var(--action-teal);
+  outline-offset: 2px;
+}
+
+.ll-review-shown {
+  margin-top: -0.25rem;
+}
+
+/* ---------- /account/review ---------- */
+.ll-review-page {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 340px);
+  align-items: start;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.ll-review-main {
+  display: grid;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.ll-review-status {
+  padding: 1.25rem 1.4rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid #d4a43b;
+  background-color: var(--white);
+}
+
+.ll-review-status--approved {
+  border-left-color: var(--action-teal);
+}
+
+.ll-review-status--rejected {
+  border-left-color: #9aa3a1;
+}
+
+.ll-review-status-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.55rem;
+}
+
+.ll-review-status-chip {
+  padding: 0.22rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  background-color: #fff3d6;
+  color: #6b4e00;
+}
+
+.ll-review-status--approved .ll-review-status-chip {
+  background-color: var(--brand-teal-10);
+  color: var(--dark-teal);
+}
+
+.ll-review-status--rejected .ll-review-status-chip {
+  background-color: #eef0ef;
+  color: #4a5352;
+}
+
+.ll-review-status-title {
+  margin: 0 0 0.3rem;
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--heading);
+}
+
+.ll-review-status-text {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.ll-review-aside {
+  position: sticky;
+  top: 110px;
+  padding: 1.5rem 1.6rem;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-tint);
+  border: 1px solid var(--border-subtle);
+}
+
+.ll-review-aside h2 {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--heading);
+}
+
+.ll-review-aside ol {
+  display: grid;
+  gap: 0.9rem;
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.87rem;
+  line-height: 1.55;
+}
+
+.ll-review-aside strong {
+  color: var(--heading);
+  font-weight: 600;
+}
+
+@media (max-width: 860px) {
+  .ll-review-page {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ll-review-aside {
+    position: static;
+  }
+}
+
+/* Account page: review status pill */
+.ll-acc-status--review-pending {
+  background-color: #fff3d6;
+  color: #6b4e00;
+}
+
+.ll-acc-status--review-approved {
+  background-color: var(--brand-teal-10);
+  color: var(--dark-teal);
+}
+
+.ll-acc-status--review-rejected {
+  background-color: #eef0ef;
+  color: #4a5352;
+}
+
+.ll-acc-review-row {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  background-color: var(--white);
+}
+
+.ll-acc-review-row .ll-acc-request-main {
+  gap: 0.35rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ll-review-star,
+  .ll-review-avatar-opt {
+    transition: none;
+  }
+}
