@@ -23,6 +23,9 @@
   --carousel-peek: 130px;
   --carousel-bleed: 0px;
   --carousel-room: max(0px, calc(var(--carousel-peek) - var(--carousel-bleed)));
+  /* Room the track takes beyond the container on each side: the bleed, at least 12px for
+     the hover lift + shadow */
+  --carousel-side: max(12px, var(--carousel-bleed));
   position: relative;
 }
 
@@ -51,7 +54,11 @@
 /* ---------- Stage + track ---------- */
 .ll-carousel-stage {
   position: relative;
-  margin-right: calc(-1 * var(--carousel-bleed));
+  /* flow-root: the track's negative margins must not collapse through, so the stage (and
+     the edge tabs inside it) is exactly as tall as the cards */
+  display: flow-root;
+  /* Symmetric bleed: cards run to both screen edges; the one before peeks in on the left */
+  margin-inline: calc(-1 * var(--carousel-side));
 }
 
 /* Native scroll-snap track: swipe, trackpad, keyboard and (below) mouse drag */
@@ -65,10 +72,10 @@
   );
   column-gap: var(--carousel-gap);
   list-style: none;
-  margin: -8px 0 -28px -12px;
+  margin: -8px 0 -28px;
   /* room for card lift + shadow inside the scroller; the bleed on the right */
-  padding: 8px var(--carousel-bleed) 28px 12px;
-  scroll-padding-inline: 12px;
+  padding: 8px var(--carousel-side) 28px;
+  scroll-padding-inline: var(--carousel-side);
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
@@ -128,7 +135,7 @@
 /* Next: covers exactly the peeking card (+ the gap), fading it out towards the screen edge */
 .ll-carousel-edge--next {
   right: 0;
-  width: calc(var(--carousel-bleed) + var(--carousel-room));
+  width: calc(var(--carousel-side) + var(--carousel-room));
   justify-content: center;
   background: linear-gradient(
     90deg,
@@ -138,19 +145,20 @@
   );
 }
 
-/* Previous: a narrower fade over the first card's left edge, only once scrolled */
+/* Previous: the mirror of next, over the card that peeks in from the left screen edge. The
+   fade stops at the container edge, so the first card in view is never washed out; only the
+   tab may overlap it where the margin is narrow. */
 .ll-carousel-edge--prev {
   left: 0;
-  width: 112px;
-  justify-content: flex-start;
-  padding-left: 14px;
+  width: max(80px, calc(var(--carousel-side) + 24px));
+  justify-content: center;
   background: linear-gradient(
-    270deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.85) 70%,
-    rgba(255, 255, 255, 0.94) 100%
-  );
-  border-radius: var(--radius-md) 0 0 var(--radius-md);
+      270deg,
+      rgba(255, 255, 255, 0.55) 0%,
+      rgba(255, 255, 255, 0.9) 45%,
+      rgba(255, 255, 255, 0.96) 100%
+    )
+    left / var(--carousel-side) 100% no-repeat;
 }
 
 .ll-carousel-edge[data-show='false'] {

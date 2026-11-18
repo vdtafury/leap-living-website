@@ -80,9 +80,11 @@ export function Carousel({
     if (!track) return
     const max = track.scrollWidth - track.clientWidth
     const left = track.scrollLeft
-    // Cards fully inside the container (not the peek on the right)
+    // Cards fully inside the container (not the peeks at the screen edges)
     const box = track.getBoundingClientRect()
-    const bleedRight = parseFloat(getComputedStyle(track).paddingRight || '0')
+    const pad = getComputedStyle(track)
+    const padLeft = parseFloat(pad.paddingLeft || '0')
+    const padRight = parseFloat(pad.paddingRight || '0')
     const cards = [
       ...track.querySelectorAll<HTMLElement>(':scope > li:not(.ll-carousel-slide--end)'),
     ]
@@ -90,7 +92,7 @@ export function Carousel({
     let last = -1
     cards.forEach((card, i) => {
       const r = card.getBoundingClientRect()
-      if (r.left >= box.left - 2 && r.right <= box.right - bleedRight + 2) {
+      if (r.left >= box.left + padLeft - 2 && r.right <= box.right - padRight + 2) {
         if (first < 0) first = i
         last = i
       }
