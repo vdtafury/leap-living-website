@@ -4,9 +4,11 @@ import { redirect } from 'next/navigation'
 import { accountCsrfToken, getCustomer } from '@/server/auth/account'
 import { firstName, listFavoriteItems } from '@/modules/customers'
 import { listCustomerInquiries } from '@/modules/inquiries'
+import { getCustomerReview } from '@/modules/reviews'
 import { SavedListings } from '@/components/account/saved-listings'
 import { ResendVerificationButton, SignOutButton } from '@/components/account/account-forms'
-import { MailIcon } from '@/components/ui/icons'
+import { MailIcon, StarIcon } from '@/components/ui/icons'
+import { Stars } from '@/components/ui/stars'
 
 export const metadata: Metadata = { title: 'My account | LEAP LIVING' }
 
@@ -23,9 +25,10 @@ export default async function AccountPage({ searchParams }: { searchParams: Sear
   const customer = await getCustomer()
   if (!customer) redirect('/account/sign-in')
   const query = await searchParams
-  const [saved, requests] = await Promise.all([
+  const [saved, requests, review] = await Promise.all([
     listFavoriteItems(customer.id),
     listCustomerInquiries(customer.id),
+    getCustomerReview(customer.id),
   ])
   const csrf = accountCsrfToken(customer)
 
@@ -67,6 +70,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Sear
           <a href="#saved-properties">Saved properties</a>
           <a href="#saved-projects">Saved projects</a>
           <a href="#requests">My requests</a>
+          <a href="#review">My review</a>
         </nav>
 
         <SavedListings properties={saved.properties} projects={saved.projects} />
@@ -119,6 +123,44 @@ export default async function AccountPage({ searchParams }: { searchParams: Sear
                 </li>
               ))}
             </ul>
+          )}
+        </section>
+
+        <section id="review" className="ll-acc-section" aria-labelledby="review-title">
+          <div className="ll-acc-section-head">
+            <h2 id="review-title">My review</h2>
+          </div>
+          {review ? (
+            <div className="ll-acc-request ll-acc-review-row">
+              <div className="ll-acc-request-main">
+                <Stars rating={review.rating} size={14} />
+                <span className="ll-acc-request-about">{review.title}</span>
+              </div>
+              <span
+                className={`ll-acc-status ll-acc-status--review-${review.status.toLowerCase()}`}
+              >
+                {review.status === 'APPROVED'
+                  ? 'Published'
+                  : review.status === 'PENDING'
+                    ? 'Waiting for approval'
+                    : 'Not published'}
+              </span>
+              <Link href="/account/review" className="ll-acc-link">
+                Change
+              </Link>
+            </div>
+          ) : (
+            <div className="ll-acc-empty">
+              <span className="ll-acc-empty-icon" aria-hidden="true">
+                <StarIcon size={20} />
+              </span>
+              <p>Worked with us? A short review helps other clients decide.</p>
+              <div className="ll-acc-empty-links">
+                <Link href="/account/review" className="ll-btn ll-btn-outline">
+                  Write a review
+                </Link>
+              </div>
+            </div>
           )}
         </section>
       </div>

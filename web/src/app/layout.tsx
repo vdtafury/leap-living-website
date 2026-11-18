@@ -12,6 +12,7 @@ import { pageMetadata, SITE_INDEXING, SITE_URL } from '@/lib/seo'
 import { accountCsrfToken, getCustomer } from '@/server/auth/account'
 import { firstName, listFavoriteKeys } from '@/modules/customers'
 import { AccountProvider } from '@/components/account/account-provider'
+import { PageTransitions } from '@/components/layout/page-transitions'
 
 /**
  * Every page is rendered per request from the database (published content only), so an edit
@@ -49,6 +50,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   return (
     <html lang="en">
       <body>
+        <PageTransitions />
         {/* Keyed on the session: signing in or out starts from the server's saved list. */}
         <AccountProvider
           key={customer?.id ?? 'guest'}

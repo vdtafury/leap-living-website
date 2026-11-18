@@ -686,3 +686,38 @@
     padding: 1.25rem 1rem 3rem;
   }
 }
+
+/* Client reviews (D-44) */
+.adm-review-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.9rem;
+  margin-bottom: 0.6rem;
+}
+
+.adm-review-stars {
+  color: #c99a2e;
+  letter-spacing: 0.08em;
+  font-size: 1.05rem;
+}
+
+.adm-review-title {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+}
+
+.adm-review-body {
+  margin: 0 0 0.75rem;
+  white-space: pre-line;
+  max-width: 75ch;
+  line-height: 1.6;
+}
+
+.adm-review-by {
+  margin-bottom: 0.25rem;
+}
+
+.adm-review-actions {
+  margin-top: 0.9rem;
+}

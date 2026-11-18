@@ -24,8 +24,13 @@ export default async function SignUpPage({ searchParams }: { searchParams: Searc
 
   return (
     <AuthShell
-      title="Create your account"
-      intro={<p>It takes a minute. You can start saving properties straight away.</p>}
+      title="Create a free account"
+      intro={
+        <p>
+          Shortlist properties and projects, and follow your requests in one place. It takes less
+          than a minute.
+        </p>
+      }
       footer={
         <>
           Already have an account?{' '}

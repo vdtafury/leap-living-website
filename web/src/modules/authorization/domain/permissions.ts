@@ -21,6 +21,8 @@ export const PERMISSIONS = {
   'inquiry.export': 'Download form submissions as CSV',
   'customer.view': 'See website accounts (personal data)',
   'customer.manage': 'Deactivate and reactivate website accounts',
+  'review.view': 'Read client reviews sent from website accounts, including unpublished ones',
+  'review.moderate': 'Approve, hide and delete client reviews',
   'email.view': 'See the email outbox',
   'email.retry': 'Send queued emails now / retry failed ones',
   'content.view': 'See page content and settings in the admin',

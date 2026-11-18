@@ -18,12 +18,12 @@ export default async function ResetPasswordPage({ searchParams }: { searchParams
   const usable = await resetTokenUsable(token)
   return (
     <AuthShell
-      title={usable ? 'Choose a new password' : 'This link does not work'}
+      title={usable ? 'Choose a new password' : 'This link is no longer valid'}
       intro={
         usable ? (
-          <p>After saving, you are signed in and signed out everywhere else.</p>
+          <p>Once saved, you&apos;ll be signed in here and signed out on your other devices.</p>
         ) : (
-          <p>The link is invalid, was already used, or is older than 1 hour. Ask for a new one.</p>
+          <p>Reset links work once and expire after 1 hour. Request a new one below.</p>
         )
       }
       footer={

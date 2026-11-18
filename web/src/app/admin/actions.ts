@@ -38,6 +38,7 @@ import {
 import { deleteDeveloper, moveDeveloper, saveDeveloper } from '@/modules/developers'
 import { retryOutbox, setInquiryStatus } from '@/modules/inquiries'
 import { setCustomerActive } from '@/modules/customers'
+import { moderateReview, type ModerationOp } from '@/modules/reviews'
 import { deleteMedia } from '@/modules/media'
 import { backTo, guarded, jsonField, text, withMessage, type ActionState } from './_lib/guard'
 
@@ -315,6 +316,23 @@ export async function customerAction(formData: FormData) {
   revalidatePath('/admin/customers')
   const done = op === 'activate' ? 'Account reactivated.' : 'Account deactivated and signed out.'
   redirect(withMessage(back, error ? 'error' : 'ok', error ?? done))
+}
+
+const REVIEW_DONE: Record<ModerationOp, string> = {
+  approve: 'Review approved: it is on the homepage now.',
+  reject: 'Review hidden from the website.',
+  delete: 'Review deleted.',
+}
+
+/** Client reviews (D-44): approve (publish), hide or delete. */
+export async function reviewAction(formData: FormData) {
+  const back = backTo(formData, '/admin/reviews')
+  const op = text(formData, 'op') as ModerationOp
+  const result = await guarded(formData, (actor) => moderateReview(actor, text(formData, 'id'), op))
+  const error = !result.ok ? result.error : !result.value.ok ? result.value.error : null
+  revalidatePath('/admin/reviews')
+  revalidatePath('/')
+  redirect(withMessage(back, error ? 'error' : 'ok', error ?? REVIEW_DONE[op] ?? 'Done.'))
 }
 
 /* ------------------------------------------------------------------ inquiries, outbox, media */

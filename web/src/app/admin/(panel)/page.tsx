@@ -3,6 +3,7 @@ import { requireActor } from '@/server/auth/current'
 import { can } from '@/modules/authorization'
 import { dashboardSummary } from '@/modules/reporting'
 import { smtpConfigured } from '@/modules/inquiries'
+import { countPendingReviews } from '@/modules/reviews'
 import { Flash, PageHead, param, When, type SearchParams } from '../_components/ui'
 
 export const metadata = { title: 'Dashboard' }
@@ -13,7 +14,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: Se
   if (!can(actor, 'dashboard.view')) {
     return <PageHead title={`Welcome, ${actor.name}`} description="Your role has no dashboard." />
   }
-  const s = await dashboardSummary(actor)
+  const [s, pendingReviews] = await Promise.all([
+    dashboardSummary(actor),
+    can(actor, 'review.view') ? countPendingReviews(actor) : Promise.resolve(null),
+  ])
   const total = (counts: Record<string, number> | null) =>
     counts ? Object.values(counts).reduce((a, b) => a + b, 0) : 0
 
@@ -56,6 +60,12 @@ export default async function DashboardPage({ searchParams }: { searchParams: Se
             <div className="adm-stat-label">
               New form requests · {s.inquiries.week} in the last 7 days
             </div>
+          </Link>
+        )}
+        {pendingReviews !== null && (
+          <Link className="adm-stat" href="/admin/reviews">
+            <div className="adm-stat-value">{pendingReviews}</div>
+            <div className="adm-stat-label">Client reviews waiting for approval</div>
           </Link>
         )}
         {s.outbox && (

@@ -5,6 +5,7 @@ import { OrganizationJsonLd } from '@/components/seo/organization-json-ld'
 import { HERO_VIDEO_SRC } from '@/lib/hero-video'
 import { getPublishedContent } from '@/modules/content'
 import { listVisibleDevelopers } from '@/modules/developers'
+import { listPublishedReviews } from '@/modules/reviews'
 import { listPublishedProjects, listPublishedProperties } from '@/modules/listings'
 
 // The client's hero video is git-ignored (over GitHub's 100 MB limit), so it only exists where it
@@ -15,13 +16,16 @@ const hasHeroVideo = fs.existsSync(
 
 /** Homepage: published content, listings, projects and developers only (never drafts). */
 export default async function HomePage() {
-  const [content, settings, properties, projects, developers] = await Promise.all([
-    getPublishedContent('home'),
-    getPublishedContent('settings'),
-    listPublishedProperties(),
-    listPublishedProjects({ featured: true }),
-    listVisibleDevelopers(),
-  ])
+  const [content, settings, properties, projects, developers, publishedReviews] = await Promise.all(
+    [
+      getPublishedContent('home'),
+      getPublishedContent('settings'),
+      listPublishedProperties(),
+      listPublishedProjects({ featured: true }),
+      listVisibleDevelopers(),
+      listPublishedReviews(),
+    ],
+  )
   return (
     <HomeView
       content={content}
@@ -29,6 +33,7 @@ export default async function HomePage() {
       projects={projects}
       developers={developers}
       hasHeroVideo={hasHeroVideo}
+      publishedReviews={publishedReviews}
       jsonLd={<OrganizationJsonLd settings={settings} />}
     />
   )

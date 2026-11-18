@@ -270,4 +270,22 @@ export const SCHEMA_STATEMENTS: readonly string[] = [
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
   )`,
   `CREATE INDEX IF NOT EXISTS "CustomerInquiry_customerId_createdAt_idx" ON "CustomerInquiry"("customerId", "createdAt")`,
+  // Client reviews (D-44)
+  `CREATE TABLE IF NOT EXISTS "Review" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "customerId" TEXT NOT NULL,
+    "rating" INTEGER NOT NULL,
+    "title" TEXT NOT NULL,
+    "body" TEXT NOT NULL,
+    "role" TEXT NOT NULL DEFAULT '',
+    "avatar" TEXT NOT NULL DEFAULT 'man',
+    "displayName" TEXT NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'PENDING',
+    "reviewedAt" DATETIME,
+    "reviewedById" TEXT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+  )`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS "Review_customerId_key" ON "Review"("customerId")`,
+  `CREATE INDEX IF NOT EXISTS "Review_status_reviewedAt_idx" ON "Review"("status", "reviewedAt")`,
 ]

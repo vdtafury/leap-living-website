@@ -8,9 +8,12 @@ export const metadata: Metadata = { title: 'Reset your password | LEAP LIVING' }
 export default function ForgotPasswordPage() {
   return (
     <AuthShell
-      title="Forgot your password?"
+      title="Reset your password"
       intro={
-        <p>Enter the email of your account and we will send you a link to choose a new one.</p>
+        <p>
+          Enter the email you signed up with and we&apos;ll send you a link to choose a new
+          password.
+        </p>
       }
       footer={
         <Link href="/account/sign-in" className="ll-acc-link">

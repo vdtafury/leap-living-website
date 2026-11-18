@@ -591,3 +591,22 @@ export function UserIcon(props: IconProps) {
     </LineIcon>
   )
 }
+
+/** Five-point star (reviews, D-44). Filled with currentColor. */
+export function StarIcon({ size = 16, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+      {...props}
+    >
+      <path
+        fill="currentColor"
+        d="M12 2.6l2.9 5.9 6.5.95-4.7 4.58 1.11 6.47L12 17.45l-5.81 3.05 1.11-6.47-4.7-4.58 6.5-.95z"
+      />
+    </svg>
+  )
+}
