@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { pageMetadata } from '@/lib/seo'
+import { SaveButton } from '@/components/account/save-button'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { ConsultationForm } from '@/components/forms/consultation-form'
@@ -79,16 +80,24 @@ export default async function PropertyDetailPage({
                 </div>
               </div>
 
-              <div className="ll-hero-price">
-                <div className="ll-hero-price-label">
-                  {property.transactionType === 'BUY' ? 'Guide Asking Price' : 'Annual Lease'}
+              <div className="ll-hero-side">
+                <div className="ll-hero-price">
+                  <div className="ll-hero-price-label">
+                    {property.transactionType === 'BUY' ? 'Guide Asking Price' : 'Annual Lease'}
+                  </div>
+                  <div className="ll-hero-price-value tabular-nums">
+                    {property.priceLabel}
+                    {property.priceFrequency && (
+                      <span className="ll-hero-price-freq"> {property.priceFrequency}</span>
+                    )}
+                  </div>
                 </div>
-                <div className="ll-hero-price-value tabular-nums">
-                  {property.priceLabel}
-                  {property.priceFrequency && (
-                    <span className="ll-hero-price-freq"> {property.priceFrequency}</span>
-                  )}
-                </div>
+                <SaveButton
+                  type="PROPERTY"
+                  id={property.id}
+                  title={property.title}
+                  variant="detail"
+                />
               </div>
             </div>
           </div>

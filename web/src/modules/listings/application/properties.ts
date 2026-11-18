@@ -27,6 +27,14 @@ export async function getPublishedProperty(slug: string) {
   return row ? toPropertyListing(row) : null
 }
 
+/** Published properties among `ids` (saved items); unpublished or deleted ones are left out. */
+export async function listPublishedPropertiesByIds(ids: string[]) {
+  if (ids.length === 0) return []
+  await ensureReady()
+  const rows = await prisma.property.findMany({ where: { ...PUBLIC_WHERE, id: { in: ids } } })
+  return rows.map(toPropertyListing)
+}
+
 /* ------------------------------------------------------------------ admin */
 
 export async function listPropertiesAdmin(

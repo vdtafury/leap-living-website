@@ -19,6 +19,8 @@ export const PERMISSIONS = {
   'inquiry.view': 'Read form submissions (personal data)',
   'inquiry.update': 'Change the follow-up status of form submissions',
   'inquiry.export': 'Download form submissions as CSV',
+  'customer.view': 'See website accounts (personal data)',
+  'customer.manage': 'Deactivate and reactivate website accounts',
   'email.view': 'See the email outbox',
   'email.retry': 'Send queued emails now / retry failed ones',
   'content.view': 'See page content and settings in the admin',

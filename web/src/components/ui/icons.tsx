@@ -564,3 +564,30 @@ export function HomeIcon(props: IconProps) {
     </LineIcon>
   )
 }
+
+/* ---- Website accounts (D-40) ---- */
+
+/** Heart for saved items. `filled` = saved. */
+export function HeartIcon({
+  size = 18,
+  filled = false,
+  ...props
+}: IconProps & { filled?: boolean }) {
+  return (
+    <LineIcon size={size} strokeWidth={1.7} {...props}>
+      <path
+        d="M12 20.25s-7.75-4.6-7.75-10.4A4.35 4.35 0 0 1 12 7.2a4.35 4.35 0 0 1 7.75 2.65c0 5.8-7.75 10.4-7.75 10.4Z"
+        fill={filled ? 'currentColor' : 'none'}
+      />
+    </LineIcon>
+  )
+}
+
+export function UserIcon(props: IconProps) {
+  return (
+    <LineIcon {...props}>
+      <circle cx="12" cy="8.25" r="3.75" />
+      <path d="M4.5 20.25c0-4.1 3.35-7 7.5-7s7.5 2.9 7.5 7" />
+    </LineIcon>
+  )
+}

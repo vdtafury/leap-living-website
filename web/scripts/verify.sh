@@ -93,6 +93,26 @@ check_contains "sign-in page has a password field" 'type="password"' "$TMP/login
 check_contains "sign-in page is noindex" 'noindex' "$TMP/login.html"
 check_not_contains "sign-in page is not cached" "cache-control: public" "$TMP/login-headers.txt"
 
+# D-40: website accounts (signed-in flows are covered by vitest and the browser run)
+for page in /account /account/settings; do
+  code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE$page")
+  location=$(curl -s -o /dev/null -w '%{redirect_url}' "$BASE$page")
+  if [[ "$code" =~ ^30[37]$ ]] && [[ "$location" == *"/account/sign-in"* ]]; then
+    echo "PASS  D-40: $page sends guests to the account sign-in page"
+    pass=$((pass + 1))
+  else
+    echo "FAIL  D-40: $page answered HTTP $code -> '$location' (expected a redirect to /account/sign-in)"
+    fail=$((fail + 1))
+  fi
+done
+code=$(curl -s -D "$TMP/acc-headers.txt" -o "$TMP/acc-signin.html" -w '%{http_code}' "$BASE/account/sign-in")
+check "D-40: GET /account/sign-in" 200 "$code"
+check_contains "D-40: account sign-in is noindex" 'noindex' "$TMP/acc-signin.html"
+check_not_contains "D-40: account sign-in is not cached publicly" "cache-control: public" "$TMP/acc-headers.txt"
+code=$(curl -s -o "$TMP/acc-signup.html" -w '%{http_code}' "$BASE/account/sign-up")
+check "D-40: GET /account/sign-up" 200 "$code"
+check_contains "D-40: sign-up asks for a new password" '="new-password"' "$TMP/acc-signup.html"
+
 code=$(curl -s --path-as-is -o /dev/null -w '%{http_code}' "$BASE/media/..%2F..%2Fpackage.json")
 if [ "$code" = "404" ] || [ "$code" = "400" ]; then
   echo "PASS  reject path traversal (HTTP $code)"

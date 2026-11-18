@@ -290,3 +290,77 @@ model Developer {
 
   @@index([isVisible, sortOrder])
 }
+
+// ---------------------------------------------------------------------------
+// Website accounts (D-40): visitors sign up, save properties/projects, see their requests.
+// Kept apart from admin `User`/`Session`: a website account can never reach /admin.
+// ---------------------------------------------------------------------------
+
+/// A visitor account on the public website. Email is stored lowercased and is the sign-in name.
+model Customer {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  name            String
+  phone           String    @default("")
+  passwordHash    String
+  /// Null until the link in the confirmation email is opened (the account works before that).
+  emailVerifiedAt DateTime?
+  /// false = deactivated by the team in /admin/customers: cannot sign in, sessions ended.
+  isActive        Boolean   @default(true)
+  failedLogins    Int       @default(0)
+  lockedUntil     DateTime?
+  lastLoginAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([createdAt])
+}
+
+/// Website-account session. `id` is the SHA-256 of the cookie token (as for admin sessions).
+model CustomerSession {
+  id         String   @id
+  customerId String
+  createdAt  DateTime @default(now())
+  lastSeenAt DateTime @default(now())
+  expiresAt  DateTime
+  ipHash     String?
+  userAgent  String?
+
+  @@index([customerId])
+}
+
+/// One-time link token (email confirmation, password reset). `id` is the SHA-256 of the token
+/// sent by email; the token itself is never stored.
+model CustomerToken {
+  id         String    @id
+  customerId String
+  /// VERIFY_EMAIL | RESET_PASSWORD
+  purpose    String
+  expiresAt  DateTime
+  usedAt     DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([customerId, purpose])
+}
+
+/// A saved (hearted) property or project.
+model Favorite {
+  customerId String
+  /// PROPERTY | PROJECT
+  itemType   String
+  /// Property.id or Project.id (stable when the slug or reference changes)
+  itemId     String
+  createdAt  DateTime @default(now())
+
+  @@id([customerId, itemType, itemId])
+  @@index([itemType, itemId])
+}
+
+/// Links a form request to the website account that sent it (signed-in visitors only).
+model CustomerInquiry {
+  inquiryId  String   @id
+  customerId String
+  createdAt  DateTime @default(now())
+
+  @@index([customerId, createdAt])
+}

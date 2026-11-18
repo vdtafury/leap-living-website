@@ -55,10 +55,15 @@ const draftInput = {
 
 describe('starter content', () => {
   it('imports every listing and project so the public pages look the same', async () => {
+    // `id` is the database id (used by the save heart); everything else must match the starter data.
+    const withoutId = <T extends { id?: string }>({ id, ...rest }: T) => {
+      expect(id).toEqual(expect.any(String))
+      return rest
+    }
     const properties = await listPublishedProperties()
-    expect(properties).toEqual(PROPERTIES.map((p) => ({ ...p })))
+    expect(properties.map(withoutId)).toEqual(PROPERTIES.map((p) => ({ ...p })))
     const projects = await listPublishedProjects()
-    expect(projects).toEqual(PROJECTS)
+    expect(projects.map(withoutId)).toEqual(PROJECTS)
   })
 
   it('runs once: deleting a starter item does not bring it back', async () => {

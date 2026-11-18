@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createRateLimiter } from '@/server/rate-limit'
 import { clientIp, hashIp, isSameOrigin } from '@/server/request'
 import { guardApi } from '@/server/auth/api-guard'
+import { customerFromRequest } from '@/server/auth/account'
 import { fieldErrors, inquirySchema, MAX_INQUIRY_BYTES } from '@/lib/inquiry'
 import { exportInquiries, submitInquiry } from '@/modules/inquiries'
 
@@ -49,9 +50,12 @@ export async function POST(request: Request) {
 
   try {
     // Saved together with its notification email (outbox); sending happens afterwards.
+    // Signed in on the website: the request is also listed on the visitor's account page.
+    const customer = await customerFromRequest(request)
     const inquiry = await submitInquiry(data, {
       ipHash: ip === 'unknown' ? null : hashIp(ip),
       userAgent: request.headers.get('user-agent'),
+      customerId: customer?.id ?? null,
     })
     return json({ ok: true, id: inquiry.id }, 201)
   } catch (error) {

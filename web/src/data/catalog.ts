@@ -9,6 +9,8 @@
  */
 
 export interface PropertyListing {
+  /** Database id (saved items are keyed on it). Absent only on the starter catalog below. */
+  id?: string
   slug: string
   refCode: string
   transactionType: 'BUY' | 'RENT'
@@ -36,6 +38,8 @@ export interface PropertyListing {
 }
 
 export interface ProjectItem {
+  /** Database id (saved items are keyed on it). Absent only on the starter catalog below. */
+  id?: string
   slug: string
   refCode: string
   title: string

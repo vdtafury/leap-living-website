@@ -29,7 +29,7 @@ describe('robots.txt and sitemap.xml', () => {
     expect(robots.rules).toEqual({
       userAgent: '*',
       allow: '/',
-      disallow: ['/api/', '/media/', '/admin'],
+      disallow: ['/api/', '/media/', '/admin', '/account'],
     })
     expect(robots.sitemap).toBe('https://leapliving.ae/sitemap.xml')
   })

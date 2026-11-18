@@ -90,11 +90,12 @@ Scope
 
 Acceptance
 - Release gates in this file all green; restore and rollback demonstrated on staging.
+- Website accounts (D-40) go live only with a published Privacy Policy (text from the client/legal) plus a consent line on sign-up, and working SMTP (O-19) so confirm/reset emails are delivered.
 - **Production deployment only after explicit written approval**, with a cut-over plan that leaves the WordPress site restorable.
 
 ## Backlog (not scheduled — do not implement)
 
-Analytics dashboard from real data · saved searches / buyer profiles · property comparison · PDF brochures/dossiers · external CRM integration · additional branches · mobile app / public API consumers · advanced search engine · newsletter · blog/insights section (market analysis content) · additional administrators and approval workflows (publish requires approval) · slug redirect history · multi-currency display rates.
+Analytics dashboard from real data · saved searches / search alerts (website accounts with saved listings and projects are built, D-40) · property comparison · PDF brochures/dossiers · external CRM integration · additional branches · mobile app / public API consumers · advanced search engine · newsletter · blog/insights section (market analysis content) · additional administrators and approval workflows (publish requires approval) · slug redirect history · multi-currency display rates.
 
 ## Release gates (all phases)
 

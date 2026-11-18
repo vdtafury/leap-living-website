@@ -26,6 +26,7 @@ const NAV: { group?: string; href: string; label: string; permission: Permission
     label: 'Form requests',
     permission: 'inquiry.view',
   },
+  { href: '/admin/customers', label: 'Website accounts', permission: 'customer.view' },
   { href: '/admin/outbox', label: 'Email queue', permission: 'email.view' },
   { group: 'Administration', href: '/admin/users', label: 'Users', permission: 'user.view' },
   { href: '/admin/audit', label: 'Audit log', permission: 'audit.view' },

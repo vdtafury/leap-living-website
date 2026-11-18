@@ -35,6 +35,7 @@ import {
 } from '@/modules/content'
 import { deleteDeveloper, moveDeveloper, saveDeveloper } from '@/modules/developers'
 import { retryOutbox, setInquiryStatus } from '@/modules/inquiries'
+import { setCustomerActive } from '@/modules/customers'
 import { deleteMedia } from '@/modules/media'
 import { backTo, guarded, jsonField, text, withMessage, type ActionState } from './_lib/guard'
 
@@ -320,6 +321,22 @@ export async function userAction(formData: FormData) {
     reset: 'Temporary password set. The user must change it at the next sign-in.',
   }
   redirect(withMessage('/admin/users', error ? 'error' : 'ok', error ?? messages[op] ?? 'Done.'))
+}
+
+/* ------------------------------------------------------------------ website accounts (D-40) */
+
+export async function customerAction(formData: FormData) {
+  const back = backTo(formData, '/admin/customers')
+  const op = text(formData, 'op')
+  const result = await guarded(formData, (actor) =>
+    op === 'activate' || op === 'deactivate'
+      ? setCustomerActive(actor, text(formData, 'id'), op === 'activate')
+      : Promise.resolve({ ok: false as const, error: 'Unknown action.' }),
+  )
+  const error = !result.ok ? result.error : !result.value.ok ? result.value.error : null
+  revalidatePath('/admin/customers')
+  const done = op === 'activate' ? 'Account reactivated.' : 'Account deactivated and signed out.'
+  redirect(withMessage(back, error ? 'error' : 'ok', error ?? done))
 }
 
 /* ------------------------------------------------------------------ inquiries, outbox, media */

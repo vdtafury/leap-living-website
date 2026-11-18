@@ -1,7 +1,9 @@
 'use client'
 
 import { useState, type FormEvent } from 'react'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useAccount } from '@/components/account/account-provider'
 import { ArrowUpRightIcon, CheckIcon } from '@/components/ui/icons'
 import { fieldErrors, inquirySchema, type InquiryType } from '@/lib/inquiry'
 
@@ -22,6 +24,8 @@ export function ConsultationForm({
     mode === 'VALUATION' ? 'VALUATION' : 'CONSULTATION',
   )
   const pathname = usePathname()
+  // Signed in on the website (D-40): the visitor's details are filled in, still editable.
+  const { account } = useAccount()
   const [submitted, setSubmitted] = useState(false)
   const [sending, setSending] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -95,6 +99,11 @@ export function ConsultationForm({
             A senior consultant at Leap Living will review your mandate details
             {contextTitle ? ` regarding ${contextTitle}` : ''} and respond directly.
           </p>
+          {account && (
+            <p>
+              You can follow it in <Link href="/account#requests">My account</Link>.
+            </p>
+          )}
           <button
             type="button"
             onClick={() => setSubmitted(false)}
@@ -155,6 +164,7 @@ export function ConsultationForm({
             <input
               id="cf-name"
               name="name"
+              defaultValue={account?.name ?? ''}
               required
               autoComplete="name"
               maxLength={120}
@@ -172,6 +182,7 @@ export function ConsultationForm({
             <input
               id="cf-phone"
               name="phone"
+              defaultValue={account?.phone ?? ''}
               type="tel"
               required
               autoComplete="tel"
@@ -193,6 +204,7 @@ export function ConsultationForm({
             <input
               id="cf-email"
               name="email"
+              defaultValue={account?.email ?? ''}
               type="email"
               required
               autoComplete="email"
