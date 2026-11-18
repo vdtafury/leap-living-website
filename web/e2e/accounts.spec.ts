@@ -42,7 +42,9 @@ test('save a property, create an account, sign out and back in', async ({ page }
   await expect(saved).toContainText(title)
 
   // Sign out, then a wrong password is refused.
+  // Sign out ends in a full page load of the homepage; wait for it before moving on.
   await page.getByRole('button', { name: 'Sign out' }).click()
+  await page.waitForURL((url) => url.pathname === '/', { waitUntil: 'load' })
   await page.goto('/account/sign-in')
   await page.getByLabel('Email or username').fill(email)
   await page.getByLabel('Password', { exact: true }).fill('not-the-right-password')
