@@ -87,6 +87,9 @@
 .ll-dev-showcase {
   position: relative;
   overflow: hidden;
+  /* Repaints in the strip (logo hover, marquee pause) stay inside it and never reach the hero's
+     glass search above (owner, 2026-11-18: lines appeared on the search on logo hover) */
+  contain: paint;
   padding: clamp(4.5rem, 5.5vw, 6.5rem) 0 clamp(4rem, 5vw, 5.5rem);
 }
 
@@ -149,6 +152,11 @@
   filter: none;
   opacity: 1;
   transition: opacity 0.3s ease, transform 0.3s ease;
+  /* Always on its own GPU layer: otherwise Chrome creates the layer when the hover zoom starts
+     and drops it when it ends, and that rebuild re-renders the search's backdrop blur with seam
+     lines across it */
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .ll-marquee-wordmark {

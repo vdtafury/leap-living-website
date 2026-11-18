@@ -16,6 +16,11 @@
   -webkit-backdrop-filter: blur(22px) saturate(140%);
   backdrop-filter: blur(22px) saturate(140%);
   color: var(--white);
+  /* A stable GPU layer of its own, so layer changes elsewhere on the page (e.g. the developer
+     logos' hover zoom) do not re-render the blur with seam lines. Safe: nothing inside uses
+     position: fixed. */
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .ll-hs-top {
