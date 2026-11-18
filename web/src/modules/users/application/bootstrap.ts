@@ -54,15 +54,22 @@ export async function bootstrapAdmin(env = process.env, db = prisma): Promise<bo
   }
   if ((await db.user.count()) > 0) return false
   const role = await db.role.findUniqueOrThrow({ where: { key: SUPER_ADMIN_ROLE } })
-  const user = await db.user.create({
-    data: {
-      username,
-      name: 'Administrator',
-      passwordHash: await hashPassword(password),
-      mustChangePassword: true,
-    },
-  })
-  await db.userRole.create({ data: { userId: user.id, roleId: role.id } })
-  await recordAudit({ action: 'user.bootstrap', targetType: 'User', targetId: user.id }, db)
-  return true
+  try {
+    const user = await db.user.create({
+      data: {
+        username,
+        name: 'Administrator',
+        passwordHash: await hashPassword(password),
+        mustChangePassword: true,
+      },
+    })
+    await db.userRole.create({ data: { userId: user.id, roleId: role.id } })
+    await recordAudit({ action: 'user.bootstrap', targetType: 'User', targetId: user.id }, db)
+    return true
+  } catch (err: unknown) {
+    if (err && typeof err === 'object' && 'code' in err && err.code === 'P2002') {
+      return false
+    }
+    throw err
+  }
 }
