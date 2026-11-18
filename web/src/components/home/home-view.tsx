@@ -6,6 +6,7 @@ import { MortgageCalculator } from '@/components/tools/mortgage-calculator'
 import { HeroVideoBackdrop } from '@/components/home/hero-video-backdrop'
 import { PropertyCarousel } from '@/components/property/property-carousel'
 import { ProjectPanels } from '@/components/home/project-panels'
+import { ServiceDial } from '@/components/home/service-dial'
 import {
   ArrowRightIcon,
   ArrowUpRightIcon,
@@ -162,25 +163,8 @@ export function HomeView({
               </Link>
             </div>
 
-            <div className="ll-services-bento">
-              {services.items.map((service, index) => (
-                <div
-                  key={`${service.title}-${index}`}
-                  className={`ll-service-tile ${service.featured ? 'featured' : ''}`}
-                >
-                  <div className="ll-service-bignum" aria-hidden="true">
-                    {String(index + 1).padStart(2, '0')}
-                  </div>
-                  <div className="ll-service-tile-body">
-                    {service.featured && service.tag && (
-                      <span className="ll-chip ll-chip-light">{service.tag}</span>
-                    )}
-                    <h3 className="ll-service-tile-title">{service.title}</h3>
-                    <p className="ll-service-tile-desc">{service.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            {/* The lifecycle dial: the services as one loop around the brand mark (D-48) */}
+            <ServiceDial items={services.items} label="Our services, stage by stage" />
           </div>
         </section>
 

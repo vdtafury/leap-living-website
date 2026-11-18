@@ -86,16 +86,6 @@
 }
 
 /* ==================== RESPONSIVE: BRAND LAYER ==================== */
-@media (max-width: 1120px) {
-  .ll-services-bento {
-    grid-template-columns: 1fr 1fr;
-  }
-  .ll-service-tile.featured {
-    grid-row: auto;
-    grid-column: 1 / -1;
-  }
-}
-
 @media (max-width: 960px) {
   .ll-section-light,
   .ll-section-muted,
@@ -109,17 +99,5 @@
   .ll-page-hero::before {
     width: 360px;
     right: -140px;
-  }
-}
-
-@media (max-width: 600px) {
-  .ll-services-bento {
-    grid-template-columns: 1fr;
-  }
-  .ll-service-tile {
-    min-height: 0;
-  }
-  .ll-service-tile.featured .ll-service-bignum {
-    font-size: 4.25rem;
   }
 }

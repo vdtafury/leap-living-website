@@ -297,18 +297,13 @@
   color: var(--body-text);
 }
 
-/* ---------- Light tint surface (homepage Advisory bento) ---------- */
+/* ---------- Light tint surface (homepage services dial) ---------- */
 .ll-section-tint {
   position: relative;
   padding: clamp(4.75rem, 6.2vw, 7.25rem) 0;
   background-color: var(--surface-tint);
   border-top: 1px solid var(--border-subtle);
   border-bottom: 1px solid var(--border-subtle);
-}
-
-.ll-service-tile.featured .ll-chip-light {
-  background-color: var(--white);
-  border: 1px solid var(--brand-teal-25);
 }
 
 /* ---------- Developer strip: logos only, so the band hugs them ----------

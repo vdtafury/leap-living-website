@@ -69,8 +69,8 @@ export const HOME_SECTIONS: Record<keyof HomeContent, SectionDef> = {
         item: {
           title: { kind: 'text', label: 'Title', max: 60 },
           desc: { kind: 'textarea', label: 'Description', max: 220 },
-          featured: { kind: 'boolean', label: 'Large teal tile' },
-          tag: { kind: 'text', label: 'Tag on the large tile', max: 24, optional: true },
+          featured: { kind: 'boolean', label: 'Show the tag on this stage' },
+          tag: { kind: 'text', label: 'Tag (e.g. Core practice)', max: 24, optional: true },
         },
       },
     },
