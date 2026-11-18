@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { pageMetadata } from '@/lib/seo'
+import { SaveButton } from '@/components/account/save-button'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { ConsultationForm } from '@/components/forms/consultation-form'
@@ -69,9 +70,14 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                 </div>
               </div>
 
-              <div className="ll-hero-price">
-                <div className="ll-hero-price-label">Guide Pricing</div>
-                <div className="ll-hero-price-value tabular-nums">{project.startingPriceLabel}</div>
+              <div className="ll-hero-side">
+                <div className="ll-hero-price">
+                  <div className="ll-hero-price-label">Guide Pricing</div>
+                  <div className="ll-hero-price-value tabular-nums">
+                    {project.startingPriceLabel}
+                  </div>
+                </div>
+                <SaveButton type="PROJECT" id={project.id} title={project.title} variant="detail" />
               </div>
             </div>
           </div>

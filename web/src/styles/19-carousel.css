@@ -65,8 +65,8 @@
 }
 
 .ll-carousel-btn:hover:not(:disabled) {
-  background: var(--brand-teal);
-  border-color: var(--brand-teal);
+  background: var(--action-teal);
+  border-color: var(--action-teal);
   color: var(--white);
   transform: translateY(-1px);
 }

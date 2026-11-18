@@ -1,14 +1,16 @@
 'use server'
 
-import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
-import { clearSessionCookie, requestInfo, setSessionCookie } from '@/server/auth/current'
-import { originAllowed } from '@/server/auth/csrf'
+import {
+  clearSessionCookie,
+  requestInfo,
+  setSessionCookie,
+  SIGN_IN_PATH,
+} from '@/server/auth/current'
 import {
   changeOwnPassword,
   createUser,
-  login,
   logout,
   resetUserPassword,
   setUserActive,
@@ -35,34 +37,11 @@ import {
 } from '@/modules/content'
 import { deleteDeveloper, moveDeveloper, saveDeveloper } from '@/modules/developers'
 import { retryOutbox, setInquiryStatus } from '@/modules/inquiries'
+import { setCustomerActive } from '@/modules/customers'
 import { deleteMedia } from '@/modules/media'
 import { backTo, guarded, jsonField, text, withMessage, type ActionState } from './_lib/guard'
 
 /* ------------------------------------------------------------------ sign-in */
-
-export async function loginAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
-  // Login has no session yet, so no CSRF token: the Origin check stops cross-site posts.
-  if (!originAllowed(await headers())) return { error: 'Request blocked. Reload the page.' }
-  const result = await login(
-    { username: text(formData, 'username'), password: text(formData, 'password') },
-    await requestInfo(),
-  )
-  if (!result.ok) {
-    return {
-      error:
-        result.reason === 'locked'
-          ? 'Too many attempts. Try again in 15 minutes.'
-          : 'Wrong username or password.',
-    }
-  }
-  await setSessionCookie(result.token)
-  const target = result.mustChangePassword ? '/admin/change-password' : '/admin'
-  // With JavaScript the form does a full page load to the target, so the next request shows
-  // whether the browser kept the cookie (a server redirect would render the target in this
-  // same response and hide a blocked cookie). Without JavaScript: a normal redirect.
-  if (text(formData, 'js') === '1') return { redirectTo: target }
-  redirect(target)
-}
 
 export async function logoutAction(formData: FormData) {
   const result = await guarded(
@@ -72,7 +51,7 @@ export async function logoutAction(formData: FormData) {
   )
   if (!result.ok) redirect(withMessage('/admin', 'error', result.error))
   await clearSessionCookie()
-  redirect('/admin/login')
+  redirect(SIGN_IN_PATH)
 }
 
 export async function changePasswordAction(
@@ -320,6 +299,22 @@ export async function userAction(formData: FormData) {
     reset: 'Temporary password set. The user must change it at the next sign-in.',
   }
   redirect(withMessage('/admin/users', error ? 'error' : 'ok', error ?? messages[op] ?? 'Done.'))
+}
+
+/* ------------------------------------------------------------------ website accounts (D-40) */
+
+export async function customerAction(formData: FormData) {
+  const back = backTo(formData, '/admin/customers')
+  const op = text(formData, 'op')
+  const result = await guarded(formData, (actor) =>
+    op === 'activate' || op === 'deactivate'
+      ? setCustomerActive(actor, text(formData, 'id'), op === 'activate')
+      : Promise.resolve({ ok: false as const, error: 'Unknown action.' }),
+  )
+  const error = !result.ok ? result.error : !result.value.ok ? result.value.error : null
+  revalidatePath('/admin/customers')
+  const done = op === 'activate' ? 'Account reactivated.' : 'Account deactivated and signed out.'
+  redirect(withMessage(back, error ? 'error' : 'ok', error ?? done))
 }
 
 /* ------------------------------------------------------------------ inquiries, outbox, media */

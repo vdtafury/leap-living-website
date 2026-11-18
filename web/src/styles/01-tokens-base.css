@@ -16,6 +16,12 @@
   /* 2. Approved Supporting Website UI Colors */
   --dark-teal: #185C5E;
   --secondary-teal: #287F82;
+  /* Action teal (owner, 2026-11-18): fills that carry white text or icons (buttons, search
+     submit, active tabs). White on #287F82 = 4.72:1 (AA); on brand #3B9EA1 only 3.18:1.
+     Brand teal stays for accents, lines, borders and decoration. */
+  --action-teal: var(--secondary-teal);
+  --action-teal-rgb: 40, 127, 130;
+  --action-teal-hover: var(--dark-teal);
   --page-bg: #F5F7F6;
   /* light brand tint for alternating homepage sections (D-28) */
   --surface-tint: #F3F8F8;

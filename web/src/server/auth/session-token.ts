@@ -21,9 +21,10 @@ export type SessionState = 'valid' | 'idle-expired' | 'expired'
 export function sessionState(
   session: { lastSeenAt: Date; expiresAt: Date },
   now = Date.now(),
+  idleMs = SESSION_IDLE_MS,
 ): SessionState {
   if (session.expiresAt.getTime() <= now) return 'expired'
-  if (session.lastSeenAt.getTime() + SESSION_IDLE_MS <= now) return 'idle-expired'
+  if (session.lastSeenAt.getTime() + idleMs <= now) return 'idle-expired'
   return 'valid'
 }
 
@@ -52,5 +53,26 @@ export function sessionCookie(
       path: '/',
       maxAge: SESSION_ABSOLUTE_MS / 1000,
     },
+  }
+}
+
+/* ------------------------------------------------------------------ website accounts (D-40) */
+
+/** Website accounts stay signed in longer than staff: 14 days idle, 30 days at most. */
+export const ACCOUNT_IDLE_MS = 14 * 24 * 60 * 60 * 1000
+export const ACCOUNT_ABSOLUTE_MS = 30 * 24 * 60 * 60 * 1000
+
+/**
+ * Cookie for website accounts. A different name from the admin cookie, so the two sessions
+ * never mix: an account token is only ever looked up in CustomerSession, never in Session.
+ */
+export function accountCookie(
+  production = process.env.NODE_ENV === 'production',
+  framed = process.env.ALLOW_FRAMING === '1',
+) {
+  const admin = sessionCookie(production, framed)
+  return {
+    name: admin.name.replace('ll_session', 'll_account'),
+    options: { ...admin.options, maxAge: ACCOUNT_ABSOLUTE_MS / 1000 },
   }
 }

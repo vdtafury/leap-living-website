@@ -321,8 +321,8 @@
 
 .ll-card:hover .ll-card-cta-icon,
 .ll-card-cta:hover .ll-card-cta-icon {
-  background-color: var(--brand-teal);
-  border-color: var(--brand-teal);
+  background-color: var(--action-teal);
+  border-color: var(--action-teal);
   color: var(--white);
   transform: rotate(45deg);
 }

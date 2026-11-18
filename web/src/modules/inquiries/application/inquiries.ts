@@ -52,7 +52,7 @@ export function notificationEmail(inquiry: Omit<Inquiry, 'website'> & { id: stri
  */
 export async function submitInquiry(
   data: Omit<Inquiry, 'website'>,
-  meta: { ipHash: string | null; userAgent: string | null },
+  meta: { ipHash: string | null; userAgent: string | null; customerId?: string | null },
 ): Promise<{ id: string }> {
   await ensureReady()
   const settings = await getPublishedContent('settings')
@@ -72,6 +72,12 @@ export async function submitInquiry(
     await tx.emailOutbox.create({
       data: { to, ...email, relatedType: 'Inquiry', relatedId: created.id },
     })
+    // Signed-in visitor: the request also appears on their account page (D-40).
+    if (meta.customerId) {
+      await tx.customerInquiry.create({
+        data: { inquiryId: created.id, customerId: meta.customerId },
+      })
+    }
     return created
   })
   // Fire and forget: the visitor's answer does not wait for SMTP.
@@ -154,4 +160,67 @@ export async function exportInquiries(actor: Actor, format: 'json' | 'csv') {
   ]
   // BOM so Excel opens UTF-8 (Arabic names) correctly.
   return { csv: `\uFEFF${lines.join('\r\n')}\r\n` }
+}
+
+/* ------------------------------------------------------------------ website accounts (D-40) */
+
+const PUBLIC_TYPE_LABEL: Record<string, string> = {
+  CONSULTATION: 'Consultation',
+  VALUATION: 'Valuation',
+  PROPERTY_INQUIRY: 'Viewing request',
+  PROJECT_BRIEFING: 'Project briefing',
+}
+
+const PUBLIC_STATUS_LABEL: Record<string, string> = {
+  NEW: 'Received',
+  CONTACTED: 'In progress',
+  CLOSED: 'Closed',
+}
+
+/**
+ * The requests a website account sent while signed in, newest first. Only what the visitor
+ * typed and a plain status: no internal fields (IP hash, user agent, staff notes).
+ */
+export async function listCustomerInquiries(customerId: string, take = 50) {
+  await ensureReady()
+  const links = await prisma.customerInquiry.findMany({
+    where: { customerId },
+    orderBy: { createdAt: 'desc' },
+    take,
+  })
+  if (links.length === 0) return []
+  const rows = await prisma.inquiry.findMany({
+    where: { id: { in: links.map((l) => l.inquiryId) } },
+    orderBy: { createdAt: 'desc' },
+    select: { id: true, type: true, interest: true, context: true, status: true, createdAt: true },
+  })
+  return rows.map((row) => ({
+    id: row.id,
+    type: PUBLIC_TYPE_LABEL[row.type] ?? 'Request',
+    interest: row.interest,
+    context: row.context,
+    status: PUBLIC_STATUS_LABEL[row.status] ?? 'Received',
+    createdAt: row.createdAt,
+  }))
+}
+
+type LinkClient = Pick<typeof prisma, 'customerInquiry'>
+
+/**
+ * Account deletion: the requests stay with the company (they were sent to it), only the link
+ * to the deleted account goes.
+ */
+export async function unlinkCustomerInquiries(customerId: string, db: LinkClient = prisma) {
+  await db.customerInquiry.deleteMany({ where: { customerId } })
+}
+
+/** Counts per account for the admin list. */
+export async function countCustomerInquiries(customerIds: string[]) {
+  if (customerIds.length === 0) return new Map<string, number>()
+  const groups = await prisma.customerInquiry.groupBy({
+    by: ['customerId'],
+    where: { customerId: { in: customerIds } },
+    _count: { _all: true },
+  })
+  return new Map(groups.map((g) => [g.customerId, g._count._all]))
 }

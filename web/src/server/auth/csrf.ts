@@ -5,13 +5,17 @@ import { createHash, timingSafeEqual } from 'node:crypto'
  * derived from the session id, which never leaves the server, so another site cannot compute
  * it. Every admin form carries it in a hidden field; uploads send it in a header.
  */
-export function csrfTokenFor(sessionId: string): string {
-  return createHash('sha256').update(`csrf:v1:${sessionId}`).digest('base64url')
+export type CsrfScope = 'admin' | 'account'
+
+export function csrfTokenFor(sessionId: string, scope: CsrfScope = 'admin'): string {
+  // Different prefixes: an admin token is never valid for a website account and vice versa.
+  const prefix = scope === 'admin' ? 'csrf:v1:' : 'csrf:account:v1:'
+  return createHash('sha256').update(`${prefix}${sessionId}`).digest('base64url')
 }
 
-export function csrfValid(sessionId: string, token: unknown): boolean {
+export function csrfValid(sessionId: string, token: unknown, scope: CsrfScope = 'admin'): boolean {
   if (typeof token !== 'string' || token.length === 0 || token.length > 100) return false
-  const expected = Buffer.from(csrfTokenFor(sessionId))
+  const expected = Buffer.from(csrfTokenFor(sessionId, scope))
   const given = Buffer.from(token)
   return expected.length === given.length && timingSafeEqual(expected, given)
 }

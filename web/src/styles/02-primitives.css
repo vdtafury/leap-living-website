@@ -101,12 +101,12 @@
 }
 
 .ll-btn-primary {
-  background-color: var(--brand-teal);
+  background-color: var(--action-teal);
   color: var(--white);
 }
 
 .ll-btn-primary:hover {
-  background-color: var(--secondary-teal);
+  background-color: var(--action-teal-hover);
 }
 
 .ll-btn-light {

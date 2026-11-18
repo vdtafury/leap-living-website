@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { ArrowUpRightIcon, CalculatorIcon, CloseIcon, MenuIcon } from '@/components/ui/icons'
 
 import { DEFAULT_SETTINGS } from '@/data/content-defaults'
+import { AccountButton, AccountMenuLink } from '@/components/account/account-button'
 
 export type NavLink = { label: string; href: string }
 
@@ -93,7 +94,11 @@ export function SiteHeaderClient({
             <span>Free Valuation</span>
             <ArrowUpRightIcon size={14} />
           </Link>
+          <AccountButton />
         </div>
+
+        {/* Below 1200px the actions above are hidden; the account button stays in the bar. */}
+        <AccountButton className="ll-account-btn--bar" />
 
         <button
           type="button"
@@ -119,6 +124,7 @@ export function SiteHeaderClient({
                 {item.label}
               </Link>
             ))}
+            <AccountMenuLink onNavigate={() => setMobileOpen(false)} />
             <div className="ll-mobile-nav-actions">
               <Link
                 href="/#mortgage-calculator"

@@ -48,6 +48,8 @@ export function projectPublishProblems(p: { images: string; overview: string }):
 }
 
 export interface ProjectRow {
+  /** Absent for unsaved admin previews */
+  id?: string
   slug: string
   referenceNumber: string
   title: string
@@ -69,6 +71,7 @@ export interface ProjectRow {
 export function toProjectItem(row: ProjectRow): ProjectItem {
   const images = parseJsonArray<ListingImage>(row.images)
   return {
+    id: row.id,
     slug: row.slug,
     refCode: row.referenceNumber,
     title: row.title,

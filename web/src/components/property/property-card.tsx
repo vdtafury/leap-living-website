@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import type { PropertyListing } from '@/data/catalog'
 import { ResponsiveImg } from '@/components/ui/responsive-img'
+import { SaveButton } from '@/components/account/save-button'
 import { AreaIcon, ArrowUpRightIcon, BathIcon, BedIcon, MapPinIcon } from '@/components/ui/icons'
 
 const HIGHLIGHT_STATUSES = new Set(['Private Advisory', 'Exclusive Mandate'])
@@ -11,6 +12,7 @@ export function PropertyCard({ property }: { property: PropertyListing }) {
 
   return (
     <article className="ll-card">
+      <SaveButton type="PROPERTY" id={property.id} title={property.title} />
       <Link href={href} className="ll-card-media" tabIndex={-1} aria-hidden="true">
         <ResponsiveImg
           src={property.heroImage}

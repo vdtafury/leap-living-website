@@ -220,4 +220,54 @@ export const SCHEMA_STATEMENTS: readonly string[] = [
   )`,
   `CREATE UNIQUE INDEX IF NOT EXISTS "Developer_name_key" ON "Developer"("name")`,
   `CREATE INDEX IF NOT EXISTS "Developer_isVisible_sortOrder_idx" ON "Developer"("isVisible", "sortOrder")`,
+  // Website accounts (D-40)
+  `CREATE TABLE IF NOT EXISTS "Customer" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "email" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "phone" TEXT NOT NULL DEFAULT '',
+    "passwordHash" TEXT NOT NULL,
+    "emailVerifiedAt" DATETIME,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "failedLogins" INTEGER NOT NULL DEFAULT 0,
+    "lockedUntil" DATETIME,
+    "lastLoginAt" DATETIME,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+  )`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS "Customer_email_key" ON "Customer"("email")`,
+  `CREATE INDEX IF NOT EXISTS "Customer_createdAt_idx" ON "Customer"("createdAt")`,
+  `CREATE TABLE IF NOT EXISTS "CustomerSession" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "customerId" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "lastSeenAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "expiresAt" DATETIME NOT NULL,
+    "ipHash" TEXT,
+    "userAgent" TEXT
+  )`,
+  `CREATE INDEX IF NOT EXISTS "CustomerSession_customerId_idx" ON "CustomerSession"("customerId")`,
+  `CREATE TABLE IF NOT EXISTS "CustomerToken" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "customerId" TEXT NOT NULL,
+    "purpose" TEXT NOT NULL,
+    "expiresAt" DATETIME NOT NULL,
+    "usedAt" DATETIME,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )`,
+  `CREATE INDEX IF NOT EXISTS "CustomerToken_customerId_purpose_idx" ON "CustomerToken"("customerId", "purpose")`,
+  `CREATE TABLE IF NOT EXISTS "Favorite" (
+    "customerId" TEXT NOT NULL,
+    "itemType" TEXT NOT NULL,
+    "itemId" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY ("customerId", "itemType", "itemId")
+  )`,
+  `CREATE INDEX IF NOT EXISTS "Favorite_itemType_itemId_idx" ON "Favorite"("itemType", "itemId")`,
+  `CREATE TABLE IF NOT EXISTS "CustomerInquiry" (
+    "inquiryId" TEXT NOT NULL PRIMARY KEY,
+    "customerId" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )`,
+  `CREATE INDEX IF NOT EXISTS "CustomerInquiry_customerId_createdAt_idx" ON "CustomerInquiry"("customerId", "createdAt")`,
 ]

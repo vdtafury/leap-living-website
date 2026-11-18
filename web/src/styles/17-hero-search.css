@@ -9,8 +9,9 @@
   border-radius: 22px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.06) 100%);
   border: 1px solid rgba(255, 255, 255, 0.22);
+  /* Negative spread keeps the shadow inside the hero (it reached the developer strip). */
   box-shadow:
-    0 30px 80px rgba(3, 24, 26, 0.34),
+    0 24px 56px -14px rgba(3, 24, 26, 0.38),
     inset 0 1px 0 rgba(255, 255, 255, 0.24);
   -webkit-backdrop-filter: blur(22px) saturate(140%);
   backdrop-filter: blur(22px) saturate(140%);
@@ -43,8 +44,8 @@
   left: 4px;
   width: calc((100% - 8px) / 2);
   border-radius: 999px;
-  background: var(--brand-teal);
-  box-shadow: 0 6px 18px rgba(var(--brand-teal-rgb), 0.45);
+  background: var(--action-teal);
+  box-shadow: 0 6px 18px rgba(var(--action-teal-rgb), 0.45);
   transform: translateX(calc(var(--mode-index, 0) * 100%));
   transition: transform 0.38s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -320,21 +321,21 @@
   padding: 0 1.9rem;
   border: none;
   border-radius: 12px;
-  background: var(--brand-teal);
+  background: var(--action-teal);
   color: var(--white);
   font: inherit;
   font-size: 0.92rem;
   font-weight: 600;
   letter-spacing: 0.02em;
   cursor: pointer;
-  box-shadow: 0 10px 26px rgba(var(--brand-teal-rgb), 0.42);
+  box-shadow: 0 10px 26px rgba(var(--action-teal-rgb), 0.42);
   transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .ll-hs-submit:hover {
-  background: #318D90;
+  background: var(--action-teal-hover);
   transform: translateY(-1px);
-  box-shadow: 0 14px 30px rgba(var(--brand-teal-rgb), 0.5);
+  box-shadow: 0 14px 30px rgba(var(--action-teal-rgb), 0.5);
 }
 
 .ll-hs-submit:active {
@@ -357,6 +358,13 @@
 
 /* Tablet: 2-column tiles, full-width submit */
 @media (max-width: 900px) {
+  /* Tighter drop shadow: here the search sits close to the hero's bottom edge, and the
+     desktop shadow (80px blur) spilled as a grey haze onto the developer strip. */
+  .ll-hs {
+    box-shadow:
+      0 10px 24px -6px rgba(3, 24, 26, 0.24),
+      inset 0 1px 0 rgba(255, 255, 255, 0.24);
+  }
   .ll-hs-bar {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 6px;

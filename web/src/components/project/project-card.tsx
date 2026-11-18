@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import type { ProjectItem } from '@/data/catalog'
 import { ResponsiveImg } from '@/components/ui/responsive-img'
+import { SaveButton } from '@/components/account/save-button'
 import { ArrowUpRightIcon, BuildingIcon, MapPinIcon } from '@/components/ui/icons'
 
 export function ProjectCard({ project }: { project: ProjectItem }) {
@@ -8,6 +9,7 @@ export function ProjectCard({ project }: { project: ProjectItem }) {
 
   return (
     <article className="ll-card">
+      <SaveButton type="PROJECT" id={project.id} title={project.title} />
       <Link href={href} className="ll-card-media" tabIndex={-1} aria-hidden="true">
         <ResponsiveImg
           src={project.heroImage}

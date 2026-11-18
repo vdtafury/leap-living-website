@@ -6,6 +6,9 @@ import { clientIp, hashIp } from '@/server/request'
 import { csrfTokenFor, csrfValid, originAllowed } from './csrf'
 import { sessionCookie } from './session-token'
 
+/** One sign-in page for visitors and the team (D-41); `/admin/login` redirects here. */
+export const SIGN_IN_PATH = '/account/sign-in'
+
 /** The signed-in admin user for this request, or null. */
 export async function getActor(): Promise<SessionActor | null> {
   const jar = await cookies()
@@ -21,7 +24,7 @@ export async function requireActor(
   { allowPasswordChange = false } = {},
 ): Promise<SessionActor> {
   const actor = await getActor()
-  if (!actor) redirect('/admin/login')
+  if (!actor) redirect(SIGN_IN_PATH)
   if (actor.mustChangePassword && !allowPasswordChange) redirect('/admin/change-password')
   if (permission && !can(actor, permission)) redirect('/admin?denied=1')
   return actor

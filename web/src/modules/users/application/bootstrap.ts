@@ -44,6 +44,14 @@ export async function bootstrapAdmin(env = process.env, db = prisma): Promise<bo
   const username = env.ADMIN_USER?.trim().toLowerCase()
   const password = env.ADMIN_PASSWORD ?? ''
   if (!username || password.length < 12) return false
+  // Same rule as usernames made in /admin/users; no "@", so the shared sign-in page (D-41)
+  // treats it as a team login and not as a visitor's email.
+  if (!/^[a-z0-9._-]{3,40}$/.test(username)) {
+    console.error(
+      '[bootstrap] ADMIN_USER must be 3-40 letters, digits, dots, dashes or underscores',
+    )
+    return false
+  }
   if ((await db.user.count()) > 0) return false
   const role = await db.role.findUniqueOrThrow({ where: { key: SUPER_ADMIN_ROLE } })
   const user = await db.user.create({

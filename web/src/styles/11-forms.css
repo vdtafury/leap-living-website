@@ -44,7 +44,7 @@
 }
 
 .ll-switch-tab.active {
-  background-color: var(--brand-teal);
+  background-color: var(--action-teal);
   color: var(--white);
 }
 

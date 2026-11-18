@@ -14,7 +14,7 @@ const deny = (status: number, error: string): ApiGuard => ({
   ),
 })
 
-function cookieValue(request: Request, name: string): string | undefined {
+export function cookieValue(request: Request, name: string): string | undefined {
   for (const part of (request.headers.get('cookie') ?? '').split(';')) {
     const [key, ...rest] = part.trim().split('=')
     if (key === name) return decodeURIComponent(rest.join('='))

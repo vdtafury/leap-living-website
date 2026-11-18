@@ -27,7 +27,7 @@
 - **Homepage order:**
   1. header
   2. full-screen hero (client video, Buy/Rent search)
-  3. developer strip (from the Developers module, in its order)
+  3. developer strip (from the Developers module, in its order; flat teal tint plus keyhole watermark, no photo, D-39)
   4. stats (tint, teal icons)
   5. featured properties carousel
   6. advisory bento (tint)
@@ -99,7 +99,7 @@ The full question list for the meeting is in `docs/business/meeting-questions.md
 ## Next (in order)
 
 1. Client meeting: get answers to `docs/business/meeting-questions.md`.
-2. Owner: decide teal for buttons/search (`#3B9EA1` 3.18:1 fails AA for white text; `#287F82` 4.72:1 passes).
+2. Owner: look at the buttons/search in `#287F82` (D-38, on trial) and confirm, or revert with one token.
 3. SMTP details for the form emails (O-19) → set the `SMTP_*`, `MAIL_FROM`, `MAIL_TO` env vars; queued emails then send by themselves.
 4. Staging on cPanel when the owner resumes it (`docs/deployment/cpanel-staging.md`): verify glibc ≥ 2.28 (better-sqlite3 and argon2 need it), set `ADMIN_USER`, `ADMIN_PASSWORD`, `SITE_URL`, keep the data folder outside the app.
 5. Phase 3 (CRM workflows) after the meeting answers.
@@ -109,7 +109,7 @@ The full question list for the meeting is in `docs/business/meeting-questions.md
 
 - **Hosting:** staging is on hold (owner). The host OS/glibc is still unverified; better-sqlite3 needs glibc ≥ 2.28.
 - **Content/legal:** O-05 stats, O-06 developer logo permissions, O-08 legal pages, O-19 SMTP / CRM.
-- **Design:** teal for buttons/search (owner).
+- **Design:** owner to confirm the `#287F82` buttons/search after seeing them (D-38).
 
 ## Session log
 
@@ -162,3 +162,7 @@ The full question list for the meeting is in `docs/business/meeting-questions.md
 | 2026-11-17 | Arena agent | Owner & Buyer section is now one card: owners (title + valuation) on the left, buyers (calculator) on the right; the redundant "Open Mortgage Calculator" tile is removed. Desktop hero search centred and lower (D-30) | `tsc` PASS, lint 0 errors, vitest 55/55, build PASS, verify.sh 67/67; anchor 6/6 |
 | 2026-11-18 | Arena agent | Item 4 closed; Phase 1 + 2 built (D-31 … D-36): admin with DB sessions, RBAC, audit log; property/project CRUD with images; public site from the DB with starter import; forms + email outbox; CMS (home, about, settings) with preview, publish and revisions; developers; users; form requests; email queue. Fixed on the way: same-site check without Origin (Chrome), admin forms no longer reset on error, `sitemap.xml`/`robots.txt` dynamic | tsc PASS, lint 0 errors, vitest 102/102, build PASS, `verify.sh` 80/80, browser run: login → forced password change → edit price → public updated → draft hidden → preview → publish → public updated; 0 console errors |
 | 2026-11-18 | Arena agent | Owner hit "You do not have permission" in the admin preview: his browser blocked the framed session cookie. Signed-out message, full-page-load login check with a notice and "open in its own tab" link (D-37) | tsc PASS, lint 0 errors, vitest 102/102, build PASS, verify.sh 80/80; headless Chrome: normal sign-in, blocked cookie → notice, sign-in inside a cross-site iframe works |
+| 2026-11-18 | Arena agent | Buttons and hero search moved to action teal `#287F82` (owner: try it, D-38): one token `--action-teal`, hover dark teal; brand `#3B9EA1` kept for accents | Computed in headless Chrome: header/hero/form buttons, search button and active tab all `rgb(40,127,130)`, white text 4.72:1 (was 3.18:1); build PASS, verify.sh 80/80 |
+| 2026-11-18 | Arena agent | Section polish 1, developer strip: skyline photo removed, same teal tint, logos and keyhole watermark (watermark restored on owner request) (D-39); hero search shadow tightened so it no longer shades the strip | Screenshots 1440 and 390 (home, about); measured strip top row uniform (235/235); build PASS |
+| 2026-11-18 | Arena agent | Website accounts for visitors (D-40, owner: email + password, soft verification, favourites + requests, hearts on properties and projects): sign-up / sign-in / forgot + reset password / confirm email, `/account` (saved properties, saved projects, my requests with status), `/account/settings` (details, password, delete), heart on every card and detail page (guest → sign-in → saved), account button in the header (badge = saved count) and in the mobile menu, enquiry forms pre-filled and linked to the account, admin `/admin/customers` (search, deactivate/reactivate, Super Admin only). Mobile header tightened below 480px so logo + account + menu fit at 360px. Before production: Privacy Policy + consent line, SMTP | tsc clean; lint 0 errors; vitest 125/125 (customers 22, route test for account linking); `next build` OK; verify.sh 87/87 (7 new account checks); headless Chrome run: guest heart → sign-up (all field errors at once) → item saved, project + detail hearts, reload keeps state, pre-filled form linked to My requests, unsave from account, sign-out → `/`, guest `/account` → sign-in, sign-in with upper-case email, admin deactivate; no console errors; screenshots desktop + 360/390/430 px |
+| 2026-11-18 | Arena agent | One sign-in page for visitors and the team (D-41, owner): `/account/sign-in` takes *Email or username*; usernames go to the admin, emails to the website account; `/admin/login` and admin pages redirect there; old admin login form removed. Heart badge removed from the sign-in panel. Action teal `#287F82` confirmed by the owner (D-38) | tsc clean; lint 0 errors; vitest 125/125; `next build` OK; verify.sh 87/87 (admin redirects now to the shared page, +D-41 checks); headless Chrome: guest `/admin` → shared page, wrong team password → generic error, `leapadmin` → forced password change → `/admin`, signed-in admin on the sign-in page → `/admin`, full visitor flow unchanged, no console errors |

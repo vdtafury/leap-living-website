@@ -5,6 +5,7 @@ export {
   getPublishedProperty,
   listPropertiesAdmin,
   listPublishedProperties,
+  listPublishedPropertiesByIds,
   setPropertyPublication,
   updateProperty,
   type Result,
@@ -16,6 +17,7 @@ export {
   getPublishedProject,
   listProjectsAdmin,
   listPublishedProjects,
+  listPublishedProjectsByIds,
   setProjectPublication,
   updateProject,
 } from './application/projects'

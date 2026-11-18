@@ -9,6 +9,9 @@ import '@fontsource/poppins/700.css'
 import './globals.css'
 import { getPublishedContent } from '@/modules/content'
 import { pageMetadata, SITE_INDEXING, SITE_URL } from '@/lib/seo'
+import { accountCsrfToken, getCustomer } from '@/server/auth/account'
+import { firstName, listFavoriteKeys } from '@/modules/customers'
+import { AccountProvider } from '@/components/account/account-provider'
 
 /**
  * Every page is rendered per request from the database (published content only), so an edit
@@ -38,10 +41,33 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  // Website account (D-40): read once per request for the header button and the hearts.
+  // Visitors without the account cookie cost no database query here.
+  const customer = await getCustomer()
+  const saved = customer ? await listFavoriteKeys(customer.id) : []
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {/* Keyed on the session: signing in or out starts from the server's saved list. */}
+        <AccountProvider
+          key={customer?.id ?? 'guest'}
+          account={
+            customer
+              ? {
+                  name: customer.name,
+                  firstName: firstName(customer.name),
+                  email: customer.email,
+                  phone: customer.phone,
+                }
+              : null
+          }
+          csrf={customer ? accountCsrfToken(customer) : ''}
+          saved={saved}
+        >
+          {children}
+        </AccountProvider>
+      </body>
     </html>
   )
 }

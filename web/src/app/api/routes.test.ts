@@ -10,8 +10,9 @@ import sharp from 'sharp'
 import { prisma } from '@/server/db'
 import { ensureReady } from '@/server/bootstrap'
 import { csrfTokenFor } from '@/server/auth/csrf'
-import { hashSessionToken, sessionCookie } from '@/server/auth/session-token'
+import { accountCookie, hashSessionToken, sessionCookie } from '@/server/auth/session-token'
 import { createUser, login } from '@/modules/users'
+import { signUp } from '@/modules/customers'
 import { superAdmin } from '@/test/actors'
 import { POST as upload } from './upload/route'
 import { GET as exportInquiries, POST as submit } from './inquiries/route'
@@ -177,6 +178,38 @@ describe('POST /api/inquiries (public form)', () => {
     expect((await post('{not json')).status).toBe(400)
     expect((await post(inquiry, { origin: 'https://evil.example' })).status).toBe(403)
     expect(await prisma.inquiry.count()).toBe(before)
+  })
+
+  it('links the request to a signed-in website account, and only to a real one', async () => {
+    const account = await signUp(
+      {
+        name: 'Route Customer',
+        email: 'route-customer@example.com',
+        phone: '',
+        password: 'customer-password-for-tests',
+      },
+      { ...info, ipKey: 'routes-test-signup' },
+    )
+    if (!account.ok) throw new Error(account.error)
+    const cookie = `${accountCookie().name}=${account.token}`
+
+    const linked = await post(inquiry, { cookie, 'x-forwarded-for': '203.0.113.11' })
+    expect(linked.status).toBe(201)
+    const { id } = await linked.json()
+    expect(await prisma.customerInquiry.findUnique({ where: { inquiryId: id } })).toMatchObject({
+      customerId: account.customerId,
+    })
+
+    // A forged account cookie is ignored: the request is still saved, just not linked.
+    const forged = await post(inquiry, {
+      cookie: `${accountCookie().name}=forged-token`,
+      'x-forwarded-for': '203.0.113.12',
+    })
+    expect(forged.status).toBe(201)
+    const { id: anonymousId } = await forged.json()
+    expect(await prisma.customerInquiry.findUnique({ where: { inquiryId: anonymousId } })).toBe(
+      null,
+    )
   })
 
   it('answers a filled honeypot like a success but stores nothing', async () => {

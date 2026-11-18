@@ -274,10 +274,14 @@
   }
 }
 
-/* ---- Light glass surface: brand-teal tint over the skyline, bare full-colour logos ---- */
+/* ---- Light surface: brand-teal tint gradient, bare full-colour logos ----
+   Owner, 2026-11-18: no skyline photo, same colour; the white keyhole watermark stays. The gradient is
+   the old scrim with opaque stops, so the band keeps the tone it had over the photo. */
 .ll-dev-showcase.ll-section-glass-light {
-  /* Brand teal tints (10% -> 25%), light enough for full-colour logos */
   background-color: var(--brand-teal-10);
+  background-image:
+    radial-gradient(ellipse 60% 80% at 6% 110%, rgba(59, 158, 161, 0.3) 0%, rgba(59, 158, 161, 0) 65%),
+    linear-gradient(180deg, #e3f2f2 0%, #d7ecec 22%, #c3e0e1 55%, #b6d8d9 80%, #b9dadb 100%);
   padding: clamp(5.25rem, 6.2vw, 7.25rem) 0 clamp(4.75rem, 5.8vw, 6.5rem);
   border-bottom: 1px solid var(--border-subtle);
 }
@@ -288,21 +292,7 @@
   z-index: 1;
 }
 
-.ll-section-glass-light .ll-section-image-bg img {
-  object-position: center 62%;
-  /* skyline toned toward the brand teal so it reads as a soft brand texture */
-  filter: grayscale(1) sepia(0.45) hue-rotate(128deg) saturate(1.7) contrast(0.88) brightness(1.04);
-}
-
-.ll-section-glass-light .ll-dev-glass-scrim {
-  background:
-    radial-gradient(ellipse 60% 80% at 6% 110%, rgba(59, 158, 161, 0.34) 0%, rgba(59, 158, 161, 0) 65%),
-    radial-gradient(ellipse 50% 70% at 100% 0%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 70%),
-    linear-gradient(180deg, rgba(229, 243, 243, 0.94) 0%, rgba(220, 239, 240, 0.86) 22%, rgba(205, 230, 231, 0.74) 55%, rgba(196, 226, 227, 0.7) 80%, rgba(196, 226, 227, 0.88) 100%),
-    rgba(59, 158, 161, 0.14);
-}
-
-/* Logos sit directly on the washed skyline: no frosted band, no tiles */
+/* Logos sit directly on the tint: no frosted band, no tiles */
 .ll-section-glass-light .ll-marquee {
   padding: 1.25rem 0;
 }

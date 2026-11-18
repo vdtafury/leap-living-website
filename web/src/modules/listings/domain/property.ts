@@ -61,6 +61,8 @@ export function propertyPublishProblems(p: { images: string; description: string
 }
 
 export interface PropertyRow {
+  /** Absent for unsaved admin previews */
+  id?: string
   slug: string
   referenceNumber: string
   title: string
@@ -94,6 +96,7 @@ export function toPropertyListing(row: PropertyRow): PropertyListing {
   const price = Number(row.price.toString())
   const area = Number(row.area.toString())
   return {
+    id: row.id,
     slug: row.slug,
     refCode: row.referenceNumber,
     transactionType: row.transactionType as PropertyListing['transactionType'],

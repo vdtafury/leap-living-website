@@ -26,6 +26,14 @@ export async function getPublishedProject(slug: string) {
   return row ? toProjectItem(row) : null
 }
 
+/** Published projects among `ids` (saved items); unpublished or deleted ones are left out. */
+export async function listPublishedProjectsByIds(ids: string[]) {
+  if (ids.length === 0) return []
+  await ensureReady()
+  const rows = await prisma.project.findMany({ where: { ...PUBLIC_WHERE, id: { in: ids } } })
+  return rows.map(toProjectItem)
+}
+
 /* ------------------------------------------------------------------ admin */
 
 export async function listProjectsAdmin(
