@@ -6,7 +6,7 @@ import { MortgageCalculator } from '@/components/tools/mortgage-calculator'
 import { HeroVideoBackdrop } from '@/components/home/hero-video-backdrop'
 import { PropertyCarousel } from '@/components/property/property-carousel'
 import { ProjectPanels } from '@/components/home/project-panels'
-import { ServiceDial } from '@/components/home/service-dial'
+import { ServiceIndex } from '@/components/home/service-index'
 import {
   ArrowRightIcon,
   ArrowUpRightIcon,
@@ -163,8 +163,8 @@ export function HomeView({
               </Link>
             </div>
 
-            {/* The lifecycle dial: the services as one loop around the brand mark (D-48) */}
-            <ServiceDial items={services.items} label="Our services, stage by stage" />
+            {/* Editorial index: one quiet row per service (D-48) */}
+            <ServiceIndex items={services.items} />
           </div>
         </section>
 

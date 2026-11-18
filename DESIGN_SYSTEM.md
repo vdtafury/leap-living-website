@@ -180,7 +180,7 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 2. Developer Network: light glass logo marquee, logos only; a tight band of about 130px (104px on phones) (D-29)
 3. Institutional Pillars (21+ Years, AED 12B+, ...): light tint, teal line icons, hairline dividers; 2 x 2 on phones (D-28)
 4. Featured Properties: white, **carousel with an edge tab, segments and a View all card** (see 7.8)
-5. Advisory: light tint (`ll-section-tint`), **lifecycle dial** (see 7.14, D-48)
+5. Advisory: light tint (`ll-section-tint`), **editorial index** of hairline rows (see 7.14, D-48)
 6. Selected Projects: plain white
 7. Valuation & Mortgage: light tint, **one card** (`ll-advice`, D-30). Left half: eyebrow, section title, then For Owners ("What is your property worth?" + Request Free Valuation). Right half: For Buyers, the mortgage calculator (`#mortgage-calculator`). One action per side; the halves stack on tablets and phones
 8. Client reviews: plain white, **client index + one large review** (see 7.10, D-42)
@@ -304,15 +304,12 @@ Replaces the D-42 client index (owner: all reviews visible at once, like the big
 | Form | Five 42px star radios (real inputs, keyboard + focus ring), word next to them (*Poor* … *Excellent*), man / woman picture as pill radios, live "Shown as *Mona A.*" line, character counter |
 | Status | Left border + chip: waiting = gold, published = teal, hidden = grey |
 
-### 7.14 Services: lifecycle dial (`service-dial.tsx`, `28-service-dial.css`, `ll-sd-*`, D-48)
+### 7.14 Services: editorial index (`service-index.tsx`, `28-service-index.css`, `ll-si-*`, D-48)
 
 | Part | Rule |
 |---|---|
-| Idea | The services are stations of one loop (*End-to-End*): a watch dial around the brand keyhole, the last stage leads back to the first |
-| Dial | SVG 600×600: white face, 60 inner minute ticks (major at stations), track + teal arc filled clockwise to the current stage, thin hand creeping to the next station during autoplay; keyhole outline in the centre, stage number (teal-dark, tabular) in its head, "of 05" in its body |
-| Stations | Numbered dots on the track (54px, 44px on phones); active = solid action teal with a halo; labels outside the ring, aligned by side; hidden ≤ 600px |
-| Text | *Stage 0X / 05* + tag chip, title (Poppins 500), description, *Next stage* card with a teal square arrow button; panels crossfade |
-| Motion | Autoplay 6.5s only while in view; pauses on hover/focus; stops after the visitor picks; none with reduced motion; swipe on the text on phones |
-| Layout | ≥ 1181px: text 0.85fr / dial 1.15fr (ring max 520px); below: dial above, text centred (max 40rem); ring 340px on phones |
-| Must not look like | Any card grid on the page (properties carousel, projects panels, review wall) |
-
+| Idea | Professional through simplicity: one quiet row per service, like a consultancy's list of practices |
+| Row | Grid `5.5rem / 1fr / 1.1fr`: number (teal, 0.82rem, tracked), title (Poppins 500, 1.25–1.6rem) + optional tag chip, description (0.95rem, max 34rem); hairline above each row and below the last |
+| Hover | A teal rule draws along the row's top hairline (0.6s), title moves 6px right; no pointer, rows are not links |
+| Narrow (container ≤ 760px) | Number + title on one line, description under the title |
+| Must not | Become cards, carry icons, or animate on its own |
