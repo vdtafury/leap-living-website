@@ -7,11 +7,7 @@ import { SiteFooter } from '@/components/layout/site-footer'
 import { ConsultationForm } from '@/components/forms/consultation-form'
 import { ImageGallery } from '@/components/ui/image-gallery'
 import { CheckIcon, ChevronRightIcon, MapPinIcon } from '@/components/ui/icons'
-import { PROJECTS } from '@/data/catalog'
-
-export function generateStaticParams() {
-  return PROJECTS.map((project) => ({ slug: project.slug }))
-}
+import { getPublishedProject } from '@/modules/listings'
 
 export async function generateMetadata({
   params,
@@ -19,7 +15,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const project = PROJECTS.find((p) => p.slug === slug)
+  const project = await getPublishedProject(slug)
   if (!project) return { title: 'Project Not Found | LEAP LIVING' }
 
   return pageMetadata({
@@ -31,7 +27,8 @@ export async function generateMetadata({
 
 export default async function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const project = PROJECTS.find((p) => p.slug === slug)
+  // Published and not deleted only: drafts and archived projects are a 404 for visitors.
+  const project = await getPublishedProject(slug)
 
   if (!project) notFound()
 

@@ -99,7 +99,6 @@
    ========================================================================== */
 .ll-form-card,
 .ll-key-specs-box,
-.ll-mortgage-shell,
 .ll-filter-bar,
 .ll-leadership-panel {
   border-radius: var(--radius-md);
@@ -107,8 +106,7 @@
   box-shadow: var(--shadow-card);
 }
 
-.ll-key-specs-box,
-.ll-mortgage-shell {
+.ll-key-specs-box {
   overflow: hidden;
 }
 

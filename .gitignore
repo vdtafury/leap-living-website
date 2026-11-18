@@ -60,3 +60,6 @@ releases/
 *.pdf
 docs/source-materials/*
 !docs/source-materials/README.md
+
+# local screenshots (never commit)
+.shots/

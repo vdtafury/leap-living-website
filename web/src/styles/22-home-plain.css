@@ -102,6 +102,17 @@
   scroll-margin-top: calc(76px + 1.5rem); /* fixed header */
 }
 
+.ll-hmc-standalone {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background-color: var(--white);
+  box-shadow: var(--shadow-card);
+}
+
+.ll-hmc-standalone .ll-hmc-desc {
+  margin-top: 0;
+}
+
 .ll-hmc-title {
   margin-top: 0.9rem;
   font-size: clamp(1.45rem, 2vw, 1.85rem);

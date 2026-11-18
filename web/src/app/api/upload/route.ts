@@ -1,69 +1,36 @@
-import { randomUUID } from 'node:crypto'
-import path from 'node:path'
 import { NextResponse } from 'next/server'
-import { checkAdmin } from '@/server/admin-auth'
-import { z } from 'zod'
-import { ensureSchema, prisma } from '@/server/db'
-import { savePublicFile } from '@/server/storage'
-import { getImageMetadata } from '@/server/images'
-import {
-  ALLOWED_IMAGE_TYPES,
-  isAllowedImageType,
-  MAX_UPLOAD_BYTES,
-  sniffImageMime,
-} from '@/lib/validation'
+import { guardApi } from '@/server/auth/api-guard'
+import { uploadImage } from '@/modules/media'
+import { MAX_UPLOAD_BYTES } from '@/lib/validation'
 
-const uploadSchema = z.object({
-  file: z.instanceof(File),
-})
-
+/** Admin image upload (signed in, `media.upload`, same origin, CSRF header). */
 export async function POST(request: Request) {
-  // Admin only (HTTP Basic, ADMIN_USER / ADMIN_PASSWORD); switched off when those are unset.
-  const auth = checkAdmin(request)
-  if (!auth.ok) return auth.response
+  const guard = await guardApi(request, 'media.upload', { mutation: true })
+  if (!guard.ok) return guard.response
 
-  const formData = await request.formData()
-  const parsed = uploadSchema.safeParse(Object.fromEntries(formData))
-
-  if (!parsed.success) {
-    return NextResponse.json({ ok: false, error: 'file field is required' }, { status: 400 })
-  }
-
-  const file = parsed.data.file
-
-  if (file.size > MAX_UPLOAD_BYTES) {
-    return NextResponse.json({ ok: false, error: 'file exceeds the 5 MB limit' }, { status: 413 })
-  }
-  if (!isAllowedImageType(file.type)) {
-    return NextResponse.json({ ok: false, error: 'unsupported file type' }, { status: 415 })
-  }
-
-  const buffer = Buffer.from(await file.arrayBuffer())
-  const sniffed = sniffImageMime(buffer)
-  if (sniffed !== file.type) {
+  // Refuse big bodies before parsing them (multipart overhead allowed for).
+  if (Number(request.headers.get('content-length') ?? 0) > MAX_UPLOAD_BYTES + 64 * 1024) {
     return NextResponse.json(
-      { ok: false, error: 'file content does not match its declared type' },
-      { status: 415 },
+      { ok: false, error: 'The file exceeds the 5 MB limit.' },
+      { status: 413 },
     )
   }
-
-  const extension = path.extname(file.name).toLowerCase() || ALLOWED_IMAGE_TYPES[file.type][0]
-  const filename = `${randomUUID()}${extension}`
-  const storagePath = await savePublicFile(filename, buffer)
-  const metadata = await getImageMetadata(buffer)
-
-  await ensureSchema()
-  const asset = await prisma.mediaAsset.create({
-    data: {
-      filename,
-      originalName: file.name,
-      mimeType: file.type,
-      size: file.size,
-      width: metadata.width,
-      height: metadata.height,
-      path: storagePath,
-    },
+  let file: FormDataEntryValue | null
+  try {
+    file = (await request.formData()).get('file')
+  } catch {
+    return NextResponse.json({ ok: false, error: 'Invalid upload.' }, { status: 400 })
+  }
+  if (!(file instanceof File)) {
+    return NextResponse.json({ ok: false, error: 'Choose a file.' }, { status: 400 })
+  }
+  const result = await uploadImage(guard.actor, {
+    name: file.name,
+    type: file.type,
+    size: file.size,
+    bytes: () => file.arrayBuffer(),
   })
-
-  return NextResponse.json({ ok: true, asset }, { status: 201 })
+  if (!result.ok)
+    return NextResponse.json({ ok: false, error: result.error }, { status: result.status })
+  return NextResponse.json({ ok: true, asset: result.asset }, { status: 201 })
 }

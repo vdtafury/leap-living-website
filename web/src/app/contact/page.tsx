@@ -6,7 +6,7 @@ import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { ConsultationForm } from '@/components/forms/consultation-form'
 import { ChevronRightIcon, MailIcon, MapPinIcon, PhoneIcon } from '@/components/ui/icons'
-import { SITE } from '@/data/site'
+import { getPublishedContent } from '@/modules/content'
 
 export const metadata: Metadata = pageMetadata({
   title: 'Contact Us | LEAP LIVING Real Estate Consultancy — Dubai',
@@ -15,7 +15,8 @@ export const metadata: Metadata = pageMetadata({
   path: '/contact',
 })
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const { company } = await getPublishedContent('settings')
   return (
     <>
       <SiteHeader />
@@ -58,10 +59,10 @@ export default function ContactPage() {
                       Direct Line / WhatsApp
                     </div>
                     <a
-                      href={SITE.phone.href}
+                      href={company.phoneHref}
                       style={{ fontWeight: 600, fontSize: '1.05rem', color: 'var(--heading)' }}
                     >
-                      {SITE.phone.display}
+                      {company.phoneDisplay}
                     </a>
                   </div>
                 </div>
@@ -73,10 +74,10 @@ export default function ContactPage() {
                       Advisory Desk Email
                     </div>
                     <a
-                      href={`mailto:${SITE.email}`}
+                      href={`mailto:${company.email}`}
                       style={{ fontWeight: 600, fontSize: '1.05rem', color: 'var(--heading)' }}
                     >
-                      {SITE.email}
+                      {company.email}
                     </a>
                   </div>
                 </div>
@@ -90,10 +91,10 @@ export default function ContactPage() {
                     <address
                       style={{ fontStyle: 'normal', fontWeight: 600, color: 'var(--heading)' }}
                     >
-                      {SITE.address.lines.map((line) => (
+                      {company.addressLines.map((line) => (
                         <div key={line}>{line}</div>
                       ))}
-                      <div>Dubai, United Arab Emirates</div>
+                      <div>{company.region}</div>
                     </address>
                   </div>
                 </div>

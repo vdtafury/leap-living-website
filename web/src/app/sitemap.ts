@@ -1,6 +1,9 @@
 import type { MetadataRoute } from 'next'
-import { PROJECTS, PROPERTIES } from '@/data/catalog'
+import { listPublishedProjects, listPublishedProperties } from '@/modules/listings'
 import { SITE_URL } from '@/lib/seo'
+
+// Read on every request: new listings appear without a rebuild, and the build never touches a DB.
+export const dynamic = 'force-dynamic'
 
 const STATIC_ROUTES: { path: string; priority: number }[] = [
   { path: '/', priority: 1 },
@@ -12,10 +15,15 @@ const STATIC_ROUTES: { path: string; priority: number }[] = [
   { path: '/contact', priority: 0.7 },
 ]
 
-export default function sitemap(): MetadataRoute.Sitemap {
+/** Published, non-deleted listings and projects only. */
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [properties, projects] = await Promise.all([
+    listPublishedProperties(),
+    listPublishedProjects(),
+  ])
   return [
     ...STATIC_ROUTES.map(({ path, priority }) => ({ url: `${SITE_URL}${path}`, priority })),
-    ...PROPERTIES.map((p) => ({ url: `${SITE_URL}/properties/${p.slug}`, priority: 0.6 })),
-    ...PROJECTS.map((p) => ({ url: `${SITE_URL}/projects/${p.slug}`, priority: 0.6 })),
+    ...properties.map((p) => ({ url: `${SITE_URL}/properties/${p.slug}`, priority: 0.6 })),
+    ...projects.map((p) => ({ url: `${SITE_URL}/projects/${p.slug}`, priority: 0.6 })),
   ]
 }

@@ -4,17 +4,15 @@
 
 ## Current phase
 
-**Phase 0 — Multi-page public platform, pre-meeting delivery.** The public site is built and hardened: forms are saved to the database, admin endpoints are locked, and security headers and SEO are in place. Staging deployment on the client's Tasjeel cPanel is prepared but **on hold** (owner, 2026-11-17). ROADMAP is a guide, not a contract: quality comes first (owner).
+**Phases 1 and 2 built (owner, 2026-11-18): admin, RBAC, audit log, property and project CRUD with images, public pages reading the database, form outbox, CMS with draft → preview → publish, site settings, developers.** Waiting on the client meeting answers. Staging on the client's Tasjeel cPanel is prepared but **on hold** (owner, 2026-11-17). ROADMAP is a guide, not a contract: quality comes first (owner).
 
 ## Last updated
 
-2026-11-17 — by: Antigravity agent. Mobile data optimization (phones stay on lightweight 84KB WebP frame-0 poster instead of loading 150MB video); cleaned Git history with `git-filter-repo` dropping pack size from 333MB to 23.8MB; verified 75/75 PASS and force-pushed to `feat/multi-page-platform`.
-
-Same day, Arena agent: checked the cleanup from a fresh clone. The 88 MB master is gone from every branch (three old branches that still held it were deleted by the owner). `feat/multi-page-platform` alone is 23.8 MB; a full clone is still ~86 MB because 11 merged `arena/*` branches (PRs #1–#13) keep the pre-rewrite history with the old stock clips. Deleting them brings a full clone to ~24 MB. Phones turned sideways now also keep the poster (they loaded the 150 MB video before), docs updated.
+2026-11-18 — by: Arena agent. Item 4 closed (calculator unification, `10-mortgage.css` removed, a11y fixes). Phase 1 + Phase 2 built (D-31 … D-36): `/admin` with sessions, roles and audit log; properties, projects, images, developers, homepage/about/settings content with preview and revisions; form requests and email queue; users. Public site unchanged visually, now fed from the database.
 
 ### Previous update
 
-2026-11-17 — by: Arena agent. Applied the owner's point-by-point decisions: hero original only, fluid width, Insights removed, leapliving.ae data, forms → database, locked APIs, security headers, SEO, branded 404, CSS split, tests 8 → 47.
+2026-11-17 — by: Arena agent. Homepage mortgage calculator (D-30), `/mortgage` → 308, one-card Owner & Buyer section, meeting questions file.
 
 ## State of the repository
 
@@ -22,47 +20,46 @@ Same day, Arena agent: checked the cleanup from a fresh clone. The 88 MB master 
 - **Pages (`web/src/app/`):**
   - `/`, `/buy`, `/rent`, `/properties/[slug]`;
   - `/projects`, `/projects/[slug]`;
-  - `/sell`, `/mortgage`, `/about`, `/contact`;
+  - `/sell`, `/about`, `/contact` (`/mortgage` → 308 to `/#mortgage-calculator`);
+  - `/admin/**`: the admin panel (below);
   - a branded 404 (`not-found.tsx`) and error page (`error.tsx`);
   - `robots.txt`, `sitemap.xml`.
 - **Homepage order:**
   1. header
   2. full-screen hero (client video, Buy/Rent search)
-  3. developer marquee (28 developers, client sheet order)
+  3. developer strip (from the Developers module, in its order)
   4. stats (tint, teal icons)
   5. featured properties carousel
-  6. advisory bento (light tint)
+  6. advisory bento (tint)
   7. projects
-  8. valuation & mortgage panel (tint)
-  9. client reviews (Provident-style cards, man / woman avatars)
+  8. Owner & Buyer card: owners + valuation | buyers + mortgage calculator (tint)
+  9. client reviews (man / woman avatars)
   10. footer (light tint)
-- **Company data:** single source `web/src/data/site.ts`, taken from https://leapliving.ae/ (owner: that site is correct). Footer, contact page and JSON-LD read it.
+- **Company data:** published **Site settings** in the admin (starter values from `web/src/data/site.ts`, taken from https://leapliving.ae/). Header, footer, contact page and JSON-LD read it.
 - **Hero video:** one file, the client's original as delivered.
   - Path `public/videos/hero/client-hero-original.mp4`, ~150 MB, git-ignored, placed with `scripts/prepare-hero-original.sh`.
   - No renditions, no trimming (D-24).
   - The poster is frame 0.
   - Phones (upright or sideways) keep the poster only; tablets and desktops play the video (`HERO_MOBILE_QUERY`).
-- **Styles:** `web/src/styles/01-…21-*.css`, imported in order by `web/src/app/globals.css` (was one 84 KB file). Content width is fluid, 1220 → 1560px (`DESIGN_SYSTEM.md` §6).
+- **Styles:** `web/src/styles/01-…22-*.css` (admin: `web/src/app/admin/admin.css`, `adm-*` classes only), imported in order by `web/src/app/globals.css` (was one 84 KB file). Content width is fluid, 1220 → 1560px (`DESIGN_SYSTEM.md` §6).
+- **Modules (`web/src/modules/<name>/{domain,application,infrastructure}` + `index.ts`):** authorization, users (auth, sessions, user admin), audit-logs, listings (properties + projects), media, developers, content (registry + documents + revisions), inquiries (forms + outbox + mailer), reporting (dashboard). Other code imports a module only through its `index.ts` (`src/server/bootstrap.ts` is the one exception, for the first-run seed).
 - **Server (`web/src/server/`):**
-  - SQLite via Prisma + better-sqlite3; models `MediaAsset` and `Inquiry`.
-  - Tables are created on the first request (`schema.ts`). A test checks them against `prisma/schema.prisma`.
+  - SQLite via Prisma + better-sqlite3; 15 models. Tables are created on the first request (`schema.ts`, additive only); a test checks them against `prisma/schema.prisma`.
+  - `bootstrap.ts`: schema → roles/permissions sync → first Super Admin → one-time starter import → outbox worker.
+  - `auth/`: Argon2id passwords, session tokens, CSRF + same-site check (D-35), `requireActor`/`requireMutation`, `guardApi` for route handlers.
+- **Admin (`/admin`):** dashboard; properties and projects (draft / publish / unpublish / archive / delete, images with order, cover and alt text); images; homepage, about page, site settings (draft → preview → publish, revisions); developers (logo upload, order); form requests (status, filters, CSV); email queue (retry); users (create, role, reset password, deactivate); audit log. Times shown in Dubai time.
 - **APIs:**
-  - `POST /api/inquiries`: the public form endpoint. It runs validation, a honeypot and a same-origin check, caps bodies at 16 KB, and saves at most 5 submissions per IP per 10 minutes.
-  - Admin only: `GET /api/inquiries[?format=csv]`, `POST /api/upload`, `GET /api/sharp`.
-    - Basic auth with `ADMIN_USER`/`ADMIN_PASSWORD` (password ≥ 12 characters).
-    - These answer 404 when either variable is unset.
-  - `GET /api/health`: returns `{status, db}`; error details go to the server log only.
-- **Environment variables:** listed in `web/.env.example`:
-  - `DATABASE_URL`, `STORAGE_DIR`;
-  - `ADMIN_USER`, `ADMIN_PASSWORD`, `IP_HASH_SECRET`;
-  - `SITE_URL`, `SITE_INDEXING`;
-  - `ALLOW_FRAMING` (preview only).
-- **Checks:**
-  1. `npx tsc --noEmit`
-  2. `npx eslint .`
-  3. `npx vitest run` (12 files)
-  4. `npm run build`
-  5. `ADMIN_USER=… ADMIN_PASSWORD=… BASE=http://localhost:3000 bash scripts/verify.sh`, against `next start` running with the same env.
+  - `POST /api/inquiries`: public form endpoint (validation, honeypot, same-origin, 16 KB cap, 5 saved per IP per 10 min). Saves the request and queues its email in one transaction.
+  - `GET /api/inquiries[?format=csv]`: signed in with `inquiry.export`.
+  - `POST /api/upload`: signed in with `media.upload`, same-site + `x-csrf-token`. Re-encodes to WebP (1600 + 800 px).
+  - `GET /api/health`: `{status, db}`; error details go to the server log only.
+- **Environment variables** (`web/.env.example`): `DATABASE_URL`, `STORAGE_DIR`; `ADMIN_USER`, `ADMIN_PASSWORD` (first Super Admin only); `SEED_STARTER_CONTENT`; `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASSWORD`, `MAIL_FROM`, `MAIL_TO`; `IP_HASH_SECRET`; `SITE_URL`, `SITE_INDEXING`; `ALLOW_FRAMING` (preview only).
+- **Checks (from `web/`):**
+  1. `rm -rf .next/types && npx tsc --noEmit -p .`
+  2. `npm run lint` (0 errors; 3 old `<img>` warnings)
+  3. `npx vitest run` (19 files, 102 tests)
+  4. `ALLOW_FRAMING=1 npx next build` (`npm run build` runs `prisma generate` first)
+  5. `BASE=http://localhost:3000 bash scripts/verify.sh` against `next start` (80 checks; signed-in behaviour is covered by vitest)
 
 ## Done
 
@@ -81,6 +78,10 @@ Same day, Arena agent: checked the cleanup from a fresh clone. The 88 MB master 
 - [x] Fluid content width (no jumps at 1400/1600/1800)
 - [x] CSS split into 21 files
 - [x] Tests 8 → 47, covering API, auth, rate limit, validation, CSV, schema, SEO and hero rules
+- [x] Homepage mortgage calculator; `/mortgage` → 308 (D-30)
+- [x] **Phase 1:** admin login (Argon2id, DB sessions, lockout), RBAC as data, audit log, property + project CRUD with images, public pages from the DB, forms + email outbox (D-31 … D-33)
+- [x] **Phase 2:** homepage / about / site settings with draft → preview → publish and revisions; developers module (D-34)
+- [x] Tests 47 → 102 (auth, sessions, CSRF, permissions, listings, content, media, outbox, routes)
 
 ## Open items (temporary on purpose, to settle at the client meeting)
 
@@ -91,20 +92,24 @@ The full question list for the meeting is in `docs/business/meeting-questions.md
 - **Testimonials:** Hassan A., Leila K. and Omar N. are placeholders, to be replaced.
 - **Samples:** sample listings, projects and developer names/logos stay until the CRM and permission answers arrive (O-06). No SAMPLE labels for now (owner).
 - **Links:** Privacy, Terms and some other links point to `/contact` (O-08).
-- **Forms:** the CRM link and email notification are undecided (O-19). Until then, read submissions via `GET /api/inquiries?format=csv`.
+- **Forms:** requests are in `/admin/inquiries`; emails wait in `/admin/outbox` until SMTP is set (O-19: which mailbox, CRM link).
 - **WhatsApp:** a possible WhatsApp option next to `Know More` on property cards, after the meeting.
 - **Source materials:** `docs/source-materials/` is git-ignored and absent from fresh clones.
 
 ## Next (in order)
 
 1. Client meeting: get answers to `docs/business/meeting-questions.md`.
-2. Staging on cPanel when the owner resumes it (`docs/deployment/cpanel-staging.md`). Set `ADMIN_USER`, `ADMIN_PASSWORD` and `SITE_URL`.
-3. Production cut-over, only with written approval: set `SITE_URL=https://leapliving.ae` and `SITE_INDEXING=true`.
+2. Owner: decide teal for buttons/search (`#3B9EA1` 3.18:1 fails AA for white text; `#287F82` 4.72:1 passes).
+3. SMTP details for the form emails (O-19) → set the `SMTP_*`, `MAIL_FROM`, `MAIL_TO` env vars; queued emails then send by themselves.
+4. Staging on cPanel when the owner resumes it (`docs/deployment/cpanel-staging.md`): verify glibc ≥ 2.28 (better-sqlite3 and argon2 need it), set `ADMIN_USER`, `ADMIN_PASSWORD`, `SITE_URL`, keep the data folder outside the app.
+5. Phase 3 (CRM workflows) after the meeting answers.
+6. Production cut-over, only with written approval: `SITE_URL=https://leapliving.ae` and `SITE_INDEXING=true`.
 
 ## Blocked / waiting
 
 - **Hosting:** staging is on hold (owner). The host OS/glibc is still unverified; better-sqlite3 needs glibc ≥ 2.28.
 - **Content/legal:** O-05 stats, O-06 developer logo permissions, O-08 legal pages, O-19 SMTP / CRM.
+- **Design:** teal for buttons/search (owner).
 
 ## Session log
 
@@ -155,3 +160,5 @@ The full question list for the meeting is in `docs/business/meeting-questions.md
 | 2026-11-17 | Arena agent | Homepage mortgage calculator from the owner's reference (navbar, buyer tile and footer go to `/#mortgage-calculator`); `/mortgage` page deleted (308 redirect, out of the sitemap); desktop hero search smaller and lower (D-30) | `tsc` PASS, lint 0 errors, vitest 55/55 (7 new), build PASS, verify.sh 67/67; anchor lands under the header in 6/6 cases (desktop, phone); Lighthouse mobile 90–93, desktop 99 |
 | 2026-11-17 | Arena agent | Meeting questions saved in `docs/business/meeting-questions.md` (24, grouped, with O-xx references). Teal status chips use secondary teal `#287F82`: white text now 4.72:1, was 3.19:1 (Lighthouse `color-contrast` fixed) | build PASS, verify.sh 67/67; Lighthouse a11y re-checked |
 | 2026-11-17 | Arena agent | Owner & Buyer section is now one card: owners (title + valuation) on the left, buyers (calculator) on the right; the redundant "Open Mortgage Calculator" tile is removed. Desktop hero search centred and lower (D-30) | `tsc` PASS, lint 0 errors, vitest 55/55, build PASS, verify.sh 67/67; anchor 6/6 |
+| 2026-11-18 | Arena agent | Item 4 closed; Phase 1 + 2 built (D-31 … D-36): admin with DB sessions, RBAC, audit log; property/project CRUD with images; public site from the DB with starter import; forms + email outbox; CMS (home, about, settings) with preview, publish and revisions; developers; users; form requests; email queue. Fixed on the way: same-site check without Origin (Chrome), admin forms no longer reset on error, `sitemap.xml`/`robots.txt` dynamic | tsc PASS, lint 0 errors, vitest 102/102, build PASS, `verify.sh` 80/80, browser run: login → forced password change → edit price → public updated → draft hidden → preview → publish → public updated; 0 console errors |
+| 2026-11-18 | Arena agent | Owner hit "You do not have permission" in the admin preview: his browser blocked the framed session cookie. Signed-out message, full-page-load login check with a notice and "open in its own tab" link (D-37) | tsc PASS, lint 0 errors, vitest 102/102, build PASS, verify.sh 80/80; headless Chrome: normal sign-in, blocked cookie → notice, sign-in inside a cross-site iframe works |

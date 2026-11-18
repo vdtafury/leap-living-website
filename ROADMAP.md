@@ -27,6 +27,8 @@ Acceptance
 
 ## Phase 1 — Foundation and core listing (MVP)
 
+> **Status (2026-11-18): built** (D-31 … D-33), except deployment to staging (on hold by the owner). Mortgage calculator is on the homepage (D-30). Projects are editable here too (owner).
+
 **Goal:** an admin can log in, add a property with images, and visitors can browse, calculate mortgages, request free valuations, and enquire.
 
 Scope
@@ -47,6 +49,8 @@ Acceptance
 - Deployed to **staging** only.
 
 ## Phase 2 — CMS for website content
+
+> **Status (2026-11-18): built** (D-34). Pages are typed documents (home, about, settings) instead of a general page builder; publish shows at once because public pages render per request (D-32), so no cache tags are needed yet.
 
 Scope
 - `content` module: pages, typed sections, section registry, draft → preview → publish, basic revision record.

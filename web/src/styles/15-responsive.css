@@ -28,7 +28,6 @@
   .ll-cards-grid,
   .ll-services-catalog-grid,
   .ll-leadership-panel,
-  .ll-mortgage-shell,
   .ll-filter-bar,
   .ll-detail-layout {
     /* minmax(0, 1fr) lets wide children (gallery, sliders) shrink instead of

@@ -8,11 +8,7 @@ import { ConsultationForm } from '@/components/forms/consultation-form'
 import { MortgageCalculator } from '@/components/tools/mortgage-calculator'
 import { ImageGallery } from '@/components/ui/image-gallery'
 import { CheckIcon, ChevronRightIcon, MapPinIcon } from '@/components/ui/icons'
-import { PROPERTIES } from '@/data/catalog'
-
-export function generateStaticParams() {
-  return PROPERTIES.map((property) => ({ slug: property.slug }))
-}
+import { getPublishedProperty } from '@/modules/listings'
 
 export async function generateMetadata({
   params,
@@ -20,7 +16,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const property = PROPERTIES.find((p) => p.slug === slug)
+  const property = await getPublishedProperty(slug)
   if (!property) return { title: 'Property Not Found | LEAP LIVING' }
 
   return pageMetadata({
@@ -36,7 +32,8 @@ export default async function PropertyDetailPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const property = PROPERTIES.find((p) => p.slug === slug)
+  // Published and not deleted only: drafts and archived listings are a 404 for visitors.
+  const property = await getPublishedProperty(slug)
 
   if (!property) notFound()
 
@@ -157,11 +154,7 @@ export default async function PropertyDetailPage({
                   >
                     Estimate Mortgage for This Residence
                   </h2>
-                  <MortgageCalculator
-                    initialPrice={property.priceAed}
-                    propertyTitle={property.title}
-                    showPresets={false}
-                  />
+                  <MortgageCalculator variant="property" initialPrice={property.priceAed} />
                 </div>
               )}
             </div>
