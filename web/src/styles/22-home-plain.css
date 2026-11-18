@@ -245,43 +245,103 @@
   color: var(--body-text);
 }
 
-/* ---------- Client reviews: Provident-style cards ---------- */
-.ll-review {
+/* ---------- Client reviews: client index + one large review (owner, 2026-11-18) ----------
+   Deliberately unlike the listing carousels: no cards, arrows, counter or progress bar. */
+.ll-reviews-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  column-gap: clamp(2.5rem, 5vw, 5.5rem);
+  row-gap: clamp(1.5rem, 2.4vw, 2.25rem);
+  align-items: stretch;
+}
+
+.ll-reviews-side {
   display: flex;
-  flex: 1;
   flex-direction: column;
   min-width: 0;
-  margin: 0;
-  padding: clamp(1.6rem, 2vw, 2rem);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  background-color: var(--white);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.ll-review:hover {
-  border-color: var(--brand-teal-25);
-  box-shadow: var(--shadow-card);
+/* Title across both columns, so the review panel lines up with the client list */
+.ll-reviews-heading {
+  grid-column: 1 / -1;
+  margin-bottom: 0;
 }
 
-/* Reviewer row first, as on Provident: avatar + name + role */
-.ll-review-author {
+.ll-reviews-index {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.ll-reviews-person {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 0.95rem;
-  margin-bottom: 1.35rem;
+  gap: 0.9rem;
+  width: 100%;
+  padding: 0.85rem 0.25rem 0.85rem 1.1rem;
+  border: 0;
+  border-bottom: 1px solid var(--border-subtle);
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  transition: background-color 0.2s ease;
 }
 
-.ll-review-avatar {
+/* Active reviewer: a teal bar on the edge, full-strength text */
+.ll-reviews-person::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.7rem;
+  bottom: 0.7rem;
+  width: 2px;
+  border-radius: 2px;
+  background-color: var(--action-teal);
+  transform: scaleY(0);
+  transition: transform 0.25s ease;
+}
+
+.ll-reviews-person[aria-selected='true']::before {
+  transform: scaleY(1);
+}
+
+.ll-reviews-person:hover {
+  background-color: var(--surface-tint);
+}
+
+.ll-reviews-person:focus-visible {
+  outline: 2px solid var(--action-teal);
+  outline-offset: -2px;
+}
+
+.ll-reviews-avatar {
   display: block;
   flex-shrink: 0;
-  width: 60px;
-  height: 60px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   overflow: hidden;
   box-shadow: inset 0 0 0 1px var(--brand-teal-25);
+  transition: box-shadow 0.25s ease, opacity 0.25s ease;
 }
 
+.ll-reviews-avatar--lg {
+  width: 56px;
+  height: 56px;
+}
+
+.ll-reviews-person[aria-selected='false'] .ll-reviews-avatar {
+  opacity: 0.6;
+}
+
+.ll-reviews-person[aria-selected='true'] .ll-reviews-avatar {
+  box-shadow: 0 0 0 2px var(--white), 0 0 0 3.5px var(--action-teal);
+}
+
+/* Generic man / woman avatar colours (shared by the index and the review footer) */
 .ll-avatar-svg {
   display: block;
 }
@@ -302,47 +362,158 @@
   fill: var(--brand-teal);
 }
 
-.ll-review-person {
+.ll-reviews-who {
   display: flex;
   flex-direction: column;
   min-width: 0;
 }
 
-.ll-review-name {
-  font-size: 0.98rem;
+.ll-reviews-name {
+  font-size: 0.95rem;
   font-weight: 600;
   color: var(--heading);
 }
 
-.ll-review-role {
-  font-size: 0.8rem;
+.ll-reviews-role {
+  font-size: 0.78rem;
   color: var(--body-text);
 }
 
-.ll-review-title {
-  margin: 0 0 0.6rem;
-  font-size: clamp(1.02rem, 1.1vw, 1.1rem);
+.ll-reviews-person[aria-selected='false'] .ll-reviews-name {
+  color: var(--body-text);
+  font-weight: 500;
+}
+
+.ll-reviews-link {
+  margin-top: auto;
+  padding-top: 1.75rem;
+  align-self: flex-start;
+}
+
+/* The stage: every review in one grid cell, only the chosen one visible */
+.ll-reviews-stage {
+  display: grid;
+  min-width: 0;
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-tint);
+  border: 1px solid var(--border-subtle);
+}
+
+.ll-reviews-panel {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0;
+  padding: clamp(2rem, 4.5vw, 4rem);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease,
+    visibility 0s linear 0.35s;
+}
+
+.ll-reviews-panel[data-active='true'] {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease,
+    visibility 0s;
+}
+
+.ll-reviews-title {
+  margin: 0 0 1rem;
+  font-size: clamp(1.08rem, 1.25vw, 1.22rem);
   font-weight: 600;
-  line-height: 1.4;
+  line-height: 1.35;
   letter-spacing: -0.01em;
+  color: var(--secondary-teal);
+}
+
+.ll-reviews-quote {
+  margin: 0;
+}
+
+.ll-reviews-quote p {
+  margin: 0;
+  font-size: clamp(1.1rem, 1.65vw, 1.45rem);
+  font-weight: 300;
+  line-height: 1.65;
+  letter-spacing: -0.005em;
   color: var(--heading);
 }
 
-.ll-review-quote {
-  margin: 0;
+.ll-reviews-by {
+  display: flex;
+  align-items: center;
+  gap: 0.95rem;
+  margin-top: clamp(1.75rem, 3vw, 2.5rem);
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-subtle);
 }
 
-.ll-review-quote p {
-  margin: 0;
-  font-size: 0.92rem;
-  line-height: 1.7;
-  color: var(--body-text);
-  /* long reviews never stretch the row: clamp to five lines */
-  display: -webkit-box;
-  -webkit-line-clamp: 5;
-  line-clamp: 5;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+/* Phones and tablets: reviewers become a swipeable row of avatars above the review */
+@media (max-width: 960px) {
+  .ll-reviews-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+  .ll-reviews-index {
+    flex-direction: row;
+    gap: 0.6rem;
+    overflow-x: auto;
+    border-top: 0;
+    padding: 0.35rem 0.25rem 0.5rem;
+    margin: 0 -0.25rem;
+    scrollbar-width: none;
+    scroll-snap-type: x proximity;
+  }
+  .ll-reviews-index::-webkit-scrollbar {
+    display: none;
+  }
+  .ll-reviews-person {
+    flex: 0 0 auto;
+    width: auto;
+    padding: 0.4rem 0.95rem 0.4rem 0.4rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
+    scroll-snap-align: start;
+  }
+  .ll-reviews-person::before {
+    display: none;
+  }
+  .ll-reviews-person[aria-selected='true'] {
+    border-color: var(--action-teal);
+    background-color: var(--brand-teal-10);
+  }
+  .ll-reviews-avatar {
+    width: 36px;
+    height: 36px;
+  }
+  .ll-reviews-avatar svg {
+    width: 36px;
+    height: 36px;
+  }
+  .ll-reviews-person .ll-reviews-role {
+    display: none;
+  }
+  .ll-reviews-link {
+    order: 3;
+    padding-top: 0;
+  }
+  .ll-reviews-side {
+    display: contents;
+  }
+  .ll-reviews-heading {
+    margin-bottom: 0;
+  }
+  .ll-reviews-stage {
+    order: 2;
+  }
 }
 
 /* ---------- Light tint surface (homepage Advisory bento) ---------- */
@@ -486,8 +657,15 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ll-review,
+  .ll-reviews-panel,
+  .ll-reviews-panel[data-active='true'],
+  .ll-reviews-person,
+  .ll-reviews-person::before,
+  .ll-reviews-avatar,
   .ll-hmc-field input {
     transition: none;
+  }
+  .ll-reviews-panel {
+    transform: none;
   }
 }

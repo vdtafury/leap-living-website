@@ -20,14 +20,17 @@ function DeveloperTile({ brand }: { brand: DeveloperBrand }) {
   return (
     <li className="ll-marquee-item">
       {brand.logo ? (
-        // Plain <img>: tiny static PNGs, explicit size avoids layout shift.
+        // Plain <img>: tiny static PNGs (~8 KB each), explicit size avoids layout shift.
+        // Eager on purpose: inside the clipped strip a lazy logo only starts loading once it is
+        // already visible, so it glided in as an empty gap (worst at the loop seam).
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={brand.logo}
           alt={brand.name}
           width={brand.width}
           height={brand.height}
-          loading="lazy"
+          loading="eager"
+          fetchPriority="low"
           decoding="async"
           className="ll-marquee-logo"
         />
