@@ -8,7 +8,7 @@
 
 ## Last updated
 
-2026-11-18 — by: Arena agent. Vercel deployment operational: live at `https://web-ecru-delta-79.vercel.app`. Fixed Vercel runtime Node.js version mismatch by pinning `"engines": { "node": "24.x" }` in `package.json`, added `/tmp/leap_dev.db` fallback for serverless read-only filesystem in `src/server/db.ts`, and bootstrapped admin credentials on Vercel. Health checks (`/api/health`), SSR pages, and database writes (`/api/inquiries`) verified 200/201. Local server active on `http://localhost:3000`. Item 4 closed (calculator unification, `10-mortgage.css` removed, a11y fixes). Phase 1 + Phase 2 built (D-31 … D-36): `/admin` with sessions, roles and audit log; properties, projects, images, developers, homepage/about/settings content with preview and revisions; form requests and email queue; users. Public site unchanged visually, now fed from the database.
+2026-11-18 — by: Arena agent. Pulled PR #22 & PR #23 (`5668ee7`). Integrated D-42 navbar order & developer strip, D-43 smooth page transitions, D-44 client reviews wall with ratings breakdown + visitor review submission (`/account/review`) & admin moderation (`/admin/reviews`), and D-45 expanding photo panels for projects (`ll-xp-panel`). Handled bootstrap concurrency and test timeouts. 135/135 vitest tests pass across 21 test files; 90/90 verify.sh checks pass. Local server updated on `http://localhost:3000` and live Vercel deployment synced at `https://web-ecru-delta-79.vercel.app`.
 
 ### Previous update
 
