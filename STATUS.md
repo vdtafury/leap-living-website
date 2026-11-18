@@ -99,7 +99,7 @@ The full question list for the meeting is in `docs/business/meeting-questions.md
 ## Next (in order)
 
 1. Client meeting: get answers to `docs/business/meeting-questions.md`.
-2. Owner: decide teal for buttons/search (`#3B9EA1` 3.18:1 fails AA for white text; `#287F82` 4.72:1 passes).
+2. Owner: look at the buttons/search in `#287F82` (D-38, on trial) and confirm, or revert with one token.
 3. SMTP details for the form emails (O-19) → set the `SMTP_*`, `MAIL_FROM`, `MAIL_TO` env vars; queued emails then send by themselves.
 4. Staging on cPanel when the owner resumes it (`docs/deployment/cpanel-staging.md`): verify glibc ≥ 2.28 (better-sqlite3 and argon2 need it), set `ADMIN_USER`, `ADMIN_PASSWORD`, `SITE_URL`, keep the data folder outside the app.
 5. Phase 3 (CRM workflows) after the meeting answers.
@@ -109,7 +109,7 @@ The full question list for the meeting is in `docs/business/meeting-questions.md
 
 - **Hosting:** staging is on hold (owner). The host OS/glibc is still unverified; better-sqlite3 needs glibc ≥ 2.28.
 - **Content/legal:** O-05 stats, O-06 developer logo permissions, O-08 legal pages, O-19 SMTP / CRM.
-- **Design:** teal for buttons/search (owner).
+- **Design:** owner to confirm the `#287F82` buttons/search after seeing them (D-38).
 
 ## Session log
 
@@ -162,3 +162,4 @@ The full question list for the meeting is in `docs/business/meeting-questions.md
 | 2026-11-17 | Arena agent | Owner & Buyer section is now one card: owners (title + valuation) on the left, buyers (calculator) on the right; the redundant "Open Mortgage Calculator" tile is removed. Desktop hero search centred and lower (D-30) | `tsc` PASS, lint 0 errors, vitest 55/55, build PASS, verify.sh 67/67; anchor 6/6 |
 | 2026-11-18 | Arena agent | Item 4 closed; Phase 1 + 2 built (D-31 … D-36): admin with DB sessions, RBAC, audit log; property/project CRUD with images; public site from the DB with starter import; forms + email outbox; CMS (home, about, settings) with preview, publish and revisions; developers; users; form requests; email queue. Fixed on the way: same-site check without Origin (Chrome), admin forms no longer reset on error, `sitemap.xml`/`robots.txt` dynamic | tsc PASS, lint 0 errors, vitest 102/102, build PASS, `verify.sh` 80/80, browser run: login → forced password change → edit price → public updated → draft hidden → preview → publish → public updated; 0 console errors |
 | 2026-11-18 | Arena agent | Owner hit "You do not have permission" in the admin preview: his browser blocked the framed session cookie. Signed-out message, full-page-load login check with a notice and "open in its own tab" link (D-37) | tsc PASS, lint 0 errors, vitest 102/102, build PASS, verify.sh 80/80; headless Chrome: normal sign-in, blocked cookie → notice, sign-in inside a cross-site iframe works |
+| 2026-11-18 | Arena agent | Buttons and hero search moved to action teal `#287F82` (owner: try it, D-38): one token `--action-teal`, hover dark teal; brand `#3B9EA1` kept for accents | Computed in headless Chrome: header/hero/form buttons, search button and active tab all `rgb(40,127,130)`, white text 4.72:1 (was 3.18:1); build PASS, verify.sh 80/80 |

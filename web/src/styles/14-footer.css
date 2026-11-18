@@ -109,8 +109,8 @@
 
 .ll-social-link:hover {
   color: var(--white);
-  background-color: var(--brand-teal);
-  border-color: var(--brand-teal);
+  background-color: var(--action-teal);
+  border-color: var(--action-teal);
 }
 
 .ll-footer-heading {

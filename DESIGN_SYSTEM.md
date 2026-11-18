@@ -27,7 +27,7 @@ It is essential to distinguish between **Core Brand Colors** and **Supporting We
 
 | Token | HEX | RGB | CMYK | Role |
 |---|---|---|---|---|
-| `brand-teal` | `#3B9EA1` | `59, 158, 161` | `74, 20, 38, 0` | Primary brand colour, primary buttons, key brand accents |
+| `brand-teal` | `#3B9EA1` | `59, 158, 161` | `74, 20, 38, 0` | Primary brand colour, key brand accents (icons, lines, borders, decoration). Not for fills behind white text (3.18:1) |
 | `neutral-grey` | `#DDDDDD` | `221, 221, 221` | `12, 9, 9, 0` | Dividers, borders, secondary neutral elements |
 | `white` | `#FFFFFF` | `255, 255, 255` | `0, 0, 0, 0` | Primary clean backgrounds and cards |
 
@@ -40,7 +40,7 @@ It is essential to distinguish between **Core Brand Colors** and **Supporting We
 | Token | Usage | HEX | Notes |
 |---|---|---|---|
 | `dark-teal` | Dark Hero / Feature Sections | `#185C5E` | Used selectively for dark hero/advisory panels and dark accents |
-| `secondary-teal` | Secondary Teal / Interactive Hover | `#287F82` | Button hover states, secondary highlights, high-contrast interactive elements |
+| `secondary-teal` | Secondary Teal / Action | `#287F82` | **`--action-teal`**: every fill that carries white text or icons: primary buttons (header `Free Valuation`, hero, forms), hero search button and active Buy/Rent tab, form tabs, carousel/social/card-arrow hovers, status chips. White text 4.72:1 (AA). Hover: `--action-teal-hover` = dark teal `#185C5E` (D-38) |
 | `page-bg` | Secondary / Page Background | `#F5F7F6` | Soft off-white background to alternate with pure `#FFFFFF` sections |
 | `heading` | Headings / Primary Text | `#252B2B` | Deep charcoal-teal for crisp editorial headings and primary text |
 | `body-text` | Body Text | `#626B69` | Balanced muted slate-grey for comfortable reading |
