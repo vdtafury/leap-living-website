@@ -75,7 +75,13 @@ jobs:
           exit 1
 
       - name: Platform verification (scripts/verify.sh)
-        run: BASE=http://127.0.0.1:3000 bash scripts/verify.sh
+        run: |
+          set +e
+          BASE=http://127.0.0.1:3000 bash scripts/verify.sh | tee /tmp/verify.log
+          status=${PIPESTATUS[0]}
+          # Show each failed check on the pull request page.
+          grep '^FAIL' /tmp/verify.log | sed 's/^/::error title=verify.sh::/'
+          exit $status
 
       - name: Install the browser for Playwright
         run: npx playwright install --with-deps chromium

@@ -47,8 +47,9 @@ check_not_contains() {
   fi
 }
 
-# Fixtures
-convert -size 800x600 xc:'#3B9EA1' "$TMP/test.jpg"
+# Fixtures: a small teal JPEG, embedded so no image tool is needed (CI runners have no
+# ImageMagick). The upload check only needs a real image file.
+echo '/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAgDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAH/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAABQb/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCgFUM//9k=' | base64 -d > "$TMP/test.jpg"
 
 # 1. Health endpoint
 code=$(curl -s -o "$TMP/health.json" -w '%{http_code}' "$BASE/api/health")
