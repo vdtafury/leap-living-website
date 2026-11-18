@@ -43,6 +43,13 @@ export interface HeroVideoContext {
 
 const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]'])
 
+export function isDevOrPreviewHost(hostname?: string): boolean {
+  if (!hostname) return false
+  if (LOCAL_HOSTS.has(hostname)) return true
+  if (hostname.endsWith('.vercel.app')) return true
+  return false
+}
+
 /**
  * Whether the hero video may load. When it may not, the poster (the video's own frame 0, in
  * full quality) stays on screen, so the visitor still sees the same picture.
@@ -51,8 +58,8 @@ export function shouldPlayHeroVideo(ctx: HeroVideoContext): boolean {
   if (!ctx.hasVideo) return false
   if (ctx.isMobile) return false
   if (ctx.saveData) return false
-  // Development machines always play it, whatever Chrome guesses about the link.
-  if (ctx.hostname && LOCAL_HOSTS.has(ctx.hostname)) return true
+  // Development and preview environments (e.g. Vercel) always play it so owners/reviewers see it working.
+  if (ctx.hostname && isDevOrPreviewHost(ctx.hostname)) return true
   if (ctx.effectiveType && /(^|-)(2g|3g)$/.test(ctx.effectiveType)) return false
   if (ctx.downlink !== undefined && ctx.downlink < HERO_MIN_DOWNLINK_MBPS * (1 - DOWNLINK_NOISE))
     return false

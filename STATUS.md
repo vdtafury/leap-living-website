@@ -8,6 +8,15 @@
 
 ## Last updated
 
+2026-11-18 — by: Arena agent. Diagnosed, resolved, and verified hero video playback on live Vercel production (`https://web-ecru-delta-79.vercel.app`):
+1. Root cause 1 (Serverless FS): Vercel executes serverless functions in `/var/task` without copying `public/` files into local fs, causing `fs.existsSync` to evaluate to `false` and rendering `hasVideo: false` in RSC payload. Resolved by checking `process.env.VERCEL || fs.existsSync(...)` in `app/page.tsx` and `admin/preview/[key]/page.tsx`.
+2. Root cause 2 (Host & Network filtering): Added `isDevOrPreviewHost` recognizing `*.vercel.app` in `src/lib/hero-video.ts` so preview visitors bypass the strict 10 Mbps downlink barrier.
+3. Root cause 3 (Mobile autoplay & timing): Added mobile preview support on Vercel, explicit `v.muted = true` on the video DOM element before `v.play()`, widened first-frame threshold, and added a 1200ms safety reveal fallback timer in `src/components/home/hero-video-backdrop.tsx`.
+4. Automated Live Verification: Chrome DevTools Protocol (CDP) headless testing on live `web-ecru-delta-79.vercel.app` confirmed: `hasVideoTag: true`, `videoPaused: false`, `is-visible` applied, `videoWidth: 1920`, `videoHeight: 1080`, continuous playback (`currentTime` advancing smoothly) for both desktop and mobile viewports.
+5. Quality checks: 145/145 vitest tests pass across 23 test files; typecheck and ESLint 100% clean. Video file (44 MB) remains git-ignored and uncommitted to GitHub.
+
+### Previous update
+
 2026-11-18 — by: Arena agent. Hero video optimized for web & Vercel deployment: encoded crisp 1080p60 H.264 (High profile, CRF 22, 44 MB, well below Vercel's 100 MB ceiling) with faststart progressive streaming at `public/videos/hero/client-hero-original.mp4` (git-ignored, kept off GitHub). Deployed live to Vercel production (`https://web-ecru-delta-79.vercel.app`) with active byte-range streaming (`HTTP 206`). All 145 vitest tests pass; 99/99 verify.sh checks pass. Working tree clean.
 
 ### Previous update

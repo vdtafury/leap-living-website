@@ -8,10 +8,11 @@ import { listVisibleDevelopers } from '@/modules/developers'
 import { listPublishedReviews } from '@/modules/reviews'
 import { listPublishedProjects, listPublishedProperties } from '@/modules/listings'
 
-// The client's hero video is git-ignored (over GitHub's 100 MB limit), so it only exists where it
-// was placed with scripts/prepare-hero-original.sh. Checked once per process.
-const hasHeroVideo = fs.existsSync(
-  path.join(/*turbopackIgnore: true*/ process.cwd(), 'public', HERO_VIDEO_SRC),
+// The client's hero video is git-ignored. On Vercel, static files are served via CDN rather than
+// local fs at runtime. Checked once per process.
+const hasHeroVideo = Boolean(
+  process.env.VERCEL ||
+    fs.existsSync(path.join(/*turbopackIgnore: true*/ process.cwd(), 'public', HERO_VIDEO_SRC)),
 )
 
 /** Homepage: published content, listings, projects and developers only (never drafts). */

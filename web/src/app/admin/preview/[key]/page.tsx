@@ -48,8 +48,11 @@ export default async function PreviewPage({ params }: { params: Promise<{ key: s
       listVisibleDevelopers(),
       listPublishedReviews(),
     ])
-    const hasHeroVideo = fs.existsSync(
-      path.join(/*turbopackIgnore: true*/ process.cwd(), 'public', HERO_VIDEO_SRC),
+    const hasHeroVideo = Boolean(
+      process.env.VERCEL ||
+        fs.existsSync(
+          path.join(/*turbopackIgnore: true*/ process.cwd(), 'public', HERO_VIDEO_SRC),
+        ),
     )
     return (
       <>

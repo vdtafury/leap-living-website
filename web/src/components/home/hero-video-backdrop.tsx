@@ -28,13 +28,15 @@ interface NetworkInformationLike {
 
 function canPlayHere(hasVideo: boolean): boolean {
   const connection = (navigator as Navigator & { connection?: NetworkInformationLike }).connection
+  const hostname = window.location.hostname
+  const isVercelPreview = hostname.endsWith('.vercel.app')
   return shouldPlayHeroVideo({
     hasVideo,
     saveData: connection?.saveData,
     effectiveType: connection?.effectiveType,
     downlink: connection?.downlink,
-    hostname: window.location.hostname,
-    isMobile: window.matchMedia(HERO_MOBILE_QUERY).matches,
+    hostname,
+    isMobile: isVercelPreview ? false : window.matchMedia(HERO_MOBILE_QUERY).matches,
   })
 }
 
@@ -109,6 +111,7 @@ export function HeroVideoBackdrop({ hasVideo = false }: { hasVideo?: boolean }) 
     let cancelled = false
     let frameHandle: number | undefined
     const play = () => {
+      v.muted = true
       const p = v.play()
       if (p) {
         p.catch(() => {
@@ -123,12 +126,17 @@ export function HeroVideoBackdrop({ hasVideo = false }: { hasVideo?: boolean }) 
       v.classList.add('is-visible')
       setVideoReady(true)
     }
+    // Safety fallback: if frame callback is delayed, reveal after playback begins
+    const safetyTimer = setTimeout(() => {
+      if (!cancelled && v.currentTime > 0) reveal()
+    }, 1200)
+
     // Shown only once the browser has painted a frame — never on `canplay`, which fires before
     // anything is drawn. If decoding started late and the first painted frame is already past
     // frame 0, rewind (still hidden) so the first visible frame is exactly the poster.
     const onFirstFrame = (mediaTime: number) => {
       if (cancelled) return
-      if (mediaTime < 0.05) return reveal()
+      if (mediaTime < 0.2) return reveal()
       v.pause()
       v.addEventListener(
         'seeked',
@@ -154,6 +162,7 @@ export function HeroVideoBackdrop({ hasVideo = false }: { hasVideo?: boolean }) 
     play()
     return () => {
       cancelled = true
+      clearTimeout(safetyTimer)
       if (frameHandle !== undefined) v.cancelVideoFrameCallback(frameHandle)
     }
   }, [reducedMotion, playVideo])
