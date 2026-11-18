@@ -157,11 +157,7 @@ export default async function PropertyDetailPage({
                   >
                     Estimate Mortgage for This Residence
                   </h2>
-                  <MortgageCalculator
-                    initialPrice={property.priceAed}
-                    propertyTitle={property.title}
-                    showPresets={false}
-                  />
+                  <MortgageCalculator variant="property" initialPrice={property.priceAed} />
                 </div>
               )}
             </div>

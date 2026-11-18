@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { HeroSearchBar } from '@/components/home/hero-search-bar'
-import { HomeMortgageCalculator } from '@/components/home/home-mortgage-calculator'
+import { MortgageCalculator } from '@/components/tools/mortgage-calculator'
 import { HeroVideoBackdrop } from '@/components/home/hero-video-backdrop'
 import { PropertyCarousel } from '@/components/property/property-carousel'
 import { ProjectCard } from '@/components/project/project-card'
@@ -229,7 +229,7 @@ export default function HomePage() {
               </div>
 
               {/* Buyers: the calculator (navbar "Mortgage Calculator" scrolls here, D-30) */}
-              <HomeMortgageCalculator />
+              <MortgageCalculator />
             </div>
           </div>
         </section>

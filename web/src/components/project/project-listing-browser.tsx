@@ -45,10 +45,7 @@ export function ProjectListingBrowser({
 
   return (
     <div>
-      <div
-        className="ll-filter-bar"
-        style={{ gridTemplateColumns: 'repeat(3, 1fr) auto' }}
-      >
+      <div className="ll-filter-bar" style={{ gridTemplateColumns: 'repeat(3, 1fr) auto' }}>
         <div>
           <label htmlFor="prj-community" className="ll-field-label">
             District / Community
@@ -115,6 +112,9 @@ export function ProjectListingBrowser({
         </button>
       </div>
 
+      {/* Keeps the heading order h1 > h2 > h3 (card titles are h3) */}
+      <h2 className="sr-only">Projects</h2>
+
       {filtered.length === 0 ? (
         <div className="ll-form-card" style={{ textAlign: 'center', padding: '3rem' }}>
           <h3 style={{ marginBottom: '0.5rem' }}>No Developments Match Your Criteria</h3>
@@ -135,4 +135,3 @@ export function ProjectListingBrowser({
     </div>
   )
 }
-

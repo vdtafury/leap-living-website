@@ -47,7 +47,7 @@ export function SiteHeader() {
   return (
     <header className={headerClass}>
       <div className="ll-container ll-header-inner">
-        <Link href="/" className="ll-brand-group" aria-label="LEAP LIVING Home">
+        <Link href="/" className="ll-brand-group" aria-label="LEAP LIVING Real Estate Consultancy, home">
           <img
             src={
               isTransparent

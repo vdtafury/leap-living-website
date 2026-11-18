@@ -66,7 +66,7 @@ export function SiteFooter() {
           </div>
 
           <div className="ll-footer-col">
-            <h4 className="ll-footer-heading">Explore</h4>
+            <h2 className="ll-footer-heading">Explore</h2>
             <div className="ll-footer-links">
               <Link href="/">Home</Link>
               <Link href="/about">About</Link>
@@ -76,7 +76,7 @@ export function SiteFooter() {
           </div>
 
           <div className="ll-footer-col">
-            <h4 className="ll-footer-heading">Properties</h4>
+            <h2 className="ll-footer-heading">Properties</h2>
             <div className="ll-footer-links">
               <Link href="/buy">Buy</Link>
               <Link href="/rent">Rent</Link>
@@ -86,7 +86,7 @@ export function SiteFooter() {
           </div>
 
           <div className="ll-footer-col">
-            <h4 className="ll-footer-heading">Information</h4>
+            <h2 className="ll-footer-heading">Information</h2>
             <div className="ll-footer-links">
               <Link href="/about">Company Profile</Link>
               <Link href="/about#leadership">Executive Leadership</Link>
@@ -98,7 +98,7 @@ export function SiteFooter() {
           </div>
 
           <div className="ll-footer-col">
-            <h4 className="ll-footer-heading">Location</h4>
+            <h2 className="ll-footer-heading">Location</h2>
             <div className="ll-footer-location">
               <MapPinIcon size={15} />
               <div>

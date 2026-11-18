@@ -159,6 +159,8 @@ export function PropertyListingBrowser({
         </button>
       </div>
 
+      {/* Keeps the heading order h1 > h2 > h3 (card titles are h3) */}
+      <h2 className="sr-only">Listings</h2>
       <div
         style={{
           marginBottom: '1.25rem',
@@ -191,4 +193,3 @@ export function PropertyListingBrowser({
     </div>
   )
 }
-

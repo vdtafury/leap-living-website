@@ -1,269 +1,186 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import Link from 'next/link'
-import { ArrowUpRightIcon } from '@/components/ui/icons'
-import { monthlyPayment as monthlyPaymentFor } from '@/lib/mortgage'
+import { ArrowUpRightIcon, CalculatorIcon } from '@/components/ui/icons'
+import { formatAmountInput, monthlyPayment, parseAmount } from '@/lib/mortgage'
 
-interface MortgageCalculatorProps {
-  initialPrice?: number
-  propertyTitle?: string
-  showPresets?: boolean
+/**
+ * Mortgage calculator (owner's reference, 2026-11-17): four inputs, the monthly payment, a
+ * consultation button and an "Apply for home loan" link. One component for both places:
+ * - `variant="home"`: right half of the homepage Owner & Buyer card. The navbar
+ *   "Mortgage Calculator" button scrolls here (`/#mortgage-calculator`).
+ * - `variant="property"`: standalone card on a property page, prefilled with its price.
+ */
+const ANCHOR = 'mortgage-calculator'
+const ANCHOR_LINKS = `a[href="/#${ANCHOR}"], a[href="#${ANCHOR}"]`
+
+/**
+ * Scrolls to the calculator reliably. Sections above it use `content-visibility: auto`
+ * (estimated heights), so a plain hash jump lands in the wrong place once they render.
+ * `ll-render-all` renders them first; the scroll then runs on real heights.
+ */
+function revealCalculator(smooth: boolean) {
+  const target = document.getElementById(ANCHOR)
+  if (!target) return
+  document.documentElement.classList.add('ll-render-all')
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() =>
+      target.scrollIntoView({ behavior: smooth && !reduceMotion ? 'smooth' : 'instant' }),
+    ),
+  )
 }
 
+interface MortgageCalculatorProps {
+  variant?: 'home' | 'property'
+  /** Prefilled price in AED (property pages) */
+  initialPrice?: number
+  /** Default rate / down payment / term (CMS settings on the homepage) */
+  defaults?: { interestRate?: number; downPaymentPercent?: number; years?: number }
+}
+
+const DEFAULT_PRICE = 2_500_000
+
 export function MortgageCalculator({
-  initialPrice = 12500000,
-  propertyTitle,
-  showPresets = true,
+  variant = 'home',
+  initialPrice = DEFAULT_PRICE,
+  defaults = {},
 }: MortgageCalculatorProps) {
-  const [propertyPrice, setPropertyPrice] = useState<number>(initialPrice)
-  const [downPaymentPercent, setDownPaymentPercent] = useState<number>(
-    initialPrice > 5000000 ? 30 : 20,
-  )
-  const [loanYears, setLoanYears] = useState<number>(20)
-  const [interestRate, setInterestRate] = useState<number>(4.25)
+  const uid = useId()
+  const isHome = variant === 'home'
 
-  const calculation = useMemo(() => {
-    const downPaymentAed = Math.round((propertyPrice * downPaymentPercent) / 100)
-    const loanAmount = Math.max(0, propertyPrice - downPaymentAed)
-    const totalMonths = loanYears * 12
-    const monthlyPayment =
-      monthlyPaymentFor({
-        price: propertyPrice,
-        downPaymentPercent,
-        interestRatePercent: interestRate,
-        years: loanYears,
-      }) ?? 0
+  // Arrivals (/mortgage redirect, links from other pages) and same-page clicks on any
+  // link to the calculator (navbar button, buyer tile, footer).
+  useEffect(() => {
+    if (!isHome) return
+    if (window.location.hash === `#${ANCHOR}`) revealCalculator(false)
 
-    const totalRepayment = Math.round(monthlyPayment * totalMonths)
-    const totalInterest = Math.max(0, totalRepayment - loanAmount)
-    const dldFee = Math.round(propertyPrice * 0.04)
-    const trusteeAndReg = Math.round(loanAmount * 0.0025 + 4200)
-    const totalUpfront = downPaymentAed + dldFee + trusteeAndReg
-
-    return {
-      downPaymentAed,
-      loanAmount,
-      monthlyPayment: Math.round(monthlyPayment),
-      totalInterest,
-      dldFee,
-      trusteeAndReg,
-      totalUpfront,
-      equityPercent: downPaymentPercent,
-      debtPercent: 100 - downPaymentPercent,
+    const onClick = (event: MouseEvent) => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+        return
+      }
+      const link = event.target instanceof Element ? event.target.closest(ANCHOR_LINKS) : null
+      if (!link) return
+      event.preventDefault() // Next.js Link skips its own navigation; its onClick still runs
+      if (window.location.hash !== `#${ANCHOR}`) window.history.pushState(null, '', `#${ANCHOR}`)
+      revealCalculator(true)
     }
-  }, [propertyPrice, downPaymentPercent, loanYears, interestRate])
+    document.addEventListener('click', onClick, true)
+    return () => document.removeEventListener('click', onClick, true)
+  }, [isHome])
+  // UAE LTV rule of thumb: 20% down up to AED 5M, 30% above (the lender decides)
+  const [price, setPrice] = useState(formatAmountInput(String(Math.round(initialPrice))))
+  const [downPayment, setDownPayment] = useState(
+    String(defaults.downPaymentPercent ?? (initialPrice > 5_000_000 ? 30 : 20)),
+  )
+  const [rate, setRate] = useState(String(defaults.interestRate ?? 4.25))
+  const [years, setYears] = useState(String(defaults.years ?? 25))
 
-  const formatAed = (value: number) =>
-    'AED ' + value.toLocaleString('en-US', { maximumFractionDigits: 0 })
+  const monthly = monthlyPayment({
+    price: parseAmount(price),
+    downPaymentPercent: parseAmount(downPayment),
+    interestRatePercent: parseAmount(rate),
+    years: parseAmount(years),
+  })
+
+  const fields = [
+    {
+      id: `${uid}-price`,
+      label: 'Total Price (AED)',
+      value: price,
+      onChange: (v: string) => setPrice(formatAmountInput(v)),
+    },
+    {
+      id: `${uid}-down`,
+      label: 'Down Payment (%)',
+      value: downPayment,
+      onChange: (v: string) => setDownPayment(v.replace(/[^\d.]/g, '')),
+    },
+    {
+      id: `${uid}-rate`,
+      label: 'Interest Rate (%)',
+      value: rate,
+      onChange: (v: string) => setRate(v.replace(/[^\d.]/g, '')),
+    },
+    {
+      id: `${uid}-years`,
+      label: 'Loan Period (Years)',
+      value: years,
+      onChange: (v: string) => setYears(v.replace(/\D/g, '')),
+    },
+  ]
 
   return (
-    <div className="ll-mortgage-shell">
-      <div className="ll-mortgage-controls">
-        {propertyTitle && (
-          <div className="ll-mortgage-context">
-            Financing illustration for <strong>{propertyTitle}</strong>
-          </div>
-        )}
-
-        {showPresets && (
-          <div className="ll-preset-row">
-            {[
-              { label: 'Boulevard Penthouse · 12.5M', price: 12500000 },
-              { label: 'Palm Sky Villa · 14.8M', price: 14800000 },
-              { label: 'Golfside Duplex · 9.6M', price: 9600000 },
-            ].map((preset) => (
-              <button
-                key={preset.label}
-                type="button"
-                onClick={() => setPropertyPrice(preset.price)}
-                className={`ll-segment-chip ${propertyPrice === preset.price ? 'active' : ''}`}
-              >
-                {preset.label}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Property Price */}
-        <div>
-          <div className="ll-control-header">
-            <label htmlFor="mc-price" className="ll-field-label">
-              Property Price (AED)
-            </label>
-            <span className="ll-control-value tabular-nums">{formatAed(propertyPrice)}</span>
-          </div>
-          <input
-            id="mc-price"
-            type="range"
-            min={1500000}
-            max={50000000}
-            step={100000}
-            value={propertyPrice}
-            onChange={(e) => setPropertyPrice(Number(e.target.value))}
-            className="ll-range-slider"
-          />
-          <div className="ll-range-bounds">
-            <span>AED 1.5M</span>
-            <span>AED 25M</span>
-            <span>AED 50M</span>
-          </div>
-        </div>
-
-        {/* Down Payment */}
-        <div>
-          <div className="ll-control-header">
-            <label htmlFor="mc-down" className="ll-field-label">
-              Down Payment ({downPaymentPercent}%)
-            </label>
-            <span className="ll-control-value ll-value-accent tabular-nums">
-              {formatAed(calculation.downPaymentAed)}
+    <div
+      id={isHome ? ANCHOR : undefined}
+      className={isHome ? 'll-hmc' : 'll-hmc ll-hmc-standalone'}
+    >
+      {isHome && (
+        <>
+          <div className="ll-advice-kicker">
+            <span className="ll-advice-icon" aria-hidden="true">
+              <CalculatorIcon size={18} />
             </span>
+            For Buyers
           </div>
-          <input
-            id="mc-down"
-            type="range"
-            min={20}
-            max={80}
-            step={5}
-            value={downPaymentPercent}
-            onChange={(e) => setDownPaymentPercent(Number(e.target.value))}
-            className="ll-range-slider"
-          />
-          <div className="ll-preset-row" style={{ marginTop: '0.6rem' }}>
-            {[
-              { label: '20% UAE Resident', pct: 20 },
-              { label: '30% Luxury Tier (>5M)', pct: 30 },
-              { label: '40% Non-Resident', pct: 40 },
-              { label: '50% Conservative', pct: 50 },
-            ].map((tier) => (
-              <button
-                key={tier.pct}
-                type="button"
-                onClick={() => setDownPaymentPercent(tier.pct)}
-                className={`ll-segment-chip ${downPaymentPercent === tier.pct ? 'active' : ''}`}
-              >
-                {tier.label}
-              </button>
-            ))}
-          </div>
-        </div>
+          <h3 className="ll-hmc-title">Mortgage Calculator</h3>
+        </>
+      )}
+      <p className="ll-hmc-desc">
+        {isHome
+          ? 'Estimate your monthly repayment in seconds. Adjust the figures to match your plans.'
+          : 'Prefilled with this property’s price. Adjust the figures to match your plans.'}
+      </p>
 
-        {/* Tenure and Rate */}
-        <div className="ll-two-col">
-          <div>
-            <div className="ll-control-header">
-              <label htmlFor="mc-years" className="ll-field-label">
-                Loan Tenure
-              </label>
-              <span className="ll-control-value tabular-nums">{loanYears} Years</span>
-            </div>
+      <div className="ll-hmc-fields">
+        {fields.map((field) => (
+          <div key={field.id} className="ll-hmc-field">
+            <label htmlFor={field.id}>{field.label}</label>
             <input
-              id="mc-years"
-              type="range"
-              min={5}
-              max={25}
-              step={1}
-              value={loanYears}
-              onChange={(e) => setLoanYears(Number(e.target.value))}
-              className="ll-range-slider"
+              id={field.id}
+              type="text"
+              inputMode="decimal"
+              autoComplete="off"
+              value={field.value}
+              onChange={(e) => field.onChange(e.target.value)}
             />
-            <div className="ll-range-bounds">
-              <span>5 Yrs</span>
-              <span>15 Yrs</span>
-              <span>25 Yrs</span>
-            </div>
           </div>
-
-          <div>
-            <div className="ll-control-header">
-              <label htmlFor="mc-rate" className="ll-field-label">
-                Interest Rate (p.a.)
-              </label>
-              <span className="ll-control-value tabular-nums">{interestRate.toFixed(2)}%</span>
-            </div>
-            <input
-              id="mc-rate"
-              type="range"
-              min={2.5}
-              max={7.5}
-              step={0.05}
-              value={interestRate}
-              onChange={(e) => setInterestRate(Number(e.target.value))}
-              className="ll-range-slider"
-            />
-            <div className="ll-range-bounds">
-              <span>2.50%</span>
-              <span>4.25%</span>
-              <span>7.50%</span>
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
 
-      {/* Breakdown Panel */}
-      <div className="ll-mortgage-summary">
-        <div>
-          <div className="ll-summary-kicker">Estimated Monthly Repayment</div>
-          <div className="ll-summary-figure tabular-nums">
-            {formatAed(calculation.monthlyPayment)}
-            <span className="ll-summary-unit"> / month</span>
-          </div>
-
-          <div
-            className="ll-equity-bar"
-            role="img"
-            aria-label={`Equity ${calculation.equityPercent}% vs Financing ${calculation.debtPercent}%`}
-          >
-            <div
-              style={{
-                width: `${calculation.equityPercent}%`,
-                backgroundColor: '#6CB6B8',
-              }}
-            />
-            <div
-              style={{
-                width: `${calculation.debtPercent}%`,
-                backgroundColor: 'rgba(255,255,255,0.28)',
-              }}
-            />
-          </div>
-
-          <div className="ll-summary-rows tabular-nums">
-            <div className="ll-summary-row">
-              <span>Principal Financed ({calculation.debtPercent}%)</span>
-              <strong>{formatAed(calculation.loanAmount)}</strong>
-            </div>
-            <div className="ll-summary-row">
-              <span>Equity Down Payment ({calculation.equityPercent}%)</span>
-              <strong>{formatAed(calculation.downPaymentAed)}</strong>
-            </div>
-            <div className="ll-summary-row">
-              <span>Dubai Land Dept. Transfer (4%)</span>
-              <strong>{formatAed(calculation.dldFee)}</strong>
-            </div>
-            <div className="ll-summary-row">
-              <span>Mortgage Reg. &amp; Trustee Est.</span>
-              <strong>{formatAed(calculation.trusteeAndReg)}</strong>
-            </div>
-            <div className="ll-summary-row ll-summary-total">
-              <span>Estimated Upfront Capital</span>
-              <strong>{formatAed(calculation.totalUpfront)}</strong>
-            </div>
+      <div className="ll-hmc-result-row">
+        <div className="ll-hmc-result">
+          <div className="ll-hmc-result-label">Monthly Payments</div>
+          <div className="ll-hmc-result-figure tabular-nums" aria-live="polite">
+            {monthly === null ? (
+              'Enter valid figures'
+            ) : (
+              <>
+                AED{' '}
+                {monthly.toLocaleString('en-US', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+                <span> /month</span>
+              </>
+            )}
           </div>
         </div>
-
-        <div className="ll-summary-actions">
-          <Link href="/contact?topic=mortgage" className="ll-btn ll-btn-primary ll-btn-full">
-            <span>Request Bank Pre-Approval Advisory</span>
-            <ArrowUpRightIcon size={15} />
-          </Link>
-          <p className="ll-summary-note">
-            Indicative planning illustration subject to UAE Central Bank LTV regulations and lender
-            underwriting.
-          </p>
-        </div>
+        <Link href="/contact?topic=mortgage" className="ll-btn ll-hmc-cta">
+          Get a Free Consultation
+        </Link>
       </div>
+
+      <div className="ll-hmc-apply">
+        <Link href="/contact?topic=mortgage">Apply For Home Loan</Link>
+        <span>Contact us to get started with your mortgage.</span>
+        <ArrowUpRightIcon size={14} aria-hidden="true" />
+      </div>
+
+      <p className="ll-hmc-note">
+        Indicative figure for principal and interest only. Fees and lender terms apply.
+      </p>
     </div>
   )
 }
