@@ -46,3 +46,247 @@ model Inquiry {
   @@index([createdAt])
   @@index([type, createdAt])
 }
+
+// ---------------------------------------------------------------------------
+// Phase 1: admin users, permission-based RBAC, sessions, audit log
+// ---------------------------------------------------------------------------
+
+/// Admin dashboard user. Signs in with `username`; passwords are Argon2id hashes.
+model User {
+  id                 String    @id @default(cuid())
+  username           String    @unique
+  email              String?
+  name               String
+  passwordHash       String
+  isActive           Boolean   @default(true)
+  /// Set for the bootstrap admin and after a reset: the next sign-in must choose a new password.
+  mustChangePassword Boolean   @default(false)
+  failedLogins       Int       @default(0)
+  lockedUntil        DateTime?
+  lastLoginAt        DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}
+
+/// Roles are data: add a role by inserting rows, never by changing code.
+model Role {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  name        String
+  description String   @default("")
+  /// Shipped with the app (super_admin, editor); its permissions are re-synced on start.
+  isSystem    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model Permission {
+  id          String @id @default(cuid())
+  key         String @unique
+  description String @default("")
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+
+  @@id([roleId, permissionId])
+}
+
+model UserRole {
+  userId String
+  roleId String
+
+  @@id([userId, roleId])
+  @@index([roleId])
+}
+
+/// Server-side session. `id` is the SHA-256 of the cookie token, so a database leak does not
+/// hand out live sessions.
+model Session {
+  id         String   @id
+  userId     String
+  createdAt  DateTime @default(now())
+  lastSeenAt DateTime @default(now())
+  expiresAt  DateTime
+  ipHash     String?
+  userAgent  String?
+
+  @@index([userId])
+}
+
+/// Append-only from the application's point of view (SECURITY.md §7).
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  actorName  String?
+  action     String
+  targetType String?
+  targetId   String?
+  ipHash     String?
+  /// JSON object with non-sensitive details
+  metadata   String   @default("{}")
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([targetType, targetId])
+}
+
+// ---------------------------------------------------------------------------
+// Phase 1: listings
+// ---------------------------------------------------------------------------
+
+/// A listing. Visibility comes from `publicationStatus` only (PUBLISHED and not deleted);
+/// `availabilityStatus` is the commercial state and never hides or shows a listing.
+model Property {
+  id                 String    @id @default(cuid())
+  slug               String    @unique
+  referenceNumber    String    @unique
+  title              String
+  subtitle           String    @default("")
+  /// BUY | RENT (pending O-09)
+  transactionType    String
+  /// RESIDENTIAL | COMMERCIAL
+  segment            String    @default("RESIDENTIAL")
+  /// Villa | Penthouse | Apartment | Duplex | Townhouse | Commercial
+  propertyType       String
+  /// DRAFT | PUBLISHED | ARCHIVED
+  publicationStatus  String    @default("DRAFT")
+  /// AVAILABLE | UNDER_OFFER | SOLD | RENTED | OFF_MARKET
+  availabilityStatus String    @default("AVAILABLE")
+  /// Badge on the card (e.g. "Private Advisory"); empty = none
+  highlightLabel     String    @default("")
+  featured           Boolean   @default(false)
+  sortOrder          Int       @default(0)
+  community          String
+  emirate            String    @default("Dubai")
+  price              Decimal
+  currency           String    @default("AED")
+  /// e.g. "/ year" for rentals
+  priceFrequency     String    @default("")
+  beds               Int       @default(0)
+  baths              Int       @default(0)
+  area               Decimal
+  areaUnit           String    @default("sq ft")
+  /// Ready | Off-Plan | Leasing Available
+  completionStatus   String    @default("Ready")
+  developer          String    @default("")
+  description        String    @default("")
+  /// JSON array of strings
+  highlights         String    @default("[]")
+  /// JSON array of { url, alt }; the first image is the cover
+  images             String    @default("[]")
+  permitNumber       String?
+  publishedAt        DateTime?
+  deletedAt          DateTime?
+  createdById        String?
+  updatedById        String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@index([publicationStatus, transactionType, sortOrder])
+}
+
+/// A development (off-plan or ready). Same visibility rule as Property.
+model Project {
+  id                String    @id @default(cuid())
+  slug              String    @unique
+  referenceNumber   String    @unique
+  title             String
+  developer         String    @default("")
+  community         String
+  /// RESIDENTIAL | COMMERCIAL | MIXED-USE
+  segment           String    @default("RESIDENTIAL")
+  /// Off-Plan | Under Construction | Ready | free text such as "Handover 2026"
+  status            String
+  publicationStatus String    @default("DRAFT")
+  featured          Boolean   @default(false)
+  sortOrder         Int       @default(0)
+  startingPrice     Decimal
+  currency          String    @default("AED")
+  handoverLabel     String    @default("")
+  paymentPlan       String    @default("")
+  unitTypes         String    @default("")
+  overview          String    @default("")
+  /// JSON array of { label, value }
+  keyFacts          String    @default("[]")
+  /// JSON array of strings
+  amenities         String    @default("[]")
+  /// JSON array of { url, alt }; the first image is the cover
+  images            String    @default("[]")
+  publishedAt       DateTime?
+  deletedAt         DateTime?
+  createdById       String?
+  updatedById       String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([publicationStatus, sortOrder])
+}
+
+// ---------------------------------------------------------------------------
+// Phase 1: email outbox (persist first, send later)
+// ---------------------------------------------------------------------------
+
+model EmailOutbox {
+  id            String    @id @default(cuid())
+  to            String
+  subject       String
+  text          String
+  /// PENDING | SENT | FAILED (FAILED = gave up after the maximum attempts)
+  status        String    @default("PENDING")
+  attempts      Int       @default(0)
+  nextAttemptAt DateTime  @default(now())
+  lastError     String?
+  sentAt        DateTime?
+  /// e.g. "Inquiry" + its id
+  relatedType   String?
+  relatedId     String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([status, nextAttemptAt])
+}
+
+// ---------------------------------------------------------------------------
+// Phase 2: CMS (pages and settings as typed section documents), developers
+// ---------------------------------------------------------------------------
+
+/// One editable document: a page ("home", "about") or the global "settings". `draft` and
+/// `published` hold JSON validated by the section registry (src/modules/content). The public
+/// site reads `published` only; Publish copies draft -> published and writes a revision.
+model ContentDocument {
+  key           String    @id
+  draft         String
+  published     String?
+  updatedById   String?
+  publishedById String?
+  publishedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model ContentRevision {
+  id            String   @id @default(cuid())
+  documentKey   String
+  content       String
+  publishedById String?
+  createdAt     DateTime @default(now())
+
+  @@index([documentKey, createdAt])
+}
+
+/// Developer logo strip on the homepage (and the developer filter list).
+model Developer {
+  id         String   @id @default(cuid())
+  name       String   @unique
+  logoUrl    String
+  /// Display size in the strip, in CSS pixels (logos differ in shape)
+  logoWidth  Int      @default(120)
+  logoHeight Int      @default(32)
+  isVisible  Boolean  @default(true)
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([isVisible, sortOrder])
+}

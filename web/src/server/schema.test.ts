@@ -23,6 +23,24 @@ function prismaModels(): Map<string, string[]> {
   return models
 }
 
+const EXPECTED_MODELS = [
+  'AuditLog',
+  'ContentDocument',
+  'ContentRevision',
+  'Developer',
+  'EmailOutbox',
+  'Inquiry',
+  'MediaAsset',
+  'Permission',
+  'Project',
+  'Property',
+  'Role',
+  'RolePermission',
+  'Session',
+  'User',
+  'UserRole',
+]
+
 describe('SQLite schema', () => {
   it('is idempotent: running it twice on the same database is fine', () => {
     const db = new Database(':memory:')
@@ -34,7 +52,7 @@ describe('SQLite schema', () => {
     const db = new Database(':memory:')
     for (const sql of SCHEMA_STATEMENTS) db.exec(sql)
     const models = prismaModels()
-    expect([...models.keys()].sort()).toEqual(['Inquiry', 'MediaAsset'])
+    expect([...models.keys()].sort()).toEqual(EXPECTED_MODELS)
     for (const [model, fields] of models) {
       const columns = (db.prepare(`PRAGMA table_info("${model}")`).all() as { name: string }[]).map(
         (c) => c.name,

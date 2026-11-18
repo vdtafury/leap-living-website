@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import { DEVELOPER_BRANDS, type DeveloperBrand } from '@/data/catalog'
+import type { DeveloperBrand } from '@/data/catalog'
 import { KeyholeMark } from '@/components/ui/keyhole-mark'
 import { ResponsiveImg } from '@/components/ui/responsive-img'
 
@@ -12,6 +12,8 @@ interface DeveloperShowcaseProps {
    * - `light` / `muted`: flat surfaces.
    */
   surface?: 'glass-light' | 'glass' | 'light' | 'muted'
+  /** Visible developers in strip order (Admin → Developers) */
+  brands: DeveloperBrand[]
 }
 
 function DeveloperTile({ brand }: { brand: DeveloperBrand }) {
@@ -43,7 +45,8 @@ function DeveloperTile({ brand }: { brand: DeveloperBrand }) {
  * - Pauses while hovered or focused, so a logo can be read.
  * - Honours prefers-reduced-motion: becomes a static wrapped grid.
  */
-export function DeveloperShowcase({ surface = 'glass-light' }: DeveloperShowcaseProps) {
+export function DeveloperShowcase({ surface = 'glass-light', brands }: DeveloperShowcaseProps) {
+  if (brands.length === 0) return null
   return (
     <section
       className={`ll-dev-showcase ll-section-${surface}`}
@@ -62,19 +65,16 @@ export function DeveloperShowcase({ surface = 'glass-light' }: DeveloperShowcase
       {/* Contained like every other section: same width and gutters as the page content. */}
       <div className="ll-container">
         {/* Loop length scales with the logo count so the glide speed stays constant. */}
-        <div
-          className="ll-marquee"
-          style={{ '--marquee-items': DEVELOPER_BRANDS.length } as CSSProperties}
-        >
+        <div className="ll-marquee" style={{ '--marquee-items': brands.length } as CSSProperties}>
           <div className="ll-marquee-track">
             <ul className="ll-marquee-list">
-              {DEVELOPER_BRANDS.map((brand) => (
+              {brands.map((brand) => (
                 <DeveloperTile key={brand.name} brand={brand} />
               ))}
             </ul>
             {/* Visual duplicate for the seamless loop; hidden from assistive tech. */}
             <ul className="ll-marquee-list" aria-hidden="true">
-              {DEVELOPER_BRANDS.map((brand) => (
+              {brands.map((brand) => (
                 <DeveloperTile key={`dup-${brand.name}`} brand={brand} />
               ))}
             </ul>

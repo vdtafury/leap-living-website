@@ -69,3 +69,23 @@ Record: login/logout, failed logins, user/role/permission changes, property crea
 ## 10. Security test checklist (`tests/security`)
 
 Unauthenticated access to admin routes/APIs denied · missing-permission action denied (crafted requests) · IDOR on leads/properties denied · unpublished content never public · upload abuse cases rejected · rate limits trigger · session fixation/rotation · password reset token single use/expiry · headers present · private file route requires auth · audit events written for each sensitive action.
+
+## 11. As built (Phases 1–2, 2026-11-18)
+
+How the rules above are implemented today; keep this in sync with the code.
+
+| Area | Implementation | Where |
+|---|---|---|
+| Passwords | Argon2id (`@node-rs/argon2` 2.2.2, m=19456 KiB, t=2, p=1); 12–128 chars, common-password list, must not contain the username | `src/server/auth/password.ts` |
+| Sessions | 32 random bytes in cookie `__Host-ll_session` (production/framed) / `ll_session` (local); DB stores only SHA-256; idle 2 h, absolute 12 h, touched every 5 min; deleted on logout, password change, reset, deactivation | `src/server/auth/session-token.ts`, `modules/users` |
+| Login | Generic error; 5 failures → 15 min account lock; 20 attempts / 15 min / IP; success and failure audited | `modules/users/application/auth.ts` |
+| First admin | From `ADMIN_USER`/`ADMIN_PASSWORD` only while there are no users; `mustChangePassword` blocks every other page and API until changed | `modules/users/application/bootstrap.ts` |
+| Authorization | `authorize(actor, permission)` inside every application function (reads included); pages use `requireActor(permission)` for UX only. Only a Super Admin assigns or changes a Super Admin; nobody grants a role with permissions they lack | `modules/authorization` |
+| CSRF | Every signed-in mutation: same-site check (Origin → `Sec-Fetch-Site` → Referer, else refuse) **and** a token bound to the session (`sha256("csrf:v1:" + sessionId)`) in a hidden field or `x-csrf-token` | `src/server/auth/csrf.ts`, `current.ts`, `api-guard.ts` |
+| Uploads | Permission + CSRF; 5 MB cap before parsing; magic bytes must match the declared type; decoded and re-encoded by sharp to WebP (drops metadata and appended payloads); 50 MP pixel limit; random UUID names; served by `/media/[...path]` with traversal checks | `modules/media`, `src/server/images.ts`, `storage.ts` |
+| Forms | Zod, honeypot, same-origin, 16 KB cap, 5 saved / 10 min / IP, IP stored only as HMAC; request + email written in one transaction | `modules/inquiries` |
+| Email | SMTP credentials in env only; nothing sent until configured; failures kept with the error, retry from the admin | `modules/inquiries/infrastructure/mailer.ts` |
+| Drafts | Public reads only published listings and the published copy of content; preview needs `content.view`; `/admin` is noindex and disallowed in robots | `modules/listings`, `modules/content` |
+| Audit | Append-only `AuditLog` (no update/delete in code): logins, password changes, users, listings, content, media, developers, inquiry status, email retries | `modules/audit-logs` |
+| Tests | `src/server/auth/auth-helpers.test.ts`, `src/modules/*/**.test.ts`, `src/app/api/routes.test.ts` (forged cookies, Basic auth, missing/foreign CSRF token, cross-site, deactivated user, forced password change) | |
+

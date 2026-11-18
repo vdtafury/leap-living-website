@@ -1,6 +1,6 @@
 # LEAP LIVING
 
-Premium English-only real-estate consultancy platform for Dubai (`leapliving.ae`), organized around a dedicated multi-page public experience and preparing the modular monolith architecture for Phase 1+ Admin Dashboard, CMS, and CRM.
+Premium English-only real-estate consultancy platform for Dubai (`leapliving.ae`), a multi-page public site fed from the database, with an Admin Dashboard and CMS (Phases 1–2) built as a modular monolith; CRM comes next.
 
 ## Directory Structure
 
@@ -8,8 +8,10 @@ Premium English-only real-estate consultancy platform for Dubai (`leapliving.ae`
 |---|---|
 | `web/` | Main Next.js (App Router + TypeScript strict + Prisma + Sharp) web application |
 | `web/src/app/` | Multi-page public routes (`/`, `/buy`, `/rent`, `/sell`, `/projects`, `/projects/[slug]`, `/properties/[slug]`, `/about`, `/contact`) and infrastructure API routes. The mortgage calculator is on the homepage (`/#mortgage-calculator`); `/mortgage` redirects there |
+| `web/src/app/admin/` | Admin panel: sign-in, dashboard, properties, projects, images, homepage / about / site settings (draft → preview → publish), developers, form requests, email queue, users, audit log |
+| `web/src/modules/` | Business modules (`domain` / `application` / `infrastructure` + `index.ts`): authorization, users, audit-logs, listings, media, developers, content, inquiries, reporting |
 | `web/src/components/` | Modular UI components organized by domain (`layout`, `home`, `property`, `project`, `tools`, `forms`, `ui`) |
-| `web/src/data/` | Typed portfolio showcase & service catalog (`catalog.ts`) |
+| `web/src/data/` | Starter content imported into the database on first run (`catalog.ts`, `content-defaults.ts`, `site.ts`); after that everything is edited in `/admin` |
 | `web/public/brand/` | Brand logo lockups derived strictly from the client-supplied `leap-living-logo.png` |
 | `web/public/images/` | High-resolution architectural photography sourced from public stock repositories (zero people) |
 | `docs/business/` | Approved company copy (`client-content.md`) |

@@ -92,36 +92,4 @@ describe('POST /api/inquiries', () => {
   })
 })
 
-describe('GET /api/inquiries (admin export)', () => {
-  const get = (query = '', authorization?: string) =>
-    route.GET(
-      new Request(`http://leapliving.test/api/inquiries${query}`, {
-        headers: { 'x-forwarded-for': '192.0.2.1', ...(authorization ? { authorization } : {}) },
-      }),
-    )
-  const auth = `Basic ${Buffer.from('leap:a-long-admin-password').toString('base64')}`
-
-  it('does not exist (404) while no admin credentials are configured', async () => {
-    vi.stubEnv('ADMIN_USER', '')
-    expect((await get()).status).toBe(404)
-  })
-
-  it('needs the admin login, then returns JSON or an Excel-safe CSV', async () => {
-    vi.stubEnv('ADMIN_USER', 'leap')
-    vi.stubEnv('ADMIN_PASSWORD', 'a-long-admin-password')
-    expect((await get()).status).toBe(401)
-
-    const json = await (await get('', auth)).json()
-    expect(json.count).toBeGreaterThan(0)
-    expect(json.inquiries[0]).toHaveProperty('email')
-
-    const csv = await get('?format=csv', auth)
-    expect(csv.headers.get('content-type')).toContain('text/csv')
-    expect(csv.headers.get('content-disposition')).toContain('attachment')
-    // Raw bytes: Response.text() would silently drop the BOM that Excel needs for Arabic.
-    const bytes = Buffer.from(await csv.arrayBuffer())
-    expect([...bytes.subarray(0, 3)]).toEqual([0xef, 0xbb, 0xbf])
-    const text = bytes.toString('utf8')
-    expect(text).toContain('"Omar Haddad"')
-  })
-})
+// GET (admin export, session + permission) is covered in src/app/api/routes.test.ts.

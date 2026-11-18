@@ -1,17 +1,13 @@
 #!/usr/bin/env bash
-# LEAP LIVING Platform Verification (DB, forms, admin endpoints, security headers, SEO, routes,
+# LEAP LIVING Platform Verification (DB, forms, admin access, security headers, SEO, routes,
 # and meeting modifications)
 #   BASE=http://localhost:3000 ./scripts/verify.sh
-# The upload / sharp / inquiry-export checks need the admin login the server runs with:
-#   ADMIN_USER=... ADMIN_PASSWORD=... BASE=... ./scripts/verify.sh
-# Without them those checks only confirm the endpoints are closed.
+# Admin checks here are the ones visible from outside (closed to anonymous visitors, sign-in
+# page, noindex). Signed-in behaviour (sessions, CSRF, permissions, upload validation) is covered
+# by the vitest suites, which run against a throwaway database.
 set -u
 
 BASE="${BASE:-http://localhost:3000}"
-ADMIN_USER="${ADMIN_USER:-}"
-ADMIN_PASSWORD="${ADMIN_PASSWORD:-}"
-AUTH=()
-[ -n "$ADMIN_USER" ] && AUTH=(-u "$ADMIN_USER:$ADMIN_PASSWORD")
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
@@ -53,9 +49,6 @@ check_not_contains() {
 
 # Fixtures
 convert -size 800x600 xc:'#3B9EA1' "$TMP/test.jpg"
-convert -size 400x300 xc:'#123C42' "$TMP/test.png"
-printf 'hello not an image' > "$TMP/notimage.jpg"
-dd if=/dev/zero of="$TMP/oversize.jpg" bs=1M count=6 status=none
 
 # 1. Health endpoint
 code=$(curl -s -o "$TMP/health.json" -w '%{http_code}' "$BASE/api/health")
@@ -68,79 +61,37 @@ else
   fail=$((fail + 1))
 fi
 
-# 2. Admin-only endpoints are closed to the public
-for ep in /api/upload /api/sharp; do
-  code=$(curl -s -o /dev/null -w '%{http_code}' -F "file=@$TMP/test.jpg;type=image/jpeg" "$BASE$ep")
-  if [ "$code" = 401 ] || [ "$code" = 404 ]; then
-    echo "PASS  $ep refuses anonymous uploads (HTTP $code)"
+# 2. Admin: everything needs a session (D-31); the old Basic-auth endpoints are gone
+code=$(curl -s -o /dev/null -w '%{http_code}' -F "file=@$TMP/test.jpg;type=image/jpeg" "$BASE/api/upload")
+check "upload refuses anonymous visitors" 401 "$code"
+code=$(curl -s -o /dev/null -w '%{http_code}' -u "leapadmin:anything-at-all" \
+  -F "file=@$TMP/test.jpg;type=image/jpeg" "$BASE/api/upload")
+check "upload ignores Basic auth" 401 "$code"
+code=$(curl -s -o /dev/null -w '%{http_code}' -H 'Cookie: ll_session=forged; __Host-ll_session=forged' \
+  -F "file=@$TMP/test.jpg;type=image/jpeg" "$BASE/api/upload")
+check "upload refuses a forged session cookie" 401 "$code"
+code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE/api/inquiries")
+check "inquiry export refuses anonymous visitors" 401 "$code"
+code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE/api/inquiries?format=csv")
+check "inquiry CSV refuses anonymous visitors" 401 "$code"
+code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE/api/sharp")
+check "old /api/sharp endpoint is gone" 404 "$code"
+for page in /admin /admin/properties /admin/content/home /admin/users /admin/preview/home; do
+  code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE$page")
+  location=$(curl -s -o /dev/null -w '%{redirect_url}' "$BASE$page")
+  if [ "$code" = 307 ] && [[ "$location" == *"/admin/login"* ]]; then
+    echo "PASS  $page sends anonymous visitors to the sign-in page"
     pass=$((pass + 1))
   else
-    echo "FAIL  $ep accepted an anonymous upload (HTTP $code)"
+    echo "FAIL  $page answered HTTP $code -> '$location' (expected 307 to /admin/login)"
     fail=$((fail + 1))
   fi
 done
-code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE/api/inquiries")
-if [ "$code" = 401 ] || [ "$code" = 404 ]; then
-  echo "PASS  inquiry export is not public (HTTP $code)"
-  pass=$((pass + 1))
-else
-  echo "FAIL  inquiry export is public (HTTP $code)"
-  fail=$((fail + 1))
-fi
-
-if [ ${#AUTH[@]} -gt 0 ]; then
-  # 3. Upload a valid JPEG
-  code=$(curl -s "${AUTH[@]}" -o "$TMP/upload.json" -w '%{http_code}' \
-    -F "file=@$TMP/test.jpg;type=image/jpeg" "$BASE/api/upload")
-  check "upload jpeg (admin)" 201 "$code"
-  FNAME=$(node -e "const d=JSON.parse(require('fs').readFileSync(0,'utf8'));console.log(d.asset.filename)" < "$TMP/upload.json")
-  if [ -n "$FNAME" ]; then
-    echo "PASS  upload returned filename $FNAME"
-    pass=$((pass + 1))
-  else
-    echo "FAIL  upload did not return a filename"
-    fail=$((fail + 1))
-  fi
-
-  # Media read-back
-  code=$(curl -s -o "$TMP/readback.jpg" -w '%{http_code}' "$BASE/media/$FNAME")
-  check "media read-back" 200 "$code"
-  if [ "$(head -c 3 "$TMP/readback.jpg" | od -An -tx1 | tr -d ' \n')" = "ffd8ff" ]; then
-    echo "PASS  media read-back is a JPEG"
-    pass=$((pass + 1))
-  else
-    echo "FAIL  media read-back is not a JPEG"
-    fail=$((fail + 1))
-  fi
-
-  # 4. Sharp resize
-  code=$(curl -s "${AUTH[@]}" -o "$TMP/resized.jpg" -w '%{http_code}' \
-    -F "file=@$TMP/test.jpg;type=image/jpeg" "$BASE/api/sharp")
-  check "sharp resize (admin)" 200 "$code"
-  WIDTH=$(identify -format '%w' "$TMP/resized.jpg" 2>/dev/null)
-  if [ "$WIDTH" = "320" ]; then
-    echo "PASS  sharp produced a 320px-wide JPEG"
-    pass=$((pass + 1))
-  else
-    echo "FAIL  sharp output width was '$WIDTH', expected 320"
-    fail=$((fail + 1))
-  fi
-
-  # 5. Rejection cases
-  code=$(curl -s "${AUTH[@]}" -o /dev/null -w '%{http_code}' -F "file=@$TMP/test.png;type=image/jpeg" "$BASE/api/upload")
-  check "reject PNG bytes declared as JPEG" 415 "$code"
-
-  code=$(curl -s "${AUTH[@]}" -o /dev/null -w '%{http_code}' -F "file=@$TMP/notimage.jpg;type=image/jpeg" "$BASE/api/upload")
-  check "reject non-image content" 415 "$code"
-
-  code=$(curl -s "${AUTH[@]}" -o /dev/null -w '%{http_code}' -F "file=@$TMP/oversize.jpg;type=image/jpeg" "$BASE/api/upload")
-  check "reject oversize file" 413 "$code"
-
-  code=$(curl -s "${AUTH[@]}" -o "$TMP/inquiries.csv" -w '%{http_code}' "$BASE/api/inquiries?format=csv")
-  check "inquiry CSV export (admin)" 200 "$code"
-else
-  echo "SKIP  upload / sharp / export checks (set ADMIN_USER and ADMIN_PASSWORD to run them)"
-fi
+code=$(curl -s -D "$TMP/login-headers.txt" -o "$TMP/login.html" -w '%{http_code}' "$BASE/admin/login")
+check "GET /admin/login" 200 "$code"
+check_contains "sign-in page has a password field" 'type="password"' "$TMP/login.html"
+check_contains "sign-in page is noindex" 'noindex' "$TMP/login.html"
+check_not_contains "sign-in page is not cached" "cache-control: public" "$TMP/login-headers.txt"
 
 code=$(curl -s --path-as-is -o /dev/null -w '%{http_code}' "$BASE/media/..%2F..%2Fpackage.json")
 if [ "$code" = "404" ] || [ "$code" = "400" ]; then
@@ -154,7 +105,7 @@ fi
 # 6. Multi-Page Platform Routes & Content Checks
 code=$(curl -s -o "$TMP/home.html" -w '%{http_code}' "$BASE/")
 check "GET / (Home)" 200 "$code"
-# Home is static: no database read and no hidden debug marker (DB health is /api/health above).
+# Home reads published content from the database; no hidden debug marker (DB health is /api/health above).
 check_not_contains "Home has no hidden DB debug marker" "Platform Ready" "$TMP/home.html"
 check_contains "Mod #1: Consultancy service on Home" "Real Estate Consultancy" "$TMP/home.html"
 check_not_contains "Mod #2 & #3: Founder & removed (escaped)" "Founder &amp; CEO" "$TMP/home.html"
@@ -245,6 +196,7 @@ check "unknown URL returns 404" 404 "$code"
 check_contains "404 page is the branded one" "This address is not on our map" "$TMP/404.html"
 code=$(curl -s -o "$TMP/robots.txt" -w '%{http_code}' "$BASE/robots.txt")
 check "GET /robots.txt" 200 "$code"
+check_contains "robots.txt keeps crawlers out of the admin" "Disallow: /" "$TMP/robots.txt"
 code=$(curl -s -o "$TMP/sitemap.xml" -w '%{http_code}' "$BASE/sitemap.xml")
 check "GET /sitemap.xml" 200 "$code"
 check_contains "sitemap lists property pages" "/properties/palm-jumeirah-waterfront-sky-villa" "$TMP/sitemap.xml"

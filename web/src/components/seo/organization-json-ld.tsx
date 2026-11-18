@@ -1,27 +1,28 @@
-import { SITE } from '@/data/site'
+import type { SiteSettings } from '@/data/content-defaults'
 import { SITE_URL } from '@/lib/seo'
 
 /** schema.org RealEstateAgent: lets search engines show the company's contact card. */
-export function OrganizationJsonLd() {
+export function OrganizationJsonLd({ settings }: { settings: SiteSettings }) {
+  const { company, social } = settings
   const data = {
     '@context': 'https://schema.org',
     '@type': 'RealEstateAgent',
-    name: SITE.legalName,
-    alternateName: SITE.name,
+    name: company.legalName,
+    alternateName: company.name,
     url: SITE_URL,
     logo: `${SITE_URL}/brand/leap-living-logo-teal.png`,
     image: `${SITE_URL}/brand/og-image.jpg`,
-    description: SITE.description,
-    telephone: SITE.phone.display,
-    email: SITE.email,
+    description: company.description,
+    telephone: company.phoneDisplay,
+    email: company.email,
     address: {
       '@type': 'PostalAddress',
-      streetAddress: SITE.address.street,
-      addressLocality: SITE.address.locality,
-      addressCountry: SITE.address.country,
+      streetAddress: company.addressStreet,
+      addressLocality: company.addressLocality,
+      addressCountry: 'AE',
     },
     areaServed: 'Dubai, United Arab Emirates',
-    sameAs: Object.values(SITE.socials),
+    sameAs: Object.values(social).filter(Boolean),
   }
   return (
     <script

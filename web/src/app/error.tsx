@@ -2,8 +2,8 @@
 
 import Link from 'next/link'
 import { useEffect } from 'react'
-import { SiteHeader } from '@/components/layout/site-header'
-import { SiteFooter } from '@/components/layout/site-footer'
+import { SiteHeaderClient as SiteHeader } from '@/components/layout/site-header-client'
+import { SiteFooterView as SiteFooter } from '@/components/layout/site-footer-view'
 import { StatusPage } from '@/components/layout/status-page'
 
 /** Shown when a page fails while rendering (the details stay in the server log). */

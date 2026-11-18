@@ -5,7 +5,7 @@ import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { PropertyListingBrowser } from '@/components/property/property-listing-browser'
 import { ChevronRightIcon } from '@/components/ui/icons'
-import { PROPERTIES } from '@/data/catalog'
+import { listPublishedProperties } from '@/modules/listings'
 
 export const metadata: Metadata = pageMetadata({
   title: 'Properties for Sale | LEAP LIVING Dubai',
@@ -20,7 +20,7 @@ export default async function BuyPage({
   searchParams: Promise<{ community?: string; type?: string; beds?: string; budget?: string }>
 }) {
   const params = await searchParams
-  const saleItems = PROPERTIES.filter((p) => p.transactionType === 'BUY')
+  const saleItems = await listPublishedProperties({ transactionType: 'BUY' })
 
   return (
     <>

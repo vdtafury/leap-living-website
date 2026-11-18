@@ -1,9 +1,9 @@
 import Link from 'next/link'
-import { CLIENT_PERSPECTIVES } from '@/data/catalog'
+import type { HomeContent } from '@/data/content-defaults'
 import { Carousel } from '@/components/ui/carousel'
 import { ArrowUpRightIcon, AvatarIcon } from '@/components/ui/icons'
 
-type Review = (typeof CLIENT_PERSPECTIVES)[number]
+type Review = HomeContent['reviews']['items'][number]
 
 function ReviewCard({ review }: { review: Review }) {
   return (
@@ -31,7 +31,7 @@ function ReviewCard({ review }: { review: Review }) {
  * Cards are server-rendered; only the shared carousel (arrows, counter, progress, swipe) runs in
  * the browser.
  */
-export function ClientExperience() {
+export function ClientExperience({ title, linkLabel, linkHref, items }: HomeContent['reviews']) {
   return (
     <section
       className="ll-section-plain ll-reviews ll-defer-render"
@@ -44,21 +44,21 @@ export function ClientExperience() {
           noun="review"
           nounPlural="reviews"
           action={
-            <Link href="/contact" className="ll-link-arrow">
-              <span className="ll-label-long">Speak With an Advisor</span>
+            <Link href={linkHref} className="ll-link-arrow">
+              <span className="ll-label-long">{linkLabel}</span>
               <span className="ll-label-short" aria-hidden="true">
                 Contact
               </span>
               <ArrowUpRightIcon size={15} />
             </Link>
           }
-          slides={CLIENT_PERSPECTIVES.map((review) => ({
-            key: review.author,
+          slides={items.map((review, index) => ({
+            key: `${review.author}-${index}`,
             node: <ReviewCard review={review} />,
           }))}
         >
           <h2 id="ll-reviews-title" className="ll-serif-title ll-section-title">
-            Why Clients Trust Leap Living
+            {title}
           </h2>
         </Carousel>
       </div>

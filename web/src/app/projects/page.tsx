@@ -5,7 +5,7 @@ import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { ProjectListingBrowser } from '@/components/project/project-listing-browser'
 import { ChevronRightIcon } from '@/components/ui/icons'
-import { PROJECTS } from '@/data/catalog'
+import { listPublishedProjects } from '@/modules/listings'
 
 export const metadata: Metadata = pageMetadata({
   title: 'Real Estate Projects in Dubai | LEAP LIVING',
@@ -20,6 +20,7 @@ export default async function ProjectsPage({
   searchParams: Promise<{ community?: string; type?: string }>
 }) {
   const params = await searchParams
+  const projects = await listPublishedProjects()
 
   return (
     <>
@@ -46,7 +47,7 @@ export default async function ProjectsPage({
         <section className="ll-section-muted">
           <div className="ll-container">
             <ProjectListingBrowser
-              projects={PROJECTS}
+              projects={projects}
               initialCommunity={params.community ?? 'ALL'}
               initialType={params.type ?? 'ALL'}
             />

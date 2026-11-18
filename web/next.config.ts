@@ -57,6 +57,8 @@ const nextConfig: NextConfig = {
     'better-sqlite3',
     '@prisma/adapter-better-sqlite3',
     '@prisma/client',
+    '@node-rs/argon2',
+    'nodemailer',
   ],
   // The standalone /mortgage page was replaced by the homepage calculator (D-30).
   async redirects() {

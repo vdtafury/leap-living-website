@@ -47,6 +47,8 @@ Rules:
 - Modules do not import each other's infrastructure. Cross-module needs go through the other module's public interface or a domain event/port.
 - No circular dependencies. Add a lint rule (import boundaries) once the first modules exist.
 
+**As built (2026-11-18):** `web/src/modules/` holds authorization, users, audit-logs, listings, media, developers, content, inquiries and reporting, each `{domain,application,infrastructure}` + `index.ts`. Admin pages (`src/app/admin/**`) and route handlers call only module `index.ts` exports and `src/server/auth/*`; server actions live in `src/app/admin/actions.ts` and wrap every mutation in `guarded()` (session + same-site + CSRF, then the module call, which authorizes). `src/server/bootstrap.ts` (`ensureReady()`: schema → RBAC sync → first admin → starter import → outbox worker) is the only file allowed to reach into module internals, to avoid import cycles in the first-run seed. Presentation for the public site stays in `src/components` (`HomeView`, `AboutView` are pure views reused by the draft preview).
+
 ## 4. Request flow
 
 ```
@@ -138,12 +140,14 @@ Future languages are **not planned**. Do not build for them. Keep copy out of do
 - Public pages use controlled Next.js caching with **tags** (e.g. `property:{id}`, `properties:list`, `page:{key}`, `settings:site`).
 - Publishing/unpublishing/updating calls the matching invalidation helper in the application layer.
 - No Redis requirement. Define invalidation before enabling caching on a page.
+- **As built:** public pages are `force-dynamic` (D-32): every request reads the published rows, so publishing needs no invalidation. SQLite reads are sub-millisecond at this size; add tag caching only if measurements show a need.
 
 ## 9. Jobs and email
 
 - `EmailOutbox` (status, attempts, nextAttemptAt, lastError) and a `Job` table for other work.
 - A script (or a protected endpoint with a secret) triggered by **cPanel Cron** processes due rows. Handlers are idempotent. Retries use backoff and a max-attempt limit; failures stay visible in the admin.
 - cPanel cron granularity and Node availability must be verified in Phase 0.
+- **As built:** `EmailOutbox` only (no `Job` table yet). The worker runs inside the Node process every 60 s once SMTP is configured, claims rows with a 5-minute lease (safe if two processes run), and retries with backoff 1 m / 5 m / 15 m / 1 h / 6 h, 6 attempts (D-33). A submission also triggers an immediate attempt.
 
 ## 10. Storage
 

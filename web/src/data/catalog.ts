@@ -1,7 +1,9 @@
 /**
  * Curated advisory catalog data for Leap Living.
- * Note: Property and project entries represent SAMPLE / illustrative showcase mandates
- * for Phase 0 presentation until connected to live Phase 1/2 Prisma CMS tables.
+ * Property, project, developer and review entries are the STARTER CONTENT: they are imported
+ * into the database on the first start (src/server/bootstrap.ts, SEED_STARTER_CONTENT) and are
+ * edited in /admin from then on. The public pages read the database, not these arrays.
+ * The interfaces below are the view shapes the public components render.
  * Company profile copy, CEO credentials, services, and contact info strictly follow
  * approved CLIENT-SUPPLIED documentation in docs/business/client-content.md.
  */
@@ -40,7 +42,8 @@ export interface ProjectItem {
   developer: string
   community: string
   segment: 'RESIDENTIAL' | 'COMMERCIAL' | 'MIXED-USE'
-  status: 'Off-Plan' | 'Under Construction' | 'Handover 2026' | 'Ready'
+  /** Delivery stage shown on the card, e.g. Off-Plan, Under Construction, Handover 2026 */
+  status: string
   startingPriceAed: number
   startingPriceLabel: string
   handoverLabel: string
