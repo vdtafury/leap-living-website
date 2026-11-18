@@ -37,7 +37,8 @@ export default defineConfig({
   webServer: external
     ? undefined
     : {
-        command: `npx next start -H 127.0.0.1 -p ${PORT}`,
+        // SQLite creates the file but not its folder.
+        command: `mkdir -p storage/e2e && npx next start -H 127.0.0.1 -p ${PORT}`,
         url: `http://127.0.0.1:${PORT}`,
         timeout: 120_000,
         reuseExistingServer: false,
