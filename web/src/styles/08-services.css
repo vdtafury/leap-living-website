@@ -1,16 +1,4 @@
 /* ==================== SERVICES ==================== */
-.ll-services-layout {
-  display: grid;
-  grid-template-columns: 1.05fr 2.95fr;
-  gap: 2.25rem;
-  align-items: start;
-}
-
-.ll-services-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 0.95rem;
-}
 
 .ll-services-catalog-grid {
   display: grid;

@@ -132,11 +132,6 @@
   border-color: var(--brand-teal);
 }
 
-.ll-field-icon {
-  color: var(--brand-teal);
-  flex-shrink: 0;
-}
-
 .ll-select {
   width: 100%;
   border: none;

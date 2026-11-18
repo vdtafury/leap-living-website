@@ -48,7 +48,8 @@ const CROPS = {
     aspect: 0.6,
     x: 0.5,
     width: 540,
-    quality: 85,
+    // 78: the phone LCP image (shown until the video plays); 85 cost 19 KB more for no visible gain
+    quality: 78,
   },
 }
 

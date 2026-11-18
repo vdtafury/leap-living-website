@@ -611,50 +611,6 @@ export const FULL_SERVICE_CATALOG = [
   },
 ]
 
-/** Upper-case developer names (client sheet order). Mirrors DEVELOPER_BRANDS. */
-export const DEVELOPERS = [
-  'EMAAR',
-  'NAKHEEL',
-  'MERAAS',
-  'DUBAI PROPERTIES',
-  'MAJID AL FUTTAIM',
-  'SELECT GROUP',
-  'OMNIYAT',
-  'NSHAMA',
-  'DAMAC',
-  'AL BARARI',
-  'DUBAI SOUTH',
-  'SLS DUBAI',
-  'W RESIDENCES',
-  'MBR CITY DISTRICT ONE',
-  'WASL',
-  'SOBHA REALTY',
-  'MIRA DEVELOPMENTS',
-  'ARADA',
-  'AVENEW DEVELOPMENT',
-  'ALDAR',
-  'ELLINGTON PROPERTIES',
-  'BINGHATTI',
-  'IMTIAZ DEVELOPMENTS',
-  'MAG DEVELOPMENT',
-  'RAK PROPERTIES',
-  'BEYOND',
-  'EXPO CITY DUBAI',
-  'MEYDAN',
-]
-
-/**
- * Developer logos for the homepage/about marquee, in the order of the
- * client's "Developers we work with" sheet (28 brands, 2026-11-14).
- * Files live in `public/images/developers/` (transparent PNG). Eight are
- * 120px-tall masters; the rest were cut from the client sheet (white keyed
- * out), so they are ~30–60px tall — ask the client for original files to
- * sharpen them. `width`/`height` are the *display* size in CSS px, balanced
- * optically (~3,500px² each, max 150 wide / ~50 tall) so square marks and
- * long wordmarks carry similar visual weight.
- * A brand without `logo` renders as a typographic wordmark.
- * Logo usage permission is still open with the client (DECISIONS O-06).
- */
 export type DeveloperBrand = {
   name: string
   logo?: string

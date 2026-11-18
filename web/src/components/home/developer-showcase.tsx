@@ -1,17 +1,8 @@
 import type { CSSProperties } from 'react'
 import type { DeveloperBrand } from '@/data/catalog'
 import { KeyholeMark } from '@/components/ui/keyhole-mark'
-import { ResponsiveImg } from '@/components/ui/responsive-img'
 
 interface DeveloperShowcaseProps {
-  /**
-   * Section surface.
-   * - `glass-light` (default): flat brand-teal tint gradient with the white keyhole watermark,
-   *   no photo (owner, 2026-11-18); bare full-colour logos glide across it.
-   * - `glass`: skyline photo under a deep-teal scrim plus the watermark, bare white logos.
-   * - `light` / `muted`: flat surfaces.
-   */
-  surface?: 'glass-light' | 'glass' | 'light' | 'muted'
   /** Visible developers in strip order (Admin → Developers) */
   brands: DeveloperBrand[]
 }
@@ -42,29 +33,24 @@ function DeveloperTile({ brand }: { brand: DeveloperBrand }) {
 }
 
 /**
+ * Surface: flat brand-teal tint gradient with the large white keyhole watermark, no photo
+ * (owner, 2026-11-18); bare full-colour logos glide across it.
+ *
  * Continuously scrolling developer logo strip, logos only (owner, 2026-11-17: no heading,
  * description or Pause button).
  * - Pure CSS animation (transform only), list rendered twice for a seamless loop.
  * - Pauses while hovered or focused, so a logo can be read.
  * - Honours prefers-reduced-motion: becomes a static wrapped grid.
  */
-export function DeveloperShowcase({ surface = 'glass-light', brands }: DeveloperShowcaseProps) {
+export function DeveloperShowcase({ brands }: DeveloperShowcaseProps) {
   if (brands.length === 0) return null
   return (
     <section
-      className={`ll-dev-showcase ll-section-${surface}`}
+      className="ll-dev-showcase ll-section-glass-light"
       aria-label="Developers we work with"
     >
-      {surface === 'glass' && (
-        <div className="ll-section-image-bg" aria-hidden="true">
-          <ResponsiveImg src="/images/developer-network-skyline.jpg" sizes="100vw" />
-          <div className="ll-dev-glass-scrim" />
-        </div>
-      )}
-      {(surface === 'glass' || surface === 'glass-light') && (
-        // Brand watermark: the keyhole mark, large and cropped by the section edge.
-        <KeyholeMark className="ll-keyhole ll-keyhole-dev" strokeWidth={1.4} />
-      )}
+      {/* Brand watermark: the keyhole mark, large and cropped by the section edge. */}
+      <KeyholeMark className="ll-keyhole ll-keyhole-dev" strokeWidth={1.4} />
 
       {/* Contained like every other section: same width and gutters as the page content. */}
       <div className="ll-container">

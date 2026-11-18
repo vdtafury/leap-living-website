@@ -30,9 +30,15 @@ export function SiteFooterView({ settings = DEFAULT_SETTINGS }: { settings?: Sit
         <div className="ll-footer-grid">
           <div className="ll-footer-brand-col">
             <Link href="/" className="ll-brand-group" style={{ marginBottom: '0.9rem' }}>
+              {/* Plain <img> on purpose: static logo, and next/image needs sharp at runtime (cPanel host). */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/brand/logo-horizontal-brand.png"
                 alt="LEAP LIVING"
+                width={125}
+                height={36}
+                loading="lazy"
+                decoding="async"
                 style={{ height: '36px', width: 'auto', display: 'block' }}
               />
               <span className="ll-brand-divider" aria-hidden="true" />

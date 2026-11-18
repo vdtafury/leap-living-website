@@ -1,87 +1,4 @@
 /* ==================== TESTIMONIALS & DEVELOPERS ==================== */
-.ll-quote-card {
-  position: relative;
-  margin: 0;
-  background-color: var(--white);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-card);
-  padding: 2.25rem 1.85rem 1.6rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.35rem;
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.ll-quote-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--brand-teal), var(--brand-teal-25));
-}
-
-.ll-quote-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-card-hover);
-}
-
-.ll-quote-mark {
-  font-family: var(--font-serif);
-  font-size: 4.5rem;
-  line-height: 0.6;
-  height: 1.6rem;
-  color: var(--brand-teal-50);
-}
-
-.ll-quote-text {
-  margin: 0;
-  flex: 1;
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 1.06rem;
-  line-height: 1.6;
-  color: var(--heading);
-}
-
-.ll-quote-author {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  padding-top: 1.1rem;
-  border-top: 1px solid var(--border-subtle);
-}
-
-.ll-quote-name {
-  display: block;
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: var(--heading);
-}
-
-.ll-quote-role {
-  display: block;
-  font-size: 0.76rem;
-  color: var(--body-text);
-}
-
-.ll-monogram {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: var(--brand-gradient);
-  color: var(--white);
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
 
 /* Developer network: continuous logo marquee */
 .ll-dev-showcase {
@@ -188,11 +105,6 @@
   opacity: 0.5;
 }
 
-.ll-section-glass .ll-keyhole-dev {
-  color: var(--white);
-  opacity: 0.1;
-}
-
 @media (max-width: 960px) {
   .ll-keyhole-dev {
     width: 440px;
@@ -205,82 +117,12 @@
 }
 
 /* ---- Glass surface: skyline photo + teal scrim, bare white logos ---- */
-.ll-dev-showcase.ll-section-glass {
-  background-color: var(--brand-deep);
-  color: var(--white);
-  padding: 6rem 0 5.5rem;
-}
-
-.ll-section-glass > .ll-container,
-.ll-section-glass > .ll-marquee {
-  position: relative;
-  z-index: 1;
-}
-
-.ll-section-glass .ll-section-image-bg img {
-  object-position: center 62%;
-}
-
-.ll-dev-glass-scrim {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 60% 80% at 10% 105%, rgba(59, 158, 161, 0.5) 0%, rgba(59, 158, 161, 0) 62%),
-    linear-gradient(180deg, rgba(7, 43, 45, 1) 0%, rgba(7, 43, 45, 0.86) 14%, rgba(10, 52, 54, 0.6) 44%, rgba(12, 66, 69, 0.38) 72%, rgba(7, 43, 45, 0.72) 100%),
-    linear-gradient(100deg, rgba(10, 52, 54, 0.5) 0%, rgba(24, 92, 94, 0.2) 100%);
-}
-
-.ll-section-glass .ll-section-image-bg img {
-  /* pull the warm sunset toward the brand teal while keeping the skyline readable */
-  filter: grayscale(0.55) sepia(0.25) hue-rotate(130deg) saturate(1.1) brightness(0.95);
-}
 
 /* Clear seam before the (also dark) footer */
-.ll-dev-showcase.ll-section-glass {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
-}
-
-.ll-section-glass .ll-section-title {
-  color: var(--white);
-}
-
-.ll-section-glass .ll-eyebrow {
-  color: var(--brand-teal-25);
-}
-
-.ll-section-glass .ll-eyebrow::after {
-  background-color: var(--brand-teal-50);
-}
-
-.ll-section-glass .ll-eyebrow-num {
-  color: var(--white);
-}
 
 /* Logos read as white marks straight on the photo (no band, no tiles) */
-.ll-section-glass .ll-marquee-logo {
-  filter: brightness(0) invert(1);
-  opacity: 0.82;
-}
-
-.ll-section-glass .ll-marquee-wordmark {
-  color: rgba(255, 255, 255, 0.85);
-}
 
 /* Hover: the white mark brightens (stays white — colour logos would sink into the dark scrim) */
-.ll-section-glass .ll-marquee-item:hover .ll-marquee-logo {
-  opacity: 1;
-}
-
-.ll-section-glass .ll-marquee-item:hover .ll-marquee-wordmark {
-  color: var(--white);
-}
-
-@media (max-width: 960px) {
-  .ll-dev-showcase.ll-section-glass {
-    padding: 4.5rem 0 4.25rem;
-  }
-}
 
 /* ---- Light surface: brand-teal tint gradient, bare full-colour logos ----
    Owner, 2026-11-18: no skyline photo, same colour; the white keyhole watermark stays. The gradient is
@@ -357,8 +199,7 @@
     justify-content: center;
     padding: 0;
   }
-  .ll-marquee-list[aria-hidden='true'],
-  .ll-marquee-toggle {
+  .ll-marquee-list[aria-hidden='true'] {
     display: none;
   }
 }

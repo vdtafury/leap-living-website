@@ -73,9 +73,15 @@ export function AboutView({
           <div className="ll-container">
             <div className="ll-leadership-panel">
               <div className="ll-leadership-emblem">
+                {/* Plain <img> on purpose: static logo, and next/image needs sharp at runtime (cPanel host). */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/brand/logo-horizontal-white.png"
                   alt="LEAP LIVING"
+                  width={118}
+                  height={34}
+                  loading="lazy"
+                  decoding="async"
                   style={{ height: '34px', width: 'auto', alignSelf: 'flex-start' }}
                 />
                 <div>
