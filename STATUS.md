@@ -8,11 +8,11 @@
 
 ## Last updated
 
-2026-11-18 — by: Arena agent. Pulled PR #24 (`9cec146`). Integrated D-46 (featured carousel cards sizing with screen edge peek, WhatsApp/Call/Email quick contact actions from Site Settings), D-47 (carousel redesign with edge "N more" tab, progress pill segments, mouse drag snap, "View all" end card, removed old round corner buttons), full track left/right edge bleed, and GPU compositing layer fix for developer strip hover seams. 140/140 vitest tests pass across 22 test files; 97/97 verify.sh checks pass. Local server updated on `http://localhost:3000` and live Vercel deployment synced at `https://web-ecru-delta-79.vercel.app`.
+2026-11-18 — by: Arena agent. Pulled and merged PR #25 (`5ad2a00`). Integrated D-48 (Services section redesign: heading block + editorial cards, server-rendered) and D-49 (Performance & CI overhaul: SVG icon sprite reducing ~25 KB HTML, reviews progressive reveal, route-level CSS splitting, brand kit cleanup, Playwright browser test suite & GitHub Actions CI). Ran full codebase review: 0 console.log, 0 TODO/FIXME, strict TypeScript, 0 ESLint warnings. 145/145 vitest tests pass across 23 test files; 99/99 verify.sh checks pass. Local server updated on `http://localhost:3000` and live Vercel deployment synced at `https://web-ecru-delta-79.vercel.app`.
 
 ### Previous update
 
-2026-11-18 — by: Arena agent. Pulled PR #22 & PR #23 (`5668ee7`). Integrated D-42 navbar order & developer strip, D-43 smooth page transitions, D-44 client reviews wall with ratings breakdown + visitor review submission (`/account/review`) & admin moderation (`/admin/reviews`), and D-45 expanding photo panels for projects (`ll-xp-panel`). Handled bootstrap concurrency and test timeouts. 135/135 vitest tests pass across 21 test files; 90/90 verify.sh checks pass. Local server updated on `http://localhost:3000` and live Vercel deployment synced at `https://web-ecru-delta-79.vercel.app`.
+2026-11-18 — by: Arena agent. Pulled PR #24 (`9cec146`). Integrated D-46 (featured carousel cards sizing with screen edge peek, WhatsApp/Call/Email quick contact actions from Site Settings), D-47 (carousel redesign with edge "N more" tab, progress pill segments, mouse drag snap, "View all" end card, removed old round corner buttons), full track left/right edge bleed, and GPU compositing layer fix for developer strip hover seams. 140/140 vitest tests pass across 22 test files; 97/97 verify.sh checks pass. Local server updated on `http://localhost:3000` and live Vercel deployment synced at `https://web-ecru-delta-79.vercel.app`.
 
 ## State of the repository
 
