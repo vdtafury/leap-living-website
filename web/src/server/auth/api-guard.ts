@@ -32,7 +32,7 @@ export async function guardApi(
   { mutation = false } = {},
 ): Promise<ApiGuard> {
   const actor = await actorFromSessionToken(cookieValue(request, sessionCookie().name))
-  if (!actor) return deny(401, 'authentication required')
+  if (!actor) return deny(401, 'You are signed out. Sign in again.')
   if (mutation) {
     if (!originAllowed(request.headers)) return deny(403, 'forbidden')
     if (!csrfValid(actor.sessionId, request.headers.get('x-csrf-token')))

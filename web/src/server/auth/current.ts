@@ -57,6 +57,14 @@ export class CsrfError extends Error {
   }
 }
 
+/** No valid session on a mutation: signed out, expired, or the browser dropped the cookie. */
+export class SessionError extends Error {
+  constructor() {
+    super('You are signed out. Sign in again.')
+    this.name = 'SessionError'
+  }
+}
+
 /**
  * For every admin mutation (server actions and route handlers): signed in, Origin is this
  * site, and the CSRF token matches the session. Returns the actor.
@@ -66,7 +74,7 @@ export async function requireMutation(
   { allowPasswordChange = false } = {},
 ): Promise<SessionActor> {
   const actor = await getActor()
-  if (!actor) throw new ForbiddenError('session')
+  if (!actor) throw new SessionError()
   if (!originAllowed(await headers()) || !csrfValid(actor.sessionId, token)) throw new CsrfError()
   if (actor.mustChangePassword && !allowPasswordChange) throw new ForbiddenError('password-change')
   return actor

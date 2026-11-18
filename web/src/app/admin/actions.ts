@@ -56,7 +56,12 @@ export async function loginAction(_prev: ActionState, formData: FormData): Promi
     }
   }
   await setSessionCookie(result.token)
-  redirect(result.mustChangePassword ? '/admin/change-password' : '/admin')
+  const target = result.mustChangePassword ? '/admin/change-password' : '/admin'
+  // With JavaScript the form does a full page load to the target, so the next request shows
+  // whether the browser kept the cookie (a server redirect would render the target in this
+  // same response and hide a blocked cookie). Without JavaScript: a normal redirect.
+  if (text(formData, 'js') === '1') return { redirectTo: target }
+  redirect(target)
 }
 
 export async function logoutAction(formData: FormData) {

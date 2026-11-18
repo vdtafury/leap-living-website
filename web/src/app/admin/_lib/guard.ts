@@ -1,8 +1,16 @@
-import { CsrfError, requireMutation } from '@/server/auth/current'
+import { CsrfError, requireMutation, SessionError } from '@/server/auth/current'
 import { ForbiddenError } from '@/modules/authorization'
 import type { SessionActor } from '@/modules/users'
 
-export type ActionState = { error?: string; ok?: string } | null
+export type ActionState = {
+  error?: string
+  ok?: string
+  /** Full page load target (login): proves the browser really stored the session cookie. */
+  redirectTo?: string
+} | null
+
+export const SIGNED_OUT_MESSAGE =
+  'You are signed out, so nothing was saved. Sign in again. If this keeps happening, your browser is blocking the sign-in cookie: open the admin in its own browser tab.'
 
 /**
  * Runs an admin mutation: session + Origin + CSRF first (requireMutation), then `fn`, which
@@ -18,7 +26,11 @@ export async function guarded<T>(
     const actor = await requireMutation(formData.get('csrf'), options)
     return { ok: true, value: await fn(actor) }
   } catch (error) {
+    if (error instanceof SessionError) return { ok: false, error: SIGNED_OUT_MESSAGE }
     if (error instanceof CsrfError) return { ok: false, error: error.message }
+    if (error instanceof ForbiddenError && error.permission === 'password-change') {
+      return { ok: false, error: 'Change your password first.' }
+    }
     if (error instanceof ForbiddenError) {
       return { ok: false, error: 'You do not have permission to do this.' }
     }
