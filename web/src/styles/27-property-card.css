@@ -8,7 +8,8 @@
 }
 
 .ll-pc-media {
-  aspect-ratio: 16 / 10;
+  /* Owner, 2026-11-18: a bigger photo (was 16:11, then 16:10) */
+  aspect-ratio: 4 / 3;
 }
 
 .ll-pc-body {

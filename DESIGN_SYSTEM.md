@@ -247,7 +247,7 @@ Verified with no horizontal overflow, and with the panel fully in view, at 1920Ã
 
 | Row | Content |
 |---|---|
-| Image | 16:10, status + type chips, heart, location on the photo |
+| Image | 4:3 (owner: bigger photo), status + type chips, heart, location on the photo |
 | 1 | *Residential Â· Ready* (teal kicker) ... reference (grey) |
 | 2 | Title, one line with an ellipsis |
 | 3 | Price (dark teal, 700) ... *Know More* + round arrow |
