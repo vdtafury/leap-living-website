@@ -3,7 +3,7 @@
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { originAllowed } from '@/server/auth/csrf'
-import { requestInfo } from '@/server/auth/current'
+import { requestInfo, setSessionCookie } from '@/server/auth/current'
 import {
   AccountCsrfError,
   AccountSessionError,
@@ -26,6 +26,7 @@ import {
   type AuthResult,
   type CustomerActor,
 } from '@/modules/customers'
+import { login as teamLogin } from '@/modules/users'
 
 export type AccountActionState = {
   error?: string
@@ -80,12 +81,35 @@ export async function signInAction(
 ): Promise<AccountActionState> {
   // No session yet, so no CSRF token: the same-site check stops cross-site posts.
   if (!originAllowed(await headers())) return BLOCKED
-  const result = await signIn(
-    { email: text(formData, 'email'), password: text(formData, 'password') },
-    await requestInfo(),
-  )
+  // One sign-in page for everyone (D-41). Team usernames never contain "@" (letters, digits,
+  // dots, dashes, underscores), so the shape of what was typed picks the account type; the
+  // answer never depends on whether an account exists.
+  const login = text(formData, 'login').trim()
+  const password = text(formData, 'password')
+  if (!login.includes('@')) return teamSignIn(login, password, formData)
+  const result = await signIn({ email: login, password }, await requestInfo())
   if (!result.ok) return { error: result.error }
   return finishSignIn(result, formData)
+}
+
+/** A Leap Living team member: admin session (the D-31 rules), then the admin. */
+async function teamSignIn(
+  username: string,
+  password: string,
+  formData: FormData,
+): Promise<AccountActionState> {
+  const result = await teamLogin({ username, password }, await requestInfo())
+  if (!result.ok) {
+    return {
+      error:
+        result.reason === 'locked'
+          ? 'Too many attempts. Try again in 15 minutes.'
+          : 'Wrong username or password.',
+    }
+  }
+  await setSessionCookie(result.token)
+  // A full page load to the admin shows whether the browser kept the cookie (D-37).
+  return go(result.mustChangePassword ? '/admin/change-password' : '/admin', formData)
 }
 
 export async function signUpAction(

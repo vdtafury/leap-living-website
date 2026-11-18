@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { KeyholeMark } from '@/components/ui/keyhole-mark'
-import { CheckIcon, HeartIcon } from '@/components/ui/icons'
+import { CheckIcon } from '@/components/ui/icons'
 
 const BENEFITS = [
   'Save properties and projects with the heart, on any device',
@@ -27,9 +27,6 @@ export function AuthShell({
           <aside className="ll-acc-auth-aside" aria-hidden="true">
             <KeyholeMark className="ll-keyhole ll-acc-keyhole" strokeWidth={1.4} />
             <div className="ll-acc-auth-aside-inner">
-              <span className="ll-acc-auth-badge">
-                <HeartIcon size={16} filled />
-              </span>
               <p className="ll-acc-auth-aside-title">Your LEAP LIVING account</p>
               <ul className="ll-acc-benefits">
                 {BENEFITS.map((item) => (

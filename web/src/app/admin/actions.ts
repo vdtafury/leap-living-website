@@ -1,14 +1,16 @@
 'use server'
 
-import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
-import { clearSessionCookie, requestInfo, setSessionCookie } from '@/server/auth/current'
-import { originAllowed } from '@/server/auth/csrf'
+import {
+  clearSessionCookie,
+  requestInfo,
+  setSessionCookie,
+  SIGN_IN_PATH,
+} from '@/server/auth/current'
 import {
   changeOwnPassword,
   createUser,
-  login,
   logout,
   resetUserPassword,
   setUserActive,
@@ -41,30 +43,6 @@ import { backTo, guarded, jsonField, text, withMessage, type ActionState } from 
 
 /* ------------------------------------------------------------------ sign-in */
 
-export async function loginAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
-  // Login has no session yet, so no CSRF token: the Origin check stops cross-site posts.
-  if (!originAllowed(await headers())) return { error: 'Request blocked. Reload the page.' }
-  const result = await login(
-    { username: text(formData, 'username'), password: text(formData, 'password') },
-    await requestInfo(),
-  )
-  if (!result.ok) {
-    return {
-      error:
-        result.reason === 'locked'
-          ? 'Too many attempts. Try again in 15 minutes.'
-          : 'Wrong username or password.',
-    }
-  }
-  await setSessionCookie(result.token)
-  const target = result.mustChangePassword ? '/admin/change-password' : '/admin'
-  // With JavaScript the form does a full page load to the target, so the next request shows
-  // whether the browser kept the cookie (a server redirect would render the target in this
-  // same response and hide a blocked cookie). Without JavaScript: a normal redirect.
-  if (text(formData, 'js') === '1') return { redirectTo: target }
-  redirect(target)
-}
-
 export async function logoutAction(formData: FormData) {
   const result = await guarded(
     formData,
@@ -73,7 +51,7 @@ export async function logoutAction(formData: FormData) {
   )
   if (!result.ok) redirect(withMessage('/admin', 'error', result.error))
   await clearSessionCookie()
-  redirect('/admin/login')
+  redirect(SIGN_IN_PATH)
 }
 
 export async function changePasswordAction(

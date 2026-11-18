@@ -51,6 +51,10 @@ function useAccountForm(action: Action) {
       const result = await action(null, data)
       if (result?.redirectTo) {
         setLeaving(true)
+        // Team sign-in: if the admin sends the browser straight back here, the cookie was refused.
+        if (result.redirectTo.startsWith('/admin')) {
+          sessionStorage.setItem(TEAM_SIGNIN_CHECK_KEY, String(Date.now()))
+        }
         window.location.assign(result.redirectTo)
         return
       }
@@ -194,15 +198,14 @@ export function SignInForm({ next, save }: { next: string; save: string }) {
       <input type="hidden" name="next" value={next} />
       <input type="hidden" name="save" value={save} />
       <Notice state={state} />
-      <Field label="Email" name="email">
+      <Field label="Email or username" name="login">
         {(p) => (
           <input
             {...p}
             className="ll-input"
-            name="email"
-            type="email"
-            autoComplete="email"
-            inputMode="email"
+            name="login"
+            type="text"
+            autoComplete="username"
             autoCapitalize="none"
             spellCheck={false}
             required
@@ -473,5 +476,43 @@ export function DeleteAccountForm({ csrf }: { csrf: string }) {
         {busy ? 'Deleting…' : 'Delete my account'}
       </Submit>
     </form>
+  )
+}
+
+const TEAM_SIGNIN_CHECK_KEY = 'll-admin-login-check'
+
+/**
+ * Shown when a team sign-in succeeded but the admin sent the browser straight back without the
+ * cookie: typically third-party cookies blocked inside another site's frame (D-37).
+ */
+export function CookieBlockedNotice() {
+  const blocked = useSyncExternalStore(
+    noop,
+    () => {
+      const at = Number(sessionStorage.getItem(TEAM_SIGNIN_CHECK_KEY) ?? 0)
+      return at > 0 && Date.now() - at < 15_000
+    },
+    () => false,
+  )
+  // Not cleared on mount: the hydration render reads the server snapshot first. The 15 s window
+  // expires it.
+  if (!blocked) return null
+  const framed = typeof window !== 'undefined' && window.top !== window.self
+  return (
+    <div className="ll-acc-alert ll-acc-alert--error" role="alert">
+      Your password was accepted, but the browser did not keep the sign-in cookie, so you are still
+      signed out.{' '}
+      {framed ? (
+        <>
+          This page is open inside another site&apos;s frame, where this browser blocks cookies.{' '}
+          <a href="/account/sign-in" target="_blank" rel="noopener" className="ll-acc-link">
+            Open it in its own tab
+          </a>{' '}
+          and sign in there.
+        </>
+      ) : (
+        <>Allow cookies for this site in the browser settings, then sign in again.</>
+      )}
+    </div>
   )
 }

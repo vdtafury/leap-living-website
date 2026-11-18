@@ -2,9 +2,10 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { getCustomer } from '@/server/auth/account'
+import { getActor } from '@/server/auth/current'
 import { parseFavoriteKey, safeNextPath } from '@/modules/customers'
 import { AuthShell } from '@/components/account/auth-shell'
-import { SignInForm } from '@/components/account/account-forms'
+import { CookieBlockedNotice, SignInForm } from '@/components/account/account-forms'
 
 export const metadata: Metadata = { title: 'Sign in | LEAP LIVING' }
 
@@ -15,6 +16,9 @@ export default async function SignInPage({ searchParams }: { searchParams: Searc
   const query = await searchParams
   const next = safeNextPath(one(query.next))
   const save = parseFavoriteKey(one(query.save)) ? one(query.save) : ''
+  // Already signed in as a team member: straight to the admin (visitors: back where they were).
+  const actor = await getActor()
+  if (actor) redirect(actor.mustChangePassword ? '/admin/change-password' : '/admin')
   if (await getCustomer()) redirect(next)
 
   const carry = new URLSearchParams({
@@ -45,6 +49,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Searc
         </>
       }
     >
+      <CookieBlockedNotice />
       <SignInForm next={next} save={save} />
     </AuthShell>
   )
