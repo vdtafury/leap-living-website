@@ -1,0 +1,35 @@
+/* ==========================================================================
+   STAR RATING (D-44), shared: homepage reviews and the account page.
+   The review wall is in home/26-review-wall.css, the review form and
+   /account/review in account/26-review-form.css (D-49).
+   ========================================================================== */
+
+/* ---------- Stars ---------- */
+.ll-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  line-height: 0;
+  vertical-align: middle;
+}
+
+.ll-star {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.ll-star svg {
+  display: block;
+}
+
+.ll-star-empty {
+  color: #dfe4e2;
+}
+
+.ll-star-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  overflow: hidden;
+  color: #d4a43b;
+}

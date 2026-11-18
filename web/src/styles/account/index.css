@@ -1,0 +1,4 @@
+/* Account pages stylesheet bundle (D-49), imported by app/account/layout.tsx, so it
+ * loads under /account only. Loads after app/globals.css. */
+@import './23-account-pages.css';
+@import './26-review-form.css';

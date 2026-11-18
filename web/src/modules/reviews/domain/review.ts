@@ -17,8 +17,12 @@ export type ReviewAvatar = (typeof REVIEW_AVATARS)[number]
 
 /** From this many published reviews on, the sample reviews are no longer shown. */
 export const REAL_REVIEWS_TO_HIDE_SAMPLES = 3
-/** Reviews shown on the homepage at most (newest approved first). */
-export const HOMEPAGE_REVIEW_LIMIT = 9
+/**
+ * Reviews sent to the homepage at most (newest approved first). The wall renders the first
+ * six and "Show more reviews" adds six at a time (owner, 2026-11-18), so only what the
+ * visitor asks for is in the page.
+ */
+export const HOMEPAGE_REVIEW_LIMIT = 30
 /** Stars shown on the sample reviews until real ones replace them (owner, 2026-11-18). */
 export const SAMPLE_RATING = 5
 

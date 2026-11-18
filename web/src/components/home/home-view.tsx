@@ -27,6 +27,8 @@ import {
   type ReviewStats,
 } from '@/modules/reviews'
 import type { ReactNode } from 'react'
+// Homepage-only styles (D-49): this page and its admin preview, not the rest of the site.
+import '@/styles/home/index.css'
 
 export interface HomeViewProps {
   content: HomeContent

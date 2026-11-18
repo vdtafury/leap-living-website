@@ -4,12 +4,21 @@
  * override earlier ones (e.g. 16-brand-overrides re-skins cards and forms, and
  * 15-responsive must follow the components it adapts). Add new rules to the file
  * of their area; add a new file only for a new area, at the right point in the list.
+ *
+ * Route bundles (D-49): styles used on one part of the site only load there, so
+ * every other page has less render-blocking CSS:
+ *  - styles/home/index.css    homepage (components/home/home-view.tsx)
+ *  - styles/account/index.css /account/* (app/account/layout.tsx)
+ *  - app/admin/admin.css      the admin
+ * They load after this file, so a rule there wins over a global rule of equal
+ * specificity. Keep their selectors scoped to their own sections: in-app
+ * navigation keeps an already-loaded bundle in the page.
  */
 @import '../styles/01-tokens-base.css';
 @import '../styles/02-primitives.css';
 @import '../styles/03-header.css';
 @import '../styles/04-page-hero.css';
-@import '../styles/05-home-hero.css';
+@import '../styles/05-select-field.css';
 @import '../styles/06-sections.css';
 @import '../styles/07-cards.css';
 @import '../styles/08-services.css';
@@ -20,15 +29,11 @@
 @import '../styles/14-footer.css';
 @import '../styles/15-responsive.css';
 @import '../styles/16-brand-overrides.css';
-@import '../styles/17-hero-search.css';
-@import '../styles/18-hero-wash.css';
-@import '../styles/19-carousel.css';
+@import '../styles/19-utilities.css';
 @import '../styles/20-navbar.css';
 @import '../styles/21-status-pages.css';
-@import '../styles/22-home-plain.css';
+@import '../styles/22-shared.css';
 @import '../styles/23-account.css';
 @import '../styles/24-page-transitions.css';
-@import '../styles/25-project-panels.css';
-@import '../styles/26-reviews.css';
+@import '../styles/26-stars.css';
 @import '../styles/27-property-card.css';
-@import '../styles/28-service-cards.css';

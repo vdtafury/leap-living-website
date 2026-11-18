@@ -3,17 +3,6 @@
    Next card peeks in at the screen edge under a tall "N more" tab; one segment per card
    underneath; mouse drag; a closing "View all" card. No round buttons in the header.
    ========================================================================== */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
 
 /* Edge fades (D-47): widths animate, so they are registered lengths */
 @property --ll-fade-l {

@@ -28,7 +28,7 @@ const wash = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" h
   <rect width="100%" height="100%" fill="url(#g)"/>
 </svg>`)
 
-const logo = await sharp(path.join(ROOT, 'public/brand/logo-stacked-white.png'))
+const logo = await sharp(path.join(ROOT, '../docs/client-assets/brand-kit/logo-stacked-white.png'))
   .resize({ height: 300, fit: 'inside' })
   .toBuffer()
 const meta = await sharp(logo).metadata()

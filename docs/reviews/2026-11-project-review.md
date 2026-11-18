@@ -51,19 +51,24 @@ SEO shows 69 only because staging builds are `noindex` on purpose (`SITE_INDEXIN
 - **JavaScript:** ~165–200 KB gzipped, of which ~170 KB is React + Next itself. Zod and the
   admin code are not sent to public pages.
 
-## 5. Recommendations (not done; each needs a decision)
+## 5. Recommendations
+
+Done on 2026-11-18 at the owner's request (D-49): **1, 2, 3, 7, 8** (results at the end of each item). The others still need a decision.
 
 Ordered by value for effort.
 
 1. **SVG icon sprite.** The homepage repeats ~190 inline SVGs (stars, WhatsApp, phone…):
    59 KB of the 245 KB HTML. One hidden `<svg><symbol>` sprite + `<use href>` would cut the
    HTML by roughly a fifth and speed up the first paint on phones. Half a day; low risk.
+   *Done (D-49):* homepage HTML 245 → 220 KB raw, 28.6 → 27.4 KB gzipped (with item 2); React payload −9 KB.
 2. **Fewer reviews on first load.** The review wall renders every published review. Rendering
    the first 6–9 and the rest on *Show more* keeps the DOM small (now 1,500 elements, budget
    ~800) as real reviews grow. Needs the owner's OK (D-44 says "all reviews at once").
+   *Done (D-49):* first six, then *Show more reviews*.
 3. **Split `globals.css` by route.** All 28 style files ship on every page (93 KB raw, 19 KB
    gzipped, render-blocking). Admin and account styles could move to their own layouts;
    home-only sections could be CSS modules. Medium effort.
+   *Done (D-49):* every page except the homepage and account pages now loads 48 KB raw / 9.6 KB gzipped of CSS (was 93 / 19 KB); the homepage 82 / 17 KB; account pages 60 / 12.4 KB. Computed styles identical on 13 pages × 2 widths. The homepage's mobile LCP render delay (~400 ms) barely moved: it is mostly the round trip for the blocking stylesheet, not its size.
 4. **Merge the override layers.** `15-responsive.css`, `16-brand-overrides.css` and
    `22-home-plain.css` re-style earlier files. Folding each rule back into its component file
    (and one file per component, like `27-property-card.css`) removes ordering surprises.
@@ -75,8 +80,10 @@ Ordered by value for effort.
 7. **Brand kit out of `public/`.** 14 of the 23 files in `public/brand` are never referenced
    (wordmarks, stacked logos, the original artwork). Moving them to `docs/client-assets/`
    keeps them in the repo without publishing them.
+   *Done (D-49):* 16 files moved to `docs/client-assets/brand-kit/`.
 8. **Browser test in CI.** The interaction checks run here with Puppeteer (carousel, search,
    accounts) could become a small Playwright suite in GitHub Actions next to `verify.sh`, so
    a regression is caught before a PR is merged.
+   *Done (D-49):* `.github/workflows/ci.yml` + `web/e2e/` (9 browser tests, desktop and phone).
 9. **Error monitoring for production** (e.g. self-hosted logs or Sentry, needs approval:
    third-party infrastructure, AGENTS.md).

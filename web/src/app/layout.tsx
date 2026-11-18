@@ -14,6 +14,7 @@ import { firstName, listFavoriteKeys } from '@/modules/customers'
 import { AccountProvider } from '@/components/account/account-provider'
 import { SiteContactProvider } from '@/components/layout/site-contact'
 import { PageTransitions } from '@/components/layout/page-transitions'
+import { IconSprite } from '@/components/ui/icon-sprite'
 
 /**
  * Every page is rendered per request from the database (published content only), so an edit
@@ -82,6 +83,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
             {children}
           </SiteContactProvider>
         </AccountProvider>
+        {/* Every icon's shape, once; icons point at it with <use> (see icon-sprite.tsx). */}
+        <IconSprite />
       </body>
     </html>
   )

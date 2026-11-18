@@ -1,6 +1,6 @@
 /**
  * Outline keyhole-in-circle mark, traced from the client-supplied logo mark
- * (`public/brand/logo-mark-teal.png`). Used only as a large decorative watermark,
+ * (`docs/client-assets/brand-kit/logo-mark-teal.png`). Used only as a large decorative watermark,
  * the same way the Brand Guidelines use it on the cover and letterhead.
  */
 export function KeyholeMark({

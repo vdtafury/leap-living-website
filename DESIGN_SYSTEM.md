@@ -10,7 +10,7 @@ Reference inspiration: [Provident Estate](https://providentestate.com/).
 
 ## 2. Logo
 
-- Brand lockup variations in `web/public/brand/` are derived exclusively from the official transparent PNG uploaded by the client (`docs/source-materials/leap-living-logo.png`):
+- Brand lockup variations (full set in `docs/client-assets/brand-kit/`; only the files the site uses are published from `web/public/brand/`: header/footer horizontal logos, favicons, the JSON-LD logo and the link-preview image) are derived exclusively from the official transparent PNG uploaded by the client (`docs/source-materials/leap-living-logo.png`):
   - **Horizontal Lockup** (`logo-horizontal-brand.png`, `logo-horizontal-teal.png`, `logo-horizontal-dark.png`, `logo-horizontal-white.png`): circular keyhole icon to the left of stacked `LEAP / LIVING` (used in Header, Footer, and Dark Executive panels).
   - **Stacked Lockup** (`logo-stacked-teal.png`, `logo-stacked-dark.png`, `logo-stacked-white.png`): circular keyhole icon above `LEAP / LIVING` wordmark.
   - **Brand Mark** (`logo-mark-teal.png`, `logo-mark-white.png`): circular keyhole icon only (used for favicon and graphic marks).
@@ -262,16 +262,24 @@ Narrow cards (container query on the card: 360, 300 and 270px) shrink type and g
 
 > The four listings added on 2026-11-14 (Jumeirah Bay Island, Bluewaters Island, Business Bay, Tilal Al Ghaf) are **sample showcase mandates**, like the rest of the catalogue. Their photos (`property-jumeirah-bay-mansion.jpg`, `property-bluewaters-residence.jpg`, `property-business-bay-penthouse.jpg`, `property-lagoon-villa.jpg`) are **AI-generated placeholders**. Replace them with real listing photography before launch.
 
+### 7.9b Icons and stylesheets (D-49)
+
+| Part | Rule |
+|---|---|
+| Icons | Add the shape to `components/ui/icon-glyphs.tsx` (24×24, geometry only) and a component in `icons.tsx` that renders `<svg …stroke…><use href="#ll-i-name" /></svg>`. Never put `strokeWidth`, `className` or `style` on the shapes: they must inherit from the `<use>` side. `icons.test.ts` checks both lists match |
+| Styles | Shared rules in `src/styles/NN-*.css` via `app/globals.css`. Homepage-only rules in `src/styles/home/` (loaded by `home-view.tsx`), account pages in `src/styles/account/` (loaded by `app/account/layout.tsx`). Route bundles load after the global file, and stay in the page after in-app navigation, so their selectors must be scoped to their own sections |
+
 ### 7.10 Client reviews: review wall (`client-experience.tsx`, `ll-rw-*`, D-44)
 
-Replaces the D-42 client index (owner: all reviews visible at once, like the big sites).
+Replaces the D-42 client index. Since D-49 (owner): the first six reviews, then *Show more reviews* (six more per click).
 
 | Part | Rule |
 |---|---|
 | Header | Title; below it the summary when there are 3+ real reviews (score 2.6rem, stars, "Based on N client reviews", 5-to-1 gold bars); actions on the right (*Share your experience* primary + *Speak With an Advisor* link) |
 | Grid | 3 columns > 1100px, 2 columns > 640px, 1 column on phones; reading order (newest first); even rows, author pinned to the card bottom |
 | Card | White, 1px border, radius 12; stars 16px + faint teal quote mark; headline 600; text 0.92rem / 1.7, clamped to 5 lines with *Read more* when longer than 240 characters; avatar 44px + name + role; hover = teal border + soft shadow |
-| Phones | First 3 cards, then a full-width *Show all N reviews* button |
+| More | *Show more reviews*: white outlined button centred under the grid, adds six cards per click and disappears when all are shown |
+| Phones | First 3 cards, then the same button full width (first click shows cards 4–6, then six at a time) |
 | Must not look like | The listings carousel: no arrows, counter, progress bar or photos |
 
 ### 7.11 Page changes (`page-transitions.tsx`, `24-page-transitions.css`, D-43)
@@ -284,7 +292,7 @@ Replaces the D-42 client index (owner: all reviews visible at once, like the big
 | Not animated | Same-page links (hash, filters), the admin, back / forward, new-tab clicks, browsers without View Transitions, `prefers-reduced-motion` |
 | Not used | React `<ViewTransition>`: it holds the old page until the new page's images load (up to 1.8s) |
 
-### 7.12 Projects: expanding panels (`project-panels.tsx`, `25-project-panels.css`, D-45)
+### 7.12 Projects: expanding panels (`project-panels.tsx`, `home/25-project-panels.css`, D-45)
 
 | Part | Rule |
 |---|---|
@@ -295,7 +303,7 @@ Replaces the D-42 client index (owner: all reviews visible at once, like the big
 | Phones ≤ 899px | Swipe slider: cards 86% wide, scroll-snap, all open, dots below (current = 24px teal pill); stronger bottom gradient |
 | Must not look like | The featured-properties carousel (white cards, arrows, counter) |
 
-### 7.13 Stars and reviews (`stars.tsx`, `26-reviews.css`, D-44)
+### 7.13 Stars and reviews (`stars.tsx`, `26-stars.css`, `home/26-review-wall.css`, `account/26-review-form.css`, D-44)
 
 | Part | Rule |
 |---|---|
@@ -304,7 +312,7 @@ Replaces the D-42 client index (owner: all reviews visible at once, like the big
 | Form | Five 42px star radios (real inputs, keyboard + focus ring), word next to them (*Poor* … *Excellent*), man / woman picture as pill radios, live "Shown as *Mona A.*" line, character counter |
 | Status | Left border + chip: waiting = gold, published = teal, hidden = grey |
 
-### 7.14 Services: heading block + cards (`service-cards.tsx`, `28-service-cards.css`, `ll-svc-*`, D-48)
+### 7.14 Services: heading block + cards (`service-cards.tsx`, `home/28-service-cards.css`, `ll-svc-*`, D-48)
 
 | Part | Rule |
 |---|---|

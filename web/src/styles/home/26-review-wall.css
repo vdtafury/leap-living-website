@@ -1,0 +1,284 @@
+/* ==========================================================================
+   HOMEPAGE REVIEW WALL (D-44): summary, cards, "Show more reviews".
+   Homepage bundle (D-49). Stars: ../26-stars.css; form: ../account/.
+   ========================================================================== */
+
+/* ---------- Homepage: review wall (all reviews at once, D-44) ---------- */
+.ll-rw-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem 3rem;
+  margin-bottom: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.ll-rw-head-main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.15rem;
+  min-width: 0;
+}
+
+.ll-rw-head .ll-section-title {
+  margin-bottom: 0;
+}
+
+.ll-rw-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem 1.5rem;
+}
+
+.ll-reviews-write {
+  padding-inline: 1.4rem;
+}
+
+/* Summary: score + stars + count, then the 5-to-1 breakdown (real reviews only) */
+.ll-rw-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.75rem;
+}
+
+.ll-rw-score {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.ll-rw-score-num {
+  font-size: 2.6rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--heading);
+}
+
+.ll-rw-score-side {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.ll-rw-score-count {
+  font-size: 0.8rem;
+  color: var(--body-text);
+}
+
+.ll-rw-bars {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  padding: 0 0 0 1.75rem;
+  border-left: 1px solid var(--border-subtle);
+  list-style: none;
+  min-width: 210px;
+}
+
+.ll-rw-bar {
+  display: grid;
+  grid-template-columns: 1.6rem 1fr 1.6rem;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  color: var(--body-text);
+}
+
+.ll-rw-bar-track {
+  height: 5px;
+  border-radius: 999px;
+  background-color: #e9eeec;
+  overflow: hidden;
+}
+
+.ll-rw-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background-color: #d4a43b;
+}
+
+.ll-rw-bar-count {
+  text-align: right;
+}
+
+/* The wall: 3 / 2 / 1 columns, reading order, even rows */
+.ll-rw-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 1.6vw, 1.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ll-rw-card {
+  display: flex;
+  min-width: 0;
+}
+
+.ll-rw-figure {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0;
+  padding: clamp(1.4rem, 2vw, 1.85rem);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background-color: var(--white);
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.ll-rw-figure:hover {
+  border-color: var(--brand-teal-25);
+  box-shadow: 0 14px 34px -22px rgba(24, 92, 94, 0.35);
+}
+
+.ll-rw-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.ll-rw-mark {
+  margin: -0.55rem -0.15rem 0 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 3.4rem;
+  line-height: 1;
+  height: 1.6rem;
+  color: var(--brand-teal-25);
+  user-select: none;
+}
+
+.ll-rw-title {
+  margin: 0 0 0.55rem;
+  font-size: 1.02rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--heading);
+}
+
+.ll-rw-quote {
+  margin: 0;
+}
+
+.ll-rw-quote p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--body-text);
+  white-space: pre-line;
+}
+
+.ll-rw-quote[data-clamped='true'] p {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+  overflow: hidden;
+  /* Paragraph breaks only in the full text, so the ellipsis ends a real line */
+  white-space: normal;
+}
+
+.ll-rw-more {
+  align-self: flex-start;
+  margin-top: 0.45rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--dark-teal);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.ll-rw-by {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: auto;
+  padding-top: 1.35rem;
+}
+
+.ll-rw-all {
+  display: block;
+  margin: 2rem auto 0;
+  padding: 0.85rem 1.6rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background-color: var(--white);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--heading);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.ll-rw-all:hover {
+  border-color: var(--action-teal);
+  color: var(--dark-teal);
+}
+
+.ll-rw-all:focus-visible {
+  outline: 2px solid var(--action-teal);
+  outline-offset: 2px;
+}
+
+.ll-rw-all[data-wide='false'] {
+  display: none;
+}
+
+@media (max-width: 1100px) {
+  .ll-rw-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .ll-rw-bars {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+/* Phones: one column, the first three cards, then "Show all reviews" */
+@media (max-width: 640px) {
+  .ll-rw-head {
+    gap: 1.25rem;
+  }
+  .ll-rw-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ll-rw-grid[data-show-all='false'] > .ll-rw-card:nth-child(n + 4) {
+    display: none;
+  }
+  .ll-rw-all,
+  .ll-rw-all[data-wide='false'] {
+    display: block;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.85rem 1rem;
+  }
+  .ll-rw-all[data-phone='false'] {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ll-rw-figure {
+    transition: none;
+  }
+}

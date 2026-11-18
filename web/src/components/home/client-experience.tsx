@@ -20,15 +20,20 @@ interface ClientExperienceProps {
 const WRITE_HREF = '/account/review'
 /** Longer quotes are clamped with a "Read more" (the card grid keeps even rows). */
 const LONG_QUOTE = 240
-/** Phones show this many cards, then "Show all reviews". */
+/** Reviews in the page at first, and how many more each "Show more reviews" adds. */
+const FIRST = 6
+const STEP = 6
+/** Phones show this many of the first six, then the same button. */
 const PHONE_VISIBLE = 3
+const PHONE_QUERY = '(max-width: 640px)'
 
 /**
  * Homepage client reviews as a review wall (owner, 2026-11-18: "show them all at the same time,
  * professionally, like the big sites"). After Airbnb / Trustpilot / Google reviews: a header with
  * the rating summary and the actions, then every review as a card in a grid (3 / 2 / 1 columns),
  * in reading order, newest first. No carousel, arrows or photos, so it looks like nothing else on
- * the page (D-42). Every review is in the HTML.
+ * the page (D-42). The first six are in the HTML; "Show more reviews" adds six at a time
+ * (phones: three, then the other three, then six at a time).
  */
 export function ClientExperience({
   title,
@@ -37,7 +42,8 @@ export function ClientExperience({
   items,
   summary,
 }: ClientExperienceProps) {
-  const [showAll, setShowAll] = useState(false)
+  const [shown, setShown] = useState(FIRST)
+  const [phoneOpen, setPhoneOpen] = useState(false)
   const [open, setOpen] = useState<ReadonlySet<number>>(new Set())
   if (items.length === 0) return null
 
@@ -48,6 +54,19 @@ export function ClientExperience({
       else next.add(index)
       return next
     })
+
+  const visible = items.slice(0, shown)
+  const moreWide = items.length > shown
+  const morePhone = moreWide || (!phoneOpen && visible.length > PHONE_VISIBLE)
+  const showMore = () => {
+    // On a phone the first click only reveals the cards already in the page (4 to 6).
+    if (!phoneOpen && window.matchMedia(PHONE_QUERY).matches && visible.length > PHONE_VISIBLE) {
+      setPhoneOpen(true)
+      return
+    }
+    setPhoneOpen(true)
+    setShown((n) => n + STEP)
+  }
 
   return (
     <section
@@ -105,8 +124,8 @@ export function ClientExperience({
           </div>
         </header>
 
-        <ul className="ll-rw-grid" data-show-all={showAll}>
-          {items.map((review, index) => {
+        <ul id="ll-rw-grid" className="ll-rw-grid" data-show-all={phoneOpen}>
+          {visible.map((review, index) => {
             const long = review.quote.length > LONG_QUOTE
             const expanded = open.has(index)
             const quoteId = `ll-rw-quote-${index}`
@@ -149,9 +168,16 @@ export function ClientExperience({
           })}
         </ul>
 
-        {items.length > PHONE_VISIBLE && !showAll && (
-          <button type="button" className="ll-rw-all" onClick={() => setShowAll(true)}>
-            Show all {items.length} reviews
+        {(moreWide || morePhone) && (
+          <button
+            type="button"
+            className="ll-rw-all"
+            data-wide={moreWide}
+            data-phone={morePhone}
+            aria-controls="ll-rw-grid"
+            onClick={showMore}
+          >
+            Show more reviews
           </button>
         )}
       </div>

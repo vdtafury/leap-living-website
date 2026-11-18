@@ -2,20 +2,12 @@
    BRAND TYPOGRAPHY: Poppins display (no serif in the LEAP LIVING identity)
    ========================================================================== */
 .ll-serif-title,
-.ll-page-hero-title,
-.ll-hero-title {
+.ll-page-hero-title {
   font-weight: 500;
   letter-spacing: -0.025em;
 }
 
-.ll-hero-title {
-  line-height: 1.08;
-}
-
-.ll-stat-value {
-  font-weight: 500;
-  letter-spacing: -0.03em;
-}
+/* The homepage hero title and stat figures: home/16-brand-type.css (D-49) */
 
 /* Checklist ticks on dark/teal surfaces: a white disc keeps the tick legible */
 .ll-section-dark .ll-highlight-item svg {
