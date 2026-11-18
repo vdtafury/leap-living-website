@@ -182,7 +182,7 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 5. Advisory: bento on the light tint (`ll-section-tint`), white tiles, lead tile Teal 10%
 6. Selected Projects: plain white
 7. Valuation & Mortgage: light tint, **one card** (`ll-advice`, D-30). Left half: eyebrow, section title, then For Owners ("What is your property worth?" + Request Free Valuation). Right half: For Buyers, the mortgage calculator (`#mortgage-calculator`). One action per side; the halves stack on tablets and phones
-8. Client reviews: plain white, **row of review cards** (see 7.10)
+8. Client reviews: plain white, **client index + one large review** (see 7.10, D-42)
 9. Footer: light tint (coloured logo, hairlines)
 
 **Rule (D-28):** from the stats band down, surfaces alternate tint / white so neighbouring sections never share a background.
@@ -235,7 +235,7 @@ Verified with no horizontal overflow, and with the panel fully in view, at 1920�
 
 ### 7.8 Featured properties carousel (`ll-carousel-*`)
 
-`PropertyCarousel` (`web/src/components/property/property-carousel.tsx`) is a thin wrapper over the shared `Carousel` (`web/src/components/ui/carousel.tsx`), which the client reviews also use. Slides are rendered on the server and passed in, so the cards ship no JavaScript. It replaces the fixed 3-card grid on the homepage. It shows every `featured: true` BUY listing (currently 8).
+`PropertyCarousel` (`web/src/components/property/property-carousel.tsx`) is a thin wrapper over the shared `Carousel` (`web/src/components/ui/carousel.tsx`). Only the listings use it (the reviews stopped using it in D-42, so no two homepage sections look alike). Slides are rendered on the server and passed in, so the cards ship no JavaScript. It replaces the fixed 3-card grid on the homepage. It shows every `featured: true` BUY listing (currently 8).
 
 - **Track:** a native horizontal scroll-snap list, so touch swipe and trackpad work natively. Cards keep the standard `ll-card` design. The track has internal padding so the hover lift and shadow are not clipped.
 - **Controls (header, right):** "View All" link, a counter (`01–03 / 08`, announced via `aria-live`), and round prev/next buttons (48px; 44px on mobile). Each click moves exactly one card; the button is disabled at either end. Hover turns it solid teal. ←/→ keys work when focus is inside the carousel.
@@ -245,15 +245,16 @@ Verified with no horizontal overflow, and with the panel fully in view, at 1920�
 
 > The four listings added on 2026-11-14 (Jumeirah Bay Island, Bluewaters Island, Business Bay, Tilal Al Ghaf) are **sample showcase mandates**, like the rest of the catalogue. Their photos (`property-jumeirah-bay-mansion.jpg`, `property-bluewaters-residence.jpg`, `property-business-bay-penthouse.jpg`, `property-lagoon-villa.jpg`) are **AI-generated placeholders**. Replace them with real listing photography before launch.
 
-### 7.10 Client reviews (`ll-review-*`, D-27)
+### 7.10 Client reviews: client index (`ll-reviews-*`, D-42)
 
-Component: `web/src/components/home/client-experience.tsx` (server component). Reference: providentestate.com "Why Our Clients Trust Us", rebuilt cleaner.
+Component: `web/src/components/home/client-experience.tsx` (small client component for the tabs). The owner asked that no section repeat another (2026-11-18); the Provident-style card carousel looked like the listings carousel, so the reviews became a **client index**: no cards, arrows, counter or progress bar.
 
 | Part | Rule |
 |---|---|
-| Section | `ll-section-plain` (white). Header: title `Why Clients Trust Leap Living` + `Speak With an Advisor` link, counter and arrows |
-| Card | White, 1px `--border-subtle`, `--radius-lg`. As on Provident: reviewer row first (60px round **man / woman avatar** + name + role) → bold headline → text (clamped to 5 lines). Hover: Teal 25% border + card shadow, no movement |
+| Section | `ll-section-plain` (white). Title `Why Clients Trust Leap Living` across the full width |
+| Index (left, 5/12) | One row per client between hairlines: 44px **man / woman avatar** + name + role. Active row: 2px action-teal bar on the left edge, avatar ring, full-strength name; the others are muted. Hover: tint row. `Speak With an Advisor` link under the list |
+| Stage (right, 7/12) | Tint panel (`--surface-tint`, 1px border, `--radius-lg`) with the chosen review: headline (secondary teal, 600) → quote (large, light 300, heading colour) → hairline → 56px avatar + name + role. All panels share one grid cell, so the panel keeps the height of the longest review and never jumps; switching fades + rises 10px (off under reduced motion). **No autoplay** |
+| ≤960px | Title, then the clients as a swipeable row of pill chips (avatar + name), the review panel, then the link |
 | Avatar | `AvatarIcon` (`components/ui/icons.tsx`): inline SVG silhouette, short hair (man) or long hair (woman), in brand teals on Teal 10%. Not a photo, so the no-people-photos rule (D-17) holds. Chosen per review by `avatar: 'man' \| 'woman'` |
-| Carousel | Shared `Carousel`: 3 per view above 1120px, 2 below, 1 + peek at 700px and below; swipe, arrows (one card per click), ←/→ keys, counter, progress hairline. **No autoplay** |
-| A11y | Each card is a `figure` with `figcaption` (reviewer) + `blockquote`; avatars are `aria-hidden`; slides are labelled "n of N"; buttons read "Previous/Next review" |
+| A11y | WAI-ARIA tabs: `tablist` (vertical) of `tab` buttons with roving tabindex; ↑/↓/←/→ wrap, Home/End jump. Each review is a `tabpanel` `figure` (`blockquote` + `figcaption`); inactive panels are `visibility: hidden` + `aria-hidden`. Every review is in the server HTML |
 | Content | `CLIENT_PERSPECTIVES` in `data/catalog.ts` (`avatar`, `title`, `quote`, `author`, `role`): **placeholders** until the client sends real reviews. No star ratings and no dates until real, verifiable reviews exist |

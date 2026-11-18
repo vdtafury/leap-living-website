@@ -31,11 +31,13 @@ export const DEFAULT_SETTINGS = {
   },
   navigation: {
     links: [
+      // Visitor tasks first (most to least common), then the company, Contact last beside the
+      // header buttons (owner, 2026-11-18).
       { label: 'Home', href: '/' },
-      { label: 'About', href: '/about' },
       { label: 'Buy', href: '/buy' },
       { label: 'Rent', href: '/rent' },
       { label: 'Sell', href: '/sell' },
+      { label: 'About', href: '/about' },
       { label: 'Contact', href: '/contact' },
     ],
   },
