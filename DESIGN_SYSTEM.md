@@ -259,11 +259,12 @@ Component: `web/src/components/home/client-experience.tsx` (small client compone
 | A11y | WAI-ARIA tabs: `tablist` (vertical) of `tab` buttons with roving tabindex; ↑/↓/←/→ wrap, Home/End jump. Each review is a `tabpanel` `figure` (`blockquote` + `figcaption`); inactive panels are `visibility: hidden` + `aria-hidden`. Every review is in the server HTML |
 | Content | `CLIENT_PERSPECTIVES` in `data/catalog.ts` (`avatar`, `title`, `quote`, `author`, `role`): **placeholders** until the client sends real reviews. No star ratings and no dates until real, verifiable reviews exist |
 
-### 7.11 Page changes (`template.tsx`, `24-page-transitions.css`, D-43)
+### 7.11 Page changes (`page-transitions.tsx`, `24-page-transitions.css`, D-43)
 
 | Part | Rule |
 |---|---|
-| Speed first | The new page is on screen as soon as it is ready; no animation ever delays it. Navbar links are fully prefetched |
-| New page | Its sections (not the header) fade in and rise 6px, 200ms, ease-out, `backwards` fill (nothing left on the elements afterwards) |
-| Not animated | The landing page, query-string changes (listing filters), the admin, `prefers-reduced-motion` |
-| Not used | `<ViewTransition>`: it waits for the new page's images before showing it (measured up to 1.8s) |
+| Crossfade | Old page fades out 200ms (ease-in); new page fades in and rises 14px, 380ms (ease-out, 40ms delay). Total about 0.4s, and it never waits for images |
+| Header | `view-transition-name: site-header`: its own layer, no fade, no slide |
+| Speed | Navbar links are fully prefetched, so the new page renders from memory |
+| Not animated | Same-page links (hash, filters), the admin, back / forward, new-tab clicks, browsers without View Transitions, `prefers-reduced-motion` |
+| Not used | React `<ViewTransition>`: it holds the old page until the new page's images load (up to 1.8s) |
