@@ -21,6 +21,7 @@ export function PropertyCarousel({ items, label, children, action }: PropertyCar
       noun="property"
       nounPlural="properties"
       action={action}
+      bleed
       slides={items.map((property) => ({
         key: property.slug,
         node: <PropertyCard property={property} />,

@@ -17,7 +17,13 @@
   /* 28px up to ~1366px, growing smoothly to 36px at ~1600px (same as .ll-cards-grid) */
   --carousel-gap: clamp(1.75rem, calc(3.42vw - 18.7px), 2.25rem);
   --carousel-per-view: 3;
+  /* How much of the next card must show, at least (D-46: "more than three" at a glance) */
+  --carousel-peek: 130px;
   position: relative;
+}
+
+.ll-carousel-head {
+  margin-bottom: clamp(1.5rem, 2.2vw, 2.25rem);
 }
 
 .ll-carousel-actions {
@@ -52,16 +58,33 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
-  border: 1px solid var(--border-subtle);
+  border: 1.5px solid #c3cfcd;
   background: var(--white);
   color: var(--dark-teal);
   cursor: pointer;
-  box-shadow: 0 6px 18px rgba(16, 42, 44, 0.06);
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease,
-    transform 0.2s ease, opacity 0.2s ease;
+  box-shadow: 0 6px 18px rgba(16, 42, 44, 0.08);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+/* "Next" is the main action: filled, so the eye goes to it first */
+.ll-carousel-btn--next:not(:disabled) {
+  background: var(--action-teal);
+  border-color: var(--action-teal);
+  color: var(--white);
+  box-shadow: 0 10px 24px -8px rgba(40, 127, 130, 0.6);
+}
+
+.ll-carousel-btn--next:hover:not(:disabled) {
+  background: var(--dark-teal);
+  border-color: var(--dark-teal);
 }
 
 .ll-carousel-btn:hover:not(:disabled) {
@@ -77,15 +100,15 @@
 }
 
 .ll-carousel-btn:disabled {
-  opacity: 0.38;
+  opacity: 0.35;
   cursor: default;
   box-shadow: none;
 }
 
 @media (min-width: 1440px) {
   .ll-carousel-btn {
-    width: 52px;
-    height: 52px;
+    width: 56px;
+    height: 56px;
   }
   .ll-carousel-count {
     font-size: 0.92rem;
@@ -111,6 +134,25 @@
   -webkit-overflow-scrolling: touch;
 }
 
+/* Bleed (D-46): the track runs on to the right edge of the screen and the cards are sized so
+   the next one always peeks in (at least --carousel-peek). Needs a size container on the section
+   (.ll-carousel-bleed-host); 100cqw = section width, 100% = container width. */
+.ll-carousel--bleed .ll-carousel-track {
+  --carousel-bleed: calc((100cqw - 100%) / 2);
+  --carousel-room: max(0px, calc(var(--carousel-peek) - var(--carousel-bleed)));
+  grid-auto-columns: calc(
+    (100% - (var(--carousel-per-view) - 1) * var(--carousel-gap) - var(--carousel-room)) /
+      var(--carousel-per-view)
+  );
+  margin-right: calc((100% - 100cqw) / 2);
+  padding-right: calc((100cqw - 100%) / 2);
+}
+
+.ll-carousel-bleed-host {
+  container-type: inline-size;
+  overflow-x: clip;
+}
+
 .ll-carousel-track::-webkit-scrollbar {
   display: none;
 }
@@ -128,8 +170,8 @@
 
 .ll-carousel-progress {
   position: relative;
-  height: 2px;
-  margin-top: 2.25rem;
+  height: 3px;
+  margin-top: 1.5rem;
   border-radius: 2px;
   background: var(--border-subtle);
   overflow: hidden;
@@ -140,7 +182,9 @@
   inset: 0 auto 0 0;
   border-radius: inherit;
   background: var(--brand-teal);
-  transition: transform 0.15s linear, width 0.2s ease;
+  transition:
+    transform 0.15s linear,
+    width 0.2s ease;
 }
 
 @media (max-width: 1120px) {
@@ -173,6 +217,10 @@
     flex-wrap: nowrap;
   }
   /* One card with a peek of the next to invite swiping */
+  .ll-carousel {
+    --carousel-per-view: 1;
+    --carousel-peek: 64px;
+  }
   .ll-carousel-track {
     grid-auto-columns: calc(100% - 2.75rem);
   }
@@ -182,11 +230,18 @@
     gap: 1rem;
   }
   .ll-carousel-btn {
-    width: 44px;
-    height: 44px;
+    width: 46px;
+    height: 46px;
   }
   .ll-carousel-progress {
-    margin-top: 1.75rem;
+    margin-top: 1.25rem;
+  }
+}
+
+/* Very small phones: a slimmer peek, so the card keeps its width */
+@media (max-width: 360px) {
+  .ll-carousel {
+    --carousel-peek: 48px;
   }
 }
 

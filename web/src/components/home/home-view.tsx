@@ -126,7 +126,7 @@ export function HomeView({
         </section>
 
         {/* ==================== FEATURED BUY PORTFOLIO PREVIEW ==================== */}
-        <section className="ll-section-light ll-defer-render">
+        <section className="ll-section-light ll-defer-render ll-carousel-bleed-host">
           <div className="ll-container">
             <PropertyCarousel
               items={featuredSaleProperties}

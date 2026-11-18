@@ -237,11 +237,24 @@ Verified with no horizontal overflow, and with the panel fully in view, at 1920�
 
 `PropertyCarousel` (`web/src/components/property/property-carousel.tsx`) is a thin wrapper over the shared `Carousel` (`web/src/components/ui/carousel.tsx`). Only the listings use it (the reviews stopped using it in D-42, so no two homepage sections look alike). Slides are rendered on the server and passed in, so the cards ship no JavaScript. It replaces the fixed 3-card grid on the homepage. It shows every `featured: true` BUY listing (currently 8).
 
-- **Track:** a native horizontal scroll-snap list, so touch swipe and trackpad work natively. Cards keep the standard `ll-card` design. The track has internal padding so the hover lift and shadow are not clipped.
-- **Controls (header, right):** "View All" link, a counter (`01–03 / 08`, announced via `aria-live`), and round prev/next buttons (48px; 44px on mobile). Each click moves exactly one card; the button is disabled at either end. Hover turns it solid teal. ←/→ keys work when focus is inside the carousel.
-- **Progress:** a 2px hairline under the track with a teal thumb sized to the visible fraction.
-- **Per view:** 3 above 1120px; 2 at 1120px and below; 1 card plus a peek of the next at 700px and below. On mobile the link shortens to "View all", so the link, counter and arrows fit on one row.
+- **Track:** a native horizontal scroll-snap list (touch swipe and trackpad). It **bleeds** to the right edge of the screen (`ll-carousel--bleed`, section `ll-carousel-bleed-host`), and the cards are sized so the next one always peeks in (`--carousel-peek`: 130px desktop/tablet, 64px phones, 48px at 360px and below), D-46. The track has internal padding so the hover lift and shadow are not clipped.
+- **Controls (header, right):** "View All" link, a counter (`01–03 / 08`, announced via `aria-live`), and round buttons: *previous* white with a 1.5px `#C3CFCD` outline, *next* filled action teal with a teal shadow (56px at 1440px+, 52px, 46px on phones). Each click moves exactly one card; disabled at either end (35% opacity). ←/→ keys work when focus is inside the carousel.
+- **Progress:** a 3px line under the track, 1.5rem below (1.25rem on phones), with a teal thumb sized to the visible fraction.
+- **Per view:** 3 above 1120px; 2 at 1120px and below; 1 at 700px and below, always plus the peek. On mobile the link shortens to "View all".
 - **Accessibility:** `role="region"` + `aria-roledescription="carousel"`; slides are labelled "n of N". Smooth scrolling is disabled under `prefers-reduced-motion`.
+
+### 7.8.1 Property card (`property-card.tsx`, `27-property-card.css`, `ll-pc-*`, D-46)
+
+| Row | Content |
+|---|---|
+| Image | 16:10, status + type chips, heart, location on the photo |
+| 1 | *Residential · Ready* (teal kicker) ... reference (grey) |
+| 2 | Title, one line with an ellipsis |
+| 3 | Price (dark teal, 700) ... *Know More* + round arrow |
+| 4 | Hairline, then beds · baths · area spread across the width, values bold |
+| 5 | *WhatsApp* (green icon) · *Call* · *Email*: equal 40px buttons, 1px border, hover = tint; WhatsApp opens a new tab with a message naming the listing |
+
+Narrow cards (container query on the card: 360, 300 and 270px) shrink type and gaps, so every row stays on one line down to 320px screens. The project card keeps the older `ll-card-*` body.
 
 > The four listings added on 2026-11-14 (Jumeirah Bay Island, Bluewaters Island, Business Bay, Tilal Al Ghaf) are **sample showcase mandates**, like the rest of the catalogue. Their photos (`property-jumeirah-bay-mansion.jpg`, `property-bluewaters-residence.jpg`, `property-business-bay-penthouse.jpg`, `property-lagoon-villa.jpg`) are **AI-generated placeholders**. Replace them with real listing photography before launch.
 

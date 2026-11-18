@@ -12,6 +12,7 @@ import { pageMetadata, SITE_INDEXING, SITE_URL } from '@/lib/seo'
 import { accountCsrfToken, getCustomer } from '@/server/auth/account'
 import { firstName, listFavoriteKeys } from '@/modules/customers'
 import { AccountProvider } from '@/components/account/account-provider'
+import { SiteContactProvider } from '@/components/layout/site-contact'
 import { PageTransitions } from '@/components/layout/page-transitions'
 
 /**
@@ -47,6 +48,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   // Visitors without the account cookie cost no database query here.
   const customer = await getCustomer()
   const saved = customer ? await listFavoriteKeys(customer.id) : []
+  // Phone / WhatsApp / email for the listing contact buttons (D-46), from Site settings.
+  const { company } = await getPublishedContent('settings')
   return (
     <html lang="en">
       <body>
@@ -67,7 +70,17 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           csrf={customer ? accountCsrfToken(customer) : ''}
           saved={saved}
         >
-          {children}
+          <SiteContactProvider
+            contact={{
+              phoneHref: company.phoneHref,
+              phoneDisplay: company.phoneDisplay,
+              whatsapp: company.whatsapp,
+              email: company.email,
+              siteUrl: SITE_URL,
+            }}
+          >
+            {children}
+          </SiteContactProvider>
         </AccountProvider>
       </body>
     </html>

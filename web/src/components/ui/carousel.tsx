@@ -22,6 +22,9 @@ interface CarouselProps {
   /** Extra action shown next to the arrows (e.g. "View all" link). */
   action?: ReactNode
   className?: string
+  /** Run the track to the right edge of the screen so the next card peeks in (D-46). The
+   *  section must carry `ll-carousel-bleed-host`. */
+  bleed?: boolean
 }
 
 const pad = (n: number) => String(n).padStart(2, '0')
@@ -39,6 +42,7 @@ export function Carousel({
   children,
   action,
   className,
+  bleed = false,
 }: CarouselProps) {
   const count = slides.length
   const trackRef = useRef<HTMLUListElement>(null)
@@ -111,7 +115,9 @@ export function Carousel({
 
   return (
     <div
-      className={className ? `ll-carousel ${className}` : 'll-carousel'}
+      className={['ll-carousel', bleed && 'll-carousel--bleed', className]
+        .filter(Boolean)
+        .join(' ')}
       role="region"
       aria-roledescription="carousel"
       aria-label={label}
@@ -139,7 +145,7 @@ export function Carousel({
             </button>
             <button
               type="button"
-              className="ll-carousel-btn"
+              className="ll-carousel-btn ll-carousel-btn--next"
               onClick={() => go(1)}
               disabled={!state.canNext}
               aria-label={`Next ${noun}`}
