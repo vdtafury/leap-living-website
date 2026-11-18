@@ -245,19 +245,17 @@ Verified with no horizontal overflow, and with the panel fully in view, at 1920�
 
 > The four listings added on 2026-11-14 (Jumeirah Bay Island, Bluewaters Island, Business Bay, Tilal Al Ghaf) are **sample showcase mandates**, like the rest of the catalogue. Their photos (`property-jumeirah-bay-mansion.jpg`, `property-bluewaters-residence.jpg`, `property-business-bay-penthouse.jpg`, `property-lagoon-villa.jpg`) are **AI-generated placeholders**. Replace them with real listing photography before launch.
 
-### 7.10 Client reviews: client index (`ll-reviews-*`, D-42)
+### 7.10 Client reviews: review wall (`client-experience.tsx`, `ll-rw-*`, D-44)
 
-Component: `web/src/components/home/client-experience.tsx` (small client component for the tabs). The owner asked that no section repeat another (2026-11-18); the Provident-style card carousel looked like the listings carousel, so the reviews became a **client index**: no cards, arrows, counter or progress bar.
+Replaces the D-42 client index (owner: all reviews visible at once, like the big sites).
 
 | Part | Rule |
 |---|---|
-| Section | `ll-section-plain` (white). Title `Why Clients Trust Leap Living` across the full width |
-| Index (left, 5/12) | One row per client between hairlines: 44px **man / woman avatar** + name + role. Active row: 2px action-teal bar on the left edge, avatar ring, full-strength name; the others are muted. Hover: tint row. `Speak With an Advisor` link under the list |
-| Stage (right, 7/12) | Tint panel (`--surface-tint`, 1px border, `--radius-lg`) with the chosen review: headline (secondary teal, 600) → quote (large, light 300, heading colour) → hairline → 56px avatar + name + role. All panels share one grid cell, so the panel keeps the height of the longest review and never jumps; switching fades + rises 10px (off under reduced motion). **No autoplay** |
-| ≤960px | Title, then the clients as a swipeable row of pill chips (avatar + name), the review panel, then the link |
-| Avatar | `AvatarIcon` (`components/ui/icons.tsx`): inline SVG silhouette, short hair (man) or long hair (woman), in brand teals on Teal 10%. Not a photo, so the no-people-photos rule (D-17) holds. Chosen per review by `avatar: 'man' \| 'woman'` |
-| A11y | WAI-ARIA tabs: `tablist` (vertical) of `tab` buttons with roving tabindex; ↑/↓/←/→ wrap, Home/End jump. Each review is a `tabpanel` `figure` (`blockquote` + `figcaption`); inactive panels are `visibility: hidden` + `aria-hidden`. Every review is in the server HTML |
-| Content | `CLIENT_PERSPECTIVES` in `data/catalog.ts` (`avatar`, `title`, `quote`, `author`, `role`): **placeholders** until the client sends real reviews. No star ratings and no dates until real, verifiable reviews exist |
+| Header | Title; below it the summary when there are 3+ real reviews (score 2.6rem, stars, "Based on N client reviews", 5-to-1 gold bars); actions on the right (*Share your experience* primary + *Speak With an Advisor* link) |
+| Grid | 3 columns > 1100px, 2 columns > 640px, 1 column on phones; reading order (newest first); even rows, author pinned to the card bottom |
+| Card | White, 1px border, radius 12; stars 16px + faint teal quote mark; headline 600; text 0.92rem / 1.7, clamped to 5 lines with *Read more* when longer than 240 characters; avatar 44px + name + role; hover = teal border + soft shadow |
+| Phones | First 3 cards, then a full-width *Show all N reviews* button |
+| Must not look like | The listings carousel: no arrows, counter, progress bar or photos |
 
 ### 7.11 Page changes (`page-transitions.tsx`, `24-page-transitions.css`, D-43)
 
@@ -285,7 +283,7 @@ Component: `web/src/components/home/client-experience.tsx` (small client compone
 | Part | Rule |
 |---|---|
 | Star colour | Gold `#d4a43b` filled, `#dfe4e2` empty; partial stars by width clip (average) |
-| Homepage | Stars above the headline in the big review, small stars in each client tab (hidden ≤ 960px), average + count next to the title from 3 real reviews; *Share your experience* (primary) + *Speak With an Advisor* (link) |
+| Homepage | Stars at the top of every review card; summary with score, stars and 5-to-1 bars from 3 real reviews (7.10) |
 | Form | Five 42px star radios (real inputs, keyboard + focus ring), word next to them (*Poor* … *Excellent*), man / woman picture as pill radios, live "Shown as *Mona A.*" line, character counter |
 | Status | Left border + chip: waiting = gold, published = teal, hidden = grey |
 

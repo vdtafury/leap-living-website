@@ -11,6 +11,7 @@ export {
 } from './application/reviews'
 export {
   HOMEPAGE_REVIEW_LIMIT,
+  EMPTY_REVIEW_STATS,
   homepageReviews,
   REAL_REVIEWS_TO_HIDE_SAMPLES,
   REVIEW_AVATARS,
@@ -21,5 +22,7 @@ export {
   type HomepageReview,
   type ReviewAvatar,
   type ReviewInput,
+  type ReviewStats,
   type ReviewStatus,
+  type ReviewSummary,
 } from './domain/review'

@@ -18,7 +18,7 @@ export type ReviewAvatar = (typeof REVIEW_AVATARS)[number]
 /** From this many published reviews on, the sample reviews are no longer shown. */
 export const REAL_REVIEWS_TO_HIDE_SAMPLES = 3
 /** Reviews shown on the homepage at most (newest approved first). */
-export const HOMEPAGE_REVIEW_LIMIT = 8
+export const HOMEPAGE_REVIEW_LIMIT = 9
 /** Stars shown on the sample reviews until real ones replace them (owner, 2026-11-18). */
 export const SAMPLE_RATING = 5
 
@@ -82,16 +82,33 @@ export interface HomepageReview {
   rating: number
 }
 
+/** Totals of the published reviews; `byRating[n - 1]` = how many gave n stars. */
+export interface ReviewStats {
+  count: number
+  ratingSum: number
+  byRating: [number, number, number, number, number]
+}
+
+export const EMPTY_REVIEW_STATS: ReviewStats = { count: 0, ratingSum: 0, byRating: [0, 0, 0, 0, 0] }
+
+export interface ReviewSummary {
+  average: number
+  count: number
+  /** 5 stars first, as on the big review sites */
+  breakdown: { stars: number; count: number }[]
+}
+
 /**
  * What the homepage shows: published reviews first (newest first); the samples fill in only
  * while fewer than REAL_REVIEWS_TO_HIDE_SAMPLES real reviews are published. The summary
- * (average and count of all published reviews) is shown only from that point, never for samples.
+ * (average, count and star breakdown of all published reviews) is shown only from that point,
+ * never for samples.
  */
 export function homepageReviews(
   published: HomepageReview[],
   samples: Omit<HomepageReview, 'rating'>[],
-  stats: { count: number; ratingSum: number },
-): { items: HomepageReview[]; summary: { average: number; count: number } | null } {
+  stats: ReviewStats,
+): { items: HomepageReview[]; summary: ReviewSummary | null } {
   const enough = stats.count >= REAL_REVIEWS_TO_HIDE_SAMPLES
   const real = published.slice(0, HOMEPAGE_REVIEW_LIMIT)
   const items = enough
@@ -101,7 +118,11 @@ export function homepageReviews(
         HOMEPAGE_REVIEW_LIMIT,
       )
   const summary = enough
-    ? { average: Math.round((stats.ratingSum / stats.count) * 10) / 10, count: stats.count }
+    ? {
+        average: Math.round((stats.ratingSum / stats.count) * 10) / 10,
+        count: stats.count,
+        breakdown: [5, 4, 3, 2, 1].map((stars) => ({ stars, count: stats.byRating[stars - 1] })),
+      }
     : null
   return { items, summary }
 }

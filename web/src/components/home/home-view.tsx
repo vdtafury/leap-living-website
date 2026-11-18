@@ -19,7 +19,12 @@ import { DeveloperShowcase } from '@/components/home/developer-showcase'
 import { ClientExperience } from '@/components/home/client-experience'
 import type { DeveloperBrand, ProjectItem, PropertyListing } from '@/data/catalog'
 import type { HomeContent } from '@/data/content-defaults'
-import { homepageReviews, type HomepageReview } from '@/modules/reviews'
+import {
+  EMPTY_REVIEW_STATS,
+  homepageReviews,
+  type HomepageReview,
+  type ReviewStats,
+} from '@/modules/reviews'
 import type { ReactNode } from 'react'
 
 export interface HomeViewProps {
@@ -33,7 +38,7 @@ export interface HomeViewProps {
   /** JSON-LD needs the published settings; the admin preview leaves it out */
   jsonLd?: ReactNode
   /** Approved client reviews (D-44); the sample reviews from the CMS fill in until there are 3 */
-  publishedReviews?: { items: HomepageReview[]; stats: { count: number; ratingSum: number } }
+  publishedReviews?: { items: HomepageReview[]; stats: ReviewStats }
 }
 
 /**
@@ -48,7 +53,7 @@ export function HomeView({
   developers,
   hasHeroVideo,
   jsonLd,
-  publishedReviews = { items: [], stats: { count: 0, ratingSum: 0 } },
+  publishedReviews = { items: [], stats: EMPTY_REVIEW_STATS },
 }: HomeViewProps) {
   const { hero, stats, featured, services, advice, calculator, reviews } = content
   // Communities offered by the hero search, per mode, straight from the listings.

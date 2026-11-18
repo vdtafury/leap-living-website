@@ -15,6 +15,8 @@ import {
   type ReviewAvatar,
   type ReviewInput,
   type ReviewStatus,
+  EMPTY_REVIEW_STATS,
+  type ReviewStats,
 } from '../domain/review'
 
 /** The signed-in website account writing a review (a subset of CustomerActor). */
@@ -137,7 +139,7 @@ export async function submitReview(
  */
 export async function listPublishedReviews(): Promise<{
   items: HomepageReview[]
-  stats: { count: number; ratingSum: number }
+  stats: ReviewStats
 }> {
   await ensureReady()
   const rows = await prisma.review.findMany({
@@ -153,7 +155,7 @@ export async function listPublishedReviews(): Promise<{
       displayName: true,
     },
   })
-  if (rows.length === 0) return { items: [], stats: { count: 0, ratingSum: 0 } }
+  if (rows.length === 0) return { items: [], stats: EMPTY_REVIEW_STATS }
   const active = new Set(
     (
       await prisma.customer.findMany({
@@ -172,7 +174,13 @@ export async function listPublishedReviews(): Promise<{
       role: r.role,
       rating: r.rating,
     })),
-    stats: { count: visible.length, ratingSum: visible.reduce((a, r) => a + r.rating, 0) },
+    stats: {
+      count: visible.length,
+      ratingSum: visible.reduce((a, r) => a + r.rating, 0),
+      byRating: [1, 2, 3, 4, 5].map(
+        (n) => visible.filter((r) => r.rating === n).length,
+      ) as ReviewStats['byRating'],
+    },
   }
 }
 

@@ -81,13 +81,31 @@ describe('domain rules', () => {
     const sample = { avatar: 'man' as const, title: 's', quote: 'q', author: 'A', role: 'r' }
     const real = (n: number) =>
       Array.from({ length: n }, (_, i) => ({ ...sample, author: `R${i}`, rating: 4 }))
-    const two = homepageReviews(real(2), [sample, sample], { count: 2, ratingSum: 8 })
+    const two = homepageReviews(real(2), [sample, sample], {
+      count: 2,
+      ratingSum: 8,
+      byRating: [0, 0, 0, 2, 0],
+    })
     expect(two.items.map((i) => i.author)).toEqual(['R0', 'R1', 'A', 'A'])
     expect(two.items[2].rating).toBe(5)
     expect(two.summary).toBeNull()
-    const three = homepageReviews(real(3), [sample], { count: 3, ratingSum: 13 })
+    const three = homepageReviews(real(3), [sample], {
+      count: 3,
+      ratingSum: 13,
+      byRating: [0, 0, 0, 2, 1],
+    })
     expect(three.items.map((i) => i.author)).toEqual(['R0', 'R1', 'R2'])
-    expect(three.summary).toEqual({ average: 4.3, count: 3 })
+    expect(three.summary).toEqual({
+      average: 4.3,
+      count: 3,
+      breakdown: [
+        { stars: 5, count: 1 },
+        { stars: 4, count: 2 },
+        { stars: 3, count: 0 },
+        { stars: 2, count: 0 },
+        { stars: 1, count: 0 },
+      ],
+    })
   })
 })
 
@@ -111,7 +129,7 @@ describe('writing and approving', () => {
     expect(await moderateReview(superAdmin(), mine!.id, 'approve')).toEqual({ ok: true })
     const published = await listPublishedReviews()
     expect(published.items[0]).toMatchObject({ author: 'Sara K.', rating: 5, avatar: 'woman' })
-    expect(published.stats).toEqual({ count: 1, ratingSum: 5 })
+    expect(published.stats).toEqual({ count: 1, ratingSum: 5, byRating: [0, 0, 0, 0, 1] })
     const audit = await prisma.auditLog.findFirst({
       where: { action: 'review.approved', targetId: mine!.id },
     })
