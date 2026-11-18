@@ -5,6 +5,7 @@ import {
   useEffect,
   useRef,
   useState,
+  type CSSProperties,
   type KeyboardEvent,
   type MouseEvent as ReactMouseEvent,
   type PointerEvent as ReactPointerEvent,
@@ -67,7 +68,14 @@ export function Carousel({
   const drag = useRef<{ x: number; left: number; moved: boolean } | null>(null)
   const suppressClick = useRef(false)
   const [dragging, setDragging] = useState(false)
-  const [state, setState] = useState({ canPrev: false, canNext: count > 1, first: 0, last: 0 })
+  const [state, setState] = useState({
+    canPrev: false,
+    canNext: count > 1,
+    first: 0,
+    last: 0,
+    fadeL: 0,
+    fadeR: 0,
+  })
 
   /** Width of one card + gap. */
   const stepOf = (track: HTMLElement) => {
@@ -90,11 +98,18 @@ export function Carousel({
     ]
     let first = -1
     let last = -1
+    let fadeL = 0
+    let fadeR = 0
     cards.forEach((card, i) => {
       const r = card.getBoundingClientRect()
       if (r.left >= box.left + padLeft - 2 && r.right <= box.right - padRight + 2) {
-        if (first < 0) first = i
+        if (first < 0) {
+          first = i
+          // Edge fades start exactly at the outer edge of the cards fully in view
+          fadeL = Math.round(r.left - box.left)
+        }
         last = i
+        fadeR = Math.round(box.right - r.right)
       }
     })
     if (first < 0) {
@@ -102,7 +117,7 @@ export function Carousel({
       first = Math.min(count - 1, Math.round(left / stepOf(track)))
       last = first
     }
-    setState({ canPrev: left > 4, canNext: left < max - 4, first, last })
+    setState({ canPrev: left > 4, canNext: left < max - 4, first, last, fadeL, fadeR })
   }, [count])
 
   useEffect(() => {
@@ -229,6 +244,14 @@ export function Carousel({
           ref={trackRef}
           className="ll-carousel-track"
           data-dragging={dragging}
+          data-fade-l={state.canPrev}
+          data-fade-r={state.canNext}
+          style={
+            {
+              '--ll-dist-l': `${state.fadeL}px`,
+              '--ll-dist-r': `${state.fadeR}px`,
+            } as CSSProperties
+          }
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={endDrag}
