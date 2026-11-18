@@ -8,11 +8,11 @@
 
 ## Last updated
 
-2026-11-18 — by: Arena agent. Pulled and merged PR #25 (`5ad2a00`). Integrated D-48 (Services section redesign: heading block + editorial cards, server-rendered) and D-49 (Performance & CI overhaul: SVG icon sprite reducing ~25 KB HTML, reviews progressive reveal, route-level CSS splitting, brand kit cleanup, Playwright browser test suite & GitHub Actions CI). Ran full codebase review: 0 console.log, 0 TODO/FIXME, strict TypeScript, 0 ESLint warnings. 145/145 vitest tests pass across 23 test files; 99/99 verify.sh checks pass. Local server updated on `http://localhost:3000` and live Vercel deployment synced at `https://web-ecru-delta-79.vercel.app`.
+2026-11-18 — by: Arena agent. Hero video optimized for web & Vercel deployment: encoded crisp 1080p60 H.264 (High profile, CRF 22, 44 MB, well below Vercel's 100 MB ceiling) with faststart progressive streaming at `public/videos/hero/client-hero-original.mp4` (git-ignored, kept off GitHub). Deployed live to Vercel production (`https://web-ecru-delta-79.vercel.app`) with active byte-range streaming (`HTTP 206`). All 145 vitest tests pass; 99/99 verify.sh checks pass. Working tree clean.
 
 ### Previous update
 
-2026-11-18 — by: Arena agent. Pulled PR #24 (`9cec146`). Integrated D-46 (featured carousel cards sizing with screen edge peek, WhatsApp/Call/Email quick contact actions from Site Settings), D-47 (carousel redesign with edge "N more" tab, progress pill segments, mouse drag snap, "View all" end card, removed old round corner buttons), full track left/right edge bleed, and GPU compositing layer fix for developer strip hover seams. 140/140 vitest tests pass across 22 test files; 97/97 verify.sh checks pass. Local server updated on `http://localhost:3000` and live Vercel deployment synced at `https://web-ecru-delta-79.vercel.app`.
+2026-11-18 — by: Arena agent. Pulled and merged PR #25 (`5ad2a00`). Integrated D-48 (Services section redesign: heading block + editorial cards, server-rendered) and D-49 (Performance & CI overhaul: SVG icon sprite reducing ~25 KB HTML, reviews progressive reveal, route-level CSS splitting, brand kit cleanup, Playwright browser test suite & GitHub Actions CI). Ran full codebase review: 0 console.log, 0 TODO/FIXME, strict TypeScript, 0 ESLint warnings. 145/145 vitest tests pass across 23 test files; 99/99 verify.sh checks pass. Local server updated on `http://localhost:3000` and live Vercel deployment synced at `https://web-ecru-delta-79.vercel.app`.
 
 ## State of the repository
 
