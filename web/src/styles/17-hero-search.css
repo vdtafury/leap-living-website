@@ -9,8 +9,9 @@
   border-radius: 22px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.06) 100%);
   border: 1px solid rgba(255, 255, 255, 0.22);
+  /* Negative spread keeps the shadow inside the hero (it reached the developer strip). */
   box-shadow:
-    0 30px 80px rgba(3, 24, 26, 0.34),
+    0 24px 56px -14px rgba(3, 24, 26, 0.38),
     inset 0 1px 0 rgba(255, 255, 255, 0.24);
   -webkit-backdrop-filter: blur(22px) saturate(140%);
   backdrop-filter: blur(22px) saturate(140%);
@@ -357,6 +358,13 @@
 
 /* Tablet: 2-column tiles, full-width submit */
 @media (max-width: 900px) {
+  /* Tighter drop shadow: here the search sits close to the hero's bottom edge, and the
+     desktop shadow (80px blur) spilled as a grey haze onto the developer strip. */
+  .ll-hs {
+    box-shadow:
+      0 10px 24px -6px rgba(3, 24, 26, 0.24),
+      inset 0 1px 0 rgba(255, 255, 255, 0.24);
+  }
   .ll-hs-bar {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 6px;

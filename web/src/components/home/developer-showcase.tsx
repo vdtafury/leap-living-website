@@ -6,8 +6,8 @@ import { ResponsiveImg } from '@/components/ui/responsive-img'
 interface DeveloperShowcaseProps {
   /**
    * Section surface.
-   * - `glass-light` (default): skyline photo under a light scrim; bare
-   *   full-colour logos glide across it (no tiles, frames or band).
+   * - `glass-light` (default): flat brand-teal tint gradient, no photo or watermark
+   *   (owner, 2026-11-18); bare full-colour logos glide across it.
    * - `glass`: skyline photo under a deep-teal scrim, bare white logos.
    * - `light` / `muted`: flat surfaces.
    */
@@ -52,15 +52,16 @@ export function DeveloperShowcase({ surface = 'glass-light', brands }: Developer
       className={`ll-dev-showcase ll-section-${surface}`}
       aria-label="Developers we work with"
     >
-      {(surface === 'glass' || surface === 'glass-light') && (
-        <div className="ll-section-image-bg" aria-hidden="true">
-          <ResponsiveImg src="/images/developer-network-skyline.jpg" sizes="100vw" />
-          <div className="ll-dev-glass-scrim" />
-        </div>
+      {surface === 'glass' && (
+        <>
+          <div className="ll-section-image-bg" aria-hidden="true">
+            <ResponsiveImg src="/images/developer-network-skyline.jpg" sizes="100vw" />
+            <div className="ll-dev-glass-scrim" />
+          </div>
+          {/* Brand watermark: the keyhole mark, large and cropped by the section edge. */}
+          <KeyholeMark className="ll-keyhole ll-keyhole-dev" strokeWidth={1.4} />
+        </>
       )}
-      {/* Brand watermark: the Leap Living keyhole mark, large and cropped by the
-          section edge, the way the Brand Guidelines use it on the cover. */}
-      <KeyholeMark className="ll-keyhole ll-keyhole-dev" strokeWidth={1.4} />
 
       {/* Contained like every other section: same width and gutters as the page content. */}
       <div className="ll-container">
