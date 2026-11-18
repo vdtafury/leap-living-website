@@ -258,3 +258,13 @@ Component: `web/src/components/home/client-experience.tsx` (small client compone
 | Avatar | `AvatarIcon` (`components/ui/icons.tsx`): inline SVG silhouette, short hair (man) or long hair (woman), in brand teals on Teal 10%. Not a photo, so the no-people-photos rule (D-17) holds. Chosen per review by `avatar: 'man' \| 'woman'` |
 | A11y | WAI-ARIA tabs: `tablist` (vertical) of `tab` buttons with roving tabindex; ↑/↓/←/→ wrap, Home/End jump. Each review is a `tabpanel` `figure` (`blockquote` + `figcaption`); inactive panels are `visibility: hidden` + `aria-hidden`. Every review is in the server HTML |
 | Content | `CLIENT_PERSPECTIVES` in `data/catalog.ts` (`avatar`, `title`, `quote`, `author`, `role`): **placeholders** until the client sends real reviews. No star ratings and no dates until real, verifiable reviews exist |
+
+### 7.11 Page transitions (`template.tsx`, `24-page-transitions.css`, D-43)
+
+| Part | Rule |
+|---|---|
+| Old page | Fades out, 160ms, ease-in |
+| New page | Fades in 260ms (starts at 120ms) and rises 12px over 420ms, ease-out |
+| Header | `view-transition-name: site-header`, never animates; it sits above the pages during the swap |
+| Not animated | Query-string changes (listing filters), the admin, `prefers-reduced-motion` |
+| Wrapper | `div.ll-page` around every page so React names the page, not the header |
