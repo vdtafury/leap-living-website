@@ -18,12 +18,12 @@ export default async function VerifyPage({ searchParams }: { searchParams: Searc
   const signedIn = Boolean(await getCustomer())
   return (
     <AuthShell
-      title={result.ok ? 'Email confirmed' : 'This link does not work'}
+      title={result.ok ? 'Email confirmed' : 'This link is no longer valid'}
       intro={
         <p>
           {result.ok
-            ? 'Thank you. Your email address is confirmed.'
-            : 'The link is invalid, was already used, or has expired. If your email is not confirmed yet, you can ask for a new link on your account page.'}
+            ? 'Thanks, your email address is confirmed.'
+            : 'Confirmation links work once and expire after 48 hours. If your email isn’t confirmed yet, you can send a new link from your account page.'}
         </p>
       }
     >

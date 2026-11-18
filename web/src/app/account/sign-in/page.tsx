@@ -28,23 +28,23 @@ export default async function SignInPage({ searchParams }: { searchParams: Searc
 
   return (
     <AuthShell
-      title="Sign in"
+      title="Welcome back"
       intro={
         one(query.deleted) === '1' ? (
           <p className="ll-acc-alert ll-acc-alert--ok" role="status">
-            Your account was deleted.
+            Your account and saved items have been deleted.
           </p>
         ) : save ? (
-          <p>Sign in to save this listing to your account.</p>
+          <p>Sign in or create a free account to add this to your shortlist.</p>
         ) : (
-          <p>Welcome back. Sign in to see your saved properties and requests.</p>
+          <p>Sign in to see your shortlist and follow your requests.</p>
         )
       }
       footer={
         <>
-          New to LEAP LIVING?{' '}
+          Don&apos;t have an account?{' '}
           <Link href={`/account/sign-up${carry ? `?${carry}` : ''}`} className="ll-acc-link">
-            Create an account
+            Create a free account
           </Link>
         </>
       }

@@ -140,7 +140,7 @@ export async function forgotPasswordAction(
   await requestPasswordReset(text(formData, 'email'), await requestInfo())
   // Same answer for every address (no account discovery).
   return {
-    ok: 'If an account exists for this email, we have sent a link to reset the password. It works for 1 hour.',
+    ok: 'If an account exists for this email, a reset link is on its way. Check your inbox (and spam folder); the link expires in 1 hour.',
   }
 }
 
