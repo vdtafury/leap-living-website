@@ -13,13 +13,21 @@
   background-color: var(--white);
 }
 
-/* ---------- Valuation & mortgage: one card, owners | buyers (D-30) ----------
-   Left: the section title, then the owners' valuation request, on a soft teal
-   gradient. Right: the buyers' mortgage calculator (#mortgage-calculator).
-   One action per side, so nothing repeats. Stacks on tablets and phones. */
+/* ---------- Valuation & mortgage (D-51) ----------
+   Section heading above one white card: the buyers' mortgage calculator
+   (#mortgage-calculator, inputs | result panel) and, as the card's footer band,
+   the owners' valuation request (icon | copy | button). Nothing floats in a
+   half-empty column; every block has one job and one action. */
+.ll-advice-head {
+  max-width: 760px;
+  margin-bottom: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.ll-advice-head .ll-section-title {
+  max-width: 24ch;
+}
+
 .ll-advice {
-  display: grid;
-  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
   overflow: hidden;
   border: 1px solid var(--border-subtle);
   border-radius: 22px;
@@ -28,24 +36,15 @@
 }
 
 .ll-advice-owners {
-  display: flex;
-  flex-direction: column;
-  padding: clamp(2rem, 3.4vw, 3.25rem);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.25rem clamp(1.25rem, 2.4vw, 2rem);
+  padding: clamp(1.4rem, 2.4vw, 1.9rem) clamp(1.75rem, 3vw, 2.75rem);
+  border-top: 1px solid var(--border-subtle);
   background:
-    radial-gradient(120% 70% at 0% 100%, rgba(59, 158, 161, 0.16) 0%, rgba(59, 158, 161, 0) 62%),
-    linear-gradient(160deg, var(--brand-teal-10) 0%, var(--white) 75%);
-  border-right: 1px solid var(--border-subtle);
-}
-
-.ll-advice-owners .ll-section-title {
-  font-size: clamp(1.7rem, 2.4vw, 2.3rem);
-  max-width: 15ch;
-}
-
-/* Owners block sits at the bottom of the left column, level with the calculator's end */
-.ll-advice-valuation {
-  margin-top: auto;
-  padding-top: clamp(2rem, 3vw, 2.75rem);
+    radial-gradient(70% 160% at 0% 100%, rgba(59, 158, 161, 0.12) 0%, rgba(59, 158, 161, 0) 70%),
+    linear-gradient(90deg, var(--brand-teal-10) 0%, var(--white) 85%);
 }
 
 .ll-advice-kicker {
@@ -61,19 +60,26 @@
 
 .ll-advice-icon {
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background-color: var(--white);
+  background-color: var(--brand-teal-10);
   box-shadow: inset 0 0 0 1px var(--brand-teal-25);
   color: var(--secondary-teal);
 }
 
+.ll-advice-icon--lg {
+  width: 52px;
+  height: 52px;
+  background-color: var(--white);
+}
+
 .ll-advice-subtitle {
-  margin-top: 0.9rem;
-  font-size: clamp(1.15rem, 1.4vw, 1.3rem);
+  margin-top: 0.3rem;
+  font-size: clamp(1.1rem, 1.35vw, 1.25rem);
   font-weight: 600;
   letter-spacing: -0.01em;
   line-height: 1.3;
@@ -81,15 +87,15 @@
 }
 
 .ll-advice-text {
-  margin-top: 0.45rem;
-  max-width: 36ch;
-  font-size: 0.92rem;
-  line-height: 1.6;
+  margin-top: 0.25rem;
+  max-width: 74ch;
+  font-size: 0.9rem;
+  line-height: 1.55;
   color: var(--body-text);
 }
 
 .ll-advice-btn {
-  margin-top: 1.4rem;
+  white-space: nowrap;
   background-color: var(--dark-teal);
 }
 
@@ -165,28 +171,29 @@
   .ll-section-tint {
     padding: 4.25rem 0;
   }
-  .ll-advice {
-    grid-template-columns: minmax(0, 1fr);
-  }
+  /* Owners band: button drops under the copy */
   .ll-advice-owners {
-    border-right: none;
-    border-bottom: 1px solid var(--border-subtle);
+    grid-template-columns: auto minmax(0, 1fr);
   }
-  .ll-advice-owners .ll-section-title {
-    max-width: 22ch;
+  .ll-advice-btn {
+    grid-column: 2;
+    justify-self: start;
   }
 }
 
 @media (max-width: 600px) {
   .ll-advice-owners {
-    padding: 1.6rem 1.25rem;
+    grid-template-columns: minmax(0, 1fr);
+    padding: 1.5rem 1.25rem;
+    background: linear-gradient(180deg, var(--brand-teal-10) 0%, var(--white) 100%);
   }
-  .ll-advice-valuation {
-    padding-top: 1.75rem;
+  .ll-advice-icon--lg {
+    width: 44px;
+    height: 44px;
   }
   .ll-advice-btn {
-    width: 100%;
-    justify-content: center;
+    grid-column: auto;
+    justify-self: stretch;
   }
   /* Stats: compact 2 x 2 on phones instead of four tall rows */
   .ll-stats-section .ll-stats-grid {

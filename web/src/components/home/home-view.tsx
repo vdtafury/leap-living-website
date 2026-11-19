@@ -178,34 +178,19 @@ export function HomeView({
           </div>
         </section>
 
-        {/* ==================== VALUATION & MORTGAGE (one card: owners | buyers) ==================== */}
+        {/* ==================== VALUATION & MORTGAGE (D-51: heading, then one card) ====================
+            Buyers first: the calculator, inputs | result panel (navbar "Mortgage Calculator"
+            scrolls here, D-30). Owners last: the valuation request as the card's footer band. */}
         <section className="ll-section-tint ll-defer-render" aria-labelledby="ll-advice-title">
           <div className="ll-container">
+            <div className="ll-advice-head">
+              <div className="ll-eyebrow">{advice.eyebrow}</div>
+              <h2 id="ll-advice-title" className="ll-serif-title ll-section-title">
+                {advice.title}
+              </h2>
+            </div>
+
             <div className="ll-advice">
-              {/* Owners: section title + valuation request */}
-              <div className="ll-advice-owners">
-                <div className="ll-eyebrow">{advice.eyebrow}</div>
-                <h2 id="ll-advice-title" className="ll-serif-title ll-section-title">
-                  {advice.title}
-                </h2>
-
-                <div className="ll-advice-valuation">
-                  <div className="ll-advice-kicker">
-                    <span className="ll-advice-icon" aria-hidden="true">
-                      <HomeIcon size={18} />
-                    </span>
-                    {advice.ownersLabel}
-                  </div>
-                  <h3 className="ll-advice-subtitle">{advice.ownersTitle}</h3>
-                  <p className="ll-advice-text">{advice.ownersText}</p>
-                  <Link href={advice.ctaHref} className="ll-btn ll-btn-primary ll-advice-btn">
-                    <span>{advice.ctaLabel}</span>
-                    <ArrowUpRightIcon size={15} />
-                  </Link>
-                </div>
-              </div>
-
-              {/* Buyers: the calculator (navbar "Mortgage Calculator" scrolls here, D-30) */}
               <MortgageCalculator
                 initialPrice={calculator.price}
                 defaults={{
@@ -214,6 +199,21 @@ export function HomeView({
                   years: calculator.years,
                 }}
               />
+
+              <div className="ll-advice-owners">
+                <span className="ll-advice-icon ll-advice-icon--lg" aria-hidden="true">
+                  <HomeIcon size={22} />
+                </span>
+                <div className="ll-advice-owners-copy">
+                  <div className="ll-advice-kicker">{advice.ownersLabel}</div>
+                  <h3 className="ll-advice-subtitle">{advice.ownersTitle}</h3>
+                  <p className="ll-advice-text">{advice.ownersText}</p>
+                </div>
+                <Link href={advice.ctaHref} className="ll-btn ll-btn-primary ll-advice-btn">
+                  <span>{advice.ctaLabel}</span>
+                  <ArrowUpRightIcon size={15} />
+                </Link>
+              </div>
             </div>
           </div>
         </section>

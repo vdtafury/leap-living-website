@@ -169,7 +169,7 @@ check_not_contains "Mod #3: no Founder title on About" "Founder" "$TMP/about.htm
 
 # D-30: the calculator lives on the homepage; /mortgage redirects to it
 check_contains "D-30: homepage calculator anchor" 'id="mortgage-calculator"' "$TMP/home.html"
-check_contains "D-30: homepage calculator inputs" "Loan Period (Years)" "$TMP/home.html"
+check_contains "D-30/D-51: homepage calculator inputs" "Loan period" "$TMP/home.html"
 check_contains "D-30: navbar button targets the homepage calculator" 'href="/#mortgage-calculator"' "$TMP/home.html"
 code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE/mortgage")
 check "D-30: /mortgage redirects permanently" 308 "$code"

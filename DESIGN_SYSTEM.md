@@ -128,8 +128,8 @@ Each section gets one surface class. Adjacent sections must never share a surfac
 | `ll-section-grey` | neutral-grey wash + faint keyhole | listings blocks |
 | `ll-section-teal` | flat teal band, white text | CTA bands |
 | `ll-section-plain` | plain white, no decoration; consecutive plain sections share one gap | homepage lower half: Projects, valuation panel, reviews (D-27) |
-| `ll-advice` | one white card in two halves: `ll-advice-owners` (title + valuation request, soft teal gradient) and `ll-hmc` (calculator) | homepage Owner & Buyer section (D-30) |
-| `ll-hmc` | calculator half: kicker, title, 2 x 2 inputs on `--surface-tint`, result band in Teal 10% with the consultation button, Apply link | homepage mortgage calculator (D-30) |
+| `ll-advice` | section heading (`ll-advice-head`: eyebrow + title) above one white card: `ll-hmc` (calculator) on top, `ll-advice-owners` as the footer band (icon, For Owners copy, Request Free Valuation button) on a soft teal gradient | homepage Owner & Buyer section (D-30, re-laid out D-51) |
+| `ll-hmc` | calculator (container query `ll-hmc`, side by side from 760px): inputs column (kicker, title, 2 x 2 fields = label + live AED hint, value box with its unit, teal-filled slider) and the result panel `ll-hmc-summary` on `--surface-tint` (monthly figure, principal / interest bar, loan amount, total interest, total repayment, one consultation button, note). `ll-hmc--home` / `ll-hmc--property` (standalone card) | homepage calculator and property pages (D-51) |
 | `ll-section-tint` | very light tint `--surface-tint` (`#F3F8F8`) + hairlines | homepage Advisory and Valuation (D-28); the stats band and footer use the same tint |
 | `ll-section-gradient` | `--brand-gradient`, white text | featured/service blocks |
 | `ll-section-image` | photo (`.ll-section-image-bg`) + teal scrim + glass panel | leadership/editorial (not used on the homepage) |
@@ -182,7 +182,7 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 4. Featured Properties: white, **carousel with an edge tab and a View all card** (see 7.8)
 5. Advisory: light tint (`ll-section-tint`), **heading block + white service cards** (see 7.14, D-48)
 6. Selected Projects: plain white
-7. Valuation & Mortgage: light tint, **one card** (`ll-advice`, D-30). Left half: eyebrow, section title, then For Owners ("What is your property worth?" + Request Free Valuation). Right half: For Buyers, the mortgage calculator (`#mortgage-calculator`). One action per side; the halves stack on tablets and phones
+7. Valuation & Mortgage: light tint. Eyebrow + section title above **one card** (`ll-advice`, D-30 / D-51). Top: For Buyers, the mortgage calculator (`#mortgage-calculator`): inputs with sliders on the left, the result panel on the right. Bottom band: For Owners (“What is your property worth?” + Request Free Valuation). One action per block; the calculator stacks below 760px and the band stacks on phones
 8. Client reviews: plain white, **client index + one large review** (see 7.10, D-42)
 9. Footer: light tint (coloured logo, hairlines)
 
