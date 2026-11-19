@@ -141,7 +141,7 @@ check_contains "D-46: property cards have WhatsApp / Call / Email" "ll-pc-contac
 check_contains "D-46: WhatsApp message names the listing" "wa.me/971521459888?text=Hello%20Leap%20Living" "$TMP/home.html"
 check_contains "D-46: carousel runs to the screen edge (next card peeks in)" "ll-carousel--bleed" "$TMP/home.html"
 check_contains "D-47: carousel has the edge \"N more\" tab (no round header buttons)" "ll-carousel-edge--next" "$TMP/home.html"
-check_contains "D-47: one progress segment per featured property" "ll-carousel-seg" "$TMP/home.html"
+check_not_contains "D-50: no segment bar or counter under the carousel" "ll-carousel-seg" "$TMP/home.html"
 check_contains "D-47: carousel ends on a View all card" "ll-carousel-endcard" "$TMP/home.html"
 check_not_contains "D-47: old round carousel buttons are gone" "ll-carousel-btn" "$TMP/home.html"
 check_contains "D-44: all reviews at once on a review wall, not a carousel" "ll-rw-grid" "$TMP/home.html"
@@ -169,7 +169,7 @@ check_not_contains "Mod #3: no Founder title on About" "Founder" "$TMP/about.htm
 
 # D-30: the calculator lives on the homepage; /mortgage redirects to it
 check_contains "D-30: homepage calculator anchor" 'id="mortgage-calculator"' "$TMP/home.html"
-check_contains "D-30: homepage calculator inputs" "Loan Period (Years)" "$TMP/home.html"
+check_contains "D-30/D-51: homepage calculator inputs" "Loan period" "$TMP/home.html"
 check_contains "D-30: navbar button targets the homepage calculator" 'href="/#mortgage-calculator"' "$TMP/home.html"
 code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE/mortgage")
 check "D-30: /mortgage redirects permanently" 308 "$code"
