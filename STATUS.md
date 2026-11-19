@@ -8,6 +8,14 @@
 
 ## Last updated
 
+2026-11-19 — by: Arena agent. Pulled and synchronized repository state with `origin/arena/759c8281-leap-living-website` (`f9fa21a`):
+- Merged management status report (`docs/reports/2026-11-19-status-report.md`) and enterprise review & suggestions document (`docs/reviews/2026-11-enterprise-suggestions.md`) inspired by Bayut, Property Finder, Knight Frank, Savills, and Sotheby's.
+- Rebuilt local Next.js production build and restarted background daemon on `http://localhost:3000`.
+- All verification suites passing: 99/99 checks in `verify.sh` pass (including D-50 carousel segments removal and D-51 mortgage inputs); 147/147 vitest tests pass across 23 test files; typecheck and ESLint 100% clean.
+- Production deployment synced on Vercel at `https://web-ecru-delta-79.vercel.app`. Working tree clean.
+
+### Previous update
+
 2026-11-18 — by: Arena agent. Diagnosed, resolved, and verified hero video playback on live Vercel production (`https://web-ecru-delta-79.vercel.app`):
 1. Root cause 1 (Serverless FS): Vercel executes serverless functions in `/var/task` without copying `public/` files into local fs, causing `fs.existsSync` to evaluate to `false` and rendering `hasVideo: false` in RSC payload. Resolved by checking `process.env.VERCEL || fs.existsSync(...)` in `app/page.tsx` and `admin/preview/[key]/page.tsx`.
 2. Root cause 2 (Host & Network filtering): Added `isDevOrPreviewHost` recognizing `*.vercel.app` in `src/lib/hero-video.ts` so preview visitors bypass the strict 10 Mbps downlink barrier.
