@@ -1,7 +1,7 @@
 /* ==========================================================================
    PROPERTY CAROUSEL (homepage featured properties, D-47)
-   Next card peeks in at the screen edge under a tall "N more" tab; one segment per card
-   underneath; mouse drag; a closing "View all" card. No round buttons in the header.
+   Next card peeks in at the screen edge under a tall "N more" tab; mouse drag; a closing
+   "View all" card. No round buttons in the header, no segments or counter (D-50).
    ========================================================================== */
 
 /* Edge fades (D-47): widths animate, so they are registered lengths */
@@ -269,65 +269,6 @@
   outline-offset: 3px;
 }
 
-/* ---------- Segments + count ---------- */
-.ll-carousel-foot {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  margin-top: 1.4rem;
-}
-
-.ll-carousel-segments {
-  display: flex;
-  flex: 1;
-  gap: 6px;
-  min-width: 0;
-}
-
-.ll-carousel-seg {
-  flex: 1;
-  height: 22px;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-}
-
-.ll-carousel-seg::before {
-  content: '';
-  display: block;
-  height: 4px;
-  border-radius: 2px;
-  background-color: #dfe5e3;
-  transition: background-color 0.25s ease;
-}
-
-.ll-carousel-seg:hover::before {
-  background-color: #b9c6c3;
-}
-
-.ll-carousel-seg[data-on='true']::before {
-  background-color: var(--action-teal);
-}
-
-.ll-carousel-seg:focus-visible {
-  outline: 2px solid var(--brand-teal);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-.ll-carousel-count {
-  flex-shrink: 0;
-  font-size: 0.86rem;
-  font-weight: 600;
-  color: var(--heading);
-}
-
-.ll-carousel-count-total {
-  font-weight: 400;
-  color: var(--body-text);
-}
-
 /* ---------- Closing "View all" card ---------- */
 .ll-carousel-endcard {
   display: flex;
@@ -461,13 +402,6 @@
     --ll-fade-l: 0px;
     --ll-fade-r: 0px;
   }
-  .ll-carousel-foot {
-    margin-top: 1.1rem;
-    gap: 1rem;
-  }
-  .ll-carousel-segments {
-    gap: 4px;
-  }
 }
 
 /* Very small phones: a slimmer peek, so the card keeps its width */
@@ -482,7 +416,6 @@
   .ll-carousel-edge,
   .ll-carousel-tab,
   .ll-carousel-tab svg,
-  .ll-carousel-seg::before,
   .ll-carousel-endcard,
   .ll-carousel-endcard-mark,
   .ll-carousel-endcard-icon {

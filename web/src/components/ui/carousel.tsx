@@ -23,7 +23,7 @@ interface CarouselProps {
   slides: CarouselSlide[]
   /** Accessible name of the carousel region. */
   label: string
-  /** What one slide is, for the button and counter labels (e.g. "property"). */
+  /** What one slide is, for the button labels (e.g. "property"). */
   noun: string
   /** Plural of `noun` (e.g. "properties"). */
   nounPlural: string
@@ -46,7 +46,7 @@ const DRAG_THRESHOLD = 6
  * buttons in the top corner"). After Netflix / Apple / the big property portals:
  * - the next card peeks in at the screen edge under a tall "N more" tab (Netflix edge);
  *   a matching tab appears on the left once scrolled;
- * - under the track, one segment per card: the cards in view light up; a click jumps there;
+ * - no segments or counter under the track (owner, D-50: not needed, and lighter);
  * - the mouse can drag the track (touch swipes natively); ←/→ keys work inside;
  * - an optional end card ("View all") closes the row.
  * Native scroll-snap underneath; slides arrive pre-rendered, so the cards ship no JavaScript.
@@ -306,28 +306,6 @@ export function Carousel({
             </span>
           </span>
         </button>
-      </div>
-
-      <div className="ll-carousel-foot">
-        <div className="ll-carousel-segments" role="group" aria-label={`Go to a ${noun}`}>
-          {slides.map((slide, i) => (
-            <button
-              key={slide.key}
-              type="button"
-              className="ll-carousel-seg"
-              data-on={i >= state.first && i <= state.last}
-              aria-label={`Show ${noun} ${i + 1} of ${count}`}
-              aria-current={i >= state.first && i <= state.last ? 'true' : undefined}
-              onClick={() => scrollToIndex(i)}
-            />
-          ))}
-        </div>
-        <span className="ll-carousel-count tabular-nums" aria-live="polite">
-          <span className="sr-only">Showing {nounPlural} </span>
-          {state.first + 1}
-          {state.last > state.first && <>–{state.last + 1}</>}
-          <span className="ll-carousel-count-total"> of {count}</span>
-        </span>
       </div>
     </div>
   )
