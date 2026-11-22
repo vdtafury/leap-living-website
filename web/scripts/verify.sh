@@ -170,12 +170,21 @@ check_not_contains "Mod #3: no Founder title on About" "Founder" "$TMP/about.htm
 # D-30: the calculator lives on the homepage; /mortgage redirects to it
 check_contains "D-30: homepage calculator anchor" 'id="mortgage-calculator"' "$TMP/home.html"
 check_contains "D-30/D-51: homepage calculator inputs" "Loan period" "$TMP/home.html"
-check_contains "D-30: navbar button targets the homepage calculator" 'href="/#mortgage-calculator"' "$TMP/home.html"
+check_contains "D-30/D-52: footer link targets the homepage calculator" 'href="/#mortgage-calculator"' "$TMP/home.html"
 code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE/mortgage")
 check "D-30: /mortgage redirects permanently" 308 "$code"
 location=$(curl -s -o /dev/null -w '%{redirect_url}' "$BASE/mortgage")
 echo "$location" > "$TMP/mortgage-location.txt"
 check_contains "D-30: /mortgage redirect target" "/#mortgage-calculator" "$TMP/mortgage-location.txt"
+
+# D-52: client's homepage changes (2026-11-19)
+check_contains "D-52: header button List Your Property" "List Your Property" "$TMP/home.html"
+check_not_contains "D-52: no Mortgage Calculator header button" "ll-btn-mortgage" "$TMP/home.html"
+check_not_contains "D-52: no Off-plan link in the hero search" "Off-plan developments" "$TMP/home.html"
+check_not_contains "D-52: no key-figures band" "ll-stats-section" "$TMP/home.html"
+check_contains "D-52: Consultancy service card" "Independent, strategic real estate guidance." "$TMP/home.html"
+check_contains "D-52: teal logo (brand guidelines)" "/brand/logo-horizontal-teal.png" "$TMP/home.html"
+check_not_contains "D-52: no dark logo" "logo-horizontal-brand.png" "$TMP/home.html"
 
 # 7. Favicon Configuration & Asset Checks
 check_not_contains "Head has no broken logo-mark.svg reference" "logo-mark.svg" "$TMP/home.html"
@@ -187,7 +196,7 @@ for icon_path in /favicon.ico /brand/favicon-32x32.png /brand/favicon-192x192.pn
 done
 
 # 8. Hero Video & Statistics Checks
-check_contains "Stats bar displays 100% Fiduciary" "100% Fiduciary" "$TMP/home.html"
+check_not_contains "D-52: stats band removed (no 100% Fiduciary)" "100% Fiduciary" "$TMP/home.html"
 # The hero plays only the client's original file (git-ignored, placed by prepare-hero-original.sh);
 # the old lighter renditions are gone.
 for rendition in 1280 854; do

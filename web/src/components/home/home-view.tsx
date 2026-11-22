@@ -7,15 +7,7 @@ import { HeroVideoBackdrop } from '@/components/home/hero-video-backdrop'
 import { PropertyCarousel } from '@/components/property/property-carousel'
 import { ProjectPanels } from '@/components/home/project-panels'
 import { ServiceCards } from '@/components/home/service-cards'
-import {
-  ArrowRightIcon,
-  ArrowUpRightIcon,
-  CalendarIcon,
-  HomeIcon,
-  ShieldCheckIcon,
-  StackIcon,
-  UsersIcon,
-} from '@/components/ui/icons'
+import { ArrowRightIcon, ArrowUpRightIcon, HomeIcon } from '@/components/ui/icons'
 import { DeveloperShowcase } from '@/components/home/developer-showcase'
 import { ClientExperience } from '@/components/home/client-experience'
 import type { DeveloperBrand, ProjectItem, PropertyListing } from '@/data/catalog'
@@ -58,7 +50,7 @@ export function HomeView({
   jsonLd,
   publishedReviews = { items: [], stats: EMPTY_REVIEW_STATS },
 }: HomeViewProps) {
-  const { hero, stats, featured, services, advice, calculator, reviews } = content
+  const { hero, featured, services, advice, calculator, reviews } = content
   // Communities offered by the hero search, per mode, straight from the listings.
   const uniqueSorted = (list: string[]) => Array.from(new Set(list)).sort()
   const communitiesWhere = (match: (p: PropertyListing) => boolean) =>
@@ -71,7 +63,6 @@ export function HomeView({
   const featuredSaleProperties = properties.filter(
     (item) => item.transactionType === 'BUY' && item.featured,
   )
-  const STAT_ICONS = [CalendarIcon, StackIcon, ShieldCheckIcon, UsersIcon]
 
   return (
     <>
@@ -105,28 +96,9 @@ export function HomeView({
           </div>
         </section>
 
-        {/* ==================== DEVELOPER NETWORK (logo marquee) ==================== */}
+        {/* ==================== DEVELOPER NETWORK (logo marquee, below the fold, D-52) ====================
+            The key-figures band that followed it was removed by the client (2026-11-19, D-52). */}
         <DeveloperShowcase brands={developers} />
-
-        {/* ==================== INSTITUTIONAL PILLARS ==================== */}
-        <section className="ll-stats-section ll-defer-render" aria-label="Institutional Pillars">
-          <div className="ll-container">
-            <div className="ll-stats-grid">
-              {stats.items.map((item, index) => {
-                const Icon = STAT_ICONS[index % STAT_ICONS.length]
-                return (
-                  <div key={`${item.value}-${index}`} className="ll-stat-item">
-                    <span className="ll-stat-icon">
-                      <Icon size={28} />
-                    </span>
-                    <div className="ll-stat-value">{item.value}</div>
-                    <p className="ll-stat-desc">{item.description}</p>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        </section>
 
         {/* ==================== FEATURED BUY PORTFOLIO PREVIEW ==================== */}
         <section className="ll-section-light ll-defer-render ll-carousel-bleed-host">
@@ -179,8 +151,8 @@ export function HomeView({
         </section>
 
         {/* ==================== VALUATION & MORTGAGE (D-51: heading, then one card) ====================
-            Buyers first: the calculator, inputs | result panel (navbar "Mortgage Calculator"
-            scrolls here, D-30). Owners last: the valuation request as the card's footer band. */}
+            Buyers first: the calculator, inputs | result panel (the footer link
+            `/#mortgage-calculator` scrolls here, D-30; the navbar button became List Your Property, D-52). Owners last: the valuation request as the card's footer band. */}
         <section className="ll-section-tint ll-defer-render" aria-labelledby="ll-advice-title">
           <div className="ll-container">
             <div className="ll-advice-head">

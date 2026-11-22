@@ -18,7 +18,6 @@
 }
 
 @media (max-width: 960px) {
-  .ll-stats-grid,
   .ll-cards-grid,
   .ll-services-catalog-grid,
   .ll-leadership-panel,
@@ -40,33 +39,12 @@
     border-left: none;
     border-top: 1px solid var(--border-subtle);
   }
-  .ll-stats-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem 0;
-  }
-  .ll-stat-item {
-    padding: 0.5rem 1.25rem;
-  }
-  .ll-stat-item:nth-child(2n) {
-    border-right: none;
-  }
   .ll-key-specs-box {
     grid-template-columns: 1fr 1fr;
   }
 }
 
 @media (max-width: 600px) {
-  .ll-stats-grid {
-    grid-template-columns: 1fr;
-  }
-  .ll-stat-item {
-    padding: 1rem 0;
-    border-right: none;
-    border-bottom: 1px solid var(--border-subtle);
-  }
-  .ll-stat-item:last-child {
-    border-bottom: none;
-  }
   .ll-mobile-nav-actions {
     grid-template-columns: 1fr;
   }

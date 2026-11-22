@@ -11,7 +11,7 @@ Reference inspiration: [Provident Estate](https://providentestate.com/).
 ## 2. Logo
 
 - Brand lockup variations (full set in `docs/client-assets/brand-kit/`; only the files the site uses are published from `web/public/brand/`: header/footer horizontal logos, favicons, the JSON-LD logo and the link-preview image) are derived exclusively from the official transparent PNG uploaded by the client (`docs/source-materials/leap-living-logo.png`):
-  - **Horizontal Lockup** (`logo-horizontal-brand.png`, `logo-horizontal-teal.png`, `logo-horizontal-dark.png`, `logo-horizontal-white.png`): circular keyhole icon to the left of stacked `LEAP / LIVING` (used in Header, Footer, and Dark Executive panels).
+  - **Horizontal Lockup** (`logo-horizontal-brand.png`, `logo-horizontal-teal.png`, `logo-horizontal-dark.png`, `logo-horizontal-white.png`): circular keyhole icon to the left of stacked `LEAP / LIVING`. The site uses **teal** (`#3B9EA1`) on light backgrounds (scrolled header, footer) and **white** over the video and dark panels; never the dark-text lockup (client, D-52).
   - **Stacked Lockup** (`logo-stacked-teal.png`, `logo-stacked-dark.png`, `logo-stacked-white.png`): circular keyhole icon above `LEAP / LIVING` wordmark.
   - **Brand Mark** (`logo-mark-teal.png`, `logo-mark-white.png`): circular keyhole icon only (used for favicon and graphic marks).
   - **Word Mark** (`leap-wordmark-teal.png`, `leap-wordmark-dark.png`, `leap-wordmark-white.png`): `LEAP LIVING` typography only.
@@ -115,6 +115,7 @@ Styles live in `web/src/styles/` as numbered files (`01-tokens-base.css` holds t
 | `--teal-band` | flat `#3B9EA1` band for stats and CTAs |
 | `--keyhole-white` | data-URI thin-line keyhole for CSS backgrounds |
 | `--radius-sm/md/lg` | 4 / 12 / 18 px. Cards and panels use `md` |
+| Buttons | **always a full pill** (`border-radius: 999px`, client D-52): `.ll-btn`, switchers, search, menu, contact and *Show more* buttons. Containers and tabs keep their own radius |
 | `--shadow-card`, `--shadow-card-hover` | the single shadow language for every card and panel |
 
 ### 7.2 Section system (sections must read as separate)
@@ -130,7 +131,7 @@ Each section gets one surface class. Adjacent sections must never share a surfac
 | `ll-section-plain` | plain white, no decoration; consecutive plain sections share one gap | homepage lower half: Projects, valuation panel, reviews (D-27) |
 | `ll-advice` | section heading (`ll-advice-head`: eyebrow + title) above one white card: `ll-hmc` (calculator) on top, `ll-advice-owners` as the footer band (icon, For Owners copy, Request Free Valuation button) on a soft teal gradient | homepage Owner & Buyer section (D-30, re-laid out D-51) |
 | `ll-hmc` | calculator (container query `ll-hmc`, side by side from 760px): inputs column (kicker, title, 2 x 2 fields = label + live AED hint, value box with its unit, teal-filled slider) and the result panel `ll-hmc-summary` on `--surface-tint` (monthly figure, principal / interest bar, loan amount, total interest, total repayment, one consultation button, note). `ll-hmc--home` / `ll-hmc--property` (standalone card) | homepage calculator and property pages (D-51) |
-| `ll-section-tint` | very light tint `--surface-tint` (`#F3F8F8`) + hairlines | homepage Advisory and Valuation (D-28); the stats band and footer use the same tint |
+| `ll-section-tint` | very light tint `--surface-tint` (`#F3F8F8`) + hairlines | homepage Advisory and Valuation (D-28); the footer uses the same tint |
 | `ll-section-gradient` | `--brand-gradient`, white text | featured/service blocks |
 | `ll-section-image` | photo (`.ll-section-image-bg`) + teal scrim + glass panel | leadership/editorial (not used on the homepage) |
 | `ll-section-dark` | gradient, white text | forms on dark (Sell valuation) |
@@ -176,17 +177,17 @@ Other cards: `ll-service-tile` (glass; `.featured` = teal tile spanning two rows
 
 ### 7.6 Homepage section order
 
-1. Full-screen hero (video) with the glass search **inside** it (see 7.7); on desktop the search is at most 1040px wide, centred, and sits lower under the buttons (D-30); on desktop its height is `100svh - 130px` (560–860px), so hero + developer strip fill the first screen (D-29)
+1. Full-screen hero (video) with the glass search **inside** it (see 7.7); on desktop the search is at most 1040px wide, centred, and sits lower under the buttons (D-30). The hero fills the **whole first screen** (`100svh`); the developer strip starts below the fold (client, D-52)
 2. Developer Network: light glass logo marquee, logos only; a tight band of about 130px (104px on phones) (D-29)
-3. Institutional Pillars (21+ Years, AED 12B+, ...): light tint, teal line icons, hairline dividers; 2 x 2 on phones (D-28)
+3. ~~Institutional Pillars~~: removed by the client (D-52)
 4. Featured Properties: white, **carousel with an edge tab and a View all card** (see 7.8)
 5. Advisory: light tint (`ll-section-tint`), **heading block + white service cards** (see 7.14, D-48)
 6. Selected Projects: plain white
 7. Valuation & Mortgage: light tint. Eyebrow + section title above **one card** (`ll-advice`, D-30 / D-51). Top: For Buyers, the mortgage calculator (`#mortgage-calculator`): inputs with sliders on the left, the result panel on the right. Bottom band: For Owners (“What is your property worth?” + Request Free Valuation). One action per block; the calculator stacks below 760px and the band stacks on phones
 8. Client reviews: plain white, **client index + one large review** (see 7.10, D-42)
-9. Footer: light tint (coloured logo, hairlines)
+9. Footer: light tint (teal logo, hairlines)
 
-**Rule (D-28):** from the stats band down, surfaces alternate tint / white so neighbouring sections never share a background.
+**Rule (D-28, D-52):** below the developer strip, surfaces alternate white / tint (featured white, services tint, projects white, valuation tint, reviews white, footer tint) so neighbouring sections never share a background.
 
 ### 7.9 Media & performance rules
 

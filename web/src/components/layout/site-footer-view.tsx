@@ -33,7 +33,7 @@ export function SiteFooterView({ settings = DEFAULT_SETTINGS }: { settings?: Sit
               {/* Plain <img> on purpose: static logo, and next/image needs sharp at runtime (cPanel host). */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/brand/logo-horizontal-brand.png"
+                src="/brand/logo-horizontal-teal.png"
                 alt="LEAP LIVING"
                 width={125}
                 height={36}

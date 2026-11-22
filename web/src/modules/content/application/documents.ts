@@ -5,6 +5,7 @@ import { recordAudit } from '@/modules/audit-logs'
 import { authorize, type Actor } from '@/modules/authorization'
 import { withDefaults } from '../domain/fields'
 import { DOCUMENTS, parseDocument, type DocumentKey, type DocumentTypes } from '../domain/registry'
+import { upgradeSavedContent } from '../domain/upgrades'
 
 type Result = { ok: true } | { ok: false; error: string }
 
@@ -14,7 +15,8 @@ function decode<K extends DocumentKey>(
 ): DocumentTypes[K] | null {
   if (!json) return null
   try {
-    const parsed = parseDocument(key, withDefaults(DOCUMENTS[key].defaults, JSON.parse(json)))
+    const saved = upgradeSavedContent(key, JSON.parse(json))
+    const parsed = parseDocument(key, withDefaults(DOCUMENTS[key].defaults, saved))
     return parsed.ok ? parsed.data : null
   } catch {
     return null

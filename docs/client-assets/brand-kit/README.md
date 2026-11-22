@@ -6,7 +6,7 @@ Kept in the repository but **not published** with the site (moved out of `web/pu
 
 | Files | Use |
 |---|---|
-| `logo-horizontal-*.png` | Horizontal lockup (brand, teal, dark, white). The site serves resized copies of *brand* and *white* |
+| `logo-horizontal-*.png` | Horizontal lockup (brand, teal, dark, white). The site serves resized copies (397×114) of *teal* (light backgrounds) and *white* (video, dark panels); *brand* is no longer published (client, D-52) |
 | `logo-stacked-*.png` | Stacked lockup. `logo-stacked-white.png` is read by `web/scripts/make-og-image.mjs` |
 | `logo-mark-*.png`, `leap-icon-*.png` | Keyhole mark only |
 | `leap-wordmark-*.png` | Wordmark only |

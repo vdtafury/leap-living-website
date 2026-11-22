@@ -8,6 +8,10 @@
 
 ## Last updated
 
+2026-11-19 — by: Arena agent. **D-52, the client's six homepage changes** (branch `arena/759c8281-leap-living-website`): *List Your Property* replaces *Mortgage Calculator* in the header; every button is a full pill; *Off-plan developments* link removed from the hero search; the hero fills the first screen and the developers sit below the fold; the key-figures band is removed; the logo is teal on the scrolled header and footer; *Consultancy* replaces *Disposition & Sales* (saved content is upgraded on read, `content/domain/upgrades.ts`). Also on this branch: the enterprise review (`docs/reviews/2026-11-enterprise-suggestions.md`, waiting for the owner to pick items) and the management report (`docs/reports/2026-11-19-status-report.md`). Checks: see the PR.
+
+### Previous update
+
 2026-11-18 — by: Arena agent. Diagnosed, resolved, and verified hero video playback on live Vercel production (`https://web-ecru-delta-79.vercel.app`):
 1. Root cause 1 (Serverless FS): Vercel executes serverless functions in `/var/task` without copying `public/` files into local fs, causing `fs.existsSync` to evaluate to `false` and rendering `hasVideo: false` in RSC payload. Resolved by checking `process.env.VERCEL || fs.existsSync(...)` in `app/page.tsx` and `admin/preview/[key]/page.tsx`.
 2. Root cause 2 (Host & Network filtering): Added `isDevOrPreviewHost` recognizing `*.vercel.app` in `src/lib/hero-video.ts` so preview visitors bypass the strict 10 Mbps downlink barrier.

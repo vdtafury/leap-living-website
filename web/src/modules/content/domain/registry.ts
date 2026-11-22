@@ -29,23 +29,6 @@ export const HOME_SECTIONS: Record<keyof HomeContent, SectionDef> = {
       secondaryCta: { kind: 'group', label: 'Second button', fields: link('Button') },
     },
   },
-  stats: {
-    label: 'Key figures band',
-    help: 'Icons follow the order: calendar, stack, shield, people.',
-    fields: {
-      items: {
-        kind: 'list',
-        label: 'Figures',
-        itemLabel: 'Figure',
-        min: 1,
-        max: 4,
-        item: {
-          value: { kind: 'text', label: 'Figure', max: 24 },
-          description: { kind: 'textarea', label: 'Text', max: 160 },
-        },
-      },
-    },
-  },
   featured: {
     label: 'Featured properties',
     help: 'The cards come from listings marked “Featured” (Buy, published).',
@@ -272,7 +255,7 @@ export const SETTINGS_SECTIONS: Record<keyof SiteSettings, SectionDef> = {
   },
   navigation: {
     label: 'Main menu',
-    help: 'The Mortgage Calculator and Free Valuation buttons stay as designed.',
+    help: 'The List Your Property and Free Valuation buttons stay as designed.',
     fields: {
       links: { kind: 'list', label: 'Links', itemLabel: 'Link', min: 1, max: 8, item: navLink },
     },

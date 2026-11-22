@@ -380,11 +380,7 @@
 
 /* ---------- Developer strip: logos only, so the band hugs them ----------
    72px logo slots + 0.25rem marquee padding + 1.5rem section padding = ~130px.
-   The hero height below assumes this (--dev-strip-h). */
-:root {
-  --dev-strip-h: 130px;
-}
-
+   Since D-52 it starts below the fold (the hero fills the first screen). */
 .ll-dev-showcase.ll-section-glass-light {
   padding: 1.5rem 0;
 }

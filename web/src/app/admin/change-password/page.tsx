@@ -12,7 +12,7 @@ export default async function ChangePasswordPage() {
       <div className="adm-auth">
         <div className="adm-auth-card">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/logo-horizontal-brand.png" alt="LEAP LIVING" />
+          <img src="/brand/logo-horizontal-teal.png" alt="LEAP LIVING" />
           <h1>{actor.mustChangePassword ? 'Choose your own password' : 'Change password'}</h1>
           <p>
             {actor.mustChangePassword

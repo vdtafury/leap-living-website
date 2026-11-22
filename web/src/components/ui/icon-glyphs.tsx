@@ -145,12 +145,6 @@ export const ICON_GLYPHS: Record<string, ReactNode> = {
       <path d="m11 6-6 6 6 6" />
     </>
   ),
-  calendar: (
-    <>
-      <rect x="3.5" y="5" width="17" height="15.5" rx="2" />
-      <path d="M3.5 10h17M8 3v4M16 3v4" />
-    </>
-  ),
   stack: (
     <>
       <path d="M12 3 2.5 8 12 13l9.5-5L12 3Z" />
@@ -162,14 +156,6 @@ export const ICON_GLYPHS: Record<string, ReactNode> = {
     <>
       <path d="M12 3 4.5 6v5.5c0 4.6 3.1 8.3 7.5 9.5 4.4-1.2 7.5-4.9 7.5-9.5V6L12 3Z" />
       <path d="m8.75 12 2.25 2.25 4.25-4.5" />
-    </>
-  ),
-  users: (
-    <>
-      <circle cx="9" cy="8" r="3.5" />
-      <path d="M2.5 20c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5" />
-      <circle cx="17" cy="9" r="2.75" />
-      <path d="M17.25 13.6c2.5.3 4.25 2.6 4.25 5.4" />
     </>
   ),
   home: (

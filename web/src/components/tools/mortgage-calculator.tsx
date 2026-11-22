@@ -21,8 +21,8 @@ import {
  * own panel (monthly payment, principal / interest bar, loan amount, down payment, total
  * interest), with one primary action. Side by side when the card is wide enough (container
  * query), stacked otherwise. One component for both places:
- * - `variant="home"`: the homepage calculator card. The navbar "Mortgage Calculator" button
- *   scrolls here (`/#mortgage-calculator`).
+ * - `variant="home"`: the homepage calculator card. The footer link `/#mortgage-calculator`
+ *   scrolls here (the navbar button became List Your Property, D-52).
  * - `variant="property"`: on a property page, prefilled with its price.
  */
 const ANCHOR = 'mortgage-calculator'

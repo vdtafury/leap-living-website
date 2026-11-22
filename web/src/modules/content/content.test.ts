@@ -6,6 +6,7 @@ await vi.hoisted(async () => {
 })
 
 import { ensureReady } from '@/server/bootstrap'
+import { prisma } from '@/server/db'
 import { DEFAULT_ABOUT, DEFAULT_HOME, DEFAULT_SETTINGS } from '@/data/content-defaults'
 import { ForbiddenError } from '@/modules/authorization'
 import {
@@ -100,6 +101,42 @@ describe('draft / publish', () => {
     expect((await getContentForEditing(editor(), 'home')).draft.hero.titleLine1).toBe(
       'Second headline',
     )
+  })
+
+  it('upgrades a homepage saved before D-52: Consultancy card, no stats band', async () => {
+    // As stored by a site seeded before the client's 2026-11-19 changes
+    const old = structuredClone(DEFAULT_HOME) as Record<string, unknown> & {
+      services: { items: Record<string, unknown>[] }
+    }
+    old.stats = { items: [{ value: '21+ Years', description: 'Old band' }] }
+    old.services.items[2] = {
+      ...old.services.items[2],
+      icon: 'handshake',
+      title: 'Disposition & Sales',
+      desc: 'Maximize value through strategic positioning.',
+    }
+    // An editor's own card that merely shares the title is left alone
+    old.services.items[3] = {
+      ...old.services.items[3],
+      title: 'Disposition & Sales',
+      desc: 'Edited text',
+    }
+    const json = JSON.stringify(old)
+    await prisma.contentDocument.update({
+      where: { key: 'home' },
+      data: { draft: json, published: json },
+    })
+
+    const published = await getPublishedContent('home')
+    expect(published.services.items[2]).toMatchObject({
+      icon: 'compass',
+      title: 'Consultancy',
+      desc: 'Independent, strategic real estate guidance.',
+    })
+    expect(published.services.items[3]).toMatchObject({ title: 'Disposition & Sales' })
+    expect('stats' in published).toBe(false)
+    const editing = await getContentForEditing(editor(), 'home')
+    expect(editing.draft.services.items[2].title).toBe('Consultancy')
   })
 
   it('denies edits without permission', async () => {

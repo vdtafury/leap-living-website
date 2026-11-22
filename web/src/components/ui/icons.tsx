@@ -420,7 +420,7 @@ export function ArrowLeftIcon({ size = 16, ...props }: IconProps) {
   )
 }
 
-/* ---- Credential icons (homepage stats band) ---- */
+/* ---- Line icons (service cards, advice card; the stats band was removed in D-52) ---- */
 function LineIcon({ size = 24, children, ...props }: IconProps) {
   return (
     <svg
@@ -441,14 +441,6 @@ function LineIcon({ size = 24, children, ...props }: IconProps) {
   )
 }
 
-export function CalendarIcon(props: IconProps) {
-  return (
-    <LineIcon {...props}>
-      <use href="#ll-i-calendar" />
-    </LineIcon>
-  )
-}
-
 export function StackIcon(props: IconProps) {
   return (
     <LineIcon {...props}>
@@ -461,14 +453,6 @@ export function ShieldCheckIcon(props: IconProps) {
   return (
     <LineIcon {...props}>
       <use href="#ll-i-shield-check" />
-    </LineIcon>
-  )
-}
-
-export function UsersIcon(props: IconProps) {
-  return (
-    <LineIcon {...props}>
-      <use href="#ll-i-users" />
     </LineIcon>
   )
 }

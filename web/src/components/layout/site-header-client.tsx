@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ArrowUpRightIcon, CalculatorIcon, CloseIcon, MenuIcon } from '@/components/ui/icons'
+import { ArrowUpRightIcon, CloseIcon, HomeIcon, MenuIcon } from '@/components/ui/icons'
 
 import { DEFAULT_SETTINGS } from '@/data/content-defaults'
 import { AccountButton, AccountMenuLink } from '@/components/account/account-button'
@@ -62,7 +62,7 @@ export function SiteHeaderClient({
             src={
               isTransparent
                 ? '/brand/logo-horizontal-white.png'
-                : '/brand/logo-horizontal-brand.png'
+                : '/brand/logo-horizontal-teal.png'
             }
             alt="LEAP LIVING"
             width={132}
@@ -94,9 +94,11 @@ export function SiteHeaderClient({
         </nav>
 
         <div className="ll-header-actions">
-          <Link href="/#mortgage-calculator" className="ll-btn ll-btn-mortgage">
-            <CalculatorIcon size={15} />
-            <span>Mortgage Calculator</span>
+          {/* Client, 2026-11-19 (D-52): "List your property" replaces the calculator button;
+              the calculator stays on the homepage and in the footer. */}
+          <Link href="/sell" className="ll-btn ll-btn-list">
+            <HomeIcon size={15} />
+            <span>List Your Property</span>
           </Link>
           <Link href="/sell#valuation-form" className="ll-btn ll-btn-primary">
             <span>Free Valuation</span>
@@ -136,12 +138,12 @@ export function SiteHeaderClient({
             <AccountMenuLink onNavigate={() => setMobileOpen(false)} />
             <div className="ll-mobile-nav-actions">
               <Link
-                href="/#mortgage-calculator"
+                href="/sell"
                 onClick={() => setMobileOpen(false)}
-                className="ll-btn ll-btn-mortgage"
+                className="ll-btn ll-btn-list"
               >
-                <CalculatorIcon size={15} />
-                <span>Mortgage Calculator</span>
+                <HomeIcon size={15} />
+                <span>List Your Property</span>
               </Link>
               <Link
                 href="/sell#valuation-form"

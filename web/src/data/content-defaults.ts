@@ -90,30 +90,6 @@ export const DEFAULT_HOME = {
     primaryCta: { label: 'Explore Properties', href: '/buy' },
     secondaryCta: { label: 'Our Approach', href: '/about' },
   },
-  stats: {
-    items: [
-      {
-        value: '21+ Years',
-        description:
-          "Executive leadership across Dubai's residential and commercial cycles since 2005.",
-      },
-      {
-        value: 'AED 12B+',
-        description:
-          'Commercialisation, pricing strategy, and landmark project stewardship across the UAE.',
-      },
-      {
-        value: '100% Fiduciary',
-        description:
-          'Client-aligned counsel structured around long-term value over short-term brokerage volume.',
-      },
-      {
-        value: 'Direct Access',
-        description:
-          'Executive relationships across Tier-1 master developers, family offices, and private owners.',
-      },
-    ],
-  },
   featured: {
     title: 'Featured Properties for Sale',
     linkLabel: 'View All Properties for Sale',

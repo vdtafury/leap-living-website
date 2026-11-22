@@ -52,17 +52,17 @@
   background-color: var(--brand-teal-75);
 }
 
-.ll-header--transparent .ll-btn-mortgage {
+.ll-header--transparent .ll-btn-list {
   background-color: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.36);
   color: var(--white);
 }
 
-.ll-header--transparent .ll-btn-mortgage svg {
+.ll-header--transparent .ll-btn-list svg {
   color: var(--brand-teal-50);
 }
 
-.ll-header--transparent .ll-btn-mortgage:hover {
+.ll-header--transparent .ll-btn-list:hover {
   background-color: rgba(255, 255, 255, 0.16);
   border-color: var(--white);
   color: var(--white);
@@ -148,7 +148,7 @@
   display: none;
   background: var(--white);
   border: 1px solid var(--border-subtle);
-  border-radius: 3px;
+  border-radius: 999px;
   padding: 0.45rem 0.65rem;
   color: var(--heading);
   cursor: pointer;

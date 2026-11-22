@@ -80,7 +80,7 @@
   justify-content: center;
   gap: 0.5rem;
   padding: 0.8rem 1.5rem;
-  border-radius: var(--radius-sm);
+  border-radius: 999px; /* pill: every button on the site (client, 2026-11-19, D-52) */
   font-size: 0.84rem;
   font-weight: 500;
   letter-spacing: 0.02em;
@@ -134,18 +134,18 @@
   border-color: var(--white);
 }
 
-.ll-btn-mortgage {
+.ll-btn-list {
   background-color: var(--white);
   color: var(--heading);
   border-color: var(--neutral-grey);
   font-weight: 500;
 }
 
-.ll-btn-mortgage svg {
+.ll-btn-list svg {
   color: var(--brand-teal);
 }
 
-.ll-btn-mortgage:hover {
+.ll-btn-list:hover {
   border-color: var(--brand-teal);
   color: var(--dark-teal);
   background-color: var(--page-bg);

@@ -1,9 +1,9 @@
 /* ==========================================================================
    LIGHT HOMEPAGE (approved light design, owner 2026-11-17)
-   From the stats band down, sections ALTERNATE between the light tint and
-   white, so every section reads as separate from its neighbours:
-   stats (tint) / featured (white) / advisory (tint) / projects (white) /
-   valuation (tint) / reviews (white) / footer (tint).
+   Below the developer strip (glass tint), sections ALTERNATE between white
+   and the light tint, so every section reads as separate from its neighbours:
+   featured (white) / advisory (tint) / projects (white) / valuation (tint) /
+   reviews (white) / footer (tint). The stats band was removed (D-52).
    No photography, dark gradients or watermarks.
    ========================================================================== */
 
@@ -129,11 +129,11 @@
   border-bottom: 1px solid var(--border-subtle);
 }
 
-/* ---------- Hero: taller on desktop, so hero + developer strip fill the first
-   screen exactly (900px tall screen: 770 + 130). Capped for very tall screens. */
+/* ---------- Hero: the whole first screen (see 05-home-hero.css, D-52); the developer
+   strip starts below the fold. Capped for very tall screens. */
 @media (min-width: 901px) {
   .ll-hero {
-    min-height: clamp(560px, calc(100svh - var(--dev-strip-h)), 860px);
+    min-height: clamp(600px, 100svh, 1200px);
   }
 
   /* Hero search: a little smaller, centred, and set well below the headline
@@ -194,29 +194,5 @@
   .ll-advice-btn {
     grid-column: auto;
     justify-self: stretch;
-  }
-  /* Stats: compact 2 x 2 on phones instead of four tall rows */
-  .ll-stats-section .ll-stats-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 1.75rem 1.25rem;
-  }
-  .ll-stats-section .ll-stat-item {
-    padding: 0;
-    border: none;
-  }
-  .ll-stats-section .ll-stat-icon {
-    margin-bottom: 0.6rem;
-  }
-  .ll-stats-section .ll-stat-icon svg {
-    width: 24px;
-    height: 24px;
-  }
-  .ll-stats-section .ll-stat-value {
-    font-size: 1.2rem;
-    margin-bottom: 0.35rem;
-  }
-  .ll-stats-section .ll-stat-desc {
-    font-size: 0.78rem;
-    line-height: 1.5;
   }
 }

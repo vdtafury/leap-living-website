@@ -560,10 +560,11 @@ export const HOME_SERVICES = [
     title: 'Investment Strategy',
     desc: 'Data-led analysis and portfolio planning.',
   },
+  // Client, 2026-11-19 (D-52): Consultancy replaces "Disposition & Sales" in this slot.
   {
-    icon: 'handshake',
-    title: 'Disposition & Sales',
-    desc: 'Maximize value through strategic positioning.',
+    icon: 'compass',
+    title: 'Consultancy',
+    desc: 'Independent, strategic real estate guidance.',
   },
   {
     icon: 'layers',

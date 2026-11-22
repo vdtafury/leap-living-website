@@ -1,17 +1,9 @@
 'use client'
 
 import { useState, type FormEvent } from 'react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { HeroSelect, type HeroSelectOption } from '@/components/home/hero-select'
-import {
-  ArrowUpRightIcon,
-  BedIcon,
-  CurrencyIcon,
-  LayersIcon,
-  MapPinIcon,
-  SearchIcon,
-} from '@/components/ui/icons'
+import { BedIcon, CurrencyIcon, LayersIcon, MapPinIcon, SearchIcon } from '@/components/ui/icons'
 
 type SearchMode = 'BUY' | 'RENT'
 
@@ -116,11 +108,6 @@ export function HeroSearchBar({ communities }: HeroSearchBarProps) {
             </button>
           ))}
         </div>
-
-        <Link href="/projects" className="ll-hs-aux">
-          Off-plan developments
-          <ArrowUpRightIcon size={14} />
-        </Link>
       </div>
 
       <div className="ll-hs-bar">

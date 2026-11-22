@@ -82,21 +82,6 @@
   outline-offset: 1px;
 }
 
-.ll-hs-aux {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.8);
-  white-space: nowrap;
-  transition: color 0.2s ease;
-}
-
-.ll-hs-aux:hover {
-  color: var(--white);
-}
-
 /* The bar: fields separated by hairlines + teal submit */
 .ll-hs-bar {
   display: grid;
@@ -325,7 +310,7 @@
   margin-left: 6px;
   padding: 0 1.9rem;
   border: none;
-  border-radius: 12px;
+  border-radius: 999px;
   background: var(--action-teal);
   color: var(--white);
   font: inherit;
@@ -405,9 +390,6 @@
   .ll-hs-mode {
     min-width: 0;
     padding: 0.6rem 0.4rem;
-  }
-  .ll-hs-aux {
-    display: none;
   }
   .ll-hs-f-location {
     grid-column: 1 / -1;
@@ -530,8 +512,7 @@
     display: inline;
     margin-left: 0.25em;
   }
-  .ll-hero-ctas,
-  .ll-hs-aux {
+  .ll-hero-ctas {
     display: none;
   }
   .ll-hs-top {

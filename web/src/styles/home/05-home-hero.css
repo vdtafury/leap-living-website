@@ -6,9 +6,10 @@
   background-color: #143638;
   display: flex;
   align-items: stretch;
-  /* Proportional hero height matching leading Dubai consultancies (68vh / ~620px),
-     revealing the Developer Network band immediately above the fold */
-  min-height: clamp(520px, 68vh, 690px);
+  /* Full first screen: only the video and the search show above the fold; the developer
+     strip starts below it (client, 2026-11-19, D-52). Floor for short landscape phones. */
+  min-height: 520px;
+  min-height: max(520px, 100svh);
   padding: calc(76px + clamp(0.75rem, 2.5vh, 2rem)) 0 clamp(1.25rem, 3vh, 2.25rem);
 }
 
@@ -106,55 +107,4 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
-}
-
-/* ==================== 4-PILLAR CREDENTIALS BAR ==================== */
-/* Third on the homepage, right under the developer strip: white, teal line icons, hairline
-   dividers (approved light design, owner 2026-11-17) */
-.ll-stats-section {
-  position: relative;
-  padding: clamp(2.75rem, 3.6vw, 3.75rem) 0;
-  background-color: var(--surface-tint);
-  color: var(--heading);
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.ll-stat-icon {
-  display: inline-flex;
-  margin-bottom: 0.9rem;
-  color: var(--brand-teal);
-}
-
-.ll-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-}
-
-.ll-stat-item {
-  padding: 0.5rem 2rem;
-  border-right: 1px solid var(--border-subtle);
-}
-
-.ll-stat-item:first-child {
-  padding-left: 0;
-}
-
-.ll-stat-item:last-child {
-  padding-right: 0;
-  border-right: none;
-}
-
-.ll-stat-value {
-  font-family: var(--font-serif);
-  font-size: 2.05rem;
-  font-weight: 600;
-  color: var(--heading);
-  letter-spacing: -0.015em;
-  margin-bottom: 0.5rem;
-}
-
-.ll-stat-desc {
-  font-size: 0.84rem;
-  color: var(--body-text);
-  line-height: 1.58;
 }
