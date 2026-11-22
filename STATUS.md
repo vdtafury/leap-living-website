@@ -8,7 +8,15 @@
 
 ## Last updated
 
-2026-11-19 — by: Arena agent. **D-52, the client's six homepage changes** (branch `arena/759c8281-leap-living-website`): *List Your Property* replaces *Mortgage Calculator* in the header; every button is a full pill; *Off-plan developments* link removed from the hero search; the hero fills the first screen and the developers sit below the fold; the key-figures band is removed; the logo is teal on the scrolled header and footer; *Consultancy* replaces *Disposition & Sales* (saved content is upgraded on read, `content/domain/upgrades.ts`). Also on this branch: the enterprise review (`docs/reviews/2026-11-enterprise-suggestions.md`, waiting for the owner to pick items) and the management report (`docs/reports/2026-11-19-status-report.md`). Checks: see the PR.
+2026-11-19 — by: Arena agent. **D-52, the client's six homepage changes** (branch `arena/759c8281-leap-living-website`): *List Your Property* replaces *Mortgage Calculator* in the header; every button is a full pill; *Off-plan developments* link removed from the hero search; the hero fills the first screen and the developers sit below the fold; the key-figures band is removed; the logo is teal on the scrolled header and footer; *Consultancy* replaces *Disposition & Sales* (saved content is upgraded on read, `content/domain/upgrades.ts`). Also on this branch: the enterprise review (`docs/reviews/2026-11-enterprise-suggestions.md`, waiting for the owner to pick items) and the management report (`docs/reports/2026-11-19-status-report.md`). Checks: tsc and ESLint clean, vitest 148/148, verify.sh 106/106, Playwright 11 passed / 1 skipped, build OK (PR #27).
+
+### Previous update
+
+2026-11-19 — by: Arena agent. Pulled and synchronized repository state with `origin/arena/759c8281-leap-living-website` (`f9fa21a`):
+- Merged management status report (`docs/reports/2026-11-19-status-report.md`) and enterprise review & suggestions document (`docs/reviews/2026-11-enterprise-suggestions.md`) inspired by Bayut, Property Finder, Knight Frank, Savills, and Sotheby's.
+- Rebuilt local Next.js production build and restarted background daemon on `http://localhost:3000`.
+- All verification suites passing: 99/99 checks in `verify.sh` pass (including D-50 carousel segments removal and D-51 mortgage inputs); 147/147 vitest tests pass across 23 test files; typecheck and ESLint 100% clean.
+- Production deployment synced on Vercel at `https://web-ecru-delta-79.vercel.app`. Working tree clean.
 
 ### Previous update
 
