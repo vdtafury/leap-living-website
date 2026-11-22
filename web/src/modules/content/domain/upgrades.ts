@@ -9,10 +9,11 @@ import type { DocumentKey } from './registry'
 type Card = { icon?: unknown; title?: unknown; desc?: unknown; [key: string]: unknown }
 
 /** D-52 (client, 2026-11-19): Consultancy replaces "Disposition & Sales" in the services bar. */
-const OLD_DISPOSITION = {
-  title: 'Disposition & Sales',
-  desc: 'Maximize value through strategic positioning.',
-}
+const OLD_DISPOSITION_TITLE = 'Disposition & Sales'
+const OLD_DISPOSITION_DESCS = new Set([
+  'Maximize value through strategic positioning.',
+  'Institutional positioning, discreet buyer qualification, and strategic exit execution.',
+])
 const CONSULTANCY = {
   icon: 'compass',
   title: 'Consultancy',
@@ -24,7 +25,11 @@ function upgradeHome(value: Record<string, unknown>): Record<string, unknown> {
   if (!services || !Array.isArray(services.items)) return value
   let changed = false
   const items = (services.items as Card[]).map((card) => {
-    if (card && card.title === OLD_DISPOSITION.title && card.desc === OLD_DISPOSITION.desc) {
+    if (
+      card &&
+      card.title === OLD_DISPOSITION_TITLE &&
+      (typeof card.desc !== 'string' || OLD_DISPOSITION_DESCS.has(card.desc))
+    ) {
       changed = true
       return { ...card, ...CONSULTANCY }
     }
