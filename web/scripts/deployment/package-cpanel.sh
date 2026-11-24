@@ -147,8 +147,9 @@ if [ "${SKIP_GLIBC_COMPAT:-0}" != 1 ]; then
         quay.io/pypa/manylinux_2_28_x86_64 \
         bash -c "
           set -euo pipefail
+          export PATH='$NODEDIR/bin':\$PATH
           export PYTHON=\$(command -v python3 || ls /opt/python/cp3*/bin/python3 | head -1)
-          '$NODEDIR/bin/node' '$NODE_GYP' rebuild --release --nodedir='$NODEDIR'
+          node '$NODE_GYP' rebuild --release --nodedir='$NODEDIR'
         " >"$TMP/gyp.log" 2>&1 || { tail -40 "$TMP/gyp.log"; exit 1; }
     else
       echo "Docker unavailable; falling back to local glibc-compat shims"
