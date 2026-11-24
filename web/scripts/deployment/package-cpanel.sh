@@ -3,8 +3,9 @@
 #
 #   bash scripts/deployment/package-cpanel.sh
 #
-# Run on Linux x86_64 with Node 22 (the host app must also use Node 22.x: native
-# modules are tied to Node's ABI). Writes to web/deploy-out/:
+# Run on Linux x86_64 with Node 22 (default, matching Tasjeel's recommended 22.23.5) or
+# TARGET_NODE_MAJOR=24 (the host app must run the same major version: native modules are
+# tied to Node's ABI). Writes to web/deploy-out/:
 #
 #   leapliving-app-<stamp>.zip   extract in /home/<user>/  ->  leapliving-app/app/...
 #                                cPanel: Application root = leapliving-app
@@ -39,8 +40,12 @@ MAX_GLIBC=2.28
 log() { printf '\n== %s\n' "$*"; }
 
 [ "$(uname -sm)" = "Linux x86_64" ] || { echo "Run on Linux x86_64 (the host's platform)."; exit 1; }
+TARGET_NODE_MAJOR=${TARGET_NODE_MAJOR:-22}
 NODE_MAJOR=$(node -p 'process.versions.node.split(".")[0]')
-[ "$NODE_MAJOR" = 22 ] || { echo "Use Node 22 (found $(node -v)); the host app runs Node 22.x."; exit 1; }
+[ "$NODE_MAJOR" = "$TARGET_NODE_MAJOR" ] || {
+  echo "Use Node ${TARGET_NODE_MAJOR} (found $(node -v)); the host app must run Node ${TARGET_NODE_MAJOR}.x."
+  exit 1
+}
 [ -d node_modules ] || { echo "Run npm ci first."; exit 1; }
 [ "${ALLOW_FRAMING:-}" != 1 ] || { echo "ALLOW_FRAMING=1 is for preview builds only, never for a deploy."; exit 1; }
 
@@ -128,19 +133,43 @@ if [ "${SKIP_GLIBC_COMPAT:-0}" != 1 ]; then
   cp "$TMP/better-sqlite3/build/Release/better_sqlite3.node" "$ADDON"
 fi
 
-log "Checking native modules"
-need=$(objdump -T "$ADDON" | grep -oE 'GLIBC_[0-9.]+' | sed 's/GLIBC_//' | sort -uV | tail -1)
-echo "better-sqlite3 needs glibc $need"
-if [ "${SKIP_GLIBC_COMPAT:-0}" != 1 ] &&
-  [ "$(printf '%s\n%s\n' "$need" "$MAX_GLIBC" | sort -V | tail -1)" != "$MAX_GLIBC" ]; then
-  echo "better-sqlite3 still needs glibc $need (> $MAX_GLIBC)"
-  exit 1
-fi
-(cd "$APP" && node -e "const D=require('better-sqlite3');new D(':memory:').prepare('select 1').get();require('sharp');console.log('native modules load OK')")
+log "Checking native modules (glibc <= $MAX_GLIBC)"
+check_glibc() {
+  local label=$1 bin=$2 need
+  [ -f "$bin" ] || { echo "Missing native binary for $label: $bin"; exit 1; }
+  need=$(objdump -T "$bin" | grep -oE 'GLIBC_[0-9.]+' | sed 's/GLIBC_//' | sort -uV | tail -1 || true)
+  echo "$label ($bin) needs glibc ${need:-none}"
+  if [ -n "$need" ] && [ "${SKIP_GLIBC_COMPAT:-0}" != 1 ] &&
+    [ "$(printf '%s\n%s\n' "$need" "$MAX_GLIBC" | sort -V | tail -1)" != "$MAX_GLIBC" ]; then
+    echo "$label needs glibc $need (> $MAX_GLIBC)"
+    exit 1
+  fi
+}
+
+check_glibc "better-sqlite3" "$ADDON"
+while IFS= read -r bin; do
+  check_glibc "$(basename "$bin")" "$bin"
+done < <(find "$APP/node_modules" -type f -name '*.node' ! -path "$ADDON" | sort)
+
+(cd "$APP" && node -e "
+(async () => {
+  const D = require('better-sqlite3')
+  new D(':memory:').prepare('select 1').get()
+  const sharp = require('sharp')
+  const webp = await sharp({ create: { width: 4, height: 4, channels: 3, background: { r: 59, g: 158, b: 161 } } }).webp().toBuffer()
+  if (!webp.length) throw new Error('sharp produced empty output')
+  const argon2 = require('@node-rs/argon2')
+  const hash = await argon2.hash('cpanel-smoke-check-1', { algorithm: 2, memoryCost: 19456, timeCost: 2, parallelism: 1 })
+  const ok = await argon2.verify(hash, 'cpanel-smoke-check-1')
+  if (!ok) throw new Error('argon2 verify failed')
+  console.log('native modules load & run OK (better-sqlite3, sharp, @node-rs/argon2)')
+})().catch((e) => { console.error(e); process.exit(1) })
+")
 
 log "Creating initial database"
 # The app creates its own tables on first use (src/server/schema.ts, all IF NOT EXISTS); the
-# smoke test below is that first use, so the zipped database already has every table.
+# smoke test below is that first use, so the zipped database already has every table and
+# starter content (ADMIN_USER is unset here, so no admin user is baked into the zip).
 rm -f "$OUT/leapliving-data/leapliving.db"
 mkdir -p "$OUT/leapliving-data/storage"
 
@@ -156,6 +185,9 @@ for _ in $(seq 1 30); do
   if curl -fsS "http://127.0.0.1:$PORT/api/health" | grep -q '"db":"up"'; then ok=1; break; fi
 done
 home=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$PORT/" || true)
+buy=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$PORT/buy" || true)
+signin=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$PORT/account/sign-in" || true)
+admin_code=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$PORT/admin" || true)
 if [ -f "$HERO" ]; then
   video=$(curl -s -o /dev/null -r 0-1023 -w '%{http_code}' "http://127.0.0.1:$PORT/${HERO#public/}" || true)
 else
@@ -163,15 +195,22 @@ else
 fi
 kill "$SERVER" 2>/dev/null || true
 wait "$SERVER" 2>/dev/null || true
-[ "$ok" = 1 ] && [ "$home" = 200 ] && [ "$video" = 206 ] ||
-  { echo "Smoke test failed (health=$ok, home=$home, video=$video)"; cat "$OUT/smoke.log"; exit 1; }
+[ "$ok" = 1 ] && [ "$home" = 200 ] && [ "$buy" = 200 ] && [ "$signin" = 200 ] &&
+  ([ "$admin_code" = 307 ] || [ "$admin_code" = 308 ] || [ "$admin_code" = 302 ]) && [ "$video" = 206 ] ||
+  { echo "Smoke test failed (health=$ok, home=$home, buy=$buy, signin=$signin, admin=$admin_code, video=$video)"; cat "$OUT/smoke.log"; exit 1; }
 node -e "
 const D = require('better-sqlite3')
 const db = new D(process.argv[1], { readonly: true })
 const names = db.prepare(\"SELECT name FROM sqlite_master WHERE type = 'table'\").all().map((t) => t.name)
-for (const t of ['MediaAsset', 'Inquiry']) if (!names.includes(t)) { console.error('missing table ' + t); process.exit(1) }
+const required = [
+  'MediaAsset', 'Inquiry', 'User', 'Role', 'Permission', 'RolePermission', 'UserRole',
+  'Session', 'AuditLog', 'Property', 'Project', 'EmailOutbox', 'ContentDocument',
+  'ContentRevision', 'Developer', 'Customer', 'CustomerSession', 'CustomerToken',
+  'Favorite', 'CustomerInquiry', 'Review'
+]
+for (const t of required) if (!names.includes(t)) { console.error('missing table ' + t); process.exit(1) }
 " "$OUT/leapliving-data/leapliving.db" || { echo "Initial database is missing tables"; exit 1; }
-echo "health OK, home 200, hero video OK, database tables OK"
+echo "health OK, home/buy/sign-in 200, admin guard OK, hero video OK, all 21 database tables OK"
 rm -rf "$OUT/leapliving-data/storage"/* "$OUT/smoke.log"
 
 log "Zipping"

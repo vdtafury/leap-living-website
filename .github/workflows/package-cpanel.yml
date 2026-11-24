@@ -1,0 +1,82 @@
+# Manual workflow to build the Linux x86_64 cPanel standalone bundle (CloudLinux 8, glibc 2.28).
+# Runs package-cpanel.sh on ubuntu-24.04 so developers on macOS/Windows can download the
+# ready-to-upload zip archives without needing a local Linux box or Docker.
+#
+# Never runs automatically and uses no secrets. The hero video (~44-150 MB, git-ignored) is
+# excluded here (ALLOW_NO_HERO_VIDEO=1) and uploaded once into /home/leaplivi/leapliving-data/
+# on cPanel (see docs/deployment/cpanel-staging.md).
+name: Package cPanel bundle
+
+on:
+  workflow_dispatch:
+    inputs:
+      site_url:
+        description: 'Public origin URL baked into the bundle'
+        required: true
+        default: 'https://staging.leapliving.ae'
+        type: string
+      site_indexing:
+        description: 'Allow search engine indexing (keep false for staging!)'
+        required: true
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
+      node_version:
+        description: 'Node.js major version (must match cPanel Setup Node.js App)'
+        required: true
+        default: '22'
+        type: choice
+        options:
+          - '22'
+          - '24'
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    name: Build cPanel bundle (Node ${{ inputs.node_version }}, glibc <= 2.28)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      CI: 'true'
+    steps:
+      # Actions pinned to exact commit SHAs (matching .github/workflows/ci.yml).
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Guard against indexing staging
+        run: |
+          if [ "${{ inputs.site_indexing }}" = "true" ] && printf '%s' "${{ inputs.site_url }}" | grep -qi 'staging'; then
+            echo "::error::Refusing to enable SITE_INDEXING=true for a staging URL (${{ inputs.site_url }})."
+            exit 1
+          fi
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '${{ inputs.node_version }}'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install dependencies (exact versions from package-lock.json)
+        working-directory: web
+        run: npm ci
+
+      - name: Build and verify cPanel bundle
+        working-directory: web
+        env:
+          TARGET_NODE_MAJOR: '${{ inputs.node_version }}'
+          SITE_URL: '${{ inputs.site_url }}'
+          SITE_INDEXING: '${{ inputs.site_indexing }}'
+          ALLOW_NO_HERO_VIDEO: '1'
+        run: bash scripts/deployment/package-cpanel.sh
+
+      - name: Upload cPanel zip archives
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: cpanel-bundle-node${{ inputs.node_version }}
+          path: web/deploy-out/*.zip
+          retention-days: 7
+          if-no-files-found: error

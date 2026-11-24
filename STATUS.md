@@ -4,9 +4,18 @@
 
 ## Current phase
 
-**Phases 1 and 2 built (owner, 2026-11-18): admin, RBAC, audit log, property and project CRUD with images, public pages reading the database, form outbox, CMS with draft → preview → publish, site settings, developers.** Waiting on the client meeting answers. Staging on the client's Tasjeel cPanel is prepared but **on hold** (owner, 2026-11-17). ROADMAP is a guide, not a contract: quality comes first (owner).
+**Phases 1 and 2 built (owner, 2026-11-18): admin, RBAC, audit log, property and project CRUD with images, public pages reading the database, form outbox, CMS with draft → preview → publish, site settings, developers.** Active focus (owner, 2026-11-24): **Staging on Tasjeel cPanel (`staging.leapliving.ae`)** — host OS/glibc verified (`CloudLinux 8`, `glibc 2.28`), packaging script and manual GitHub Actions build workflow updated for Phase 1–2. Waiting on client meeting answers for production content/compliance. ROADMAP is a guide, not a contract: quality comes first (owner).
 
 ## Last updated
+
+2026-11-24 — by: Antigravity. **Tasjeel cPanel staging prep (host verified + Phase 1–2 packaging update):**
+- Verified host via read-only cPanel Terminal probe: CloudLinux 8 (`4.18.0-553.171.1.lve.el8.x86_64`), **`glibc 2.28`**, `git`, `gcc`, `python3`, `mysql`/`mariadb`, `/home/leaplivi/logs` present.
+- Updated `web/scripts/deployment/package-cpanel.sh`: configurable `TARGET_NODE_MAJOR` (defaults to `22` for Tasjeel's recommended `22.23.5`), verifies `glibc <= 2.28` on all `.node` native binaries, runs live load/execute checks for `better-sqlite3`, `sharp` (WebP), and `@node-rs/argon2` (hash/verify), and extends the smoke test to `/buy`, `/account/sign-in`, `/admin` redirect guard, and all 21 SQLite tables.
+- Added manual GitHub Actions workflow `.github/workflows/package-cpanel.yml` (`workflow_dispatch`, pinned action SHAs, staging indexing guard) to build Linux x86_64 cPanel zip artifacts from macOS without Docker.
+- Updated `docs/deployment/cpanel-staging.md` (removed obsolete Basic Auth/`/api/sharp` notes, added `IP_HASH_SECRET`, D-41 username rule, hero video symlink workflow, and GitHub Actions build steps) and `docs/deployment/compatibility-report.md` (§10).
+- Note: `node`/`npm` is unavailable in this sandbox, so `bash -n` syntax validation was run locally; full Linux bundle build + smoke test runs via the new GitHub Actions workflow.
+
+### Previous update
 
 2026-11-19 — by: Arena agent. **D-52, the client's six homepage changes** (branch `arena/759c8281-leap-living-website`): *List Your Property* replaces *Mortgage Calculator* in the header; every button is a full pill; *Off-plan developments* link removed from the hero search; the hero fills the first screen and the developers sit below the fold; the key-figures band is removed; the logo is teal on the scrolled header and footer; *Consultancy* replaces *Disposition & Sales* (saved content is upgraded on read, `content/domain/upgrades.ts`). Also on this branch: the enterprise review (`docs/reviews/2026-11-enterprise-suggestions.md`, waiting for the owner to pick items) and the management report (`docs/reports/2026-11-19-status-report.md`). Checks: tsc and ESLint clean, vitest 148/148, verify.sh 106/106, Playwright 11 passed / 1 skipped, build OK (PR #27).
 
@@ -119,18 +128,16 @@ The full question list for the meeting is in `docs/business/meeting-questions.md
 
 ## Next (in order)
 
-1. Client meeting: get answers to `docs/business/meeting-questions.md`.
-2. Owner: look at the buttons/search in `#287F82` (D-38, on trial) and confirm, or revert with one token.
+1. Push the updated packaging workflow and run GitHub Actions → **Package cPanel bundle** (`staging.leapliving.ae`, `site_indexing=false`, `node_version=22`), then deploy to `staging.leapliving.ae` per `docs/deployment/cpanel-staging.md`.
+2. Client meeting: get answers to `docs/business/meeting-questions.md`.
 3. SMTP details for the form emails (O-19) → set the `SMTP_*`, `MAIL_FROM`, `MAIL_TO` env vars; queued emails then send by themselves.
-4. Staging on cPanel when the owner resumes it (`docs/deployment/cpanel-staging.md`): verify glibc ≥ 2.28 (better-sqlite3 and argon2 need it), set `ADMIN_USER`, `ADMIN_PASSWORD`, `SITE_URL`, keep the data folder outside the app.
-5. Phase 3 (CRM workflows) after the meeting answers.
-6. Production cut-over, only with written approval: `SITE_URL=https://leapliving.ae` and `SITE_INDEXING=true`.
+4. Phase 3 (CRM workflows) and P0/P1 launch items (`docs/reviews/2026-11-enterprise-suggestions.md`) after staging verification and meeting answers.
+5. Production cut-over, only with written approval: `SITE_URL=https://leapliving.ae` and `SITE_INDEXING=true`.
 
 ## Blocked / waiting
 
-- **Hosting:** staging is on hold (owner). The host OS/glibc is still unverified; better-sqlite3 needs glibc ≥ 2.28.
+- **Hosting:** host OS (`CloudLinux 8`) and `glibc 2.28` verified (2026-11-24). Pending first live staging deploy on `staging.leapliving.ae` to verify Passenger startup, `sharp`/`argon2` runtime, persistent storage, and `X-Forwarded-For` header order.
 - **Content/legal:** O-05 stats, O-06 developer logo permissions, O-08 legal pages, O-19 SMTP / CRM.
-- **Design:** owner to confirm the `#287F82` buttons/search after seeing them (D-38).
 
 ## Session log
 

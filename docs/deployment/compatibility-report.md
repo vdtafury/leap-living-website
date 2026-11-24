@@ -262,4 +262,18 @@ npm view @prisma/client version && npm view sharp version && npm view zod versio
 | 7 | Next.js standalone under Passenger | **Prepared, not yet run on host** | Bundle + steps in `docs/deployment/cpanel-staging.md`; produced by `web/scripts/deployment/package-cpanel.sh`. Rehearsed locally with the exact host layout (`leapliving-app/app/server.js`, data outside the app): verify.sh 57/58 (only the known `file` utility check fails). |
 | 9 | Persistent storage outside the release | **Prepared** | `STORAGE_DIR` env var (uploads) + `DATABASE_URL` both point to `/home/leaplivi/leapliving-data/`. |
 
-Native-module portability: `better-sqlite3` built on the dev machine required glibc 2.34 / GLIBCXX 3.4.29, which would fail on CloudLinux 8 (glibc 2.28). The packaging script rebuilds it with pinned symbol versions (`scripts/deployment/glibc-compat/`), so it requires **glibc 2.28 / GLIBCXX 3.4.20**. Sharp's prebuilt binaries already require only glibc 2.28. The host's actual glibc is still to be confirmed (`ldd --version` in cPanel Terminal).
+Native-module portability: `better-sqlite3` built on the dev machine required glibc 2.34 / GLIBCXX 3.4.29, which would fail on CloudLinux 8 (glibc 2.28). The packaging script rebuilds it with pinned symbol versions (`scripts/deployment/glibc-compat/`), so it requires **glibc 2.28 / GLIBCXX 3.4.20**. Sharp's prebuilt binaries already require only glibc 2.28.
+
+## 10. Host Terminal verification (2026-11-24, owner ran read-only probe in cPanel Terminal)
+
+Command run as `leaplivi@d3629`:
+`uname -a; cat /etc/redhat-release 2>/dev/null; ldd --version | head -n 1; df -h "$HOME"; free -h 2>/dev/null; which mysql mariadb git gcc python3 2>/dev/null; ls -la "$HOME" | head -n 20`
+
+| # | Check | Result | Evidence / notes |
+|---|---|---|---|
+| 1 | OS / kernel / glibc | **PASS** | `Linux d3629.lon1.stableserver.net 4.18.0-553.171.1.lve.el8.x86_64` (CloudLinux 8) and **`ldd (GNU libc) 2.28`**. Matches `MAX_GLIBC=2.28` in `package-cpanel.sh` and `glibc-compat/`. |
+| 3 | MySQL / MariaDB client tools | **Observed** | `/bin/mysql` and `/bin/mariadb` present on host (DB credentials / version still unprobed while app uses SQLite). |
+| 13 | Terminal / Git / build tools | **PASS** | cPanel Terminal works (`leaplivi@d3629`); `/usr/local/cpanel/3rdparty/lib/path-bin/git`, `/bin/gcc`, `/bin/python3` all present; `/home/leaplivi/logs` already exists; CageFS + `.cl.selector` confirmed. |
+| — | Shared partition disk | **Info** | `/dev/sda4` 2.5T total / 156G free (94% node-wide); verify individual account quota in cPanel UI before uploading large media. |
+
+Still pending live staging run on `staging.leapliving.ae`: items 2 (LVE account limits), 6 (`sharp` runtime on host), 7 (Passenger startup + restart), 8 (env vars), 9–10 (persistent storage + upload), 11 (SMTP, O-19), 14 (staging HTTPS + `/api/health`), 15–16 (backup/restore + rollback). `package-cpanel.sh` updated to also verify `@node-rs/argon2` (glibc ≤ 2.28 + hash/verify) and all 21 Phase 1–2 tables; manual GitHub Actions workflow `.github/workflows/package-cpanel.yml` added so Linux x86_64 zips can be built from macOS.
