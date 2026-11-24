@@ -36,6 +36,7 @@ STAMP=$(date -u +%Y%m%d-%H%M)
 PKG=$OUT/leapliving-app
 APP=$PKG/app
 MAX_GLIBC=2.28
+MAX_GLIBCXX=3.4.25
 
 log() { printf '\n== %s\n' "$*"; }
 
@@ -111,44 +112,85 @@ else
   log "No hero video (ALLOW_NO_HERO_VIDEO=1): the hero shows the still poster"
 fi
 
+max_sym_ver() {
+  local prefix=$1 bin=$2
+  objdump -T "$bin" | grep -oE "${prefix}_[0-9.]+" | sed "s/${prefix}_//" | sort -uV | tail -1 || true
+}
+
+ver_ok() {
+  local actual=$1 max=$2
+  [ -z "$actual" ] || [ "$(printf '%s\n%s\n' "$actual" "$max" | sort -V | tail -1)" = "$max" ]
+}
+
 ADDON=$APP/node_modules/better-sqlite3/build/Release/better_sqlite3.node
 if [ "${SKIP_GLIBC_COMPAT:-0}" != 1 ]; then
-  log "Rebuilding better-sqlite3 for glibc <= $MAX_GLIBC"
-  TMP=$(mktemp -d)
-  trap 'rm -rf "$TMP"' EXIT
-  cp -a node_modules/better-sqlite3 "$TMP/"
-  gcc -O2 -fPIC -c "$HERE/glibc-compat/stat_shim.c" -o "$TMP/stat_shim.o"
-  g++ -O2 -fPIC -c "$HERE/glibc-compat/cxx_shim.cc" -o "$TMP/cxx_shim.o"
-  NODE_GYP=$(dirname "$(dirname "$(readlink -f "$(command -v npm)")")")/node_modules/node-gyp/bin/node-gyp.js
-  NODEDIR=$(dirname "$(dirname "$(readlink -f "$(command -v node)")")")
-  (
-    cd "$TMP/better-sqlite3"
-    rm -rf build
-    CFLAGS="-include $HERE/glibc-compat/glibc_compat.h" \
-      CXXFLAGS="-include $HERE/glibc-compat/glibc_compat.h" \
-      LDFLAGS="$TMP/stat_shim.o $TMP/cxx_shim.o" \
-      node "$NODE_GYP" rebuild --release --nodedir="$NODEDIR" >"$TMP/gyp.log" 2>&1 ||
-      { tail -30 "$TMP/gyp.log"; exit 1; }
-  )
-  cp "$TMP/better-sqlite3/build/Release/better_sqlite3.node" "$ADDON"
+  cur_glibc=$([ -f "$ADDON" ] && max_sym_ver GLIBC "$ADDON" || true)
+  cur_glibcxx=$([ -f "$ADDON" ] && max_sym_ver GLIBCXX "$ADDON" || true)
+  if [ -f "$ADDON" ] && ver_ok "$cur_glibc" "$MAX_GLIBC" && ver_ok "$cur_glibcxx" "$MAX_GLIBCXX"; then
+    log "better-sqlite3 already compatible (glibc ${cur_glibc:-none} <= $MAX_GLIBC, GLIBCXX ${cur_glibcxx:-none} <= $MAX_GLIBCXX); skipping rebuild"
+  else
+    log "Rebuilding better-sqlite3 for glibc <= $MAX_GLIBC / GLIBCXX <= $MAX_GLIBCXX (was glibc ${cur_glibc:-missing}, GLIBCXX ${cur_glibcxx:-missing})"
+    TMP=$(mktemp -d)
+    trap 'rm -rf "$TMP"' EXIT
+    cp -a node_modules/better-sqlite3 "$TMP/"
+    NODE_GYP=$(dirname "$(dirname "$(readlink -f "$(command -v npm)")")")/node_modules/node-gyp/bin/node-gyp.js
+    NODEDIR=$(dirname "$(dirname "$(readlink -f "$(command -v node)")")")
+    rm -rf "$TMP/better-sqlite3/build"
+    if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
+      echo "Using AlmaLinux 8 / manylinux_2_28 container (native glibc 2.28)"
+      docker run --rm \
+        -u "$(id -u):$(id -g)" \
+        -e HOME=/tmp \
+        -v "$TMP/better-sqlite3:/work" \
+        -v "$NODEDIR:$NODEDIR:ro" \
+        -w /work \
+        quay.io/pypa/manylinux_2_28_x86_64 \
+        bash -c "
+          set -euo pipefail
+          export PYTHON=\$(command -v python3 || ls /opt/python/cp3*/bin/python3 | head -1)
+          '$NODEDIR/bin/node' '$NODE_GYP' rebuild --release --nodedir='$NODEDIR'
+        " >"$TMP/gyp.log" 2>&1 || { tail -40 "$TMP/gyp.log"; exit 1; }
+    else
+      echo "Docker unavailable; falling back to local glibc-compat shims"
+      gcc -O2 -fPIC -c "$HERE/glibc-compat/stat_shim.c" -o "$TMP/stat_shim.o"
+      g++ -O2 -fPIC -c "$HERE/glibc-compat/cxx_shim.cc" -o "$TMP/cxx_shim.o"
+      (
+        cd "$TMP/better-sqlite3"
+        CFLAGS="-include $HERE/glibc-compat/glibc_compat.h" \
+          CXXFLAGS="-include $HERE/glibc-compat/glibc_compat.h" \
+          LDFLAGS="$TMP/stat_shim.o $TMP/cxx_shim.o" \
+          node "$NODE_GYP" rebuild --release --nodedir="$NODEDIR" >"$TMP/gyp.log" 2>&1 ||
+          { tail -40 "$TMP/gyp.log"; exit 1; }
+      )
+    fi
+    cp "$TMP/better-sqlite3/build/Release/better_sqlite3.node" "$ADDON"
+  fi
 fi
 
-log "Checking native modules (glibc <= $MAX_GLIBC)"
-check_glibc() {
-  local label=$1 bin=$2 need
+log "Checking native modules (glibc <= $MAX_GLIBC, GLIBCXX <= $MAX_GLIBCXX)"
+check_native() {
+  local label=$1 bin=$2 need_glibc need_glibcxx
   [ -f "$bin" ] || { echo "Missing native binary for $label: $bin"; exit 1; }
-  need=$(objdump -T "$bin" | grep -oE 'GLIBC_[0-9.]+' | sed 's/GLIBC_//' | sort -uV | tail -1 || true)
-  echo "$label ($bin) needs glibc ${need:-none}"
-  if [ -n "$need" ] && [ "${SKIP_GLIBC_COMPAT:-0}" != 1 ] &&
-    [ "$(printf '%s\n%s\n' "$need" "$MAX_GLIBC" | sort -V | tail -1)" != "$MAX_GLIBC" ]; then
-    echo "$label needs glibc $need (> $MAX_GLIBC)"
-    exit 1
+  need_glibc=$(max_sym_ver GLIBC "$bin")
+  need_glibcxx=$(max_sym_ver GLIBCXX "$bin")
+  echo "$label ($bin) needs glibc ${need_glibc:-none}, GLIBCXX ${need_glibcxx:-none}"
+  if [ "${SKIP_GLIBC_COMPAT:-0}" != 1 ]; then
+    if ! ver_ok "$need_glibc" "$MAX_GLIBC"; then
+      echo "$label needs glibc $need_glibc (> $MAX_GLIBC). Offending symbols:"
+      objdump -T "$bin" | grep -E "GLIBC_${need_glibc}" | head -20 || true
+      exit 1
+    fi
+    if ! ver_ok "$need_glibcxx" "$MAX_GLIBCXX"; then
+      echo "$label needs GLIBCXX $need_glibcxx (> $MAX_GLIBCXX). Offending symbols:"
+      objdump -T "$bin" | grep -E "GLIBCXX_${need_glibcxx}" | head -20 || true
+      exit 1
+    fi
   fi
 }
 
-check_glibc "better-sqlite3" "$ADDON"
+check_native "better-sqlite3" "$ADDON"
 while IFS= read -r bin; do
-  check_glibc "$(basename "$bin")" "$bin"
+  check_native "$(basename "$bin")" "$bin"
 done < <(find "$APP/node_modules" -type f -name '*.node' ! -path "$ADDON" | sort)
 
 (cd "$APP" && node -e "
