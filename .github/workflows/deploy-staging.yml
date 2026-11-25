@@ -1,0 +1,157 @@
+# Automatic deployment to staging.leapliving.ae on Tasjeel cPanel (CloudLinux 8, Node 22).
+# NEVER touches production (leapliving.ae), public_html (WordPress), or leapliving-data/.
+#
+# Required GitHub repository secrets (Settings -> Secrets and variables -> Actions):
+#   CPANEL_HOST     e.g. 195.250.23.54
+#   CPANEL_USER     e.g. leaplivi
+#   CPANEL_SSH_KEY  private SSH key authorized in cPanel -> SSH Access
+#   CPANEL_SSH_PORT optional (defaults to 22)
+name: Deploy to Staging (cPanel)
+
+on:
+  push:
+    branches: [feat/multi-page-platform]
+    paths:
+      - 'web/**'
+      - '.github/workflows/deploy-staging.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Test, build (Node 22, glibc <= 2.28), and deploy to staging.leapliving.ae
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      CI: 'true'
+    steps:
+      # Actions pinned to exact commit SHAs (matching .github/workflows/ci.yml).
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install dependencies (exact versions from package-lock.json)
+        working-directory: web
+        run: npm ci
+
+      - name: Lint, typecheck, and unit tests
+        working-directory: web
+        env:
+          DATABASE_URL: file:./storage/ci/site.db
+          STORAGE_DIR: ./storage/ci
+          ADMIN_USER: ciadmin
+          ADMIN_PASSWORD: ci-initial-password-1
+        run: |
+          npm run lint
+          npx prisma generate
+          npm run typecheck
+          npm test
+
+      - name: Build and smoke-test cPanel bundle
+        working-directory: web
+        env:
+          TARGET_NODE_MAJOR: '22'
+          SITE_URL: 'https://staging.leapliving.ae'
+          SITE_INDEXING: 'false'
+          ALLOW_NO_HERO_VIDEO: '1'
+        run: bash scripts/deployment/package-cpanel.sh
+
+      - name: Deploy bundle to staging.leapliving.ae via SSH
+        env:
+          CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
+          CPANEL_USER: ${{ secrets.CPANEL_USER }}
+          CPANEL_SSH_KEY: ${{ secrets.CPANEL_SSH_KEY }}
+          CPANEL_SSH_PORT: ${{ secrets.CPANEL_SSH_PORT }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CPANEL_HOST:-}" ] || [ -z "${CPANEL_USER:-}" ] || [ -z "${CPANEL_SSH_KEY:-}" ]; then
+            echo "::notice::Staging SSH secrets (CPANEL_HOST, CPANEL_USER, CPANEL_SSH_KEY) are not configured yet. Skipping SSH deploy."
+            exit 0
+          fi
+
+          PORT="${CPANEL_SSH_PORT:-22}"
+          ZIP_FILE=$(ls -1 web/deploy-out/leapliving-app-*.zip | head -n 1)
+          [ -f "$ZIP_FILE" ] || { echo "::error::No app zip found in web/deploy-out/"; exit 1; }
+
+          KEY_FILE=$(mktemp)
+          KNOWN_HOSTS=$(mktemp)
+          trap 'rm -f "$KEY_FILE" "$KNOWN_HOSTS"' EXIT
+          chmod 600 "$KEY_FILE"
+          printf '%s\n' "$CPANEL_SSH_KEY" > "$KEY_FILE"
+          ssh-keyscan -p "$PORT" -H "$CPANEL_HOST" > "$KNOWN_HOSTS" 2>/dev/null
+
+          SSH_OPTS="-i $KEY_FILE -p $PORT -o UserKnownHostsFile=$KNOWN_HOSTS -o StrictHostKeyChecking=yes -o BatchMode=yes"
+          SCP_OPTS="-i $KEY_FILE -P $PORT -o UserKnownHostsFile=$KNOWN_HOSTS -o StrictHostKeyChecking=yes -o BatchMode=yes"
+
+          echo "== Uploading $(basename "$ZIP_FILE") to $CPANEL_USER@$CPANEL_HOST"
+          scp $SCP_OPTS "$ZIP_FILE" "$CPANEL_USER@$CPANEL_HOST:~/tmp/leapliving-staging-deploy.zip"
+
+          echo "== Swapping leapliving-app/app and restarting Passenger"
+          ssh $SSH_OPTS "$CPANEL_USER@$CPANEL_HOST" 'bash -s' <<'REMOTE'
+          set -euo pipefail
+          rm -rf ~/leapliving-app-next
+          mkdir -p ~/leapliving-app-next ~/leapliving-app/tmp
+          unzip -q ~/tmp/leapliving-staging-deploy.zip -d ~/leapliving-app-next
+          [ -f ~/leapliving-app-next/leapliving-app/app/server.js ] || {
+            echo "ERROR: extracted bundle missing app/server.js"
+            exit 1
+          }
+
+          # Re-link persistent hero video stored outside releases (if present)
+          if [ -f ~/leapliving-data/client-hero-original.mp4 ]; then
+            mkdir -p ~/leapliving-app-next/leapliving-app/app/public/videos/hero
+            ln -sf ~/leapliving-data/client-hero-original.mp4 \
+              ~/leapliving-app-next/leapliving-app/app/public/videos/hero/client-hero-original.mp4
+          fi
+
+          # Swap ONLY leapliving-app/app so CloudLinux's virtualenv symlink in leapliving-app/ stays intact
+          rm -rf ~/leapliving-app/app-prev
+          if [ -d ~/leapliving-app/app ]; then
+            mv ~/leapliving-app/app ~/leapliving-app/app-prev
+          fi
+          mv ~/leapliving-app-next/leapliving-app/app ~/leapliving-app/app
+          rm -rf ~/leapliving-app-next ~/tmp/leapliving-staging-deploy.zip
+
+          # Trigger Passenger restart
+          touch ~/leapliving-app/tmp/restart.txt
+          echo "Swap complete and Passenger restart triggered."
+          REMOTE
+
+          echo "== Verifying https://staging.leapliving.ae/api/health"
+          HEALTH_OK=0
+          for i in $(seq 1 15); do
+            sleep 2
+            if curl -fsS --max-time 10 "https://staging.leapliving.ae/api/health" | grep -q '"db":"up"'; then
+              HEALTH_OK=1
+              break
+            fi
+          done
+
+          if [ "$HEALTH_OK" != "1" ]; then
+            echo "::error::Health check failed after deploy! Rolling back to app-prev..."
+            ssh $SSH_OPTS "$CPANEL_USER@$CPANEL_HOST" 'bash -s' <<'ROLLBACK'
+            set -euo pipefail
+            if [ -d ~/leapliving-app/app-prev ]; then
+              rm -rf ~/leapliving-app/app-failed
+              mv ~/leapliving-app/app ~/leapliving-app/app-failed || true
+              mv ~/leapliving-app/app-prev ~/leapliving-app/app
+              touch ~/leapliving-app/tmp/restart.txt
+              echo "Rolled back to app-prev."
+            fi
+            tail -n 40 ~/logs/leapliving-staging.log 2>/dev/null || true
+          ROLLBACK
+            exit 1
+          fi
+
+          echo "== Staging deploy verified LIVE: https://staging.leapliving.ae/api/health returned db:up"

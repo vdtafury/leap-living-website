@@ -44,19 +44,25 @@ What `package-cpanel.sh` verifies before zipping:
 | `leapliving-app-<stamp>.zip` | `/home/leaplivi/` → `leapliving-app/app/…` | every deploy |
 | `leapliving-data-initial.zip` | `/home/leaplivi/` → `leapliving-data/leapliving.db` | **first deploy only**. Never extract it over a live database |
 
-### The client's hero video (web-optimized 1080p, ~20–25 MB, git-ignored)
+### The client's hero video (web-optimized 1080p, ~25 MB, git-ignored)
 
-The homepage plays one video (`public/videos/hero/client-hero-original.mp4`), web-encoded at crisp 1080p30 H.264 (`crf 23`, `-maxrate 3500k`, faststart, D-53) so it streams smoothly from London cPanel without buffering.
+The homepage plays one video (`public/videos/hero/client-hero-original.mp4`), web-encoded at crisp 1080p H.264 (~25 MB, ~2.8 Mbps, faststart, D-53) so it streams smoothly from London cPanel without buffering.
 
-- **With Option A (GitHub Actions):** upload `client-hero-original.mp4` **once** to `/home/leaplivi/leapliving-data/client-hero-original.mp4`. Then link it both into the app (so `hasHeroVideo` is `true`) and into the web root so **Apache serves `/videos/` directly** (bypassing Node.js/Passenger):
+- **With Option A (GitHub Actions / Auto-Deploy):** upload `client-hero-original.mp4` **once** to `/home/leaplivi/leapliving-data/client-hero-original.mp4`. Link it into the app so Next.js serves it cleanly with HTTP 206 byte-range streaming and `next.config.ts` headers (the SSH auto-deploy workflow re-creates this symlink automatically on every deploy; do **not** put symlinks into `~/staging.leapliving.ae/videos/`, because Apache runs as `nobody` and cannot read `/home/leaplivi/leapliving-data/`):
   ```bash
-  mkdir -p ~/leapliving-app/app/public/videos/hero ~/staging.leapliving.ae/videos/hero
+  mkdir -p ~/leapliving-app/app/public/videos/hero
   ln -sf ~/leapliving-data/client-hero-original.mp4 ~/leapliving-app/app/public/videos/hero/client-hero-original.mp4
-  ln -sf ~/leapliving-data/client-hero-original.mp4 ~/staging.leapliving.ae/videos/hero/client-hero-original.mp4
-  printf 'PassengerEnabled off\nHeader set Cache-Control "public, max-age=604800, stale-while-revalidate=86400"\n' > ~/staging.leapliving.ae/videos/.htaccess
   mkdir -p ~/leapliving-app/tmp && touch ~/leapliving-app/tmp/restart.txt
   ```
 - **With Option B (local Linux):** place the prepared MP4 at `web/public/videos/hero/client-hero-original.mp4` before running `package-cpanel.sh`.
+
+### Option C — Automatic SSH deploy to staging (`.github/workflows/deploy-staging.yml`)
+
+Once three GitHub Actions secrets are configured (`CPANEL_HOST=195.250.23.54`, `CPANEL_USER=leaplivi`, `CPANEL_SSH_KEY`), every push to `feat/multi-page-platform` touching `web/**` (or a manual run of **Deploy to Staging (cPanel)**):
+1. Runs lint, typecheck, unit tests, and `package-cpanel.sh` (`manylinux_2_28`, Node 22, 21-table smoke test).
+2. Uploads the zip over SSH, swaps only `~/leapliving-app/app` (keeping CloudLinux's virtualenv symlink and `~/leapliving-data/` untouched), keeps the previous release at `~/leapliving-app/app-prev`, and re-links `client-hero-original.mp4`.
+3. Triggers Passenger restart via `touch ~/leapliving-app/tmp/restart.txt`.
+4. Verifies `https://staging.leapliving.ae/api/health` (`"db":"up"`), and automatically rolls back to `app-prev` if health fails.
 
 ## 2. One-time cPanel setup
 
