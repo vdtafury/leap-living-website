@@ -4,9 +4,17 @@
 
 ## Current phase
 
-**Phases 1 and 2 built (owner, 2026-11-18): admin, RBAC, audit log, property and project CRUD with images, public pages reading the database, form outbox, CMS with draft → preview → publish, site settings, developers.** Active focus (owner, 2026-11-24): **Staging on Tasjeel cPanel (`staging.leapliving.ae`)** — host OS/glibc verified (`CloudLinux 8`, `glibc 2.28`), packaging script and manual GitHub Actions build workflow updated for Phase 1–2. Waiting on client meeting answers for production content/compliance. ROADMAP is a guide, not a contract: quality comes first (owner).
+**Phases 1 and 2 built AND Staging LIVE on Tasjeel cPanel (`https://staging.leapliving.ae`, 2026-11-24)!** CloudLinux 8 / glibc 2.28 / Node 22.23.5 / Passenger / Next.js 16.4.5 / SQLite (`better-sqlite3` built via `manylinux_2_28`) / Let's Encrypt SSL all verified live, with WordPress in `public_html` completely untouched. Next: link original ~134 MB hero video on staging, verify admin login + media upload live, hold client meeting (CRM integration + content/legal), then tackle P0/P1 launch items.
 
 ## Last updated
+
+2026-11-25 — by: Antigravity. **Staging LIVE on Tasjeel cPanel (`https://staging.leapliving.ae`) + D-53 hero polish:**
+- Built verified Node 22 / `glibc <= 2.28` / `GLIBCXX <= 3.4.25` bundle via GitHub Actions (`Package cPanel bundle #3`, 47.6 MB) using `quay.io/pypa/manylinux_2_28_x86_64` for `better-sqlite3` (caught that npm's prebuild needed `glibc 2.29` and Ubuntu 24.04 shim build emitted `glibc 2.38`).
+- Created isolated subdomain `staging.leapliving.ae` (`/home/leaplivi/staging.leapliving.ae`, outside `public_html`), added DNS `A` record (`195.250.23.54`), fixed AutoSSL HTTP DCV + Basic Auth under Passenger (`ErrorDocument 401 default` + `.well-known/.htaccess` with `Require all granted` / `PassengerEnabled off`), issued Let's Encrypt SSL (valid to 2027-02-22), disabled Directory Privacy per owner for CEO review (`noindex` remains enforced).
+- **D-53 (owner, 2026-11-25):** removed the teal colour wash on the homepage hero (`05-home-hero.css`, `18-hero-wash.css`) in favour of a light neutral black scrim so the video plays in natural colours; lowered `HERO_MIN_DOWNLINK_MBPS` `10 → 3` Mbps (`hero-video.ts` + `hero-video.test.ts`) for the web-encoded 1080p hero video (~20–25 MB, ~2.5–3.5 Mbps) served directly by Apache (`staging.leapliving.ae/videos/.htaccess` with `PassengerEnabled off`).
+- Updated `DECISIONS.md` (D-53), `docs/deployment/cpanel-staging.md`, `docs/deployment/compatibility-report.md`, and `STATUS.md`.
+
+### Previous update
 
 2026-11-24 — by: Antigravity. **Tasjeel cPanel staging prep (host verified + Phase 1–2 packaging update):**
 - Verified host via read-only cPanel Terminal probe: CloudLinux 8 (`4.18.0-553.171.1.lve.el8.x86_64`), **`glibc 2.28`**, `git`, `gcc`, `python3`, `mysql`/`mariadb`, `/home/leaplivi/logs` present.

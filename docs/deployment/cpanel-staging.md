@@ -44,22 +44,33 @@ What `package-cpanel.sh` verifies before zipping:
 | `leapliving-app-<stamp>.zip` | `/home/leaplivi/` → `leapliving-app/app/…` | every deploy |
 | `leapliving-data-initial.zip` | `/home/leaplivi/` → `leapliving-data/leapliving.db` | **first deploy only**. Never extract it over a live database |
 
-### The client's hero video (~44–150 MB, git-ignored)
+### The client's hero video (web-optimized 1080p, ~20–25 MB, git-ignored)
 
-The homepage plays one video (`public/videos/hero/client-hero-original.mp4`), which is git-ignored because of GitHub's 100 MB limit.
+The homepage plays one video (`public/videos/hero/client-hero-original.mp4`), web-encoded at crisp 1080p30 H.264 (`crf 23`, `-maxrate 3500k`, faststart, D-53) so it streams smoothly from London cPanel without buffering.
 
-- **With Option A (GitHub Actions):** the bundle is built with `ALLOW_NO_HERO_VIDEO=1` (poster works immediately). To enable the video on staging without re-uploading it on every deploy, upload the prepared `client-hero-original.mp4` **once** to `/home/leaplivi/leapliving-data/client-hero-original.mp4` via File Manager, then link it in cPanel Terminal after each app deploy:
+- **With Option A (GitHub Actions):** upload `client-hero-original.mp4` **once** to `/home/leaplivi/leapliving-data/client-hero-original.mp4`. Then link it both into the app (so `hasHeroVideo` is `true`) and into the web root so **Apache serves `/videos/` directly** (bypassing Node.js/Passenger):
   ```bash
-  mkdir -p ~/leapliving-app/app/public/videos/hero
+  mkdir -p ~/leapliving-app/app/public/videos/hero ~/staging.leapliving.ae/videos/hero
   ln -sf ~/leapliving-data/client-hero-original.mp4 ~/leapliving-app/app/public/videos/hero/client-hero-original.mp4
+  ln -sf ~/leapliving-data/client-hero-original.mp4 ~/staging.leapliving.ae/videos/hero/client-hero-original.mp4
+  printf 'PassengerEnabled off\nHeader set Cache-Control "public, max-age=604800, stale-while-revalidate=86400"\n' > ~/staging.leapliving.ae/videos/.htaccess
+  mkdir -p ~/leapliving-app/tmp && touch ~/leapliving-app/tmp/restart.txt
   ```
-- **With Option B (local Linux):** run `bash scripts/prepare-hero-original.sh "/path/to/Website Video 1.mp4"` before `package-cpanel.sh` to bake it directly into the app zip.
+- **With Option B (local Linux):** place the prepared MP4 at `web/public/videos/hero/client-hero-original.mp4` before running `package-cpanel.sh`.
 
 ## 2. One-time cPanel setup
 
 1. **Domains → Create A New Domain:** `staging.leapliving.ae`. Untick *Share document root*; document root `/home/leaplivi/staging.leapliving.ae`, outside `public_html`.
 2. **SSL/TLS Status → Run AutoSSL** for `staging.leapliving.ae`.
-3. **Directory Privacy:** password-protect `/home/leaplivi/staging.leapliving.ae` so staging is not public. Without `SITE_INDEXING=true`, every response also sends `X-Robots-Tag: noindex, nofollow` and `robots.txt` disallows everything.
+3. **Directory Privacy (optional for staging):** if you password-protect `/home/leaplivi/staging.leapliving.ae`, two extra `.htaccess` lines are required on CloudLinux Passenger so browsers get a real `401` login prompt (instead of Next.js 404 on `/401.shtml`) and AutoSSL HTTP DCV (`/.well-known/`) stays reachable:
+   - Prepend `ErrorDocument 401 default` to `/home/leaplivi/staging.leapliving.ae/.htaccess`.
+   - Create `/home/leaplivi/staging.leapliving.ae/.well-known/.htaccess` containing:
+     ```apache
+     Require all granted
+     PassengerEnabled off
+     ```
+   Keep `.well-known/.htaccess` even if Directory Privacy is turned off, so Let's Encrypt auto-renewal every 90 days is never intercepted by Passenger.
+   Without `SITE_INDEXING=true`, every response also sends `X-Robots-Tag: noindex, nofollow` and `robots.txt` disallows everything.
 4. **Setup Node.js App → Create:**
 
 | Field | Value |

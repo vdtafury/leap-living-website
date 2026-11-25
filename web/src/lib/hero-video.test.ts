@@ -34,14 +34,14 @@ describe('shouldPlayHeroVideo', () => {
     expect(shouldPlayHeroVideo({ ...site, effectiveType: '4g', downlink: 10 })).toBe(true)
   })
 
-  it(`needs Chrome's top speed bucket (${HERO_MIN_DOWNLINK_MBPS} Mbps): the file streams at ~16 Mbps`, () => {
-    expect(HERO_MIN_DOWNLINK_MBPS).toBe(10)
-    // Chrome's ±10% privacy noise on a capped 10: still counts as a fast link.
-    expect(shouldPlayHeroVideo({ ...site, downlink: 9.9 })).toBe(true)
-    expect(shouldPlayHeroVideo({ ...site, downlink: 9.1 })).toBe(true)
-    expect(shouldPlayHeroVideo({ ...site, downlink: 8.5 })).toBe(false)
-    expect(shouldPlayHeroVideo({ ...site, downlink: 5 })).toBe(false)
+  it(`needs at least ${HERO_MIN_DOWNLINK_MBPS} Mbps (with ±10% Chrome noise) for smooth 1080p playback`, () => {
+    expect(HERO_MIN_DOWNLINK_MBPS).toBe(3)
+    // Chrome's ±10% privacy noise around 3 Mbps: >= 2.7 still counts as fast enough.
     expect(shouldPlayHeroVideo({ ...site, downlink: 10 })).toBe(true)
+    expect(shouldPlayHeroVideo({ ...site, downlink: 3 })).toBe(true)
+    expect(shouldPlayHeroVideo({ ...site, downlink: 2.8 })).toBe(true)
+    expect(shouldPlayHeroVideo({ ...site, downlink: 2.5 })).toBe(false)
+    expect(shouldPlayHeroVideo({ ...site, downlink: 1.5 })).toBe(false)
   })
 
   it('always plays on a development machine or preview host, whatever the speed estimate', () => {

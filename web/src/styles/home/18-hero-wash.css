@@ -1,14 +1,14 @@
 /* ==========================================================================
-   LIGHT HERO WASH: legibility on the lighter brand-teal overlay
+   HERO TYPOGRAPHY CONTRAST: neutral shadows over natural-colour hero video (D-53)
    ========================================================================== */
 .ll-hero-title,
 .ll-hero .ll-eyebrow {
-  text-shadow: 0 2px 20px rgba(7, 43, 45, 0.42);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.48);
 }
 
 .ll-hero-title span {
   color: #4AD2D6;
-  text-shadow: 0 2px 24px rgba(7, 35, 37, 0.6);
+  text-shadow: 0 2px 22px rgba(0, 0, 0, 0.58);
 }
 
 .ll-hero .ll-eyebrow {

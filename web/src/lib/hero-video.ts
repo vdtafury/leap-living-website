@@ -1,17 +1,18 @@
 /**
- * The homepage hero plays ONE video: the client's original file, exactly as delivered
- * (~150 MB, 1080p60, owner decision 2026-11-17: no lighter re-encoded versions).
+ * The homepage hero plays ONE video: the client's hero reel, full length (no trimming),
+ * web-encoded at crisp 1080p (~20-28 MB, ~2.5-3.5 Mbps, faststart, D-53) so it streams
+ * smoothly from cPanel without buffering.
  *
- * It is git-ignored (over GitHub's 100 MB limit) and placed on the build machine with
- * scripts/prepare-hero-original.sh. The page checks at build time whether it exists.
+ * It is git-ignored and placed on the server in `leapliving-data/` (symlinked to
+ * `public/videos/hero/client-hero-original.mp4` and served directly by Apache).
  */
 export const HERO_VIDEO_SRC = '/videos/hero/client-hero-original.mp4'
 
 /**
- * The original streams at ~16 Mbps. Below 10 Mbps it would keep stopping to buffer, so the
- * still frame 0 poster stays instead.
+ * The web-encoded 1080p hero streams at ~2.5-3.5 Mbps (D-53). Below ~3 Mbps it would keep
+ * stopping to buffer, so the still frame 0 poster stays instead.
  */
-export const HERO_MIN_DOWNLINK_MBPS = 10
+export const HERO_MIN_DOWNLINK_MBPS = 3
 
 /**
  * Chrome caps `downlink` at 10 and, for privacy, multiplies it by a random ±10% factor per

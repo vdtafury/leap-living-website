@@ -3,7 +3,7 @@
 .ll-hero {
   position: relative;
   z-index: 5; /* lets search popovers float above the next section */
-  background-color: #143638;
+  background-color: #0e1112;
   display: flex;
   align-items: stretch;
   /* Full first screen: only the video and the search show above the fold; the developer
@@ -52,22 +52,21 @@
   position: absolute;
   inset: 0;
   z-index: 3;
+  /* Neutral, colourless scrim (D-53: teal wash removed so the video plays in natural colours
+     while keeping the transparent header and white headline legible over bright sky/water). */
   background:
-    /* Luxury brand-teal directional scrim for crystal-clear typography on bright water/sky */
     linear-gradient(
       95deg,
-      rgba(9, 44, 46, 0.78) 0%,
-      rgba(14, 58, 61, 0.55) 38%,
-      rgba(59, 158, 161, 0.15) 68%,
-      rgba(59, 158, 161, 0.04) 100%
+      rgba(0, 0, 0, 0.36) 0%,
+      rgba(0, 0, 0, 0.14) 36%,
+      rgba(0, 0, 0, 0) 62%
     ),
-    /* Soft shade under the header and behind the search for legibility */
     linear-gradient(
       180deg,
-      rgba(9, 44, 46, 0.42) 0%,
-      rgba(9, 44, 46, 0.05) 24%,
-      rgba(9, 44, 46, 0) 60%,
-      rgba(9, 44, 46, 0.32) 100%
+      rgba(0, 0, 0, 0.34) 0%,
+      rgba(0, 0, 0, 0) 22%,
+      rgba(0, 0, 0, 0) 72%,
+      rgba(0, 0, 0, 0.24) 100%
     );
   pointer-events: none;
 }
