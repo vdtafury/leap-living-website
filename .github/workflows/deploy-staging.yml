@@ -88,7 +88,15 @@ jobs:
           KNOWN_HOSTS=$(mktemp)
           trap 'rm -f "$KEY_FILE" "$KNOWN_HOSTS"' EXIT
           chmod 600 "$KEY_FILE"
-          printf '%s\n' "$CPANEL_SSH_KEY" > "$KEY_FILE"
+          if printf '%s' "$CPANEL_SSH_KEY" | grep -q 'BEGIN .*PRIVATE KEY'; then
+            printf '%s\n' "$CPANEL_SSH_KEY" | tr -d '\r' > "$KEY_FILE"
+          else
+            printf '%s' "$CPANEL_SSH_KEY" | tr -d ' \t\r\n' | base64 -d > "$KEY_FILE"
+          fi
+          ssh-keygen -y -f "$KEY_FILE" >/dev/null || {
+            echo "::error::CPANEL_SSH_KEY could not be parsed. Paste the single-line output of: base64 -w 0 ~/.ssh/github_staging"
+            exit 1
+          }
           ssh-keyscan -p "$PORT" -H "$CPANEL_HOST" > "$KNOWN_HOSTS" 2>/dev/null
 
           SSH_OPTS="-i $KEY_FILE -p $PORT -o UserKnownHostsFile=$KNOWN_HOSTS -o StrictHostKeyChecking=yes -o BatchMode=yes"
