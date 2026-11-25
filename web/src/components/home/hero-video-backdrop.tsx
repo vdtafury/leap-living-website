@@ -3,7 +3,12 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { preload } from 'react-dom'
 import { ResponsiveImg, getPortraitImage, getResponsiveImage } from '@/components/ui/responsive-img'
-import { HERO_MOBILE_QUERY, HERO_VIDEO_SRC, shouldPlayHeroVideo } from '@/lib/hero-video'
+import {
+  HERO_MOBILE_QUERY,
+  HERO_VIDEO_HEVC_SRC,
+  HERO_VIDEO_SRC,
+  shouldPlayHeroVideo,
+} from '@/lib/hero-video'
 
 /**
  * Official client hero reel (Dubai & Palm Jumeirah aerials, 74 s loop), played from the client's
@@ -51,7 +56,13 @@ function subscribeToReducedMotion(onChange: () => void) {
 const getReducedMotion = () => window.matchMedia(REDUCED_MOTION_QUERY).matches
 const getReducedMotionOnServer = () => false
 
-export function HeroVideoBackdrop({ hasVideo = false }: { hasVideo?: boolean }) {
+export function HeroVideoBackdrop({
+  hasVideo = false,
+  hasHevcVideo = false,
+}: {
+  hasVideo?: boolean
+  hasHevcVideo?: boolean
+}) {
   const [videoReady, setVideoReady] = useState(false)
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const backdropRef = useRef<HTMLDivElement | null>(null)
@@ -126,17 +137,12 @@ export function HeroVideoBackdrop({ hasVideo = false }: { hasVideo?: boolean }) 
       v.classList.add('is-visible')
       setVideoReady(true)
     }
-    // Safety fallback: if frame callback is delayed, reveal after playback begins
-    const safetyTimer = setTimeout(() => {
-      if (!cancelled && v.currentTime > 0) reveal()
-    }, 1200)
-
-    // Shown only once the browser has painted a frame — never on `canplay`, which fires before
-    // anything is drawn. If decoding started late and the first painted frame is already past
-    // frame 0, rewind (still hidden) so the first visible frame is exactly the poster.
+    // Shown only once the browser has painted frame 0 — never on `canplay`, which fires before
+    // anything is drawn. If decoding started late (more than ~1 frame past 0), rewind while still
+    // hidden so the first visible video frame is identical to the frame-0 poster (zero jump).
     const onFirstFrame = (mediaTime: number) => {
       if (cancelled) return
-      if (mediaTime < 0.2) return reveal()
+      if (mediaTime < 0.04) return reveal()
       v.pause()
       v.addEventListener(
         'seeked',
@@ -150,6 +156,14 @@ export function HeroVideoBackdrop({ hasVideo = false }: { hasVideo?: boolean }) 
       )
       v.currentTime = 0
     }
+
+    // Safety fallback if requestVideoFrameCallback is delayed: still route through onFirstFrame
+    // so it rewinds to frame 0 before revealing instead of jumping mid-shot.
+    const safetyTimer = setTimeout(() => {
+      if (!cancelled && !v.classList.contains('is-visible') && v.currentTime > 0) {
+        onFirstFrame(v.currentTime)
+      }
+    }, 1200)
 
     // requestVideoFrameCallback: Chrome/Edge, Safari 15.4+, Firefox 132+.
     if (typeof v.requestVideoFrameCallback === 'function') {
@@ -181,11 +195,10 @@ export function HeroVideoBackdrop({ hasVideo = false }: { hasVideo?: boolean }) 
         />
       </picture>
 
-      {/* Official client hero video reel: loops continuously */}
+      {/* Official client hero video reel: HEVC first (Safari/Chrome/Edge), H.264 fallback */}
       {!reducedMotion && playVideo && (
         <video
           ref={videoRef}
-          src={HERO_VIDEO_SRC}
           autoPlay
           muted
           loop
@@ -194,7 +207,10 @@ export function HeroVideoBackdrop({ hasVideo = false }: { hasVideo?: boolean }) 
           // File missing on this server, or not playable: the poster (same picture) stays.
           onError={() => setPlayVideo(false)}
           className={`ll-hero-video ${videoReady ? 'is-visible' : ''}`}
-        />
+        >
+          {hasHevcVideo && <source src={HERO_VIDEO_HEVC_SRC} type='video/mp4; codecs="hvc1"' />}
+          <source src={HERO_VIDEO_SRC} type="video/mp4" />
+        </video>
       )}
 
       <div className="ll-hero-scrim" />

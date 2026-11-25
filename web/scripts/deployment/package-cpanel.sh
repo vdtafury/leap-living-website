@@ -68,6 +68,9 @@ fi
 
 rm -rf "$OUT" # also keeps the type-check from seeing an old bundle
 
+log "Refreshing responsive WebP images from public/images"
+npm run images:optimize
+
 log "Building (Next.js standalone) for ${SITE_URL:-https://leapliving.ae}, indexing: ${SITE_INDEXING:-off}"
 NEXT_STANDALONE=1 npm run build
 

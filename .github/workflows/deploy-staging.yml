@@ -116,12 +116,14 @@ jobs:
             exit 1
           }
 
-          # Re-link persistent hero video stored outside releases (if present)
-          if [ -f ~/leapliving-data/client-hero-original.mp4 ]; then
-            mkdir -p ~/leapliving-app-next/leapliving-app/app/public/videos/hero
-            ln -sf ~/leapliving-data/client-hero-original.mp4 \
-              ~/leapliving-app-next/leapliving-app/app/public/videos/hero/client-hero-original.mp4
-          fi
+          # Re-link persistent hero videos stored outside releases (H.264 + optional HEVC)
+          mkdir -p ~/leapliving-app-next/leapliving-app/app/public/videos/hero
+          for v in client-hero-original.mp4 client-hero-hevc.mp4; do
+            if [ -f ~/leapliving-data/"$v" ]; then
+              ln -sf ~/leapliving-data/"$v" \
+                ~/leapliving-app-next/leapliving-app/app/public/videos/hero/"$v"
+            fi
+          done
 
           # Swap ONLY leapliving-app/app so CloudLinux's virtualenv symlink in leapliving-app/ stays intact
           rm -rf ~/leapliving-app/app-prev

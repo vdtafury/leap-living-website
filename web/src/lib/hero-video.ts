@@ -7,6 +7,8 @@
  * `public/videos/hero/client-hero-original.mp4` and served directly by Apache).
  */
 export const HERO_VIDEO_SRC = '/videos/hero/client-hero-original.mp4'
+/** Higher-efficiency 1080p30 HEVC (hvc1) track served first to Safari / Chrome / Edge. */
+export const HERO_VIDEO_HEVC_SRC = '/videos/hero/client-hero-hevc.mp4'
 
 /**
  * The web-encoded 1080p hero streams at ~2.5-3.5 Mbps (D-53). Below ~3 Mbps it would keep
