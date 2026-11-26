@@ -62,7 +62,9 @@ export function ResponsiveImg({
       alt={alt}
       loading={priority ? 'eager' : 'lazy'}
       decoding={priority ? 'sync' : 'async'}
-      fetchPriority={priority ? 'high' : undefined}
+      // Do not auto-emit fetchPriority="high" here: in React 19 / Next.js 16 Server Components
+      // it causes prefetched routes (/sell, /about) to inject unused 1600w <link rel="preload">
+      // tags into the current page's <head>. LCP preloads use ReactDOM.preload with imageSrcSet.
       {...rest}
     />
   )
