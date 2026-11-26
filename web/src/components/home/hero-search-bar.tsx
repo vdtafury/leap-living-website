@@ -18,6 +18,7 @@ const TYPE_OPTIONS: HeroSelectOption[] = [
   { value: 'Penthouse', label: 'Penthouse' },
   { value: 'Apartment', label: 'Apartment' },
   { value: 'Duplex', label: 'Duplex' },
+  { value: 'Commercial', label: 'Commercial' },
 ]
 
 const BED_OPTIONS: HeroSelectOption[] = [

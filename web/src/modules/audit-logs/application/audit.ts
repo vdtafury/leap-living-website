@@ -35,13 +35,15 @@ export async function listAudit(
   { page = 1, pageSize = 50 }: { page?: number; pageSize?: number } = {},
 ) {
   authorize(actor, 'audit.view')
+  const safePage = Math.min(10_000, Math.max(1, Number.isFinite(page) ? Math.floor(page) : 1))
+  const safeSize = Math.min(200, Math.max(1, Number.isFinite(pageSize) ? Math.floor(pageSize) : 50))
   const [rows, total] = await Promise.all([
     prisma.auditLog.findMany({
       orderBy: { createdAt: 'desc' },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
+      skip: (safePage - 1) * safeSize,
+      take: safeSize,
     }),
     prisma.auditLog.count(),
   ])
-  return { rows, total, page, pageSize }
+  return { rows, total, page: safePage, pageSize: safeSize }
 }

@@ -15,12 +15,12 @@ export function ProjectListingBrowser({
   initialCommunity = 'ALL',
   initialType = 'ALL',
 }: ProjectListingBrowserProps) {
-  const [community, setCommunity] = useState(initialCommunity)
-  const [status, setStatus] = useState(initialType)
-  const [developer, setDeveloper] = useState('ALL')
-
   const communities = useMemo(
     () => Array.from(new Set(projects.map((p) => p.community))).sort(),
+    [projects],
+  )
+  const statuses = useMemo(
+    () => Array.from(new Set(projects.map((p) => p.status))).sort(),
     [projects],
   )
   const developers = useMemo(
@@ -28,9 +28,15 @@ export function ProjectListingBrowser({
     [projects],
   )
 
+  const [community, setCommunity] = useState(() =>
+    communities.includes(initialCommunity) ? initialCommunity : 'ALL',
+  )
+  const [status, setStatus] = useState(() => (statuses.includes(initialType) ? initialType : 'ALL'))
+  const [developer, setDeveloper] = useState('ALL')
+
   const filtered = useMemo(() => {
     return projects.filter((project) => {
-      if (community !== 'ALL' && !project.community.includes(community)) return false
+      if (community !== 'ALL' && project.community !== community) return false
       if (status !== 'ALL' && project.status !== status) return false
       if (developer !== 'ALL' && project.developer !== developer) return false
       return true
@@ -79,9 +85,11 @@ export function ProjectListingBrowser({
               className="ll-select"
             >
               <option value="ALL">All Stages</option>
-              <option value="Off-Plan">Off-Plan</option>
-              <option value="Under Construction">Under Construction</option>
-              <option value="Handover 2026">Handover 2026</option>
+              {statuses.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
             </select>
           </div>
         </div>

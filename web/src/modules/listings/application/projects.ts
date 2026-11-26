@@ -92,52 +92,77 @@ function toData(input: ReturnType<typeof projectInputSchema.parse>) {
   }
 }
 
+const VALID_PUBLICATION_STATUSES = new Set<string>(['DRAFT', 'PUBLISHED', 'ARCHIVED'])
+const isPrismaCode = (error: unknown, code: string) =>
+  Boolean(error && typeof error === 'object' && 'code' in error && error.code === code)
+
 export async function createProject(actor: Actor, raw: unknown): Promise<Result<{ id: string }>> {
   authorize(actor, 'project.edit')
+  await ensureReady()
   const parsed = projectInputSchema.safeParse(raw)
   if (!parsed.success) return { ok: false, error: parsed.error.issues[0].message }
   const data = toData(parsed.data)
   if (!data.slug) return { ok: false, error: 'Enter a URL slug.' }
   const clash = await uniqueProblem(data.slug, data.referenceNumber)
   if (clash) return { ok: false, error: clash }
-  const row = await prisma.$transaction(async (tx) => {
-    const created = await tx.project.create({
-      data: { ...data, publicationStatus: 'DRAFT', createdById: actor.id, updatedById: actor.id },
+  try {
+    const row = await prisma.$transaction(async (tx) => {
+      const created = await tx.project.create({
+        data: { ...data, publicationStatus: 'DRAFT', createdById: actor.id, updatedById: actor.id },
+      })
+      await recordAudit(
+        {
+          actor,
+          action: 'project.created',
+          targetType: 'Project',
+          targetId: created.id,
+          metadata: { ref: created.referenceNumber },
+        },
+        tx,
+      )
+      return created
     })
-    await recordAudit(
-      {
-        actor,
-        action: 'project.created',
-        targetType: 'Project',
-        targetId: created.id,
-        metadata: { ref: created.referenceNumber },
-      },
-      tx,
-    )
-    return created
-  })
-  return { ok: true, id: row.id }
+    return { ok: true, id: row.id }
+  } catch (error) {
+    if (isPrismaCode(error, 'P2002')) {
+      return { ok: false, error: 'This URL slug or reference number is already taken.' }
+    }
+    throw error
+  }
 }
 
 export async function updateProject(actor: Actor, id: string, raw: unknown): Promise<Result> {
   authorize(actor, 'project.edit')
-  const existing = await prisma.project.findUnique({ where: { id } })
-  if (!existing || existing.deletedAt) return { ok: false, error: 'Project not found.' }
+  await ensureReady()
   const parsed = projectInputSchema.safeParse(raw)
   if (!parsed.success) return { ok: false, error: parsed.error.issues[0].message }
   const data = toData(parsed.data)
+  if (!data.slug) return { ok: false, error: 'Enter a URL slug.' }
   const clash = await uniqueProblem(data.slug, data.referenceNumber, id)
   if (clash) return { ok: false, error: clash }
-  if (existing.publicationStatus === 'PUBLISHED') {
-    const problems = projectPublishProblems(data)
-    if (problems.length)
-      return { ok: false, error: `A published project needs: ${problems.join(' ')}` }
+  try {
+    return await prisma.$transaction(async (tx) => {
+      const existing = await tx.project.findUnique({ where: { id } })
+      if (!existing || existing.deletedAt) return { ok: false as const, error: 'Project not found.' }
+      if (existing.publicationStatus === 'PUBLISHED') {
+        const problems = projectPublishProblems(data)
+        if (problems.length) {
+          return { ok: false as const, error: `A published project needs: ${problems.join(' ')}` }
+        }
+      }
+      await tx.project.update({ where: { id }, data: { ...data, updatedById: actor.id } })
+      await recordAudit(
+        { actor, action: 'project.updated', targetType: 'Project', targetId: id },
+        tx,
+      )
+      return { ok: true as const }
+    })
+  } catch (error) {
+    if (isPrismaCode(error, 'P2002')) {
+      return { ok: false, error: 'This URL slug or reference number is already taken.' }
+    }
+    throw error
   }
-  await prisma.$transaction(async (tx) => {
-    await tx.project.update({ where: { id }, data: { ...data, updatedById: actor.id } })
-    await recordAudit({ actor, action: 'project.updated', targetType: 'Project', targetId: id }, tx)
-  })
-  return { ok: true }
 }
 
 export async function setProjectPublication(
@@ -146,13 +171,15 @@ export async function setProjectPublication(
   status: PublicationStatus,
 ): Promise<Result> {
   authorize(actor, 'project.publish')
-  const existing = await prisma.project.findUnique({ where: { id } })
-  if (!existing || existing.deletedAt) return { ok: false, error: 'Project not found.' }
-  if (status === 'PUBLISHED') {
-    const problems = projectPublishProblems(existing)
-    if (problems.length) return { ok: false, error: problems.join(' ') }
-  }
-  await prisma.$transaction(async (tx) => {
+  if (!VALID_PUBLICATION_STATUSES.has(status)) return { ok: false, error: 'Unknown status.' }
+  await ensureReady()
+  return prisma.$transaction(async (tx) => {
+    const existing = await tx.project.findUnique({ where: { id } })
+    if (!existing || existing.deletedAt) return { ok: false as const, error: 'Project not found.' }
+    if (status === 'PUBLISHED') {
+      const problems = projectPublishProblems(existing)
+      if (problems.length) return { ok: false as const, error: problems.join(' ') }
+    }
     await tx.project.update({
       where: { id },
       data: {
@@ -171,16 +198,19 @@ export async function setProjectPublication(
       },
       tx,
     )
+    return { ok: true as const }
   })
-  return { ok: true }
 }
 
 /** Soft delete: the row stays (audit, restore) but is never shown publicly. */
 export async function deleteProject(actor: Actor, id: string, restore = false): Promise<Result> {
   authorize(actor, 'project.delete')
-  const existing = await prisma.project.findUnique({ where: { id } })
-  if (!existing) return { ok: false, error: 'Project not found.' }
-  await prisma.$transaction(async (tx) => {
+  await ensureReady()
+  return prisma.$transaction(async (tx) => {
+    const existing = await tx.project.findUnique({ where: { id } })
+    if (!existing) return { ok: false as const, error: 'Project not found.' }
+    if (restore && !existing.deletedAt) return { ok: false as const, error: 'Project is already active.' }
+    if (!restore && existing.deletedAt) return { ok: false as const, error: 'Project is already deleted.' }
     await tx.project.update({
       where: { id },
       data: restore
@@ -196,6 +226,6 @@ export async function deleteProject(actor: Actor, id: string, restore = false): 
       },
       tx,
     )
+    return { ok: true as const }
   })
-  return { ok: true }
 }

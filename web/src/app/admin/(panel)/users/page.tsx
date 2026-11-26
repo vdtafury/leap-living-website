@@ -19,7 +19,7 @@ export const metadata = { title: 'Users' }
 export default async function UsersPage({ searchParams }: { searchParams: SearchParams }) {
   const actor = await requireActor('user.view')
   const query = await searchParams
-  const [users, roles] = await Promise.all([listUsers(actor), listRoles()])
+  const [users, roles] = await Promise.all([listUsers(actor), listRoles(actor)])
   const csrf = csrfToken(actor)
   const manage = can(actor, 'user.manage')
   const assignable = roles.filter((r) => canAssignRole(actor, r))
@@ -119,7 +119,9 @@ export default async function UsersPage({ searchParams }: { searchParams: Search
                               className="adm-input"
                               placeholder="New temporary password"
                               aria-label={`Temporary password for ${u.name}`}
+                              required
                               minLength={12}
+                              maxLength={128}
                               autoComplete="new-password"
                               style={{ width: 210 }}
                             />

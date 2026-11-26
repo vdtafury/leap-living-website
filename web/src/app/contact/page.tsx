@@ -15,8 +15,17 @@ export const metadata: Metadata = pageMetadata({
   path: '/contact',
 })
 
-export default async function ContactPage() {
-  const { company } = await getPublishedContent('settings')
+export default async function ContactPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ topic?: string }>
+}) {
+  const [{ company }, { topic }] = await Promise.all([
+    getPublishedContent('settings'),
+    searchParams,
+  ])
+  const formMode = topic === 'valuation' ? 'VALUATION' : 'CONSULTATION'
+  const contextTitle = topic === 'mortgage' ? 'Mortgage & Financing Advisory' : undefined
   return (
     <>
       <SiteHeader />
@@ -129,7 +138,7 @@ export default async function ContactPage() {
                   Select whether you are seeking an asset valuation or advisory consultation.
                 </p>
               </div>
-              <ConsultationForm mode="CONSULTATION" />
+              <ConsultationForm mode={formMode} contextTitle={contextTitle} />
             </div>
           </div>
         </section>

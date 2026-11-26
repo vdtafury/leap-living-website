@@ -158,6 +158,9 @@
   border-top: 1px solid var(--border-subtle);
   background-color: var(--white);
   padding: 1.25rem 0 1.5rem;
+  max-height: calc(100dvh - 82px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .ll-mobile-nav {
@@ -174,7 +177,7 @@
 }
 
 .ll-mobile-nav-link.active {
-  color: var(--brand-teal);
+  color: var(--dark-teal);
   font-weight: 600;
 }
 

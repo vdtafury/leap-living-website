@@ -23,7 +23,7 @@ export async function listCustomers(
         ],
       }
     : {}
-  const safePage = Math.max(1, Math.floor(page) || 1)
+  const safePage = Math.min(10_000, Math.max(1, Number.isFinite(page) ? Math.floor(page) : 1))
   const [rows, total] = await Promise.all([
     prisma.customer.findMany({
       where,
@@ -69,10 +69,10 @@ export async function listCustomers(
 /** Deactivating ends every session at once; the account cannot sign in until reactivated. */
 export async function setCustomerActive(actor: Actor, id: string, active: boolean) {
   authorize(actor, 'customer.manage')
-  const customer = await prisma.customer.findUnique({ where: { id }, select: { id: true } })
-  if (!customer) return { ok: false as const, error: 'Account not found.' }
-  await prisma.$transaction(async (tx) => {
-    await tx.customer.update({ where: { id }, data: { isActive: active } })
+  await ensureReady()
+  const updated = await prisma.$transaction(async (tx) => {
+    const res = await tx.customer.updateMany({ where: { id }, data: { isActive: active } })
+    if (res.count !== 1) return false
     if (!active) await tx.customerSession.deleteMany({ where: { customerId: id } })
     await recordAudit(
       {
@@ -83,6 +83,8 @@ export async function setCustomerActive(actor: Actor, id: string, active: boolea
       },
       tx,
     )
+    return true
   })
+  if (!updated) return { ok: false as const, error: 'Account not found.' }
   return { ok: true as const }
 }

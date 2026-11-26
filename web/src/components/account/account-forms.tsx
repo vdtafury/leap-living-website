@@ -50,17 +50,25 @@ function useAccountForm(action: Action) {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
     startTransition(async () => {
-      const result = await action(null, data)
-      if (result?.redirectTo) {
-        setLeaving(true)
-        // Team sign-in: if the admin sends the browser straight back here, the cookie was refused.
-        if (result.redirectTo.startsWith('/admin')) {
-          sessionStorage.setItem(TEAM_SIGNIN_CHECK_KEY, String(Date.now()))
+      try {
+        const result = await action(null, data)
+        if (result?.redirectTo) {
+          setLeaving(true)
+          // Team sign-in: if the admin sends the browser straight back here, the cookie was refused.
+          if (result.redirectTo.startsWith('/admin')) {
+            try {
+              sessionStorage.setItem(TEAM_SIGNIN_CHECK_KEY, String(Date.now()))
+            } catch {
+              // Storage disabled in restricted/sandboxed browsing contexts.
+            }
+          }
+          window.location.assign(result.redirectTo)
+          return
         }
-        window.location.assign(result.redirectTo)
-        return
+        setJsState(result)
+      } catch {
+        setJsState({ error: 'Something went wrong. Please try again.' })
       }
-      setJsState(result)
     })
   }
   return {
@@ -640,8 +648,12 @@ export function CookieBlockedNotice() {
   const blocked = useSyncExternalStore(
     noop,
     () => {
-      const at = Number(sessionStorage.getItem(TEAM_SIGNIN_CHECK_KEY) ?? 0)
-      return at > 0 && Date.now() - at < 15_000
+      try {
+        const at = Number(sessionStorage.getItem(TEAM_SIGNIN_CHECK_KEY) ?? 0)
+        return at > 0 && Date.now() - at < 15_000
+      } catch {
+        return false
+      }
     },
     () => false,
   )

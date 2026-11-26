@@ -126,19 +126,6 @@
   flex: 1;
 }
 
-@media (min-width: 1440px) {
-  .ll-card-body {
-    padding: 1.55rem 1.65rem 1.4rem;
-    gap: 0.6rem;
-  }
-  .ll-card-title {
-    font-size: 1.18rem;
-  }
-  .ll-card-price {
-    font-size: 1.42rem;
-  }
-}
-
 .ll-card-kicker {
   display: flex;
   align-items: center;
@@ -147,7 +134,7 @@
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--brand-teal);
+  color: var(--secondary-teal);
 }
 
 .ll-card-kicker-dot {
@@ -183,6 +170,19 @@
   font-weight: 700;
   color: var(--dark-teal);
   letter-spacing: -0.01em;
+}
+
+@media (min-width: 1440px) {
+  .ll-card-body {
+    padding: 1.55rem 1.65rem 1.4rem;
+    gap: 0.6rem;
+  }
+  .ll-card-title {
+    font-size: 1.18rem;
+  }
+  .ll-card-price {
+    font-size: 1.42rem;
+  }
 }
 
 .ll-card-facts {

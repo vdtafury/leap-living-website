@@ -1,3 +1,4 @@
+import { randomBytes } from 'node:crypto'
 import { hash, verify } from '@node-rs/argon2'
 
 /**
@@ -51,6 +52,9 @@ export async function verifyPassword(passwordHash: string, password: string): Pr
  */
 let dummyHash: Promise<string> | null = null
 export function timingDummyHash(): Promise<string> {
-  dummyHash ??= hashPassword(`dummy-${Math.random()}-${Date.now()}`)
+  dummyHash ??= hashPassword(`dummy-${randomBytes(16).toString('hex')}`).catch((error) => {
+    dummyHash = null
+    throw error
+  })
   return dummyHash
 }

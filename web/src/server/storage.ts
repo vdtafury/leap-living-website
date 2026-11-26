@@ -11,8 +11,9 @@ export const PUBLIC_DIR = path.join(STORAGE_ROOT, 'uploads', 'public')
  * Resolve a relative path inside a root and reject traversal outside it.
  */
 export function safeJoin(root: string, relativePath: string): string {
-  const target = path.resolve(root, relativePath)
-  if (target !== root && !target.startsWith(root + path.sep)) {
+  const base = path.resolve(root)
+  const target = path.resolve(base, relativePath)
+  if (target !== base && !target.startsWith(base + path.sep)) {
     throw new Error('Path traversal detected')
   }
   return target

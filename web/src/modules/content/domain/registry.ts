@@ -307,7 +307,8 @@ export interface DocumentTypes {
 }
 
 export const DOCUMENT_KEYS = Object.keys(DOCUMENTS) as DocumentKey[]
-export const isDocumentKey = (key: string): key is DocumentKey => key in DOCUMENTS
+export const isDocumentKey = (key: string): key is DocumentKey =>
+  Object.prototype.hasOwnProperty.call(DOCUMENTS, key)
 
 const SCHEMAS = {
   home: documentSchema(HOME_SECTIONS),

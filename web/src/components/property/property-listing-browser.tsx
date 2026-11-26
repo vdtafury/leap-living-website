@@ -21,11 +21,6 @@ export function PropertyListingBrowser({
   initialBeds = 'ALL',
   initialBudget = 'ALL',
 }: PropertyListingBrowserProps) {
-  const [community, setCommunity] = useState(initialCommunity)
-  const [propertyType, setPropertyType] = useState(initialType)
-  const [minBeds, setMinBeds] = useState(initialBeds)
-  const [budget, setBudget] = useState(initialBudget)
-
   const communities = useMemo(
     () => Array.from(new Set(items.map((item) => item.community))).sort(),
     [items],
@@ -34,6 +29,23 @@ export function PropertyListingBrowser({
   const types = useMemo(
     () => Array.from(new Set(items.map((item) => item.propertyType))).sort(),
     [items],
+  )
+
+  const validBeds = ['ALL', '3', '4', '5']
+  const validBudgets =
+    mode === 'BUY' ? ['ALL', 'UNDER_10M', '10M_15M', 'OVER_15M'] : ['ALL', 'UNDER_1M', 'OVER_1M']
+
+  const [community, setCommunity] = useState(() =>
+    communities.includes(initialCommunity) ? initialCommunity : 'ALL',
+  )
+  const [propertyType, setPropertyType] = useState(() =>
+    types.includes(initialType) ? initialType : 'ALL',
+  )
+  const [minBeds, setMinBeds] = useState(() =>
+    validBeds.includes(initialBeds) ? initialBeds : 'ALL',
+  )
+  const [budget, setBudget] = useState(() =>
+    validBudgets.includes(initialBudget) ? initialBudget : 'ALL',
   )
 
   const filtered = useMemo(() => {

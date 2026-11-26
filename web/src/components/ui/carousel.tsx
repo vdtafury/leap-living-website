@@ -200,8 +200,10 @@ export function Carousel({
     if (track.hasPointerCapture(e.pointerId)) track.releasePointerCapture(e.pointerId)
     // Swallow the click that follows this drag (and only that one)
     suppressClick.current = true
+    track.dataset.suppressClick = 'true'
     window.setTimeout(() => {
       suppressClick.current = false
+      delete track.dataset.suppressClick
     }, 0)
     setDragging(false)
     // Settle on the nearest card, in the direction of the drag

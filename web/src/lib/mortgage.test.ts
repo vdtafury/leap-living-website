@@ -49,8 +49,10 @@ describe('monthlyPayment', () => {
     expect(monthlyPayment({ ...base, price: Number.NaN })).toBeNull()
     expect(monthlyPayment({ ...base, price: 0 })).toBeNull()
     expect(monthlyPayment({ ...base, years: 0 })).toBeNull()
+    expect(monthlyPayment({ ...base, years: 0.01 })).toBeNull()
     expect(monthlyPayment({ ...base, downPaymentPercent: 120 })).toBeNull()
     expect(monthlyPayment({ ...base, interestRatePercent: -1 })).toBeNull()
+    expect(monthlyPayment({ ...base, interestRatePercent: 100_000 })).toBeNull()
   })
 })
 

@@ -19,7 +19,9 @@ type Env = Record<string, string | undefined>
 export async function seedStarterContent(env: Env = process.env): Promise<boolean> {
   if (env.SEED_STARTER_CONTENT === 'false') return false
   if (await prisma.auditLog.findFirst({ where: { action: 'system.seeded' } })) return false
-  await prisma.$transaction(async (tx) => {
+  return prisma.$transaction(async (tx) => {
+    // Re-check inside the transaction so concurrent cold starts never double-seed.
+    if (await tx.auditLog.findFirst({ where: { action: 'system.seeded' } })) return false
     const listings = await seedListings(tx)
     const developers = await seedDevelopers(tx)
     const documents = await seedContent(tx)
@@ -27,8 +29,8 @@ export async function seedStarterContent(env: Env = process.env): Promise<boolea
       { action: 'system.seeded', metadata: { ...listings, developers, documents } },
       tx,
     )
+    return true
   })
-  return true
 }
 
 let ready: Promise<void> | null = null

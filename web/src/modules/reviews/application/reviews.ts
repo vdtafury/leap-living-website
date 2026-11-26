@@ -94,7 +94,12 @@ export async function submitReview(
   }
   const settings = await getPublishedContent('settings')
   const to = notificationRecipients() ?? settings.company.email
-  await prisma.$transaction(async (tx) => {
+  const saved = await prisma.$transaction(async (tx) => {
+    const account = await tx.customer.findUnique({
+      where: { id: author.id },
+      select: { isActive: true },
+    })
+    if (!account?.isActive) return false
     const existing = await tx.review.findUnique({
       where: { customerId: author.id },
       select: { id: true },
@@ -128,7 +133,9 @@ export async function submitReview(
       },
       tx,
     )
+    return true
   })
+  if (!saved) return { ok: false, error: 'Your account is not active.' }
   processOutbox().catch((error) => console.error('[outbox] send after review failed', error))
   return { ok: true, status: 'PENDING' }
 }
@@ -244,12 +251,13 @@ export async function moderateReview(
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   authorize(actor, 'review.moderate')
   if (!['approve', 'reject', 'delete'].includes(op)) return { ok: false, error: 'Unknown action.' }
-  const review = await prisma.review.findUnique({
-    where: { id },
-    select: { id: true, rating: true },
-  })
-  if (!review) return { ok: false, error: 'Review not found. It may have been deleted.' }
-  await prisma.$transaction(async (tx) => {
+  await ensureReady()
+  const ok = await prisma.$transaction(async (tx) => {
+    const review = await tx.review.findUnique({
+      where: { id },
+      select: { id: true, rating: true },
+    })
+    if (!review) return false
     if (op === 'delete') {
       await tx.review.delete({ where: { id } })
     } else {
@@ -272,7 +280,9 @@ export async function moderateReview(
       },
       tx,
     )
+    return true
   })
+  if (!ok) return { ok: false, error: 'Review not found. It may have been deleted.' }
   return { ok: true }
 }
 

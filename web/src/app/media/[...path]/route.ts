@@ -28,7 +28,8 @@ export async function GET(
     return NextResponse.json({ ok: false, error: 'invalid file name' }, { status: 404 })
   }
 
-  const extension = filename.toLowerCase().split('.').pop() ?? ''
+  const dot = filename.lastIndexOf('.')
+  const extension = dot > 0 ? filename.slice(dot + 1).toLowerCase() : ''
   const contentType = EXTENSION_TO_TYPE[extension]
 
   if (!contentType || !isAllowedImageType(contentType)) {

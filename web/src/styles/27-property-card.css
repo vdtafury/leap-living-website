@@ -38,7 +38,7 @@
   font-size: 0.66rem;
   font-weight: 600;
   letter-spacing: 0.08em;
-  color: #7c8785;
+  color: var(--body-text);
   font-variant-numeric: tabular-nums;
 }
 

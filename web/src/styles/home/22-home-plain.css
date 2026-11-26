@@ -55,7 +55,7 @@
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--secondary-teal);
+  color: var(--dark-teal);
 }
 
 .ll-advice-icon {
@@ -131,7 +131,7 @@
 
 /* ---------- Hero: the whole first screen (see 05-home-hero.css, D-52); the developer
    strip starts below the fold. Capped for very tall screens. */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 521px) {
   .ll-hero {
     min-height: clamp(600px, 100svh, 1200px);
   }

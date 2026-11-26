@@ -121,7 +121,7 @@ export async function customerFromSessionToken(
   const customer = await prisma.customer.findUnique({ where: { id: session.customerId } })
   if (!customer || !customer.isActive) return null
   if (shouldTouch(session.lastSeenAt)) {
-    await prisma.customerSession.update({ where: { id }, data: { lastSeenAt: new Date() } })
+    await prisma.customerSession.updateMany({ where: { id }, data: { lastSeenAt: new Date() } })
   }
   return {
     id: customer.id,
@@ -257,7 +257,8 @@ export async function signUp(input: SignUpInput, info: RequestInfo): Promise<Aut
     })
   } catch (error) {
     // Two sign-ups with the same email at the same moment: the unique index decides.
-    if (String(error).includes('Unique constraint')) {
+    const code = error && typeof error === 'object' && 'code' in error ? error.code : null
+    if (code === 'P2002' || String(error).includes('Unique constraint')) {
       return { ok: false, error: 'An account with this email already exists. Sign in instead.' }
     }
     throw error
@@ -302,14 +303,20 @@ export async function signIn(
 
   if (!(await verifyPassword(customer.passwordHash, password))) {
     signInsPerIp.hit(info.ipKey)
-    const failed = customer.failedLogins + 1
-    const lock = failed >= MAX_FAILED_SIGNINS
-    await prisma.customer.update({
-      where: { id: customer.id },
-      data: {
-        failedLogins: lock ? 0 : failed,
-        lockedUntil: lock ? new Date(now + SIGNIN_LOCK_MS) : customer.lockedUntil,
-      },
+    const lock = await prisma.$transaction(async (tx) => {
+      const updated = await tx.customer.update({
+        where: { id: customer.id },
+        data: { failedLogins: { increment: 1 } },
+        select: { failedLogins: true },
+      })
+      if (updated.failedLogins >= MAX_FAILED_SIGNINS) {
+        await tx.customer.update({
+          where: { id: customer.id },
+          data: { failedLogins: 0, lockedUntil: new Date(now + SIGNIN_LOCK_MS) },
+        })
+        return true
+      }
+      return false
     })
     await audit(lock ? 'account.locked' : 'account.login_failed', customer.id, info.ipHash)
     return lock ? locked : invalid
@@ -337,6 +344,7 @@ export async function updateProfile(
   actor: CustomerActor,
   input: ProfileInput,
 ): Promise<{ ok: true } | { ok: false; error: string; fields?: Record<string, string> }> {
+  await ensureReady()
   const parsed = profileSchema.safeParse(input)
   if (!parsed.success) {
     return {
@@ -345,7 +353,11 @@ export async function updateProfile(
       fields: firstIssues(parsed.error.issues),
     }
   }
-  await prisma.customer.update({ where: { id: actor.id }, data: parsed.data })
+  const updated = await prisma.customer.updateMany({
+    where: { id: actor.id, isActive: true },
+    data: parsed.data,
+  })
+  if (updated.count !== 1) return { ok: false, error: 'Account not found.' }
   await audit('account.profile_updated', actor.id, null)
   return { ok: true }
 }
@@ -356,7 +368,9 @@ export async function changePassword(
   input: { current: string; next: string },
   info: RequestInfo,
 ): Promise<{ ok: true; token: string } | { ok: false; error: string }> {
-  const customer = await prisma.customer.findUniqueOrThrow({ where: { id: actor.id } })
+  await ensureReady()
+  const customer = await prisma.customer.findUnique({ where: { id: actor.id } })
+  if (!customer || !customer.isActive) return { ok: false, error: 'Account not found.' }
   if (!(await verifyPassword(customer.passwordHash, input.current.slice(0, 256)))) {
     await audit('account.password_change_failed', actor.id, info.ipHash)
     return { ok: false, error: 'The current password is incorrect.' }
@@ -379,6 +393,7 @@ export async function changePassword(
 export async function resendVerification(
   actor: CustomerActor,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
+  await ensureReady()
   if (actor.emailVerified) return { ok: false, error: 'Your email is already confirmed.' }
   if ((await recentLinks(actor.id, 'VERIFY_EMAIL')) >= LINK_EMAILS_PER_HOUR) {
     return { ok: false, error: 'We sent several links already. Try again in an hour.' }
@@ -397,13 +412,23 @@ export async function verifyEmail(
   const row = await findToken(token, 'VERIFY_EMAIL')
   if (!row) return { ok: false, error: 'This link is invalid, used or expired.' }
   const now = new Date()
-  await prisma.$transaction([
-    prisma.customerToken.updateMany({
+  const verified = await prisma.$transaction(async (tx) => {
+    const claim = await tx.customerToken.updateMany({
+      where: { id: row.id, usedAt: null, expiresAt: { gt: now } },
+      data: { usedAt: now },
+    })
+    if (claim.count !== 1) return false
+    await tx.customerToken.updateMany({
       where: { customerId: row.customerId, purpose: 'VERIFY_EMAIL', usedAt: null },
       data: { usedAt: now },
-    }),
-    prisma.customer.update({ where: { id: row.customerId }, data: { emailVerifiedAt: now } }),
-  ])
+    })
+    const updated = await tx.customer.updateMany({
+      where: { id: row.customerId, isActive: true },
+      data: { emailVerifiedAt: now },
+    })
+    return updated.count === 1
+  })
+  if (!verified) return { ok: false, error: 'This link is invalid, used or expired.' }
   await audit('account.email_verified', row.customerId, null)
   return { ok: true }
 }
@@ -433,7 +458,13 @@ export async function requestPasswordReset(email: unknown, info: RequestInfo): P
 /** Whether a reset link can still be used (the page shows the form only then). */
 export async function resetTokenUsable(token: unknown): Promise<boolean> {
   await ensureReady()
-  return (await findToken(token, 'RESET_PASSWORD')) !== null
+  const row = await findToken(token, 'RESET_PASSWORD')
+  if (!row) return false
+  const customer = await prisma.customer.findUnique({
+    where: { id: row.customerId },
+    select: { isActive: true },
+  })
+  return Boolean(customer?.isActive)
 }
 
 /**
@@ -458,7 +489,7 @@ export async function resetPassword(
   const claimed = await prisma.$transaction(async (tx) => {
     // Conditional claim: two tabs submitting the same link cannot both succeed.
     const claim = await tx.customerToken.updateMany({
-      where: { id: row.id, usedAt: null },
+      where: { id: row.id, usedAt: null, expiresAt: { gt: now } },
       data: { usedAt: now },
     })
     if (claim.count !== 1) return false
@@ -466,8 +497,8 @@ export async function resetPassword(
       where: { customerId: customer.id, purpose: 'RESET_PASSWORD', usedAt: null },
       data: { usedAt: now },
     })
-    await tx.customer.update({
-      where: { id: customer.id },
+    const updated = await tx.customer.updateMany({
+      where: { id: customer.id, isActive: true },
       data: {
         passwordHash,
         failedLogins: 0,
@@ -476,10 +507,11 @@ export async function resetPassword(
         emailVerifiedAt: customer.emailVerifiedAt ?? now,
       },
     })
+    if (updated.count !== 1) return false
     await tx.customerSession.deleteMany({ where: { customerId: customer.id } })
     return true
   })
-  if (!claimed) return { ok: false, error: 'This link was already used. Ask for a new one.' }
+  if (!claimed) return { ok: false, error: 'This link was already used or expired. Ask for a new one.' }
   await audit('account.password_reset', customer.id, info.ipHash)
   return { ok: true, token: await createSession(customer.id, info), customerId: customer.id }
 }
@@ -495,18 +527,21 @@ export async function deleteAccount(
   password: string,
   info: RequestInfo,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
-  const customer = await prisma.customer.findUniqueOrThrow({ where: { id: actor.id } })
+  await ensureReady()
+  const customer = await prisma.customer.findUnique({ where: { id: actor.id } })
+  if (!customer) return { ok: false, error: 'Account not found.' }
   if (!(await verifyPassword(customer.passwordHash, password.slice(0, 256)))) {
     return { ok: false, error: 'The password is incorrect. Nothing was deleted.' }
   }
-  await prisma.$transaction(async (tx) => {
+  const deleted = await prisma.$transaction(async (tx) => {
     await tx.favorite.deleteMany({ where: { customerId: actor.id } })
     await tx.customerToken.deleteMany({ where: { customerId: actor.id } })
     await tx.customerSession.deleteMany({ where: { customerId: actor.id } })
     await unlinkCustomerInquiries(actor.id, tx)
     // Their review (published or not) goes with the account (D-44).
     await deleteCustomerReview(actor.id, tx)
-    await tx.customer.delete({ where: { id: actor.id } })
+    const removed = await tx.customer.deleteMany({ where: { id: actor.id } })
+    if (removed.count !== 1) return false
     await recordAudit(
       {
         action: 'account.deleted',
@@ -516,6 +551,8 @@ export async function deleteAccount(
       },
       tx,
     )
+    return true
   })
+  if (!deleted) return { ok: false, error: 'Account not found.' }
   return { ok: true }
 }

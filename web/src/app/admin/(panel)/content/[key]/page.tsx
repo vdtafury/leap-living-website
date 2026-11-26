@@ -93,6 +93,7 @@ export default async function ContentPage({
         <When date={editing.publishedAt} />
       </p>
       <ContentEditor
+        key={`${key}-${editing.updatedAt?.getTime() ?? 0}`}
         docKey={key}
         csrf={csrf}
         sections={doc.sections}

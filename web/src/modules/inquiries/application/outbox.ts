@@ -15,7 +15,8 @@ export function nextAttemptDelay(attempts: number): number | null {
 
 type Sender = (email: OutgoingEmail) => Promise<void>
 
-let running: Promise<unknown> | null = null
+let running: Promise<{ sent: number; failed: number; skipped: boolean }> | null = null
+let rerunPending = false
 
 /** Emails whose text carries a one-time link (account confirmation, password reset). */
 export const ACCOUNT_EMAIL = 'CustomerToken'
@@ -58,10 +59,20 @@ export function processOutbox(
 ) {
   if (!options.send && !smtpConfigured())
     return Promise.resolve({ sent: 0, failed: 0, skipped: true })
-  running ??= run(options).finally(() => {
+  if (running) {
+    if (!options.send) rerunPending = true
+    return running
+  }
+  running = run(options).finally(() => {
     running = null
+    if (rerunPending) {
+      rerunPending = false
+      if (smtpConfigured()) {
+        processOutbox().catch((error) => console.error('[outbox] follow-up run failed', error))
+      }
+    }
   })
-  return running as Promise<{ sent: number; failed: number; skipped: boolean }>
+  return running
 }
 
 async function run({ send = sendEmail, now = Date.now }: { send?: Sender; now?: () => number }) {
@@ -101,6 +112,10 @@ async function run({ send = sendEmail, now = Date.now }: { send?: Sender; now?: 
           status: delay === null ? 'FAILED' : 'PENDING',
           nextAttemptAt: new Date(now() + (delay ?? 0)),
           lastError: message.slice(0, 500),
+          // Wipe one-time tokens once an account email permanently fails so they never linger.
+          ...(delay === null && row.relatedType === ACCOUNT_EMAIL
+            ? { text: redactTokens(row.text) }
+            : {}),
         },
       })
       failed++
@@ -154,15 +169,23 @@ export async function listOutbox(actor: Actor, { status }: { status?: string } =
 export async function retryOutbox(actor: Actor, id?: string) {
   authorize(actor, 'email.retry')
   if (!smtpConfigured()) return { ok: false as const, error: 'SMTP is not configured yet.' }
-  const scope = { ...(id ? { id } : {}), status: { in: ['FAILED', 'PENDING'] } }
+  // Wait for any in-flight pass so we do not reset active leases.
+  if (running) await running.catch(() => undefined)
+  const now = new Date()
+  // Never re-send account emails whose one-time token was already redacted after permanent failure.
+  const retryable = {
+    ...(id ? { id } : {}),
+    NOT: { AND: [{ relatedType: ACCOUNT_EMAIL }, { text: { contains: '[hidden]' } }] },
+    OR: [{ status: 'FAILED' }, { status: 'PENDING', nextAttemptAt: { lte: now } }],
+  }
   // One more attempt for emails that used them all up, then due now.
   await prisma.emailOutbox.updateMany({
-    where: { ...scope, attempts: { gte: MAX_ATTEMPTS } },
+    where: { ...retryable, attempts: { gte: MAX_ATTEMPTS } },
     data: { attempts: MAX_ATTEMPTS - 1 },
   })
   await prisma.emailOutbox.updateMany({
-    where: scope,
-    data: { status: 'PENDING', nextAttemptAt: new Date() },
+    where: retryable,
+    data: { status: 'PENDING', nextAttemptAt: now },
   })
   await recordAudit({
     actor,

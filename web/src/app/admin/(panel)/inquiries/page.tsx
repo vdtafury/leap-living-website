@@ -27,16 +27,26 @@ const TYPE_LABEL: Record<string, string> = {
 export default async function InquiriesPage({ searchParams }: { searchParams: SearchParams }) {
   const actor = await requireActor('inquiry.view')
   const query = await searchParams
-  const status = param(query.status)
-  const type = param(query.type)
-  const page = Math.max(1, Number(param(query.page)) || 1)
+  const rawStatus = param(query.status)
+  const rawType = param(query.type)
+  const status = (INQUIRY_STATUSES as readonly string[]).includes(rawStatus) ? rawStatus : ''
+  const type = (INQUIRY_TYPES as readonly string[]).includes(rawType) ? rawType : ''
+  const rawPage = Number(param(query.page))
+  const page = Number.isFinite(rawPage) ? Math.min(10_000, Math.max(1, Math.floor(rawPage))) : 1
   const { rows, total, pageSize } = await listInquiries(actor, {
-    status: (INQUIRY_STATUSES as readonly string[]).includes(status) ? status : undefined,
-    type: (INQUIRY_TYPES as readonly string[]).includes(type) ? type : undefined,
+    status: status || undefined,
+    type: type || undefined,
     page,
   })
   const csrf = csrfToken(actor)
-  const back = `/admin/inquiries?status=${status}&type=${type}&page=${page}`
+  const pageHref = (p: number) => {
+    const qs = new URLSearchParams()
+    if (status) qs.set('status', status)
+    if (type) qs.set('type', type)
+    qs.set('page', String(p))
+    return `/admin/inquiries?${qs.toString()}`
+  }
+  const back = pageHref(page)
   const pages = Math.max(1, Math.ceil(total / pageSize))
 
   return (
@@ -151,10 +161,7 @@ export default async function InquiriesPage({ searchParams }: { searchParams: Se
         {pages > 1 && (
           <div className="adm-actions" style={{ marginTop: '1rem' }}>
             {page > 1 && (
-              <Link
-                className="adm-btn adm-btn-ghost adm-btn-sm"
-                href={`/admin/inquiries?status=${status}&type=${type}&page=${page - 1}`}
-              >
+              <Link className="adm-btn adm-btn-ghost adm-btn-sm" href={pageHref(page - 1)}>
                 ← Newer
               </Link>
             )}
@@ -162,10 +169,7 @@ export default async function InquiriesPage({ searchParams }: { searchParams: Se
               Page {page} of {pages} · {total} requests
             </span>
             {page < pages && (
-              <Link
-                className="adm-btn adm-btn-ghost adm-btn-sm"
-                href={`/admin/inquiries?status=${status}&type=${type}&page=${page + 1}`}
-              >
+              <Link className="adm-btn adm-btn-ghost adm-btn-sm" href={pageHref(page + 1)}>
                 Older →
               </Link>
             )}

@@ -52,7 +52,6 @@ const getReducedMotion = () => window.matchMedia(REDUCED_MOTION_QUERY).matches
 const getReducedMotionOnServer = () => false
 
 export function HeroVideoBackdrop({ hasVideo = false }: { hasVideo?: boolean }) {
-  const [videoReady, setVideoReady] = useState(false)
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const backdropRef = useRef<HTMLDivElement | null>(null)
   const reducedMotion = useSyncExternalStore(
@@ -85,7 +84,7 @@ export function HeroVideoBackdrop({ hasVideo = false }: { hasVideo?: boolean }) 
   }
 
   // The video starts only after the poster has loaded and decoded: otherwise, on slow links,
-  // the video download competes with the poster and the hero shows the bare teal background
+  // the video download competes with the poster and the hero shows the bare dark background
   // until the video pops in. Order is always: poster (frame 0) → video (frame 0 → motion).
   useEffect(() => {
     if (reducedMotion) return
@@ -108,10 +107,15 @@ export function HeroVideoBackdrop({ hasVideo = false }: { hasVideo?: boolean }) 
     if (reducedMotion || !playVideo) return
     const v = videoRef.current
     if (!v) return
+    const ac = new AbortController()
     let cancelled = false
+    let settled = false
     let frameHandle: number | undefined
+    let seekTimer: ReturnType<typeof setTimeout> | undefined
+
     const play = () => {
       v.muted = true
+      v.defaultMuted = true
       const p = v.play()
       if (p) {
         p.catch(() => {
@@ -119,54 +123,88 @@ export function HeroVideoBackdrop({ hasVideo = false }: { hasVideo?: boolean }) 
         })
       }
     }
+
     const reveal = () => {
       if (cancelled) return
       // Straight on the element, in the same frame callback: waiting for a React render
       // would let the video run a frame or two past the poster before it shows.
       v.classList.add('is-visible')
-      setVideoReady(true)
     }
+
     // Shown only once the browser has painted frame 0 — never on `canplay`, which fires before
-    // anything is drawn. If decoding started late (more than ~1 frame past 0), rewind while still
-    // hidden so the first visible video frame is identical to the frame-0 poster (zero jump).
+    // anything is drawn. If decoding started late (more than ~2 frames past 0), rewind while still
+    // hidden behind the poster so the first visible video frame matches the frame-0 poster.
     const onFirstFrame = (mediaTime: number) => {
-      if (cancelled) return
-      if (mediaTime < 0.04) return reveal()
+      if (cancelled || settled) return
+      settled = true
+      if (frameHandle !== undefined && typeof v.cancelVideoFrameCallback === 'function') {
+        v.cancelVideoFrameCallback(frameHandle)
+        frameHandle = undefined
+      }
+      if (mediaTime < 0.08 || v.currentTime < 0.08) {
+        reveal()
+        if (v.paused) play()
+        return
+      }
+      let resumed = false
+      const finishSeek = () => {
+        if (cancelled || resumed) return
+        resumed = true
+        if (seekTimer !== undefined) clearTimeout(seekTimer)
+        reveal()
+        play()
+      }
+      // Hard bound so we never hang paused if the browser skips firing `seeked`.
+      seekTimer = setTimeout(finishSeek, 300)
       v.pause()
-      v.addEventListener(
-        'seeked',
-        () => {
-          reveal()
-          requestAnimationFrame(() => {
-            if (!cancelled) play()
-          })
-        },
-        { once: true },
-      )
-      v.currentTime = 0
+      v.addEventListener('seeked', finishSeek, { once: true, signal: ac.signal })
+      try {
+        v.currentTime = 0
+      } catch {
+        finishSeek()
+      }
     }
 
-    // Safety fallback if requestVideoFrameCallback is delayed: still route through onFirstFrame
-    // so it rewinds to frame 0 before revealing instead of jumping mid-shot.
-    const safetyTimer = setTimeout(() => {
-      if (!cancelled && !v.classList.contains('is-visible') && v.currentTime > 0) {
-        onFirstFrame(v.currentTime)
-      }
-    }, 1200)
-
-    // requestVideoFrameCallback: Chrome/Edge, Safari 15.4+, Firefox 132+.
+    // Primary path: requestVideoFrameCallback (Chrome/Edge, Safari 15.4+, Firefox 132+).
     if (typeof v.requestVideoFrameCallback === 'function') {
       frameHandle = v.requestVideoFrameCallback((_now, meta) => onFirstFrame(meta.mediaTime))
     } else {
-      v.addEventListener('playing', () => onFirstFrame(v.currentTime), { once: true })
+      v.addEventListener('playing', () => onFirstFrame(v.currentTime), {
+        once: true,
+        signal: ac.signal,
+      })
     }
 
-    // play() (not only the autoPlay attribute) so iOS starts fetching data.
+    // Fallback for slow buffering or delayed rVFC: fires as soon as decoded playback advances.
+    v.addEventListener(
+      'timeupdate',
+      () => {
+        if (!settled && v.readyState >= 2 && v.currentTime > 0) {
+          onFirstFrame(v.currentTime)
+        }
+      },
+      { signal: ac.signal },
+    )
+
+    // Retry play once media is buffered if the initial play() raced with source attach.
+    v.addEventListener(
+      'canplay',
+      () => {
+        if (!settled && v.paused) play()
+      },
+      { once: true, signal: ac.signal },
+    )
+
     play()
     return () => {
       cancelled = true
-      clearTimeout(safetyTimer)
-      if (frameHandle !== undefined) v.cancelVideoFrameCallback(frameHandle)
+      ac.abort()
+      if (seekTimer !== undefined) clearTimeout(seekTimer)
+      if (frameHandle !== undefined && typeof v.cancelVideoFrameCallback === 'function') {
+        v.cancelVideoFrameCallback(frameHandle)
+      }
+      v.pause()
+      v.classList.remove('is-visible')
     }
   }, [reducedMotion, playVideo])
 
@@ -189,14 +227,13 @@ export function HeroVideoBackdrop({ hasVideo = false }: { hasVideo?: boolean }) 
         <video
           ref={videoRef}
           src={HERO_VIDEO_SRC}
-          autoPlay
           muted
           loop
           playsInline
           preload="auto"
           // File missing on this server, or not playable: the poster (same picture) stays.
           onError={() => setPlayVideo(false)}
-          className={`ll-hero-video ${videoReady ? 'is-visible' : ''}`}
+          className="ll-hero-video"
         />
       )}
 

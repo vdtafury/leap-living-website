@@ -1,21 +1,5 @@
 /* ==================== RESPONSIVE ==================== */
-@media (max-width: 1180px) {
-  .ll-nav {
-    gap: 1.05rem;
-  }
-}
-
-@media (max-width: 1120px) {
-  .ll-nav,
-  .ll-header-actions {
-    display: none;
-  }
-  .ll-mobile-menu-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
+/* Navbar breakpoints live in 20-navbar.css (1200px). */
 
 @media (max-width: 960px) {
   .ll-cards-grid,
@@ -41,6 +25,15 @@
   }
   .ll-key-specs-box {
     grid-template-columns: 1fr 1fr;
+  }
+  .ll-key-specs-box .ll-key-spec-cell {
+    border-right: none;
+  }
+  .ll-key-specs-box .ll-key-spec-cell:nth-child(odd) {
+    border-right: 1px solid var(--border-subtle);
+  }
+  .ll-key-specs-box .ll-key-spec-cell:nth-child(n + 3) {
+    border-top: 1px solid var(--border-subtle);
   }
 }
 

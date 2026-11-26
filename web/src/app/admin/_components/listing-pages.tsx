@@ -98,7 +98,8 @@ export async function ListingIndex({
   const meta = META[kind]
   const actor = await requireActor(`${kind}.view`)
   const query = await searchParams
-  const tab = param(query.status)
+  const rawTab = param(query.status)
+  const tab = TABS.some((t) => t.value === rawTab) ? rawTab : ''
   const q = param(query.q)
   const filter = {
     status: tab && tab !== 'deleted' ? tab : undefined,
@@ -110,7 +111,11 @@ export async function ListingIndex({
       ? await listPropertiesAdmin(actor, filter)
       : await listProjectsAdmin(actor, filter)
   const csrf = csrfToken(actor)
-  const back = `${meta.base}?status=${tab}&q=${encodeURIComponent(q)}`
+  const backParams = new URLSearchParams()
+  if (tab) backParams.set('status', tab)
+  if (q) backParams.set('q', q)
+  const qs = backParams.toString()
+  const back = qs ? `${meta.base}?${qs}` : meta.base
   const perms = { publish: can(actor, `${kind}.publish`), remove: can(actor, `${kind}.delete`) }
 
   return (

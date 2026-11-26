@@ -18,13 +18,15 @@
 # src/data/image-manifest.json), not the video.
 set -euo pipefail
 
+SRC_ARG="${1:-}"
+[ -n "$SRC_ARG" ] && [ -f "$SRC_ARG" ] || { echo "Usage: $0 /path/to/original.mp4"; exit 1; }
+SRC="$(cd "$(dirname "$SRC_ARG")" && pwd)/$(basename "$SRC_ARG")"
+
 cd "$(dirname "$0")/.."
-SRC="${1:-}"
 OUT="public/videos/hero/client-hero-original.mp4"
 FFMPEG="${FFMPEG:-ffmpeg}"
 FFPROBE="${FFPROBE:-${FFMPEG%ffmpeg}ffprobe}"
 
-[ -n "$SRC" ] && [ -f "$SRC" ] || { echo "Usage: $0 /path/to/original.mp4"; exit 1; }
 command -v "$FFMPEG" >/dev/null || { echo "ffmpeg not found. Set FFMPEG=/path/to/ffmpeg"; exit 1; }
 command -v "$FFPROBE" >/dev/null || { echo "ffprobe not found. Set FFPROBE=/path/to/ffprobe"; exit 1; }
 
@@ -52,16 +54,17 @@ mkdir -p "$(dirname "$OUT")"
 "$FFMPEG" -v error -y -i "$SRC" -map 0:v:0 -c:v copy "${tags[@]}" -an -movflags +faststart "$OUT"
 
 # Poster: frame 0 of the file every device plays.
-tmp="$(mktemp --suffix=.png)"
+tmp_dir="$(mktemp -d)"
+trap 'rm -rf "$tmp_dir"' EXIT
+tmp="$tmp_dir/frame0.png"
 "$FFMPEG" -v error -y -i "$OUT" -frames:v 1 \
   -vf "scale=in_color_matrix=$space:in_range=tv:out_range=pc:flags=accurate_rnd+full_chroma_int,format=rgb24" \
   "$tmp"
 node -e "require('sharp')(process.argv[1]).jpeg({ quality: 92, chromaSubsampling: '4:4:4', mozjpeg: true }).toFile(process.argv[2])" \
   "$tmp" public/images/client-video-frame-0.jpg
-rm -f "$tmp"
 npm run -s images:optimize >/dev/null
 
-size=$(stat -c%s "$OUT")
+size=$(wc -c < "$OUT" | tr -d ' ')
 dur=$("$FFPROBE" -v error -show_entries format=duration -of default=nw=1:nk=1 "$OUT")
 res=$("$FFPROBE" -v error -select_streams v:0 -show_entries stream=width,height,r_frame_rate -of csv=p=0 "$OUT")
 node -e "

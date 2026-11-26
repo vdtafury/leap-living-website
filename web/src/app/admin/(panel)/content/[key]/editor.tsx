@@ -96,13 +96,26 @@ function FieldEditor({
               id={id}
               className="adm-input"
               type={field.kind === 'number' ? 'number' : field.kind === 'email' ? 'email' : 'text'}
-              value={String(value ?? '')}
+              value={
+                field.kind === 'number' &&
+                (value === '' || value === null || value === undefined || Number.isNaN(value))
+                  ? ''
+                  : String(value ?? '')
+              }
               maxLength={'max' in field ? field.max : 300}
               min={field.kind === 'number' ? field.min : undefined}
               max={field.kind === 'number' ? field.max : undefined}
               step={field.kind === 'number' ? (field.step ?? 1) : undefined}
               onChange={(e) =>
-                onChange(field.kind === 'number' ? e.target.valueAsNumber : e.target.value)
+                onChange(
+                  field.kind === 'number'
+                    ? e.target.value === ''
+                      ? ''
+                      : Number.isFinite(e.target.valueAsNumber)
+                        ? e.target.valueAsNumber
+                        : e.target.value
+                    : e.target.value,
+                )
               }
             />
           )}

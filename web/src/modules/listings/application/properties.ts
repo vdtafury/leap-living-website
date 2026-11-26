@@ -93,55 +93,77 @@ function toData(input: ReturnType<typeof propertyInputSchema.parse>) {
   }
 }
 
+const VALID_PUBLICATION_STATUSES = new Set<string>(['DRAFT', 'PUBLISHED', 'ARCHIVED'])
+const isPrismaCode = (error: unknown, code: string) =>
+  Boolean(error && typeof error === 'object' && 'code' in error && error.code === code)
+
 export async function createProperty(actor: Actor, raw: unknown): Promise<Result<{ id: string }>> {
   authorize(actor, 'property.edit')
+  await ensureReady()
   const parsed = propertyInputSchema.safeParse(raw)
   if (!parsed.success) return { ok: false, error: parsed.error.issues[0].message }
   const data = toData(parsed.data)
   if (!data.slug) return { ok: false, error: 'Enter a URL slug.' }
   const clash = await uniqueProblem(data.slug, data.referenceNumber)
   if (clash) return { ok: false, error: clash }
-  const row = await prisma.$transaction(async (tx) => {
-    const created = await tx.property.create({
-      data: { ...data, publicationStatus: 'DRAFT', createdById: actor.id, updatedById: actor.id },
+  try {
+    const row = await prisma.$transaction(async (tx) => {
+      const created = await tx.property.create({
+        data: { ...data, publicationStatus: 'DRAFT', createdById: actor.id, updatedById: actor.id },
+      })
+      await recordAudit(
+        {
+          actor,
+          action: 'property.created',
+          targetType: 'Property',
+          targetId: created.id,
+          metadata: { ref: created.referenceNumber },
+        },
+        tx,
+      )
+      return created
     })
-    await recordAudit(
-      {
-        actor,
-        action: 'property.created',
-        targetType: 'Property',
-        targetId: created.id,
-        metadata: { ref: created.referenceNumber },
-      },
-      tx,
-    )
-    return created
-  })
-  return { ok: true, id: row.id }
+    return { ok: true, id: row.id }
+  } catch (error) {
+    if (isPrismaCode(error, 'P2002')) {
+      return { ok: false, error: 'This URL slug or reference number is already taken.' }
+    }
+    throw error
+  }
 }
 
 export async function updateProperty(actor: Actor, id: string, raw: unknown): Promise<Result> {
   authorize(actor, 'property.edit')
-  const existing = await prisma.property.findUnique({ where: { id } })
-  if (!existing || existing.deletedAt) return { ok: false, error: 'Listing not found.' }
+  await ensureReady()
   const parsed = propertyInputSchema.safeParse(raw)
   if (!parsed.success) return { ok: false, error: parsed.error.issues[0].message }
   const data = toData(parsed.data)
+  if (!data.slug) return { ok: false, error: 'Enter a URL slug.' }
   const clash = await uniqueProblem(data.slug, data.referenceNumber, id)
   if (clash) return { ok: false, error: clash }
-  if (existing.publicationStatus === 'PUBLISHED') {
-    const problems = propertyPublishProblems(data)
-    if (problems.length)
-      return { ok: false, error: `A published listing needs: ${problems.join(' ')}` }
+  try {
+    return await prisma.$transaction(async (tx) => {
+      const existing = await tx.property.findUnique({ where: { id } })
+      if (!existing || existing.deletedAt) return { ok: false as const, error: 'Listing not found.' }
+      if (existing.publicationStatus === 'PUBLISHED') {
+        const problems = propertyPublishProblems(data)
+        if (problems.length) {
+          return { ok: false as const, error: `A published listing needs: ${problems.join(' ')}` }
+        }
+      }
+      await tx.property.update({ where: { id }, data: { ...data, updatedById: actor.id } })
+      await recordAudit(
+        { actor, action: 'property.updated', targetType: 'Property', targetId: id },
+        tx,
+      )
+      return { ok: true as const }
+    })
+  } catch (error) {
+    if (isPrismaCode(error, 'P2002')) {
+      return { ok: false, error: 'This URL slug or reference number is already taken.' }
+    }
+    throw error
   }
-  await prisma.$transaction(async (tx) => {
-    await tx.property.update({ where: { id }, data: { ...data, updatedById: actor.id } })
-    await recordAudit(
-      { actor, action: 'property.updated', targetType: 'Property', targetId: id },
-      tx,
-    )
-  })
-  return { ok: true }
 }
 
 export async function setPropertyPublication(
@@ -150,13 +172,15 @@ export async function setPropertyPublication(
   status: PublicationStatus,
 ): Promise<Result> {
   authorize(actor, 'property.publish')
-  const existing = await prisma.property.findUnique({ where: { id } })
-  if (!existing || existing.deletedAt) return { ok: false, error: 'Listing not found.' }
-  if (status === 'PUBLISHED') {
-    const problems = propertyPublishProblems(existing)
-    if (problems.length) return { ok: false, error: problems.join(' ') }
-  }
-  await prisma.$transaction(async (tx) => {
+  if (!VALID_PUBLICATION_STATUSES.has(status)) return { ok: false, error: 'Unknown status.' }
+  await ensureReady()
+  return prisma.$transaction(async (tx) => {
+    const existing = await tx.property.findUnique({ where: { id } })
+    if (!existing || existing.deletedAt) return { ok: false as const, error: 'Listing not found.' }
+    if (status === 'PUBLISHED') {
+      const problems = propertyPublishProblems(existing)
+      if (problems.length) return { ok: false as const, error: problems.join(' ') }
+    }
     await tx.property.update({
       where: { id },
       data: {
@@ -175,16 +199,19 @@ export async function setPropertyPublication(
       },
       tx,
     )
+    return { ok: true as const }
   })
-  return { ok: true }
 }
 
 /** Soft delete: the row stays (audit, restore) but is never shown publicly. */
 export async function deleteProperty(actor: Actor, id: string, restore = false): Promise<Result> {
   authorize(actor, 'property.delete')
-  const existing = await prisma.property.findUnique({ where: { id } })
-  if (!existing) return { ok: false, error: 'Listing not found.' }
-  await prisma.$transaction(async (tx) => {
+  await ensureReady()
+  return prisma.$transaction(async (tx) => {
+    const existing = await tx.property.findUnique({ where: { id } })
+    if (!existing) return { ok: false as const, error: 'Listing not found.' }
+    if (restore && !existing.deletedAt) return { ok: false as const, error: 'Listing is already active.' }
+    if (!restore && existing.deletedAt) return { ok: false as const, error: 'Listing is already deleted.' }
     await tx.property.update({
       where: { id },
       data: restore
@@ -200,6 +227,6 @@ export async function deleteProperty(actor: Actor, id: string, restore = false):
       },
       tx,
     )
+    return { ok: true as const }
   })
-  return { ok: true }
 }

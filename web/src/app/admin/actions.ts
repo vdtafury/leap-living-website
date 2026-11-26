@@ -59,17 +59,18 @@ export async function changePasswordAction(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  if (text(formData, 'next') !== text(formData, 'confirm')) {
-    return { error: 'The new passwords do not match.' }
-  }
   const result = await guarded(
     formData,
-    async (actor) =>
-      changeOwnPassword(
+    async (actor) => {
+      if (text(formData, 'next') !== text(formData, 'confirm')) {
+        return { ok: false as const, error: 'The new passwords do not match.' }
+      }
+      return changeOwnPassword(
         actor,
         { current: text(formData, 'current'), next: text(formData, 'next') },
         await requestInfo(),
-      ),
+      )
+    },
     { allowPasswordChange: true },
   )
   if (!result.ok) return { error: result.error }
@@ -142,6 +143,7 @@ export async function savePropertyAction(
   if (!result.ok) return { error: result.error }
   if (!result.value.ok) return { error: result.value.error }
   revalidatePath('/admin/properties')
+  if (id) revalidatePath(`/admin/properties/${id}`)
   if (!id && 'id' in result.value) {
     redirect(withMessage(`/admin/properties/${result.value.id}`, 'ok', 'Draft created.'))
   }
@@ -161,6 +163,7 @@ export async function saveProjectAction(
   if (!result.ok) return { error: result.error }
   if (!result.value.ok) return { error: result.value.error }
   revalidatePath('/admin/projects')
+  if (id) revalidatePath(`/admin/projects/${id}`)
   if (!id && 'id' in result.value) {
     redirect(withMessage(`/admin/projects/${result.value.id}`, 'ok', 'Draft created.'))
   }
@@ -219,7 +222,7 @@ export async function saveContentAction(
 export async function contentStatusAction(formData: FormData) {
   const key = text(formData, 'key')
   const op = text(formData, 'op')
-  const back = `/admin/content/${isDocumentKey(key) ? key : ''}`
+  const back = isDocumentKey(key) ? `/admin/content/${key}` : '/admin'
   const result = await guarded(formData, async (actor) => {
     if (!isDocumentKey(key)) return { ok: false as const, error: 'Unknown page.' }
     if (op === 'publish') return publishContent(actor, key)
@@ -343,6 +346,7 @@ export async function inquiryStatusAction(formData: FormData) {
     setInquiryStatus(actor, text(formData, 'id'), text(formData, 'status')),
   )
   const error = !result.ok ? result.error : !result.value.ok ? result.value.error : null
+  revalidatePath('/admin/inquiries')
   redirect(withMessage(back, error ? 'error' : 'ok', error ?? 'Status updated.'))
 }
 
@@ -351,6 +355,7 @@ export async function outboxRetryAction(formData: FormData) {
     retryOutbox(actor, text(formData, 'id') || undefined),
   )
   const error = !result.ok ? result.error : !result.value.ok ? result.value.error : null
+  revalidatePath('/admin/outbox')
   const summary =
     result.ok && result.value.ok ? `Sent ${result.value.sent}, failed ${result.value.failed}.` : ''
   redirect(withMessage('/admin/outbox', error ? 'error' : 'ok', error ?? summary))

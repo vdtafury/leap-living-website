@@ -48,9 +48,12 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
       - name: Guard against indexing staging
+        env:
+          INPUT_SITE_INDEXING: '${{ inputs.site_indexing }}'
+          INPUT_SITE_URL: '${{ inputs.site_url }}'
         run: |
-          if [ "${{ inputs.site_indexing }}" = "true" ] && printf '%s' "${{ inputs.site_url }}" | grep -qi 'staging'; then
-            echo "::error::Refusing to enable SITE_INDEXING=true for a staging URL (${{ inputs.site_url }})."
+          if [ "$INPUT_SITE_INDEXING" = "true" ] && printf '%s' "$INPUT_SITE_URL" | grep -qi 'staging'; then
+            echo "::error::Refusing to enable SITE_INDEXING=true for a staging URL ($INPUT_SITE_URL)."
             exit 1
           fi
 

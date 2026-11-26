@@ -37,10 +37,13 @@ export function monthlyPayment(input: MortgageInput): number | null {
   if (principal === 0) return 0
 
   const months = Math.round(years * 12)
+  if (months <= 0) return null
   const r = interestRatePercent / 100 / 12
   if (r === 0) return principal / months
   const factor = Math.pow(1 + r, months)
-  return (principal * r * factor) / (factor - 1)
+  if (!Number.isFinite(factor) || factor <= 1) return null
+  const payment = (principal * r * factor) / (factor - 1)
+  return Number.isFinite(payment) ? payment : null
 }
 
 /** Parses user input such as "2,500,000" or " 4.25 " into a number (NaN when empty/invalid). */
@@ -60,7 +63,9 @@ export function formatAmountInput(value: string): string {
 
 /** Total interest over the loan for a monthly payment (0 when the loan cannot be priced). */
 export function totalInterest(monthly: number | null, loan: number, years: number): number {
-  if (monthly === null || !Number.isFinite(years) || years <= 0) return 0
+  if (monthly === null || !Number.isFinite(monthly) || !Number.isFinite(years) || years <= 0) {
+    return 0
+  }
   return Math.max(0, monthly * Math.round(years * 12) - loan)
 }
 

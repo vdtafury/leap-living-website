@@ -86,14 +86,20 @@ export async function login(
 
   if (!(await verifyPassword(user.passwordHash, password))) {
     loginsPerIp.hit(info.ipKey)
-    const failed = user.failedLogins + 1
-    const lock = failed >= MAX_FAILED_LOGINS
-    await prisma.user.update({
-      where: { id: user.id },
-      data: {
-        failedLogins: lock ? 0 : failed,
-        lockedUntil: lock ? new Date(now + LOCK_MS) : user.lockedUntil,
-      },
+    const lock = await prisma.$transaction(async (tx) => {
+      const updated = await tx.user.update({
+        where: { id: user.id },
+        data: { failedLogins: { increment: 1 } },
+        select: { failedLogins: true },
+      })
+      if (updated.failedLogins >= MAX_FAILED_LOGINS) {
+        await tx.user.update({
+          where: { id: user.id },
+          data: { failedLogins: 0, lockedUntil: new Date(now + LOCK_MS) },
+        })
+        return true
+      }
+      return false
     })
     await recordAudit({
       action: lock ? 'auth.account_locked' : 'auth.login_failed',
@@ -163,7 +169,7 @@ export async function actorFromSessionToken(
   const actor = await loadActor(session.userId)
   if (!actor) return null
   if (shouldTouch(session.lastSeenAt)) {
-    await prisma.session.update({ where: { id }, data: { lastSeenAt: new Date() } })
+    await prisma.session.updateMany({ where: { id }, data: { lastSeenAt: new Date() } })
   }
   return { ...actor, sessionId: id }
 }
@@ -185,8 +191,10 @@ export async function changeOwnPassword(
   input: { current: string; next: string },
   info: RequestInfo,
 ): Promise<{ ok: true; token: string } | { ok: false; error: string }> {
-  const user = await prisma.user.findUniqueOrThrow({ where: { id: actor.id } })
-  if (!(await verifyPassword(user.passwordHash, input.current))) {
+  await ensureReady()
+  const user = await prisma.user.findUnique({ where: { id: actor.id } })
+  if (!user || !user.isActive) return { ok: false, error: 'Account not found.' }
+  if (!(await verifyPassword(user.passwordHash, input.current.slice(0, 256)))) {
     await recordAudit({
       actor: { id: actor.id, name: actor.username },
       action: 'auth.password_change_failed',
@@ -200,10 +208,11 @@ export async function changeOwnPassword(
   const problem = passwordProblem(input.next, user.username)
   if (problem) return { ok: false, error: problem }
 
+  const passwordHash = await hashPassword(input.next)
   await prisma.$transaction([
     prisma.user.update({
       where: { id: user.id },
-      data: { passwordHash: await hashPassword(input.next), mustChangePassword: false },
+      data: { passwordHash, mustChangePassword: false },
     }),
     prisma.session.deleteMany({ where: { userId: user.id } }),
   ])

@@ -10,7 +10,9 @@ interface ImageGalleryProps {
 
 export function ImageGallery({ images, title }: ImageGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0)
-  const activeImage = images[activeIndex] ?? images[0]
+  const safeIndex = activeIndex < images.length ? activeIndex : 0
+  const activeImage = images[safeIndex]
+  if (!activeImage) return null
 
   return (
     <div>
@@ -18,8 +20,8 @@ export function ImageGallery({ images, title }: ImageGalleryProps) {
         <ResponsiveImg
           src={activeImage}
           sizes="(max-width: 1000px) 100vw, 60vw"
-          priority={activeIndex === 0}
-          alt={`${title} — view ${activeIndex + 1}`}
+          priority={safeIndex === 0}
+          alt={`${title} — view ${safeIndex + 1}`}
         />
       </div>
 
@@ -31,8 +33,8 @@ export function ImageGallery({ images, title }: ImageGalleryProps) {
               type="button"
               onClick={() => setActiveIndex(idx)}
               aria-label={`View image ${idx + 1} of ${images.length}`}
-              aria-pressed={activeIndex === idx}
-              className={`ll-gallery-thumb ${activeIndex === idx ? 'active' : ''}`}
+              aria-pressed={safeIndex === idx}
+              className={`ll-gallery-thumb ${safeIndex === idx ? 'active' : ''}`}
             >
               <ResponsiveImg src={src} sizes="160px" alt={`${title} thumbnail ${idx + 1}`} />
             </button>

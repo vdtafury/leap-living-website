@@ -7,7 +7,8 @@ export const metadata = { title: 'Audit log' }
 
 export default async function AuditPage({ searchParams }: { searchParams: SearchParams }) {
   const actor = await requireActor('audit.view')
-  const page = Math.max(1, Number(param((await searchParams).page)) || 1)
+  const rawPage = Number(param((await searchParams).page))
+  const page = Number.isFinite(rawPage) ? Math.min(10_000, Math.max(1, Math.floor(rawPage))) : 1
   const { rows, total, pageSize } = await listAudit(actor, { page })
   const pages = Math.max(1, Math.ceil(total / pageSize))
   return (

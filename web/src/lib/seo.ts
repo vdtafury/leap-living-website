@@ -1,5 +1,13 @@
 import type { Metadata } from 'next'
 import { SITE } from '@/data/site'
+import manifest from '@/data/image-manifest.json'
+
+type ManifestEntry = {
+  width: number
+  height: number
+  variants: { w: number; src: string }[]
+}
+const IMAGES = manifest as Record<string, ManifestEntry>
 
 /**
  * Build-time site settings (the cPanel zip is built per environment):
@@ -18,6 +26,24 @@ export const OG_IMAGE = {
   alt: 'LEAP LIVING Real Estate Consultancy, Dubai',
 }
 
+function resolveOgImage(image: { url: string; alt?: string }): {
+  url: string
+  width?: number
+  height?: number
+  alt: string
+} {
+  const entry = IMAGES[image.url]
+  if (entry && entry.variants.length > 0) {
+    // Prefer a ~960–1280px WebP variant (fast to fetch, well under WhatsApp's ~300 KB cap).
+    const picked =
+      entry.variants.find((v) => v.w >= 960 && v.w <= 1280) ??
+      entry.variants[entry.variants.length - 1]
+    const height = Math.round((picked.w / entry.width) * entry.height)
+    return { url: picked.src, width: picked.w, height, alt: image.alt ?? OG_IMAGE.alt }
+  }
+  return { url: image.url, alt: image.alt ?? OG_IMAGE.alt }
+}
+
 /**
  * Per-page metadata with matching Open Graph / Twitter cards (link previews on WhatsApp,
  * LinkedIn, X) and a canonical URL. `path` is the page path, e.g. '/buy'.
@@ -26,14 +52,14 @@ export function pageMetadata({
   title,
   description,
   path,
+  image,
 }: {
   title: string
   description: string
   path: string
+  image?: { url: string; alt?: string }
 }): Metadata {
-  // One light JPEG for every page: WhatsApp skips preview images much over ~300 KB, and the
-  // listing photos are far heavier.
-  const images = [OG_IMAGE]
+  const images = image?.url ? [resolveOgImage(image), OG_IMAGE] : [OG_IMAGE]
   return {
     title,
     description,

@@ -224,6 +224,9 @@ export function HeroSelect({
               <input
                 ref={filterRef}
                 type="text"
+                role="combobox"
+                aria-expanded={open}
+                aria-autocomplete="list"
                 value={query}
                 placeholder={`Search ${label.toLowerCase()}`}
                 aria-label={`Filter ${label}`}
@@ -245,7 +248,7 @@ export function HeroSelect({
             tabIndex={-1}
             aria-activedescendant={searchable ? undefined : activeId}
             className="ll-hs-options"
-            onKeyDown={searchable ? undefined : onListKeyDown}
+            onKeyDown={onListKeyDown}
           >
             {visible.length === 0 && <li className="ll-hs-empty">No matches</li>}
             {visible.map((o, i) => {

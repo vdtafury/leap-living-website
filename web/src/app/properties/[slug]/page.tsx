@@ -22,8 +22,9 @@ export async function generateMetadata({
 
   return pageMetadata({
     title: `${property.title} — ${property.community} | LEAP LIVING`,
-    description: property.subtitle,
+    description: property.subtitle || property.description.slice(0, 160),
     path: `/properties/${property.slug}`,
+    image: property.image ? { url: property.image, alt: property.title } : undefined,
   })
 }
 

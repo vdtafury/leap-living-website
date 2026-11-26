@@ -197,19 +197,23 @@ export async function changePasswordAction(
   _prev: AccountActionState,
   formData: FormData,
 ): Promise<AccountActionState> {
-  return asCustomer(formData, async (customer) => {
+  const result = await asCustomer(formData, async (customer) => {
     if (text(formData, 'next') !== text(formData, 'confirm')) {
       return { error: 'The two new passwords do not match.' }
     }
-    const result = await changePassword(
+    const changed = await changePassword(
       customer,
       { current: text(formData, 'current'), next: text(formData, 'next') },
       await requestInfo(),
     )
-    if (!result.ok) return { error: result.error }
-    await setAccountCookie(result.token)
-    return { ok: 'Password changed. Other devices were signed out.' }
+    if (!changed.ok) return { error: changed.error }
+    await setAccountCookie(changed.token)
+    return { ok: 'changed' }
   })
+  // Outside asCustomer so Next's redirect() is not caught; full reload refreshes the
+  // session-bound CSRF token in every form on /account/settings and in AccountProvider.
+  if (result?.ok !== 'changed') return result
+  return go('/account/settings?passwordChanged=1', formData)
 }
 
 export async function resendVerificationAction(

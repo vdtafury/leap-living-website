@@ -63,26 +63,41 @@ export async function uploadImage(
   await ensureReady()
   const id = randomUUID()
   const filename = `${id}.webp`
-  const path = await savePublicFile(filename, main.data)
-  await savePublicFile(`${id}-${SMALL_WIDTH}.webp`, small)
-  const asset = await prisma.$transaction(async (tx) => {
-    const created = await tx.mediaAsset.create({
-      data: {
-        filename,
-        originalName: file.name.replace(/[^\w .()-]/g, '_').slice(0, 200),
-        mimeType: 'image/webp',
-        size: main.data.length,
-        width: main.info.width,
-        height: main.info.height,
-        path,
-      },
+  const smallName = `${id}-${SMALL_WIDTH}.webp`
+  let path: string
+  try {
+    path = await savePublicFile(filename, main.data)
+    await savePublicFile(smallName, small)
+  } catch (error) {
+    await unlink(safeJoin(PUBLIC_DIR, filename)).catch(() => undefined)
+    await unlink(safeJoin(PUBLIC_DIR, smallName)).catch(() => undefined)
+    throw error
+  }
+  let asset
+  try {
+    asset = await prisma.$transaction(async (tx) => {
+      const created = await tx.mediaAsset.create({
+        data: {
+          filename,
+          originalName: file.name.replace(/[^\w .()-]/g, '_').slice(0, 200),
+          mimeType: 'image/webp',
+          size: main.data.length,
+          width: main.info.width,
+          height: main.info.height,
+          path,
+        },
+      })
+      await recordAudit(
+        { actor, action: 'media.uploaded', targetType: 'MediaAsset', targetId: created.id },
+        tx,
+      )
+      return created
     })
-    await recordAudit(
-      { actor, action: 'media.uploaded', targetType: 'MediaAsset', targetId: created.id },
-      tx,
-    )
-    return created
-  })
+  } catch (error) {
+    await unlink(safeJoin(PUBLIC_DIR, filename)).catch(() => undefined)
+    await unlink(safeJoin(PUBLIC_DIR, smallName)).catch(() => undefined)
+    throw error
+  }
   return {
     ok: true,
     asset: { id: asset.id, url: `/media/${filename}`, width: asset.width, height: asset.height },
@@ -96,32 +111,43 @@ export async function listMedia(actor: Actor) {
   return assets.map((a) => ({ ...a, url: `/media/${a.filename}` }))
 }
 
-/** Where an image is used (listings, projects, developers). */
-async function usages(url: string) {
-  const [properties, projects, developers] = await Promise.all([
-    prisma.property.count({ where: { images: { contains: `"${url}"` } } }),
-    prisma.project.count({ where: { images: { contains: `"${url}"` } } }),
-    prisma.developer.count({ where: { logoUrl: url } }),
+type Tx = Parameters<Parameters<typeof prisma.$transaction>[0]>[0]
+
+/** Where an image is used (listings, projects, developers, CMS content). */
+async function usages(tx: Tx, url: string) {
+  const [properties, projects, developers, documents] = await Promise.all([
+    tx.property.count({ where: { images: { contains: `"${url}"` } } }),
+    tx.project.count({ where: { images: { contains: `"${url}"` } } }),
+    tx.developer.count({ where: { logoUrl: url } }),
+    tx.contentDocument.count({
+      where: { OR: [{ draft: { contains: url } }, { published: { contains: url } }] },
+    }),
   ])
-  return properties + projects + developers
+  return properties + projects + developers + documents
 }
 
 export async function deleteMedia(actor: Actor, id: string) {
   authorize(actor, 'media.delete')
-  const asset = await prisma.mediaAsset.findUnique({ where: { id } })
-  if (!asset) return { ok: false as const, error: 'Not found.' }
-  if ((await usages(`/media/${asset.filename}`)) > 0) {
-    return { ok: false as const, error: 'This image is still used; remove it from listings first.' }
-  }
-  await prisma.$transaction(async (tx) => {
+  await ensureReady()
+  const outcome = await prisma.$transaction(async (tx) => {
+    const asset = await tx.mediaAsset.findUnique({ where: { id } })
+    if (!asset) return { ok: false as const, error: 'Not found.' }
+    if ((await usages(tx, `/media/${asset.filename}`)) > 0) {
+      return {
+        ok: false as const,
+        error: 'This image is still used; remove it from listings first.',
+      }
+    }
     await tx.mediaAsset.delete({ where: { id } })
     await recordAudit(
       { actor, action: 'media.deleted', targetType: 'MediaAsset', targetId: id },
       tx,
     )
+    return { ok: true as const, filename: asset.filename }
   })
-  const base = asset.filename.replace(/\.webp$/, '')
-  for (const name of [asset.filename, `${base}-${SMALL_WIDTH}.webp`]) {
+  if (!outcome.ok) return outcome
+  const base = outcome.filename.replace(/\.webp$/, '')
+  for (const name of [outcome.filename, `${base}-${SMALL_WIDTH}.webp`]) {
     await unlink(safeJoin(PUBLIC_DIR, name)).catch(() => undefined)
   }
   return { ok: true as const }

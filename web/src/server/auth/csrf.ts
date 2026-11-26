@@ -1,4 +1,5 @@
 import { createHash, timingSafeEqual } from 'node:crypto'
+import { requestHost, urlMatchesHost } from '@/server/request'
 
 /**
  * CSRF token bound to the session (synchronizer-token pattern without server state): it is
@@ -20,14 +21,6 @@ export function csrfValid(sessionId: string, token: unknown, scope: CsrfScope = 
   return expected.length === given.length && timingSafeEqual(expected, given)
 }
 
-const sameHost = (url: string, host: string | null) => {
-  try {
-    return Boolean(host) && new URL(url).host === host
-  } catch {
-    return false
-  }
-}
-
 /**
  * Same-site check for state-changing requests, strongest signal first:
  *   1. Origin, when the browser sends it: must be this host.
@@ -37,12 +30,12 @@ const sameHost = (url: string, host: string | null) => {
  * Nothing at all (some non-browser client): refused. The session CSRF token is checked on top.
  */
 export function originAllowed(headers: Headers): boolean {
-  const host = headers.get('x-forwarded-host') ?? headers.get('host')
+  const host = requestHost(headers)
   const origin = headers.get('origin')
-  if (origin) return sameHost(origin, host)
+  if (origin) return urlMatchesHost(origin, host)
   const fetchSite = headers.get('sec-fetch-site')
   if (fetchSite) return fetchSite === 'same-origin'
   const referer = headers.get('referer')
-  if (referer) return sameHost(referer, host)
+  if (referer) return urlMatchesHost(referer, host)
   return false
 }

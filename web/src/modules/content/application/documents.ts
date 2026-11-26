@@ -62,6 +62,7 @@ export async function getDraftContent<K extends DocumentKey>(actor: Actor, key: 
 
 export async function saveDraft(actor: Actor, key: DocumentKey, raw: unknown): Promise<Result> {
   authorize(actor, 'content.edit')
+  await ensureReady()
   const parsed = parseDocument(key, raw)
   if (!parsed.ok) return parsed
   const json = JSON.stringify(parsed.data)
@@ -81,18 +82,19 @@ export async function saveDraft(actor: Actor, key: DocumentKey, raw: unknown): P
 
 export async function publishContent(actor: Actor, key: DocumentKey): Promise<Result> {
   authorize(actor, 'content.publish')
-  const row = await prisma.contentDocument.findUnique({ where: { key } })
-  if (!row) return { ok: false, error: 'Save a draft first.' }
-  let value: unknown
-  try {
-    value = JSON.parse(row.draft)
-  } catch {
-    return { ok: false, error: 'The draft is unreadable; save it again.' }
-  }
-  const parsed = parseDocument(key, value)
-  if (!parsed.ok) return parsed
-  const json = JSON.stringify(parsed.data)
-  await prisma.$transaction(async (tx) => {
+  await ensureReady()
+  return prisma.$transaction(async (tx) => {
+    const row = await tx.contentDocument.findUnique({ where: { key } })
+    if (!row) return { ok: false as const, error: 'Save a draft first.' }
+    let value: unknown
+    try {
+      value = upgradeSavedContent(key, JSON.parse(row.draft))
+    } catch {
+      return { ok: false as const, error: 'The draft is unreadable; save it again.' }
+    }
+    const parsed = parseDocument(key, withDefaults(DOCUMENTS[key].defaults, value))
+    if (!parsed.ok) return parsed
+    const json = JSON.stringify(parsed.data)
     await tx.contentDocument.update({
       where: { key },
       data: { draft: json, published: json, publishedAt: new Date(), publishedById: actor.id },
@@ -104,15 +106,16 @@ export async function publishContent(actor: Actor, key: DocumentKey): Promise<Re
       { actor, action: 'content.published', targetType: 'Content', targetId: key },
       tx,
     )
+    return { ok: true as const }
   })
-  return { ok: true }
 }
 
 export async function discardDraft(actor: Actor, key: DocumentKey): Promise<Result> {
   authorize(actor, 'content.edit')
-  const row = await prisma.contentDocument.findUnique({ where: { key } })
-  const restored = row?.published ?? JSON.stringify(DOCUMENTS[key].defaults)
+  await ensureReady()
   await prisma.$transaction(async (tx) => {
+    const row = await tx.contentDocument.findUnique({ where: { key } })
+    const restored = row?.published ?? JSON.stringify(DOCUMENTS[key].defaults)
     await tx.contentDocument.upsert({
       where: { key },
       create: { key, draft: restored, updatedById: actor.id },
@@ -153,12 +156,14 @@ export async function restoreRevision(
   revisionId: string,
 ): Promise<Result> {
   authorize(actor, 'content.edit')
+  await ensureReady()
   const revision = await prisma.contentRevision.findUnique({ where: { id: revisionId } })
   if (!revision || revision.documentKey !== key) return { ok: false, error: 'Version not found.' }
   await prisma.$transaction(async (tx) => {
-    await tx.contentDocument.update({
+    await tx.contentDocument.upsert({
       where: { key },
-      data: { draft: revision.content, updatedById: actor.id },
+      create: { key, draft: revision.content, updatedById: actor.id },
+      update: { draft: revision.content, updatedById: actor.id },
     })
     await recordAudit(
       {

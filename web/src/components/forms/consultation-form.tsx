@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, type FormEvent } from 'react'
+import { useId, useState, type FormEvent } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAccount } from '@/components/account/account-provider'
+import { useSiteContact } from '@/components/layout/site-contact'
 import { ArrowUpRightIcon, CheckIcon } from '@/components/ui/icons'
 import { fieldErrors, inquirySchema, type InquiryType } from '@/lib/inquiry'
 
@@ -13,13 +14,14 @@ interface ConsultationFormProps {
   darkSurface?: boolean
 }
 
-const FALLBACK_ERROR = 'We could not send your request. Please try again, or call +971 52 145 9888.'
-
 export function ConsultationForm({
   mode = 'CONSULTATION',
   contextTitle,
   darkSurface = false,
 }: ConsultationFormProps) {
+  const formId = useId()
+  const contact = useSiteContact()
+  const fallbackError = `We could not send your request. Please try again, or call ${contact?.phoneDisplay ?? '+971 52 145 9888'}.`
   const [selectedType, setSelectedType] = useState<'VALUATION' | 'CONSULTATION'>(
     mode === 'VALUATION' ? 'VALUATION' : 'CONSULTATION',
   )
@@ -68,21 +70,23 @@ export function ConsultationForm({
       }
       if (response.ok) {
         setSubmitted(true)
+      } else if (result.fields && Object.keys(result.fields).length > 0) {
+        setErrors(result.fields)
+        setFormError(null)
       } else {
-        if (result.fields) setErrors(result.fields)
-        setFormError(result.error && !result.fields ? result.error : FALLBACK_ERROR)
+        setFormError(result.error || fallbackError)
       }
     } catch {
-      setFormError(FALLBACK_ERROR)
+      setFormError(fallbackError)
     } finally {
       setSending(false)
     }
   }
 
-  const describedBy = (field: string) => (errors[field] ? `cf-${field}-error` : undefined)
+  const describedBy = (field: string) => (errors[field] ? `${formId}-${field}-error` : undefined)
   const fieldError = (field: string) =>
     errors[field] ? (
-      <p id={`cf-${field}-error`} className="ll-field-error">
+      <p id={`${formId}-${field}-error`} className="ll-field-error">
         {errors[field]}
       </p>
     ) : null
@@ -152,17 +156,17 @@ export function ConsultationForm({
       <form onSubmit={handleSubmit} className="ll-form-grid" noValidate>
         {/* Honeypot: invisible to people (and to screen readers), filled only by bots. */}
         <div className="ll-hp" aria-hidden="true">
-          <label htmlFor="cf-website">Website</label>
-          <input id="cf-website" name="website" tabIndex={-1} autoComplete="off" />
+          <label htmlFor={`${formId}-website`}>Website</label>
+          <input id={`${formId}-website`} name="website" tabIndex={-1} autoComplete="off" />
         </div>
 
         <div className="ll-two-col">
           <div>
-            <label htmlFor="cf-name" className="ll-field-label">
+            <label htmlFor={`${formId}-name`} className="ll-field-label">
               Full Name
             </label>
             <input
-              id="cf-name"
+              id={`${formId}-name`}
               name="name"
               defaultValue={account?.name ?? ''}
               required
@@ -176,11 +180,11 @@ export function ConsultationForm({
             {fieldError('name')}
           </div>
           <div>
-            <label htmlFor="cf-phone" className="ll-field-label">
+            <label htmlFor={`${formId}-phone`} className="ll-field-label">
               Phone / WhatsApp
             </label>
             <input
-              id="cf-phone"
+              id={`${formId}-phone`}
               name="phone"
               defaultValue={account?.phone ?? ''}
               type="tel"
@@ -198,11 +202,11 @@ export function ConsultationForm({
 
         <div className="ll-two-col">
           <div>
-            <label htmlFor="cf-email" className="ll-field-label">
+            <label htmlFor={`${formId}-email`} className="ll-field-label">
               Email Address
             </label>
             <input
-              id="cf-email"
+              id={`${formId}-email`}
               name="email"
               defaultValue={account?.email ?? ''}
               type="email"
@@ -217,11 +221,11 @@ export function ConsultationForm({
             {fieldError('email')}
           </div>
           <div>
-            <label htmlFor="cf-community" className="ll-field-label">
+            <label htmlFor={`${formId}-community`} className="ll-field-label">
               {selectedType === 'VALUATION' ? 'Community / Property Type' : 'Investment Interest'}
             </label>
             <input
-              id="cf-community"
+              id={`${formId}-community`}
               name="interest"
               required
               maxLength={200}
@@ -236,17 +240,20 @@ export function ConsultationForm({
         </div>
 
         <div>
-          <label htmlFor="cf-notes" className="ll-field-label">
+          <label htmlFor={`${formId}-notes`} className="ll-field-label">
             Mandate Notes (Optional)
           </label>
           <textarea
-            id="cf-notes"
+            id={`${formId}-notes`}
             name="notes"
             rows={3}
             maxLength={2000}
             placeholder="Share target timelines, unit preferences, or asset valuation questions..."
             className="ll-input ll-textarea"
+            aria-invalid={Boolean(errors.notes)}
+            aria-describedby={describedBy('notes')}
           />
+          {fieldError('notes')}
         </div>
 
         {formError && (

@@ -30,21 +30,26 @@ export function LogoField({ csrf, initial }: { csrf: string; initial: string }) 
             style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }}
             disabled={busy}
             onChange={async (event) => {
-              const file = event.target.files?.[0]
+              const input = event.currentTarget
+              const file = input.files?.[0]
+              input.value = ''
               if (!file) return
               setBusy(true)
               setError('')
-              const body = new FormData()
-              body.append('file', file)
-              const response = await fetch('/api/upload', {
-                method: 'POST',
-                body,
-                headers: { 'x-csrf-token': csrf },
-              }).catch(() => null)
-              const data = response ? await response.json().catch(() => ({})) : {}
-              if (response?.ok && data.ok) setUrl(data.asset.url)
-              else setError(data.error ?? 'Upload failed.')
-              setBusy(false)
+              try {
+                const body = new FormData()
+                body.append('file', file)
+                const response = await fetch('/api/upload', {
+                  method: 'POST',
+                  body,
+                  headers: { 'x-csrf-token': csrf },
+                }).catch(() => null)
+                const data = response ? await response.json().catch(() => ({})) : {}
+                if (response?.ok && data.ok) setUrl(data.asset.url)
+                else setError(data.error ?? 'Upload failed.')
+              } finally {
+                setBusy(false)
+              }
             }}
           />
         </label>

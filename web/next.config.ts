@@ -65,8 +65,12 @@ const nextConfig: NextConfig = {
     return [{ source: '/mortgage', destination: '/#mortgage-calculator', permanent: true }]
   },
   async headers() {
+    const noIndex = [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }]
     return [
       { source: '/:path*', headers: SECURITY_HEADERS },
+      { source: '/admin/:path*', headers: noIndex },
+      { source: '/account/:path*', headers: noIndex },
+      { source: '/api/:path*', headers: noIndex },
       { source: '/images/:path*', headers: [{ key: 'Cache-Control', value: MEDIA_CACHE }] },
       { source: '/videos/:path*', headers: [{ key: 'Cache-Control', value: MEDIA_CACHE }] },
       { source: '/brand/:path*', headers: [{ key: 'Cache-Control', value: MEDIA_CACHE }] },

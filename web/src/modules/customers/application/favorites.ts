@@ -5,6 +5,7 @@ import { favoriteKey, MAX_FAVORITES, parseFavoriteKey, type FavoriteType } from 
 
 /** The account's saved items as `TYPE:id` keys (for the hearts across the site). */
 export async function listFavoriteKeys(customerId: string): Promise<string[]> {
+  await ensureReady()
   const rows = await prisma.favorite.findMany({
     where: { customerId },
     select: { itemType: true, itemId: true },
@@ -43,19 +44,24 @@ export async function setFavorite(
   if (!(await isPublished(item.type, item.id))) {
     return { ok: false, error: 'This listing is no longer available.' }
   }
-  const existing = await prisma.favorite.findUnique({
-    where: { customerId_itemType_itemId: where },
+  return prisma.$transaction(async (tx) => {
+    const existing = await tx.favorite.findUnique({
+      where: { customerId_itemType_itemId: where },
+    })
+    if (existing) return { ok: true as const, saved: true }
+    if ((await tx.favorite.count({ where: { customerId } })) >= MAX_FAVORITES) {
+      return {
+        ok: false as const,
+        error: `You can save up to ${MAX_FAVORITES} items. Remove some first.`,
+      }
+    }
+    await tx.favorite.upsert({
+      where: { customerId_itemType_itemId: where },
+      create: where,
+      update: {},
+    })
+    return { ok: true as const, saved: true }
   })
-  if (existing) return { ok: true, saved: true }
-  if ((await prisma.favorite.count({ where: { customerId } })) >= MAX_FAVORITES) {
-    return { ok: false, error: `You can save up to ${MAX_FAVORITES} items. Remove some first.` }
-  }
-  await prisma.favorite.upsert({
-    where: { customerId_itemType_itemId: where },
-    create: where,
-    update: {},
-  })
-  return { ok: true, saved: true }
 }
 
 /**

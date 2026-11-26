@@ -43,7 +43,13 @@ export function AccountProvider({
   saved: string[]
   children: ReactNode
 }) {
+  const savedSig = saved.join('\0')
+  const [prevSig, setPrevSig] = useState(savedSig)
   const [keys, setKeys] = useState(() => new Set(saved))
+  if (savedSig !== prevSig) {
+    setPrevSig(savedSig)
+    setKeys(new Set(saved))
+  }
 
   const set = useCallback((key: string, on: boolean) => {
     setKeys((prev) => {

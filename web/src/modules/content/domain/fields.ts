@@ -41,8 +41,8 @@ export interface SectionDef {
   fields: Fields
 }
 
-/** Site links: an internal path, https, mailto: or tel:. Never javascript: or data:. */
-const HREF = /^(\/(?!\/)[^\s<>"]*|https:\/\/[^\s<>"]+|mailto:[^\s<>"]+|tel:\+?[0-9]{6,16})$/
+/** Site links: an internal path, https, mailto: or tel:. Never javascript:, data:, or // / /\. */
+const HREF = /^(\/(?![/\\])[^\s<>"]*|https:\/\/[^\s<>"]+|mailto:[^\s<>"]+|tel:\+?[0-9]{6,16})$/
 
 export const isFieldMap = (item: Fields | Field): item is Fields =>
   typeof (item as Field).kind !== 'string'

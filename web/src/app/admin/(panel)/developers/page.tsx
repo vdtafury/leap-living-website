@@ -23,7 +23,7 @@ export default async function DevelopersPage({ searchParams }: { searchParams: S
           <span className="adm-label">Name</span>
           <input className="adm-input" name="name" defaultValue={d?.name} required maxLength={60} />
         </label>
-        <LogoField csrf={csrf} initial={d?.logoUrl ?? ''} />
+        <LogoField key={d ? `${d.id}-${d.logoUrl}` : `new-${developers.length}`} csrf={csrf} initial={d?.logoUrl ?? ''} />
         <label className="adm-field">
           <span className="adm-label">Width (px)</span>
           <input

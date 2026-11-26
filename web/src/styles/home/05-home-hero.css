@@ -23,6 +23,7 @@
 .ll-hero-poster {
   position: absolute;
   inset: 0;
+  z-index: 1;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -34,18 +35,19 @@
 .ll-hero-video {
   position: absolute;
   inset: 0;
+  z-index: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center center;
-  /* Hidden until its first frame is painted, then shown instantly: no crossfade, because a
-     fade over a moving shot reads as a transition. The poster underneath is the same frame. */
-  opacity: 0;
+  /* Layered behind the opaque frame-0 poster at full opacity so Chromium never throttles
+     decoding or requestVideoFrameCallback; raised above the poster once frame 0 paints. */
+  opacity: 1;
   pointer-events: none;
 }
 
 .ll-hero-video.is-visible {
-  opacity: 1;
+  z-index: 2;
 }
 
 .ll-hero-scrim {

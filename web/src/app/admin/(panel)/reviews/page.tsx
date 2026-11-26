@@ -39,18 +39,21 @@ export default async function ReviewsPage({ searchParams }: { searchParams: Sear
   const actor = await requireActor('review.view')
   const query = await searchParams
   const requested = param(query.status)
-  // Default view: what needs a decision.
-  const status = requested === 'all' ? '' : requested || 'PENDING'
+  // Default view: what needs a decision. Restrict to known filter values.
+  const current =
+    requested === 'all' || (REVIEW_STATUSES as readonly string[]).includes(requested)
+      ? requested
+      : 'PENDING'
+  const status = current === 'all' ? '' : current
   const { rows, counts } = await listReviews(actor, { status })
   const csrf = csrfToken(actor)
   const moderate = can(actor, 'review.moderate')
-  const back = `/admin/reviews?status=${requested === 'all' ? 'all' : status}`
+  const back = `/admin/reviews?status=${encodeURIComponent(current)}`
   const total = REVIEW_STATUSES.reduce((a, s) => a + counts[s], 0)
   const tabs: { key: string; label: string; count: number }[] = [
     ...REVIEW_STATUSES.map((s) => ({ key: s, label: STATUS_LABEL[s], count: counts[s] })),
     { key: 'all', label: 'All', count: total },
   ]
-  const current = requested === 'all' ? 'all' : status
 
   return (
     <>

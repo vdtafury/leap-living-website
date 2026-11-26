@@ -11,9 +11,14 @@ import { ChevronRightIcon } from '@/components/ui/icons'
 
 export const metadata: Metadata = { title: 'Account settings | LEAP LIVING' }
 
-export default async function AccountSettingsPage() {
+export default async function AccountSettingsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ passwordChanged?: string }>
+}) {
   const customer = await getCustomer()
   if (!customer) redirect('/account/sign-in?next=/account/settings')
+  const { passwordChanged } = await searchParams
   const csrf = accountCsrfToken(customer)
 
   return (
@@ -45,6 +50,11 @@ export default async function AccountSettingsPage() {
         <section className="ll-acc-panel" aria-labelledby="password-title">
           <h2 id="password-title">Password</h2>
           <p className="ll-acc-panel-lead">Changing it signs you out on every other device.</p>
+          {passwordChanged === '1' && (
+            <div className="ll-acc-alert ll-acc-alert--ok" role="status">
+              Password changed. Other devices were signed out.
+            </div>
+          )}
           <ChangePasswordForm csrf={csrf} />
         </section>
 

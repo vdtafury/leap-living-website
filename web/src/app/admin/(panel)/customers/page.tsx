@@ -20,9 +20,11 @@ export default async function CustomersPage({ searchParams }: { searchParams: Se
   const actor = await requireActor('customer.view')
   const query = await searchParams
   const q = param(query.q).slice(0, 80)
+  const rawPage = Number(param(query.page))
+  const safePage = Number.isFinite(rawPage) ? Math.min(10_000, Math.max(1, Math.floor(rawPage))) : 1
   const { rows, total, page, pageSize } = await listCustomers(actor, {
     q,
-    page: Number(param(query.page)) || 1,
+    page: safePage,
   })
   const csrf = csrfToken(actor)
   const manage = can(actor, 'customer.manage')

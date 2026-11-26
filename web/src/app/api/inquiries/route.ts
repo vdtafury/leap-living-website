@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createRateLimiter } from '@/server/rate-limit'
 import { clientIp, hashIp, isSameOrigin } from '@/server/request'
 import { guardApi } from '@/server/auth/api-guard'
+import { originAllowed } from '@/server/auth/csrf'
 import { customerFromRequest } from '@/server/auth/account'
 import { fieldErrors, inquirySchema, MAX_INQUIRY_BYTES } from '@/lib/inquiry'
 import { exportInquiries, submitInquiry } from '@/modules/inquiries'
@@ -12,16 +13,49 @@ const submissions = createRateLimiter({ limit: 5, windowMs: 10 * 60 * 1000 })
 const json = (body: unknown, status: number, headers?: HeadersInit) =>
   NextResponse.json(body, { status, headers })
 
+/** Reads a request body as UTF-8 while enforcing a hard byte cap (covers chunked transfers too). */
+async function readBoundedText(request: Request, maxBytes: number): Promise<string | null> {
+  if (!request.body) {
+    const raw = await request.text()
+    return Buffer.byteLength(raw, 'utf8') > maxBytes ? null : raw
+  }
+  const reader = request.body.getReader()
+  const chunks: Uint8Array[] = []
+  let total = 0
+  try {
+    for (;;) {
+      const { done, value } = await reader.read()
+      if (done) break
+      total += value.byteLength
+      if (total > maxBytes) {
+        await reader.cancel().catch(() => undefined)
+        return null
+      }
+      chunks.push(value)
+    }
+  } finally {
+    reader.releaseLock()
+  }
+  return Buffer.concat(chunks, total).toString('utf8')
+}
+
 /** Public: the site's consultation / valuation / viewing forms post here. */
 export async function POST(request: Request) {
   if (!isSameOrigin(request)) return json({ ok: false, error: 'forbidden' }, 403)
 
-  // Refuse big bodies before reading them into memory (the header is checked, then the text).
-  if (Number(request.headers.get('content-length') ?? 0) > MAX_INQUIRY_BYTES) {
-    return json({ ok: false, error: 'request too large' }, 413)
+  // Refuse malformed or oversized Content-Length before reading, then enforce the byte cap on stream.
+  const contentLength = request.headers.get('content-length')
+  if (contentLength !== null) {
+    const parsedLength = Number(contentLength)
+    if (!Number.isFinite(parsedLength) || parsedLength < 0) {
+      return json({ ok: false, error: 'invalid content length' }, 400)
+    }
+    if (parsedLength > MAX_INQUIRY_BYTES) {
+      return json({ ok: false, error: 'request too large' }, 413)
+    }
   }
-  const raw = await request.text()
-  if (raw.length > MAX_INQUIRY_BYTES) return json({ ok: false, error: 'request too large' }, 413)
+  const raw = await readBoundedText(request, MAX_INQUIRY_BYTES)
+  if (raw === null) return json({ ok: false, error: 'request too large' }, 413)
   let body: unknown
   try {
     body = JSON.parse(raw)
@@ -50,8 +84,8 @@ export async function POST(request: Request) {
 
   try {
     // Saved together with its notification email (outbox); sending happens afterwards.
-    // Signed in on the website: the request is also listed on the visitor's account page.
-    const customer = await customerFromRequest(request)
+    // Link to the visitor's account only for verified same-origin browser submissions.
+    const customer = originAllowed(request.headers) ? await customerFromRequest(request) : null
     const inquiry = await submitInquiry(data, {
       ipHash: ip === 'unknown' ? null : hashIp(ip),
       userAgent: request.headers.get('user-agent'),

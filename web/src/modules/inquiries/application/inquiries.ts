@@ -96,17 +96,19 @@ export async function listInquiries(
 ) {
   authorize(actor, 'inquiry.view')
   await ensureReady()
+  const safePage = Math.min(10_000, Math.max(1, Number.isFinite(page) ? Math.floor(page) : 1))
+  const safeSize = Math.min(200, Math.max(1, Number.isFinite(pageSize) ? Math.floor(pageSize) : 50))
   const where = { ...(status ? { status } : {}), ...(type ? { type } : {}) }
   const [rows, total] = await Promise.all([
     prisma.inquiry.findMany({
       where,
       orderBy: { createdAt: 'desc' },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
+      skip: (safePage - 1) * safeSize,
+      take: safeSize,
     }),
     prisma.inquiry.count({ where }),
   ])
-  return { rows, total, page, pageSize }
+  return { rows, total, page: safePage, pageSize: safeSize }
 }
 
 export async function setInquiryStatus(actor: Actor, id: string, status: string) {
@@ -114,8 +116,10 @@ export async function setInquiryStatus(actor: Actor, id: string, status: string)
   if (!(INQUIRY_STATUSES as readonly string[]).includes(status)) {
     return { ok: false as const, error: 'Unknown status.' }
   }
-  await prisma.$transaction(async (tx) => {
-    await tx.inquiry.update({ where: { id }, data: { status } })
+  await ensureReady()
+  const updated = await prisma.$transaction(async (tx) => {
+    const res = await tx.inquiry.updateMany({ where: { id }, data: { status } })
+    if (res.count !== 1) return false
     await recordAudit(
       {
         actor,
@@ -126,7 +130,9 @@ export async function setInquiryStatus(actor: Actor, id: string, status: string)
       },
       tx,
     )
+    return true
   })
+  if (!updated) return { ok: false as const, error: 'Inquiry not found.' }
   return { ok: true as const }
 }
 

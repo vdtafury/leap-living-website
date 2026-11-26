@@ -7,12 +7,14 @@ import { usePathname, useRouter } from 'next/navigation'
 // and arrive in well under 100ms; after this the swap simply happens without the crossfade.
 const MAX_WAIT_MS = 1500
 
-type Pending = { path: string; done: () => void }
+type Pending = { from: string; done: () => void }
 
 function wantsTransition(event: MouseEvent): HTMLAnchorElement | null {
   if (event.defaultPrevented || event.button !== 0) return null
   if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return null
   const target = event.target as Element | null
+  // Do not hijack clicks that immediately follow a carousel mouse drag.
+  if (target?.closest('[data-dragging="true"], [data-suppress-click="true"]')) return null
   const link = target?.closest?.('a[href]') as HTMLAnchorElement | null
   if (!link || link.target || link.hasAttribute('download')) return null
   // A button or field inside a link handles its own click.
@@ -45,9 +47,9 @@ export function PageTransitions() {
   const pending = useRef<Pending | null>(null)
 
   // The new route has been committed to the DOM (before paint): let the browser take the
-  // "after" picture and start the animation.
+  // "after" picture and start the animation (handles server redirects as well as direct targets).
   useLayoutEffect(() => {
-    if (pending.current && pending.current.path === pathname) {
+    if (pending.current && pathname !== pending.current.from) {
       pending.current.done()
       pending.current = null
     }
@@ -65,6 +67,7 @@ export function PageTransitions() {
       event.stopPropagation()
       const url = new URL(link.href, location.href)
       const href = url.pathname + url.search + url.hash
+      const from = location.pathname
 
       document.startViewTransition(
         () =>
@@ -74,7 +77,7 @@ export function PageTransitions() {
               resolve()
             }, MAX_WAIT_MS)
             pending.current = {
-              path: url.pathname,
+              from,
               done: () => {
                 window.clearTimeout(timer)
                 resolve()

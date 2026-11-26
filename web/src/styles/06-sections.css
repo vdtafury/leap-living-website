@@ -106,7 +106,7 @@
 }
 
 .ll-link-arrow:hover {
-  color: var(--brand-teal);
-  border-bottom-color: var(--brand-teal);
+  color: var(--secondary-teal);
+  border-bottom-color: var(--secondary-teal);
 }
 

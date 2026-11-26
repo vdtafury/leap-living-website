@@ -21,8 +21,9 @@ export async function generateMetadata({
 
   return pageMetadata({
     title: `${project.title} — ${project.community} | LEAP LIVING`,
-    description: project.overview,
+    description: project.overview.slice(0, 160),
     path: `/projects/${project.slug}`,
+    image: project.image ? { url: project.image, alt: project.title } : undefined,
   })
 }
 

@@ -20,7 +20,8 @@ export function SiteHeaderClient({
   links?: NavLink[]
 }) {
   const pathname = usePathname()
-  const [mobileOpen, setMobileOpen] = useState(false)
+  const [openPath, setOpenPath] = useState<string | null>(null)
+  const mobileOpen = openPath === pathname
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
@@ -32,7 +33,16 @@ export function SiteHeaderClient({
     return () => window.removeEventListener('scroll', updateScroll)
   }, [])
 
-  const isOverlayPage = pathname === '/'
+  useEffect(() => {
+    if (!mobileOpen) return
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpenPath(null)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [mobileOpen])
+
+  const isOverlayPage = pathname === '/' || pathname === '/admin/preview/home'
   const isTransparent = isOverlayPage && !scrolled && !mobileOpen
 
   const isActive = (href: string) => {
@@ -115,7 +125,7 @@ export function SiteHeaderClient({
           className="ll-mobile-menu-btn"
           aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
           aria-expanded={mobileOpen}
-          onClick={() => setMobileOpen((prev) => !prev)}
+          onClick={() => setOpenPath((prev) => (prev === pathname ? null : pathname))}
         >
           {mobileOpen ? <CloseIcon size={20} /> : <MenuIcon size={20} />}
         </button>
@@ -129,17 +139,17 @@ export function SiteHeaderClient({
                 key={`${item.label}-${item.href}`}
                 href={item.href}
                 prefetch
-                onClick={() => setMobileOpen(false)}
+                onClick={() => setOpenPath(null)}
                 className={`ll-mobile-nav-link ${isActive(item.href) ? 'active' : ''}`}
               >
                 {item.label}
               </Link>
             ))}
-            <AccountMenuLink onNavigate={() => setMobileOpen(false)} />
+            <AccountMenuLink onNavigate={() => setOpenPath(null)} />
             <div className="ll-mobile-nav-actions">
               <Link
                 href="/sell"
-                onClick={() => setMobileOpen(false)}
+                onClick={() => setOpenPath(null)}
                 className="ll-btn ll-btn-list"
               >
                 <HomeIcon size={15} />
@@ -147,7 +157,7 @@ export function SiteHeaderClient({
               </Link>
               <Link
                 href="/sell#valuation-form"
-                onClick={() => setMobileOpen(false)}
+                onClick={() => setOpenPath(null)}
                 className="ll-btn ll-btn-primary"
               >
                 <span>Free Valuation</span>
