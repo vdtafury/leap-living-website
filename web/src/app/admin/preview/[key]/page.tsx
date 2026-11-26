@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 import { requireActor } from '@/server/auth/current'
 import { HomeView } from '@/components/home/home-view'
 import { AboutView } from '@/components/about/about-view'
-import { HERO_VIDEO_HEVC_SRC, HERO_VIDEO_SRC } from '@/lib/hero-video'
+import { HERO_VIDEO_SRC } from '@/lib/hero-video'
 import { getDraftContent } from '@/modules/content'
 import { listVisibleDevelopers } from '@/modules/developers'
 import { listPublishedReviews } from '@/modules/reviews'
@@ -54,12 +54,6 @@ export default async function PreviewPage({ params }: { params: Promise<{ key: s
           path.join(/*turbopackIgnore: true*/ process.cwd(), 'public', HERO_VIDEO_SRC),
         ),
     )
-    const hasHeroHevcVideo = Boolean(
-      !process.env.VERCEL &&
-        fs.existsSync(
-          path.join(/*turbopackIgnore: true*/ process.cwd(), 'public', HERO_VIDEO_HEVC_SRC),
-        ),
-    )
     return (
       <>
         <HomeView
@@ -68,7 +62,6 @@ export default async function PreviewPage({ params }: { params: Promise<{ key: s
           projects={projects}
           developers={developers}
           hasHeroVideo={hasHeroVideo}
-          hasHeroHevcVideo={hasHeroHevcVideo}
           publishedReviews={publishedReviews}
         />
         {banner}

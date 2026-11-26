@@ -34,18 +34,23 @@ describe('shouldPlayHeroVideo', () => {
     expect(shouldPlayHeroVideo({ ...site, effectiveType: '4g', downlink: 10 })).toBe(true)
   })
 
-  it(`needs at least ${HERO_MIN_DOWNLINK_MBPS} Mbps (with ±10% Chrome noise) for smooth 1080p playback`, () => {
-    expect(HERO_MIN_DOWNLINK_MBPS).toBe(3)
-    // Chrome's ±10% privacy noise around 3 Mbps: >= 2.7 still counts as fast enough.
+  it(`needs at least ${HERO_MIN_DOWNLINK_MBPS} Mbps (with ±10% Chrome noise) to skip slow links`, () => {
+    expect(HERO_MIN_DOWNLINK_MBPS).toBe(1.5)
+    // Chrome's ±10% privacy noise around 1.5 Mbps: >= 1.35 still counts as fast enough.
     expect(shouldPlayHeroVideo({ ...site, downlink: 10 })).toBe(true)
-    expect(shouldPlayHeroVideo({ ...site, downlink: 3 })).toBe(true)
-    expect(shouldPlayHeroVideo({ ...site, downlink: 2.8 })).toBe(true)
-    expect(shouldPlayHeroVideo({ ...site, downlink: 2.5 })).toBe(false)
-    expect(shouldPlayHeroVideo({ ...site, downlink: 1.5 })).toBe(false)
+    expect(shouldPlayHeroVideo({ ...site, downlink: 2.2 })).toBe(true)
+    expect(shouldPlayHeroVideo({ ...site, downlink: 1.4 })).toBe(true)
+    expect(shouldPlayHeroVideo({ ...site, downlink: 1.2 })).toBe(false)
+    expect(shouldPlayHeroVideo({ ...site, downlink: 0.8 })).toBe(false)
   })
 
-  it('always plays on a development machine or preview host, whatever the speed estimate', () => {
-    for (const hostname of ['localhost', '127.0.0.1', 'web-ecru-delta-79.vercel.app']) {
+  it('always plays on a development machine, staging, or preview host, whatever the speed estimate', () => {
+    for (const hostname of [
+      'localhost',
+      '127.0.0.1',
+      'staging.leapliving.ae',
+      'web-ecru-delta-79.vercel.app',
+    ]) {
       expect(
         shouldPlayHeroVideo({ hasVideo: true, hostname, downlink: 1.2, effectiveType: '3g' }),
       ).toBe(true)

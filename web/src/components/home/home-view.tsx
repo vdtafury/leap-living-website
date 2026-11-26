@@ -30,7 +30,6 @@ export interface HomeViewProps {
   projects: ProjectItem[]
   developers: DeveloperBrand[]
   hasHeroVideo: boolean
-  hasHeroHevcVideo?: boolean
   /** JSON-LD needs the published settings; the admin preview leaves it out */
   jsonLd?: ReactNode
   /** Approved client reviews (D-44); the sample reviews from the CMS fill in until there are 3 */
@@ -48,7 +47,6 @@ export function HomeView({
   projects,
   developers,
   hasHeroVideo,
-  hasHeroHevcVideo = false,
   jsonLd,
   publishedReviews = { items: [], stats: EMPTY_REVIEW_STATS },
 }: HomeViewProps) {
@@ -74,7 +72,7 @@ export function HomeView({
       <main>
         {/* ==================== CINEMATIC HERO ==================== */}
         <section className="ll-hero">
-          <HeroVideoBackdrop hasVideo={hasHeroVideo} hasHevcVideo={hasHeroHevcVideo} />
+          <HeroVideoBackdrop hasVideo={hasHeroVideo} />
 
           <div className="ll-container ll-hero-inner">
             <div className="ll-hero-content">

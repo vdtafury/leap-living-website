@@ -1,20 +1,18 @@
 /**
  * The homepage hero plays ONE video: the client's hero reel, full length (no trimming),
- * web-encoded at crisp 1080p (~20-28 MB, ~2.5-3.5 Mbps, faststart, D-53) so it streams
- * smoothly from cPanel without buffering.
+ * web-encoded at cinema 1080p30 H.264 High (~57 MB, 6.5 Mbps, BT.709, faststart, D-53) so
+ * every browser (Chrome, Safari, Firefox, Edge) hardware-decodes it with zero codec quirks.
  *
  * It is git-ignored and placed on the server in `leapliving-data/` (symlinked to
- * `public/videos/hero/client-hero-original.mp4` and served directly by Apache).
+ * `public/videos/hero/client-hero-original.mp4`).
  */
 export const HERO_VIDEO_SRC = '/videos/hero/client-hero-original.mp4'
-/** Higher-efficiency 1080p30 HEVC (hvc1) track served first to Safari / Chrome / Edge. */
-export const HERO_VIDEO_HEVC_SRC = '/videos/hero/client-hero-hevc.mp4'
 
 /**
- * The web-encoded 1080p hero streams at ~2.5-3.5 Mbps (D-53). Below ~3 Mbps it would keep
- * stopping to buffer, so the still frame 0 poster stays instead.
+ * Skip only genuinely slow connections (Chrome's `downlink` frequently under-reports normal
+ * Wi-Fi at ~2 Mbps right after page load, while Safari/Firefox report nothing).
  */
-export const HERO_MIN_DOWNLINK_MBPS = 3
+export const HERO_MIN_DOWNLINK_MBPS = 1.5
 
 /**
  * Chrome caps `downlink` at 10 and, for privacy, multiplies it by a random ±10% factor per
@@ -49,6 +47,7 @@ const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]'])
 export function isDevOrPreviewHost(hostname?: string): boolean {
   if (!hostname) return false
   if (LOCAL_HOSTS.has(hostname)) return true
+  if (hostname.startsWith('staging.')) return true
   if (hostname.endsWith('.vercel.app')) return true
   return false
 }

@@ -3,12 +3,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { preload } from 'react-dom'
 import { ResponsiveImg, getPortraitImage, getResponsiveImage } from '@/components/ui/responsive-img'
-import {
-  HERO_MOBILE_QUERY,
-  HERO_VIDEO_HEVC_SRC,
-  HERO_VIDEO_SRC,
-  shouldPlayHeroVideo,
-} from '@/lib/hero-video'
+import { HERO_MOBILE_QUERY, HERO_VIDEO_SRC, shouldPlayHeroVideo } from '@/lib/hero-video'
 
 /**
  * Official client hero reel (Dubai & Palm Jumeirah aerials, 74 s loop), played from the client's
@@ -56,13 +51,7 @@ function subscribeToReducedMotion(onChange: () => void) {
 const getReducedMotion = () => window.matchMedia(REDUCED_MOTION_QUERY).matches
 const getReducedMotionOnServer = () => false
 
-export function HeroVideoBackdrop({
-  hasVideo = false,
-  hasHevcVideo = false,
-}: {
-  hasVideo?: boolean
-  hasHevcVideo?: boolean
-}) {
+export function HeroVideoBackdrop({ hasVideo = false }: { hasVideo?: boolean }) {
   const [videoReady, setVideoReady] = useState(false)
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const backdropRef = useRef<HTMLDivElement | null>(null)
@@ -195,10 +184,11 @@ export function HeroVideoBackdrop({
         />
       </picture>
 
-      {/* Official client hero video reel: HEVC first (Safari/Chrome/Edge), H.264 fallback */}
+      {/* Official client hero video reel: universal 1080p30 H.264 High (Chrome/Safari/Firefox/Edge) */}
       {!reducedMotion && playVideo && (
         <video
           ref={videoRef}
+          src={HERO_VIDEO_SRC}
           autoPlay
           muted
           loop
@@ -207,10 +197,7 @@ export function HeroVideoBackdrop({
           // File missing on this server, or not playable: the poster (same picture) stays.
           onError={() => setPlayVideo(false)}
           className={`ll-hero-video ${videoReady ? 'is-visible' : ''}`}
-        >
-          {hasHevcVideo && <source src={HERO_VIDEO_HEVC_SRC} type='video/mp4; codecs="hvc1"' />}
-          <source src={HERO_VIDEO_SRC} type="video/mp4" />
-        </video>
+        />
       )}
 
       <div className="ll-hero-scrim" />
