@@ -23,7 +23,7 @@ export async function generateMetadata({
     title: `${project.title} — ${project.community} | LEAP LIVING`,
     description: project.overview.slice(0, 160),
     path: `/projects/${project.slug}`,
-    image: project.image ? { url: project.image, alt: project.title } : undefined,
+    image: project.heroImage ? { url: project.heroImage, alt: project.title } : undefined,
   })
 }
 

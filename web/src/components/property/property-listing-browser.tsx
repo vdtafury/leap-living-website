@@ -39,7 +39,7 @@ export function PropertyListingBrowser({
     communities.includes(initialCommunity) ? initialCommunity : 'ALL',
   )
   const [propertyType, setPropertyType] = useState(() =>
-    types.includes(initialType) ? initialType : 'ALL',
+    (types as string[]).includes(initialType) ? initialType : 'ALL',
   )
   const [minBeds, setMinBeds] = useState(() =>
     validBeds.includes(initialBeds) ? initialBeds : 'ALL',

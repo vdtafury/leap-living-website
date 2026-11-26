@@ -24,7 +24,7 @@ export async function generateMetadata({
     title: `${property.title} — ${property.community} | LEAP LIVING`,
     description: property.subtitle || property.description.slice(0, 160),
     path: `/properties/${property.slug}`,
-    image: property.image ? { url: property.image, alt: property.title } : undefined,
+    image: property.heroImage ? { url: property.heroImage, alt: property.title } : undefined,
   })
 }
 
