@@ -72,6 +72,71 @@ describe('section registry', () => {
   })
 })
 
+describe('Meet the Team (D-57)', () => {
+  const member = {
+    name: 'Test Person',
+    role: 'Property Consultant',
+    photo: '/media/0b5c2c4e-1111-4a5e-9c55-7d0f0a1b2c3d.webp',
+    bio: 'First paragraph.\nSecond paragraph.',
+    brn: '12345',
+    email: 'person@example.com',
+    linkedin: 'https://www.linkedin.com/in/test-person',
+  }
+  const withTeam = (members: unknown[]) => {
+    const about = structuredClone(DEFAULT_ABOUT) as Record<string, unknown>
+    about.team = { ...DEFAULT_ABOUT.team, members }
+    return about
+  }
+
+  it('ships with no people: the section stays hidden until real ones are added', () => {
+    expect(DEFAULT_ABOUT.team.members).toEqual([])
+    expect(DEFAULT_ABOUT.team.title).toBe('Meet the Team')
+  })
+
+  it('gives About pages saved before the section existed an empty team', () => {
+    const old: Partial<typeof DEFAULT_ABOUT> = structuredClone(DEFAULT_ABOUT)
+    delete old.team
+    const parsed = parseDocument('about', withDefaults(DEFAULT_ABOUT, old))
+    expect(parsed.ok).toBe(true)
+    if (parsed.ok) expect(parsed.data.team.members).toEqual([])
+  })
+
+  it('accepts a full member and one with only a name and a title', () => {
+    const minimal = { ...member, photo: '', bio: '', brn: '', email: '', linkedin: '' }
+    const parsed = parseDocument('about', withTeam([member, minimal]))
+    expect(parsed.ok).toBe(true)
+    if (parsed.ok) expect(parsed.data.team.members[0].photo).toBe(member.photo)
+  })
+
+  it('only takes photos the site serves itself', () => {
+    for (const photo of [
+      'https://evil.example/x.jpg',
+      'javascript:alert(1)',
+      '/media/../secret.webp',
+      '//evil.example/x.webp',
+      '/uploads/x.webp',
+    ]) {
+      expect(parseDocument('about', withTeam([{ ...member, photo }])).ok, photo).toBe(false)
+    }
+    expect(parseDocument('about', withTeam([{ ...member, photo: '/images/a.jpg' }])).ok).toBe(true)
+  })
+
+  it('requires a name and a title, and checks the email and LinkedIn link', () => {
+    expect(parseDocument('about', withTeam([{ ...member, name: ' ' }])).ok).toBe(false)
+    expect(parseDocument('about', withTeam([{ ...member, role: '' }])).ok).toBe(false)
+    expect(parseDocument('about', withTeam([{ ...member, email: 'nope' }])).ok).toBe(false)
+    expect(
+      parseDocument('about', withTeam([{ ...member, linkedin: 'javascript:alert(1)' }])).ok,
+    ).toBe(false)
+    expect(parseDocument('about', withTeam([{ ...member, bio: 'x'.repeat(1201) }])).ok).toBe(false)
+  })
+
+  it('caps the team at 24 people', () => {
+    expect(parseDocument('about', withTeam(Array(24).fill(member))).ok).toBe(true)
+    expect(parseDocument('about', withTeam(Array(25).fill(member))).ok).toBe(false)
+  })
+})
+
 describe('draft / publish', () => {
   it('a saved draft is not public until published', async () => {
     const draft = structuredClone(DEFAULT_HOME)

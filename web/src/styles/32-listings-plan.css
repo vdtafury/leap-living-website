@@ -1,0 +1,543 @@
+/* ==========================================================================
+   Buy / Rent closing section: "Plan your purchase" / "Plan your move" (D-58)
+   A bento of three different tiles:
+   - .ll-plan-tool     working estimator (light tint card, big readout, slider)
+   - .ll-plan-feature  photo tile to the next page
+   - .ll-plan-talk     dark private-consultation tile with WhatsApp / call
+   ========================================================================== */
+
+.ll-plan {
+  background: var(--white);
+  padding: clamp(4rem, 6vw, 6.5rem) 0 clamp(4.5rem, 6.5vw, 7rem);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.ll-plan-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem 3rem;
+  flex-wrap: wrap;
+  margin-bottom: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.ll-plan-title {
+  font-size: clamp(2rem, 3.2vw, 2.75rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+
+.ll-plan-lead {
+  max-width: 380px;
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--body-text);
+}
+
+.ll-plan-bento {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+  grid-template-areas:
+    'tool feature'
+    'tool talk';
+  gap: clamp(1rem, 1.6vw, 1.5rem);
+}
+
+/* ---------- estimator ---------- */
+
+.ll-plan-tool {
+  grid-area: tool;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.6rem, 3vw, 2.5rem);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(120% 80% at 100% 0%, rgba(var(--brand-teal-rgb), 0.12), transparent 60%),
+    var(--surface-tint);
+}
+
+.ll-plan-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem 0.4rem 0.65rem;
+  border-radius: 999px;
+  background: var(--white);
+  border: 1px solid var(--brand-teal-25);
+  color: var(--action-teal);
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.ll-plan-tool-title {
+  margin: 1rem 0 0;
+  max-width: 440px;
+  font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--heading);
+}
+
+.ll-plan-readout {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-top: clamp(1.5rem, 3vw, 2.4rem);
+}
+
+.ll-plan-readout-label {
+  font-size: 0.82rem;
+  color: var(--body-text);
+}
+
+.ll-plan-readout-value {
+  font-size: clamp(2.4rem, 4.4vw, 3.6rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  color: var(--brand-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.ll-plan-readout-value small {
+  font-size: 0.36em;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--body-text);
+}
+
+.ll-plan-slider {
+  margin-top: clamp(1.4rem, 2.4vw, 2rem);
+}
+
+.ll-plan-slider-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.7rem;
+}
+
+.ll-plan-slider-top label {
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: var(--heading);
+}
+
+.ll-plan-slider-top output {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--action-teal);
+  font-variant-numeric: tabular-nums;
+}
+
+.ll-plan-range {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.ll-plan-range::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--action-teal) 0 var(--fill, 50%),
+    rgba(var(--action-teal-rgb), 0.16) var(--fill, 50%) 100%
+  );
+}
+
+.ll-plan-range::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(var(--action-teal-rgb), 0.16);
+}
+
+.ll-plan-range::-moz-range-progress {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--action-teal);
+}
+
+.ll-plan-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 26px;
+  height: 26px;
+  margin-top: -10px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 7px solid var(--action-teal);
+  box-shadow: 0 4px 14px rgba(var(--action-teal-rgb), 0.35);
+  transition: transform 0.2s ease;
+}
+
+.ll-plan-range::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 7px solid var(--action-teal);
+  box-shadow: 0 4px 14px rgba(var(--action-teal-rgb), 0.35);
+}
+
+.ll-plan-range:active::-webkit-slider-thumb {
+  transform: scale(1.12);
+}
+
+.ll-plan-range:focus-visible {
+  outline: 2px solid var(--brand-teal);
+  outline-offset: 4px;
+  border-radius: 999px;
+}
+
+.ll-plan-scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.3rem;
+  font-size: 0.72rem;
+  color: var(--body-text);
+}
+
+.ll-plan-breakdown {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: clamp(1.4rem, 2.4vw, 1.9rem) 0 0;
+  border-radius: var(--radius-md);
+  background: var(--white);
+  border: 1px solid var(--border-subtle);
+}
+
+.ll-plan-breakdown > div {
+  padding: 0.9rem 1rem;
+  min-width: 0;
+}
+
+.ll-plan-breakdown > div + div {
+  border-left: 1px solid var(--border-subtle);
+}
+
+.ll-plan-breakdown dt {
+  font-size: 0.72rem;
+  color: var(--body-text);
+}
+
+.ll-plan-breakdown dd {
+  margin: 0.25rem 0 0;
+  font-size: 0.96rem;
+  font-weight: 600;
+  color: var(--heading);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.ll-plan-note {
+  margin: 0.9rem 0 0;
+  font-size: 0.76rem;
+  line-height: 1.55;
+  color: var(--body-text);
+}
+
+.ll-plan-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: auto;
+  padding-top: 1.5rem;
+}
+
+/* ---------- photo tile ---------- */
+
+.ll-plan-feature {
+  grid-area: feature;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 300px;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: var(--radius-lg);
+  color: var(--white);
+  background: var(--brand-deep);
+}
+
+.ll-plan-feature-img {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.ll-plan-feature::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(7, 22, 23, 0.05) 30%, rgba(7, 22, 23, 0.78) 100%);
+}
+
+.ll-plan-feature:hover .ll-plan-feature-img {
+  transform: scale(1.05);
+}
+
+.ll-plan-chip {
+  position: absolute;
+  top: 1.1rem;
+  left: 1.1rem;
+  padding: 0.38rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(8px);
+  font-size: 0.76rem;
+  font-weight: 500;
+}
+
+.ll-plan-feature-arrow {
+  position: absolute;
+  top: 1.1rem;
+  right: 1.1rem;
+  display: inline-grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--action-teal);
+  transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.ll-plan-feature:hover .ll-plan-feature-arrow {
+  transform: rotate(45deg);
+  background: var(--action-teal);
+  color: var(--white);
+}
+
+.ll-plan-feature-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: clamp(1.3rem, 2.4vw, 1.75rem);
+  max-width: 420px;
+}
+
+.ll-plan-feature-body strong {
+  font-size: clamp(1.3rem, 1.9vw, 1.6rem);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+
+.ll-plan-feature-body span {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.ll-plan-feature:focus-visible {
+  outline: 3px solid var(--brand-teal);
+  outline-offset: 3px;
+}
+
+/* ---------- consultation tile ---------- */
+
+.ll-plan-talk {
+  grid-area: talk;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.4rem, 2.6vw, 1.9rem);
+  border-radius: var(--radius-lg);
+  color: var(--white);
+  background:
+    radial-gradient(90% 120% at 0% 0%, rgba(var(--brand-teal-rgb), 0.35), transparent 60%),
+    var(--brand-deep);
+}
+
+.ll-plan-talk::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  width: 260px;
+  aspect-ratio: 1;
+  right: -70px;
+  bottom: -90px;
+  background: var(--keyhole-white) center / contain no-repeat;
+  opacity: 0.14;
+}
+
+.ll-plan-talk-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--brand-teal-25);
+}
+
+.ll-plan-talk-title {
+  margin: 1rem 0 0;
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--white);
+}
+
+.ll-plan-talk-text {
+  margin: 0.35rem 0 0;
+  max-width: 340px;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.ll-plan-talk-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: auto;
+  padding-top: 1.35rem;
+}
+
+.ll-btn.ll-plan-talk-cta {
+  background: var(--white);
+  color: var(--brand-ink);
+  border-color: var(--white);
+}
+
+.ll-btn.ll-plan-talk-cta:hover {
+  background: var(--brand-teal-10);
+  border-color: var(--brand-teal-10);
+  color: var(--brand-deep);
+}
+
+.ll-plan-line {
+  display: inline-grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--white);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.ll-plan-line-label {
+  display: none;
+}
+
+.ll-plan-line:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+.ll-plan-line:focus-visible,
+.ll-btn.ll-plan-talk-cta:focus-visible {
+  outline: 2px solid var(--brand-teal-25);
+  outline-offset: 3px;
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 1080px) {
+  .ll-plan-bento {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      'tool tool'
+      'feature talk';
+  }
+}
+
+@media (max-width: 640px) {
+  .ll-plan-bento {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'tool'
+      'feature'
+      'talk';
+  }
+
+  .ll-plan-feature {
+    min-height: 260px;
+  }
+
+  /* Breakdown as label / amount rows */
+  .ll-plan-breakdown {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ll-plan-breakdown > div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 0.95rem;
+  }
+
+  .ll-plan-breakdown > div + div {
+    border-left: 0;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .ll-plan-breakdown dd {
+    margin: 0;
+  }
+
+  .ll-plan-actions .ll-btn {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+
+  /* Consultation: full-width button, then WhatsApp and Call side by side with labels. */
+  .ll-plan-talk-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ll-btn.ll-plan-talk-cta {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
+
+  .ll-plan-line {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    width: auto;
+    border-radius: 999px;
+    font-size: 0.86rem;
+    font-weight: 500;
+  }
+
+  .ll-plan-line-label {
+    display: inline;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ll-plan-feature-img,
+  .ll-plan-feature-arrow,
+  .ll-plan-range::-webkit-slider-thumb {
+    transition: none;
+  }
+
+  .ll-plan-feature:hover .ll-plan-feature-img {
+    transform: none;
+  }
+}

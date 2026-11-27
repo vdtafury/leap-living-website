@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { createContext, useContext, useState } from 'react'
 import type { Field, Fields, SectionDef } from '@/modules/content'
 import { saveContentAction } from '../../../actions'
 import { SubmitButton, useActionForm } from '../../../_components/client'
@@ -28,6 +28,93 @@ function emptyFor(item: Fields | Field): Value {
   )
 }
 
+/** The CSRF token for image uploads made from inside the editor. */
+const CsrfContext = createContext('')
+
+/** Image picker: the same upload endpoint as listings (resized to WebP, saved in Media). */
+function ImageField({
+  field,
+  value,
+  onChange,
+  id,
+}: {
+  field: Extract<Field, { kind: 'image' }>
+  value: string
+  onChange: (value: string) => void
+  id: string
+}) {
+  const csrf = useContext(CsrfContext)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
+  return (
+    <div className="adm-field">
+      <span className="adm-label" id={`${id}-label`}>
+        {field.label}
+      </span>
+      <div className="adm-image-pick">
+        {value ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={value} alt="" className="adm-image-pick-preview" />
+        ) : (
+          <span className="adm-image-pick-preview adm-image-pick-empty" aria-hidden="true">
+            No photo
+          </span>
+        )}
+        <span className="adm-image-tools">
+          <label className="adm-btn adm-btn-ghost adm-btn-sm" style={{ position: 'relative' }}>
+            {busy ? 'Uploading…' : value ? 'Replace' : 'Upload'}
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              aria-labelledby={`${id}-label`}
+              style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }}
+              disabled={busy}
+              onChange={async (event) => {
+                const input = event.currentTarget
+                const file = input.files?.[0]
+                input.value = ''
+                if (!file) return
+                setBusy(true)
+                setError('')
+                try {
+                  const body = new FormData()
+                  body.append('file', file)
+                  const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body,
+                    headers: { 'x-csrf-token': csrf },
+                  }).catch(() => null)
+                  const data = response ? await response.json().catch(() => ({})) : {}
+                  if (response?.ok && data.ok) onChange(data.asset.url)
+                  else setError(data.error ?? 'Upload failed.')
+                } finally {
+                  setBusy(false)
+                }
+              }}
+            />
+          </label>
+          {value && field.optional && (
+            <button
+              type="button"
+              className="adm-btn adm-btn-ghost adm-btn-sm"
+              onClick={() => onChange('')}
+            >
+              Remove
+            </button>
+          )}
+        </span>
+      </div>
+      {error ? (
+        <span className="adm-field-help" role="alert" style={{ color: 'var(--adm-danger)' }}>
+          {error}
+        </span>
+      ) : (
+        field.help && <span className="adm-field-help">{field.help}</span>
+      )}
+    </div>
+  )
+}
+
 function FieldEditor({
   field,
   value,
@@ -51,6 +138,8 @@ function FieldEditor({
       return (
         <ListEditor field={field} value={(value as Value[]) ?? []} onChange={onChange} id={id} />
       )
+    case 'image':
+      return <ImageField field={field} value={String(value ?? '')} onChange={onChange} id={id} />
     case 'boolean':
       return (
         <label className="adm-check">
@@ -293,29 +382,31 @@ export function ContentEditor({
           {state.ok}
         </div>
       )}
-      <fieldset disabled={!canEdit} style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}>
-        {Object.entries(sections).map(([key, section], index) => (
-          <details className="adm-section" key={key} open={index === 0}>
-            <summary>{section.label}</summary>
-            <div className="adm-section-body">
-              {section.help && (
-                <p className="adm-help" style={{ margin: 0 }}>
-                  {section.help}
-                </p>
-              )}
-              <ObjectEditor
-                fields={section.fields}
-                id={key}
-                value={value[key] as Obj}
-                onChange={(next) => {
-                  setValue((current) => ({ ...current, [key]: next }))
-                  setDirty(true)
-                }}
-              />
-            </div>
-          </details>
-        ))}
-      </fieldset>
+      <CsrfContext value={csrf}>
+        <fieldset disabled={!canEdit} style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}>
+          {Object.entries(sections).map(([key, section], index) => (
+            <details className="adm-section" key={key} open={index === 0}>
+              <summary>{section.label}</summary>
+              <div className="adm-section-body">
+                {section.help && (
+                  <p className="adm-help" style={{ margin: 0 }}>
+                    {section.help}
+                  </p>
+                )}
+                <ObjectEditor
+                  fields={section.fields}
+                  id={key}
+                  value={value[key] as Obj}
+                  onChange={(next) => {
+                    setValue((current) => ({ ...current, [key]: next }))
+                    setDirty(true)
+                  }}
+                />
+              </div>
+            </details>
+          ))}
+        </fieldset>
+      </CsrfContext>
       {canEdit && (
         <div className="adm-sticky-bar">
           <span className="adm-sub">

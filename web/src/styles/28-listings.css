@@ -4,7 +4,7 @@
    - .ll-lb / .ll-fs-*  light version of the homepage search (HeroSelect with
      classPrefix="ll-fs"), sticky on desktop, plus toolbar, chips and sorting
    - .ll-brief   teal "can't find it?" tile that fills the end of the grid
-   - .ll-lplan   "Plan your purchase" link list
+   - "Plan your purchase / move" lives in 32-listings-plan.css (D-58)
    The homepage's own .ll-hs-* rules are never reused here, so the two
    searches cannot affect each other.
    ========================================================================== */
@@ -759,130 +759,6 @@
   gap: 0.6rem;
 }
 
-/* ---------- Plan your purchase ---------- */
-/* White like the list above it (the footer below is tinted), set apart by a hairline. */
-.ll-lplan {
-  background: var(--white);
-  padding: 0 0 clamp(4.5rem, 6.5vw, 6.75rem);
-}
-
-.ll-lplan-inner {
-  padding-top: clamp(3.5rem, 5vw, 5rem);
-}
-
-/* hairline across the content only (the container's padding is the page gutter) */
-.ll-lplan .ll-container {
-  background: linear-gradient(var(--border-subtle), var(--border-subtle)) top / 100% 1px no-repeat;
-  background-origin: content-box;
-  background-clip: content-box;
-}
-
-.ll-lplan-inner {
-  display: grid;
-  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-  align-items: center;
-  gap: clamp(2rem, 6vw, 6rem);
-}
-
-.ll-lplan-title {
-  font-size: clamp(2rem, 3vw, 2.6rem);
-  font-weight: 500;
-  letter-spacing: -0.025em;
-}
-
-.ll-lplan-lead {
-  margin-top: 0.75rem;
-  max-width: 360px;
-  font-size: 1rem;
-}
-
-.ll-lplan-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border-top: 1px solid var(--border-subtle);
-}
-
-.ll-lplan-list li {
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.ll-lplan-row {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 1.25rem;
-  padding: 1.45rem 0.75rem;
-  border-radius: var(--radius-md);
-  transition: background-color 0.25s ease, padding 0.3s ease;
-}
-
-.ll-lplan-icon {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: 54px;
-  height: 54px;
-  border-radius: 16px;
-  background: var(--brand-teal-10);
-  border: 1px solid var(--brand-teal-25);
-  color: var(--action-teal);
-  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
-}
-
-.ll-lplan-text {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  min-width: 0;
-}
-
-.ll-lplan-text strong {
-  font-size: 1.05rem;
-  font-weight: 500;
-  color: var(--heading);
-}
-
-.ll-lplan-text span {
-  font-size: 0.9rem;
-  color: var(--body-text);
-}
-
-.ll-lplan-arrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  border: 1px solid var(--brand-teal-25);
-  color: var(--action-teal);
-  transition: background-color 0.25s ease, color 0.25s ease, transform 0.3s ease;
-}
-
-.ll-lplan-row:hover {
-  background: var(--surface-tint);
-  padding-left: 1.25rem;
-}
-
-.ll-lplan-row:hover .ll-lplan-icon {
-  background: var(--action-teal);
-  border-color: var(--action-teal);
-  color: var(--white);
-}
-
-.ll-lplan-row:hover .ll-lplan-arrow {
-  background: var(--action-teal);
-  color: var(--white);
-  transform: rotate(45deg);
-}
-
-.ll-lplan-row:focus-visible {
-  outline: 2px solid var(--action-teal);
-  outline-offset: 2px;
-}
-
 /* ---------- Responsive ---------- */
 @media (max-width: 1080px) {
   .ll-lb-grid {
@@ -919,9 +795,6 @@
     grid-column: 1 / -1;
     margin-left: 0;
     min-height: 50px;
-  }
-  .ll-lplan-inner {
-    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -972,17 +845,6 @@
     align-items: flex-start;
     flex-direction: column;
   }
-  .ll-lplan-row {
-    gap: 1rem;
-    padding: 1.2rem 0.25rem;
-  }
-  .ll-lplan-row:hover {
-    padding-left: 0.6rem;
-  }
-  .ll-lplan-icon {
-    width: 46px;
-    height: 46px;
-  }
 }
 
 @media (max-width: 400px) {
@@ -995,8 +857,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ll-lplan-row,
-  .ll-lplan-arrow,
   .ll-lb-count-btn,
   .ll-fs-pop {
     transition: none;

@@ -180,12 +180,30 @@ export const DEFAULT_ABOUT = {
     ctaLabel: 'Request an Executive Consultation',
     ctaHref: '/contact',
   },
+  // D-57: filled from the admin once the team photos and bios arrive. While the list is
+  // empty the section (and its #team anchor) is not rendered: no placeholder people.
+  team: {
+    title: 'Meet the Team',
+    intro: '',
+    members: [] as TeamMember[],
+  },
   services: {
     eyebrow: 'Advisory Capabilities',
     title: 'Real Estate Consultancy & Core Services',
     lead: 'Full-spectrum client advisory engineered for private individuals, institutional investors, family offices, and master developers.',
     items: FULL_SERVICE_CATALOG.map((s) => ({ ...s })),
   },
+}
+
+/** One person in the About page's Meet the Team section (D-57). Empty strings = not shown. */
+export interface TeamMember {
+  name: string
+  role: string
+  photo: string
+  bio: string
+  brn: string
+  email: string
+  linkedin: string
 }
 
 export type SiteSettings = typeof DEFAULT_SETTINGS

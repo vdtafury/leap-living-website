@@ -4,9 +4,9 @@ import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { PropertyListingBrowser } from '@/components/property/property-listing-browser'
 import { ListingsHero } from '@/components/listings/listings-hero'
-import { ListingsPlan, type PlanStep } from '@/components/listings/listings-plan'
-import { BuildingIcon, CalculatorIcon, HandshakeIcon } from '@/components/ui/icons'
-import { listPublishedProperties } from '@/modules/listings'
+import { ListingsPlan } from '@/components/listings/listings-plan'
+import { CalculatorIcon } from '@/components/ui/icons'
+import { listPublishedProjects, listPublishedProperties } from '@/modules/listings'
 
 export const metadata: Metadata = pageMetadata({
   title: 'Properties for Sale | LEAP LIVING Dubai',
@@ -14,28 +14,6 @@ export const metadata: Metadata = pageMetadata({
     'Browse prime luxury villas, penthouses, and investment residences for sale across Dubai with institutional advisory by Leap Living.',
   path: '/buy',
 })
-
-/* Next steps after the list: each one opens a tool that already exists on the site. */
-const PLAN_STEPS: PlanStep[] = [
-  {
-    href: '/#mortgage-calculator',
-    icon: CalculatorIcon,
-    title: 'Mortgage calculator',
-    text: 'Estimate your monthly repayment in seconds.',
-  },
-  {
-    href: '/projects',
-    icon: BuildingIcon,
-    title: 'New projects',
-    text: 'Browse off-plan developments and their payment plans.',
-  },
-  {
-    href: '/contact',
-    icon: HandshakeIcon,
-    title: 'Private consultation',
-    text: 'Talk to an advisor about your budget, area and timing.',
-  },
-]
 
 export default async function BuyPage({
   searchParams,
@@ -49,7 +27,11 @@ export default async function BuyPage({
   }>
 }) {
   const params = await searchParams
-  const saleItems = await listPublishedProperties({ transactionType: 'BUY' })
+  const [saleItems, projects] = await Promise.all([
+    listPublishedProperties({ transactionType: 'BUY' }),
+    listPublishedProjects(),
+  ])
+  const projectCount = projects.length
 
   return (
     <>
@@ -79,9 +61,26 @@ export default async function BuyPage({
         </section>
 
         <ListingsPlan
+          mode="BUY"
           title="Plan your purchase"
           lead="Everything you need before you make an offer."
-          steps={PLAN_STEPS}
+          tool={{
+            icon: CalculatorIcon,
+            tag: 'Mortgage calculator',
+            title: 'Estimate your monthly repayment in seconds.',
+          }}
+          feature={{
+            href: '/projects',
+            image: projects[0]?.heroImage || '/images/hero-palm-villas.jpg',
+            imageAlt: projects[0] ? projects[0].title : 'Dubai villas on the water',
+            title: 'New projects',
+            text: 'Browse off-plan developments and their payment plans.',
+            chip:
+              projectCount > 0
+                ? `${projectCount} ${projectCount === 1 ? 'development' : 'developments'}`
+                : undefined,
+          }}
+          consultText="Talk to an advisor about your budget, area and timing."
         />
       </main>
 

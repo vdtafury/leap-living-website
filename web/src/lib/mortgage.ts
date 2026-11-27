@@ -99,3 +99,49 @@ export function sliderToPrice(position: number): number {
   const step = raw < 2_000_000 ? 10_000 : raw < 10_000_000 ? 50_000 : 100_000
   return Math.min(max, Math.max(min, Math.round(raw / step) * step))
 }
+
+/** Loan a monthly payment can carry (inverse of the annuity formula). */
+export function loanForPayment(
+  monthly: number,
+  interestRatePercent: number,
+  years: number,
+): number {
+  if (![monthly, interestRatePercent, years].every(Number.isFinite)) return 0
+  if (monthly <= 0 || years <= 0 || interestRatePercent < 0) return 0
+  const months = Math.round(years * 12)
+  const r = interestRatePercent / 100 / 12
+  if (r === 0) return monthly * months
+  const factor = Math.pow(1 + r, months)
+  return (monthly * (factor - 1)) / (r * factor)
+}
+
+/**
+ * Rough price of a home whose mortgage payment equals `monthly`, with the default down payment
+ * for that price (20% up to AED 5M, 30% above). Used by the Rent page's "rent vs buy" guide.
+ */
+export function priceForPayment(
+  monthly: number,
+  interestRatePercent = DEFAULT_INTEREST_RATE,
+  years = DEFAULT_LOAN_YEARS,
+): number {
+  const loan = loanForPayment(monthly, interestRatePercent, years)
+  if (loan <= 0) return 0
+  const at20 = loan / 0.8
+  return at20 <= 5_000_000 ? at20 : loan / 0.7
+}
+
+/** Dubai Land Department transfer fee: 4% of the price (admin fees on top). */
+export const DLD_FEE_PERCENT = 4
+
+/** "2500000" -> "2,500,000" (whole dirhams; same output on the server and in the browser). */
+export function formatAed(value: number): string {
+  if (!Number.isFinite(value)) return '0'
+  return String(Math.round(value)).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}
+
+/** The Buy list's price filter that contains `price` (values of the /buy ?budget= filter). */
+export function buyBudgetFor(price: number): 'UNDER_10M' | '10M_15M' | 'OVER_15M' {
+  if (price <= 10_000_000) return 'UNDER_10M'
+  if (price <= 15_000_000) return '10M_15M'
+  return 'OVER_15M'
+}

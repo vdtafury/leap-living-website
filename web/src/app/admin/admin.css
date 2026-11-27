@@ -504,6 +504,30 @@
   gap: 0.25rem;
   flex-wrap: wrap;
 }
+/* Single image field in the content editor (e.g. a team photo, 4:5 portrait) */
+.adm-image-pick {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.adm-image-pick-preview {
+  width: 72px;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: 8px;
+  border: 1px solid var(--adm-border);
+  background: var(--adm-teal-10);
+  display: block;
+}
+.adm-image-pick-empty {
+  display: grid;
+  place-items: center;
+  font-size: 0.68rem;
+  color: var(--adm-teal-dark);
+  text-align: center;
+}
 .adm-cover-tag {
   font-size: 0.7rem;
   color: var(--adm-teal-dark);
