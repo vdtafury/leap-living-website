@@ -56,7 +56,7 @@ export default function SellPage() {
       <SiteHeader />
 
       <main>
-        {/* 1. Owners' header: the quick "List With Us" form is the first thing on the page */}
+        {/* 1. Owners' header: the quick "List With Us" form beside a light photo pair (D-60) */}
         <section className="ll-sell-hero" aria-labelledby="sell-title">
           <div className="ll-container ll-sell-hero-inner">
             <div className="ll-sell-hero-copy">
@@ -96,13 +96,29 @@ export default function SellPage() {
             </div>
 
             <div className="ll-sell-hero-visual" aria-hidden="true">
-              <div className="ll-sell-arch">
+              <div className="ll-sell-capsule">
                 <ResponsiveImg
-                  src="/images/residence-cedar-dusk.jpg"
-                  sizes="(max-width: 960px) 1px, 34vw"
+                  src="/images/property-palm-villa.jpg"
+                  sizes="(max-width: 960px) 1px, 30vw"
                   priority
                   alt=""
                 />
+              </div>
+              <div className="ll-sell-orb">
+                <ResponsiveImg
+                  src="/images/waterfront-pool-estate.jpg"
+                  sizes="(max-width: 960px) 1px, 180px"
+                  alt=""
+                />
+              </div>
+              <div className="ll-sell-chip">
+                <span className="ll-sell-chip-icon">
+                  <CheckIcon size={14} />
+                </span>
+                <span>
+                  <strong>Free Property Valuation</strong>
+                  <small>Comparative DLD transaction analysis</small>
+                </span>
               </div>
             </div>
           </div>
@@ -128,32 +144,34 @@ export default function SellPage() {
           </div>
         </section>
 
-        {/* 3. Schedule a briefing: Private Consultation first, Valuation from the valuation links */}
+        {/* 3. Schedule a briefing: two equal panels, details | form (D-60) */}
         <section id={VALUATION_ANCHOR} className="ll-sell-brief" aria-labelledby="sell-brief-title">
           <div className="ll-container ll-sell-brief-inner">
-            <div className="ll-sell-brief-copy">
-              <h2 id="sell-brief-title">Schedule a Briefing</h2>
-              <p className="ll-sell-brief-lead">
-                Select whether you are seeking a private consultation or an asset valuation.
-              </p>
-            </div>
+            <div className="ll-sell-brief-panel">
+              <div className="ll-sell-brief-copy">
+                <h2 id="sell-brief-title">Schedule a Briefing</h2>
+                <p className="ll-sell-brief-lead">
+                  Select whether you are seeking a private consultation or an asset valuation.
+                </p>
+              </div>
 
-            <div className="ll-sell-brief-box">
-              <h3>Request a Free Property Valuation</h3>
-              <p>
-                Share your unit, villa, or land plot details to receive a comprehensive comparative
-                pricing review and recommended exit strategy.
-              </p>
-              <ul>
-                {VALUATION_POINTS.map((point) => (
-                  <li key={point}>
-                    <span className="ll-sell-brief-check">
-                      <CheckIcon size={13} />
-                    </span>
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
+              <div className="ll-sell-brief-box">
+                <h3>Request a Free Property Valuation</h3>
+                <p>
+                  Share your unit, villa, or land plot details to receive a comprehensive
+                  comparative pricing review and recommended exit strategy.
+                </p>
+                <ul>
+                  {VALUATION_POINTS.map((point) => (
+                    <li key={point}>
+                      <span className="ll-sell-brief-check">
+                        <CheckIcon size={13} />
+                      </span>
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
 
             <div className="ll-sell-brief-form">

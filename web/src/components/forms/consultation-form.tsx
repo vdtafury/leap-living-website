@@ -1,6 +1,6 @@
 'use client'
 
-import { useId, useState, useSyncExternalStore, type FormEvent } from 'react'
+import { useId, useState, useSyncExternalStore, type FormEvent, type ReactNode } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAccount } from '@/components/account/account-provider'
@@ -47,6 +47,8 @@ interface ConsultationFormProps {
   listingType?: 'PROPERTY' | 'PROJECT'
   listingId?: string
   darkSurface?: boolean
+  /** Optional heading drawn inside the card, above the tabs (e.g. /contact). */
+  header?: ReactNode
 }
 
 export function ConsultationForm({
@@ -55,6 +57,7 @@ export function ConsultationForm({
   listingType,
   listingId,
   darkSurface = false,
+  header,
 }: ConsultationFormProps) {
   const formId = useId()
   const contact = useSiteContact()
@@ -168,6 +171,7 @@ export function ConsultationForm({
 
   return (
     <div className={`ll-form-card ${darkSurface ? 'on-dark' : ''}`}>
+      {header}
       {(mode === 'VALUATION' || mode === 'CONSULTATION') && (
         <div className="ll-form-switcher" role="tablist">
           <button

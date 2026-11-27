@@ -1,26 +1,33 @@
 /* ==========================================================================
    SELL PAGE (/sell)
    - .ll-sell-hero    light owners' header; the quick "List With Us" form sits in it,
-                      beside an arched photo (the keyhole is Buy / Rent's, the arch is Sell's)
+                      beside a bright photo pair: a tall capsule, a round inset and a chip (D-60)
    - .ll-sell-method  "How Leap Living Protects Asset Value" as one connected path
-   - .ll-sell-brief   "Schedule a Briefing": dark band, valuation details + the
-                      Private Consultation / Free Valuation form (#valuation-form)
+   - .ll-sell-brief   "Schedule a Briefing": dark band, two equal panels: valuation details |
+                      the Private Consultation / Free Valuation form (#valuation-form)
+   - Every field on this page is a pill and every panel uses the soft --sell-radius (D-60)
    ========================================================================== */
 
 /* ---- 1. Header ------------------------------------------------------- */
+.ll-sell-hero,
+.ll-sell-brief {
+  --sell-radius: 28px;
+  --sell-field-x: 1.2rem;
+}
+
 .ll-sell-hero {
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(55% 80% at 92% 20%, rgba(var(--brand-teal-rgb), 0.14) 0%, rgba(var(--brand-teal-rgb), 0) 62%),
-    var(--surface-tint);
+    radial-gradient(42% 70% at 82% 45%, rgba(var(--brand-teal-rgb), 0.12) 0%, rgba(var(--brand-teal-rgb), 0) 70%),
+    linear-gradient(180deg, var(--white) 0%, var(--surface-tint) 100%);
   border-bottom: 1px solid var(--border-subtle);
 }
 
 .ll-sell-hero-inner {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
-  align-items: stretch;
+  align-items: center;
   gap: clamp(2rem, 5vw, 5rem);
 }
 
@@ -96,9 +103,9 @@
 }
 
 .ll-sell-list .ll-form-card {
-  padding: clamp(1.25rem, 2vw, 1.6rem);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 18px 44px rgba(16, 42, 44, 0.08);
+  padding: clamp(1.35rem, 2.2vw, 1.75rem);
+  border-radius: var(--sell-radius);
+  box-shadow: 0 18px 44px rgba(16, 42, 44, 0.07);
 }
 
 .ll-sell-list-head {
@@ -136,7 +143,7 @@
 }
 
 .ll-sell-list .ll-quick-form-submit .ll-btn {
-  min-height: 44px;
+  min-height: 48px;
 }
 
 .ll-sell-list .ll-form-success {
@@ -166,46 +173,150 @@
   outline-offset: 3px;
 }
 
-/* Arched photo standing on the header's bottom edge */
-.ll-sell-hero-visual {
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding-top: clamp(2.5rem, 4.5vw, 4rem);
+/* Pill fields and soft panels: the same rounding as the List With Us button */
+.ll-sell-hero .ll-input,
+.ll-sell-brief .ll-input {
+  min-height: 48px;
+  padding: 0.7rem var(--sell-field-x);
+  border-color: rgba(10, 52, 54, 0.14);
+  border-radius: 999px;
+  background-color: var(--page-bg);
+  transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
 }
 
+.ll-sell-hero .ll-input:hover,
+.ll-sell-brief .ll-input:hover {
+  border-color: rgba(var(--brand-teal-rgb), 0.45);
+}
+
+.ll-sell-hero .ll-input:focus,
+.ll-sell-brief .ll-input:focus {
+  border-color: var(--action-teal);
+  background-color: var(--white);
+  box-shadow: 0 0 0 4px rgba(var(--action-teal-rgb), 0.12);
+}
+
+.ll-sell-hero .ll-input[aria-invalid='true'],
+.ll-sell-brief .ll-input[aria-invalid='true'] {
+  border-color: #b42318;
+}
+
+/* a multi-line box can't be a full pill: the softest oval that keeps the text clear */
+.ll-sell-brief .ll-textarea {
+  min-height: 104px;
+  padding-top: 0.85rem;
+  border-radius: 26px;
+}
+
+/* labels and errors start where the text inside the pill starts */
+.ll-sell-hero .ll-field-label,
+.ll-sell-brief .ll-field-label,
+.ll-sell-hero .ll-field-error,
+.ll-sell-brief .ll-field-error {
+  padding-left: var(--sell-field-x);
+}
+
+.ll-sell-brief .ll-form-error {
+  border-radius: 18px;
+}
+
+/* Bright photo pair, centred beside the copy */
+.ll-sell-hero-visual {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 410px);
+  margin: clamp(2.5rem, 4vw, 3.5rem) 0;
+}
+
+/* soft teal halo behind the capsule */
 .ll-sell-hero-visual::before {
   content: '';
   position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: calc(min(100%, 400px) + 44px);
-  height: calc(100% - clamp(2.5rem, 4.5vw, 4rem) + 22px);
-  border: 1px solid rgba(var(--brand-teal-rgb), 0.4);
-  border-bottom: 0;
-  border-radius: 999px 999px 0 0;
-  transform: translateX(-50%);
+  inset: 8% -10% 6% 18%;
+  border-radius: 999px;
+  background: linear-gradient(160deg, rgba(var(--brand-teal-rgb), 0.18) 0%, rgba(var(--brand-teal-rgb), 0.04) 100%);
+  transform: rotate(8deg);
 }
 
-.ll-sell-arch {
+.ll-sell-capsule {
   position: relative;
-  width: min(100%, 400px);
-  height: 100%;
-  min-height: 460px;
-  border-radius: 999px 999px 0 0;
+  width: 80%;
+  margin-left: auto;
+  aspect-ratio: 9 / 14;
+  border: 6px solid var(--white);
+  border-radius: 999px;
   overflow: hidden;
-  background: var(--dark-teal);
-  box-shadow: 0 30px 60px rgba(10, 52, 54, 0.18);
+  background: var(--surface-tint);
+  box-shadow: 0 26px 60px rgba(16, 42, 44, 0.12);
 }
 
-.ll-sell-arch img {
+.ll-sell-capsule img,
+.ll-sell-orb img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 42% 50%;
+}
+
+.ll-sell-capsule img {
+  object-position: 45% 80%;
+}
+
+.ll-sell-orb {
+  position: absolute;
+  bottom: 13%;
+  left: 0;
+  width: 40%;
+  aspect-ratio: 1;
+  border: 6px solid var(--white);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--surface-tint);
+  box-shadow: 0 18px 40px rgba(16, 42, 44, 0.14);
+}
+
+.ll-sell-chip {
+  position: absolute;
+  top: 12%;
+  left: -6%;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.6rem 1.1rem 0.6rem 0.6rem;
+  border: 1px solid rgba(10, 52, 54, 0.06);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 14px 34px rgba(16, 42, 44, 0.12);
+  backdrop-filter: blur(8px);
+}
+
+.ll-sell-chip-icon {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: var(--action-teal);
+  color: var(--white);
+}
+
+.ll-sell-chip strong,
+.ll-sell-chip small {
+  display: block;
+  white-space: nowrap;
+}
+
+.ll-sell-chip strong {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--heading);
+}
+
+.ll-sell-chip small {
+  font-size: 0.7rem;
+  color: var(--body-text);
 }
 
 /* ---- 2. Method --------------------------------------------------------- */
@@ -299,24 +410,31 @@
   scroll-margin-top: 82px;
 }
 
+/* two panels of the same width and height */
 .ll-sell-brief-inner {
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-  grid-template-areas:
-    'copy form'
-    'box  form';
-  grid-template-rows: auto 1fr;
-  column-gap: clamp(2rem, 5vw, 5rem);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: clamp(1.25rem, 3vw, 2.25rem);
 }
 
-.ll-sell-brief-copy {
-  grid-area: copy;
-  align-self: end;
+.ll-sell-brief-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: clamp(1.5rem, 2.6vw, 2.25rem);
+  padding: clamp(1.5rem, 2.6vw, 2.25rem);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--sell-radius);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .ll-sell-brief-form {
-  grid-area: form;
-  align-self: center;
+  display: flex;
+}
+
+.ll-sell-brief-form > .ll-form-card {
+  flex: 1;
 }
 
 .ll-sell-brief-copy h2 {
@@ -337,13 +455,8 @@
 }
 
 .ll-sell-brief-box {
-  grid-area: box;
-  align-self: start;
-  margin-top: clamp(1.75rem, 3vw, 2.5rem);
-  padding: clamp(1.25rem, 2vw, 1.6rem);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.05);
+  padding-top: clamp(1.25rem, 2vw, 1.6rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .ll-sell-brief-box h3 {
@@ -361,11 +474,10 @@
 
 .ll-sell-brief-box ul {
   display: grid;
-  gap: 0.7rem;
-  margin: 1.15rem 0 0;
-  padding: 1.1rem 0 0;
+  gap: 0.75rem;
+  margin: 1.25rem 0 0;
+  padding: 0;
   list-style: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .ll-sell-brief-box li {
@@ -390,8 +502,8 @@
 }
 
 .ll-sell-brief-form .ll-form-card {
-  padding: clamp(1.4rem, 2.4vw, 2rem);
-  border-radius: var(--radius-lg);
+  padding: clamp(1.5rem, 2.6vw, 2.25rem);
+  border-radius: var(--sell-radius);
   color: var(--body-text);
   box-shadow: 0 30px 70px rgba(0, 0, 0, 0.25);
 }
@@ -415,15 +527,29 @@
   /* phones and tablets: the form comes straight after the title */
   .ll-sell-brief-inner {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-areas:
-      'copy'
-      'form'
-      'box';
-    grid-template-rows: none;
+    gap: 0;
+  }
+
+  .ll-sell-brief-panel {
+    display: contents;
+  }
+
+  .ll-sell-brief-copy {
+    order: 1;
   }
 
   .ll-sell-brief-form {
+    order: 2;
     margin-top: 1.75rem;
+  }
+
+  .ll-sell-brief-box {
+    order: 3;
+    margin-top: 1.75rem;
+    padding: clamp(1.25rem, 4vw, 1.6rem);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: var(--sell-radius);
+    background: rgba(255, 255, 255, 0.05);
   }
 }
 

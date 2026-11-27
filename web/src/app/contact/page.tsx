@@ -48,97 +48,69 @@ export default async function ContactPage({
           </div>
         </section>
 
+        {/* Two panels of the same width and height: channels | briefing form (D-60) */}
         <section className="ll-section-muted">
-          <div className="ll-container ll-detail-layout">
-            <div className="ll-form-card">
+          <div className="ll-container ll-contact-grid">
+            <div className="ll-form-card ll-contact-card">
               <div className="ll-eyebrow">Dubai Office</div>
-              <h2 className="ll-serif-title" style={{ fontSize: '1.6rem', marginBottom: '1rem' }}>
-                Direct Contact Channels
-              </h2>
-              <p style={{ fontSize: '0.92rem', marginBottom: '1.75rem' }}>
+              <h2 className="ll-contact-title">Direct Contact Channels</h2>
+              <p className="ll-contact-lead">
                 Available Sunday through Friday for scheduled executive briefings, on-site property
                 inspections, and private remote consultations.
               </p>
 
-              <div style={{ display: 'grid', gap: '1.15rem', marginBottom: '2rem' }}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem' }}>
-                  <PhoneIcon size={18} style={{ color: 'var(--brand-teal)', marginTop: '3px' }} />
+              <ul className="ll-contact-channels">
+                <li>
+                  <PhoneIcon size={18} />
                   <div>
-                    <div className="ll-field-label" style={{ marginBottom: '0.15rem' }}>
-                      Direct Line / WhatsApp
-                    </div>
-                    <a
-                      href={company.phoneHref}
-                      style={{ fontWeight: 600, fontSize: '1.05rem', color: 'var(--heading)' }}
-                    >
-                      {company.phoneDisplay}
-                    </a>
+                    <div className="ll-field-label">Direct Line / WhatsApp</div>
+                    <a href={company.phoneHref}>{company.phoneDisplay}</a>
                   </div>
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem' }}>
-                  <MailIcon size={18} style={{ color: 'var(--brand-teal)', marginTop: '3px' }} />
+                </li>
+                <li>
+                  <MailIcon size={18} />
                   <div>
-                    <div className="ll-field-label" style={{ marginBottom: '0.15rem' }}>
-                      Advisory Desk Email
-                    </div>
-                    <a
-                      href={`mailto:${company.email}`}
-                      style={{ fontWeight: 600, fontSize: '1.05rem', color: 'var(--heading)' }}
-                    >
-                      {company.email}
-                    </a>
+                    <div className="ll-field-label">Advisory Desk Email</div>
+                    <a href={`mailto:${company.email}`}>{company.email}</a>
                   </div>
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem' }}>
-                  <MapPinIcon size={18} style={{ color: 'var(--brand-teal)', marginTop: '3px' }} />
+                </li>
+                <li>
+                  <MapPinIcon size={18} />
                   <div>
-                    <div className="ll-field-label" style={{ marginBottom: '0.15rem' }}>
-                      Office
-                    </div>
-                    <address
-                      style={{ fontStyle: 'normal', fontWeight: 600, color: 'var(--heading)' }}
-                    >
+                    <div className="ll-field-label">Office</div>
+                    <address>
                       {company.addressLines.map((line) => (
                         <div key={line}>{line}</div>
                       ))}
                       <div>{company.region}</div>
                     </address>
                   </div>
-                </div>
-              </div>
+                </li>
+              </ul>
 
-              <div
-                style={{
-                  borderRadius: '3px',
-                  overflow: 'hidden',
-                  border: '1px solid var(--border-subtle)',
-                  height: '220px',
-                }}
-              >
+              <div className="ll-contact-photo">
                 <ResponsiveImg
                   src="/images/dubai-sunset-waterfront.png"
-                  sizes="(max-width: 900px) 100vw, 40vw"
+                  sizes="(max-width: 960px) 100vw, 45vw"
                   alt="Dubai skyline along the water"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                 />
               </div>
             </div>
 
-            <div>
-              <div style={{ marginBottom: '1rem' }}>
-                <h2
-                  className="ll-serif-title"
-                  style={{ fontSize: '1.5rem', marginBottom: '0.35rem' }}
-                >
-                  Schedule a Briefing
-                </h2>
-                <p style={{ fontSize: '0.86rem' }}>
-                  Select whether you are seeking a private consultation or an asset valuation.
-                </p>
-              </div>
-              <ConsultationForm mode={formMode} contextTitle={contextTitle} />
+            <div className="ll-contact-form">
+              <ConsultationForm
+                mode={formMode}
+                contextTitle={contextTitle}
+                header={
+                  <>
+                    <div className="ll-eyebrow">Advisory Desk</div>
+                    <h2 className="ll-contact-title">Schedule a Briefing</h2>
+                    <p className="ll-contact-lead">
+                      Select whether you are seeking a private consultation or an asset valuation.
+                    </p>
+                  </>
+                }
+              />
             </div>
           </div>
         </section>
