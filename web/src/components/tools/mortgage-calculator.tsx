@@ -4,7 +4,10 @@ import { useEffect, useId, useState, type CSSProperties, type ReactNode } from '
 import Link from 'next/link'
 import { ArrowUpRightIcon, CalculatorIcon } from '@/components/ui/icons'
 import {
+  DEFAULT_INTEREST_RATE,
+  DEFAULT_LOAN_YEARS,
   MAX_LOAN_YEARS,
+  defaultDownPayment,
   PRICE_SLIDER,
   formatAmountInput,
   loanAmount,
@@ -141,13 +144,12 @@ export function MortgageCalculator({
     return () => document.removeEventListener('click', onClick, true)
   }, [isHome])
 
-  // UAE LTV rule of thumb: 20% down up to AED 5M, 30% above (the lender decides)
   const [price, setPrice] = useState(formatAmountInput(String(Math.round(initialPrice))))
   const [downPayment, setDownPayment] = useState(
-    String(defaults.downPaymentPercent ?? (initialPrice > 5_000_000 ? 30 : 20)),
+    String(defaults.downPaymentPercent ?? defaultDownPayment(initialPrice)),
   )
-  const [rate, setRate] = useState(String(defaults.interestRate ?? 4.25))
-  const [years, setYears] = useState(String(defaults.years ?? 25))
+  const [rate, setRate] = useState(String(defaults.interestRate ?? DEFAULT_INTEREST_RATE))
+  const [years, setYears] = useState(String(defaults.years ?? DEFAULT_LOAN_YEARS))
 
   const n = {
     price: parseAmount(price),

@@ -8,6 +8,29 @@
 
 ## Last updated
 
+2026-11-27 — by: Arena agent. **Property page redesign (`/properties/[slug]`, D-55):**
+- The price and every way to reach us now sit beside the photos (sticky on desktop) and right under them on phones: price, Buy mortgage estimate (same figures as the calculator), *Book a private viewing*, WhatsApp / Call / Email.
+- New `components/property/detail/`: `property-gallery.tsx` (mosaic, phone slider, full-screen viewer), `property-contact.tsx` (price card, phone contact bar, direct lines), `share-button.tsx`. Icons +3 (chevron-left, share, images). `lib/mortgage.ts` now exports the calculator defaults.
+- Facts, overview, highlights, details table, calculator (Buy), dark viewing panel with the existing form, and "More homes for sale/rent". The project page still uses `ImageGallery` (unchanged).
+- `e2e/property-detail.spec.ts` (2 tests). tsc, lint, vitest 151/151, build, verify.sh 106/106, Playwright 20 passed / 2 skipped. DECISIONS D-54 (Buy/Rent) and D-55 added.
+
+### Previous update
+
+2026-11-27 — by: Arena agent. **Rent page redesign (owner approved the Buy page: "تحفه"):**
+- `/rent` now uses the same light header as Buy, via the new shared `ListingsHero` (`components/listings/listings-hero.tsx`; Rent active on the switch, Dubai Marina towers in the keyhole) and `ListingsPlan` (`listings-plan.tsx`). Buy was moved onto both, with no visual change.
+- Rent's closing list is "Plan your move": Private consultation (`/contact`), Thinking of buying? (`/buy`), Own a property to rent out? (`/sell#list-with-us`).
+- `e2e/listings.spec.ts` +1 Rent test. tsc, lint, vitest 151/151, build, verify.sh 106/106, Playwright 17 passed.
+
+### Previous update
+
+2026-11-27 — by: Arena agent. **Buy page redesign (first of the inner pages):**
+- **Hero (`/buy`):** the dark-teal band became a light tint header in the homepage's language (dark title + teal second line, "Properties for sale / in Dubai."), a Buy / Rent segmented switch, and the brand keyhole used as a photo window (`hero-villa-dusk.jpg`, decorative, hidden under 900 px).
+- **Listing section (`PropertyListingBrowser`, shared with `/rent`):** a light version of the homepage search (`HeroSelect` now takes `classPrefix`; the listing pages use `ll-fs`, so no rule is shared with the homepage's `ll-hs`), riding the hero's edge and sticky under the header on desktop with a glass band; live result count; filters kept in the URL (`replaceState`, incl. `sort`); removable chips + Clear all; sorting (Featured / price / size); 3 / 2 / 1 columns; a teal "Can't find the right home?" tile (`listing-brief-card.tsx`, WhatsApp via `briefWhatsappLink` + `/contact`) that always fills the empty end of the last row; new empty state. Filter labels now match the homepage search.
+- **"Plan your purchase":** link list to the calculator (`/#mortgage-calculator`), `/projects` and `/contact`.
+- Styles in `src/styles/28-listings.css`. Rent's hero is unchanged (next). Tests: `contact-links.test.ts` (+2), `e2e/listings.spec.ts` (new). tsc, lint, vitest 151/151, build, verify.sh 106/106, Playwright 14 passed (carousel spec flaky on the first try, unrelated).
+
+### Previous update
+
 2026-11-27 — by: Antigravity. **Client form feedback implemented + Pixxi CRM documentation received:**
 - **Schedule a briefing tab order:** moved **Private Consultation** before **Free Property Valuation** in `ConsultationForm` (`consultation-form.tsx`) and updated `/contact` helper copy.
 - **Quick "List With Us" form under `/sell`:** added `#list-with-us` 3-field quick intake form (**Full Name**, **Phone / WhatsApp**, **Community**) via `ListWithUsForm` (`list-with-us-form.tsx`), backed by `/api/inquiries` with `LIST_PROPERTY` inquiry type (email optional for `LIST_PROPERTY` only, required for all other forms; no DB schema migration required; supported in Admin → Form requests, My account, and notification emails).

@@ -1,0 +1,1015 @@
+/* ==========================================================================
+   LISTING PAGES (Buy first; Rent shares the listing section).
+   - .ll-lhero   light editorial header with the brand keyhole as a window
+   - .ll-lb / .ll-fs-*  light version of the homepage search (HeroSelect with
+     classPrefix="ll-fs"), sticky on desktop, plus toolbar, chips and sorting
+   - .ll-brief   teal "can't find it?" tile that fills the end of the grid
+   - .ll-lplan   "Plan your purchase" link list
+   The homepage's own .ll-hs-* rules are never reused here, so the two
+   searches cannot affect each other.
+   ========================================================================== */
+
+/* Keyhole silhouette, drawn on the brand mark's proportions (round head, flared body). */
+.ll-lhero {
+  --ll-keyhole-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 150'%3E%3Cpath d='M27.5 84A45 45 0 1 1 72.5 84L86 150H14Z'/%3E%3C/svg%3E");
+  --ll-keyhole-line: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 150' fill='none' stroke='%233B9EA1' stroke-width='0.7'%3E%3Cpath d='M27.5 84A45 45 0 1 1 72.5 84L86 150H14Z'/%3E%3C/svg%3E");
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(60% 90% at 88% 10%, rgba(var(--brand-teal-rgb), 0.12) 0%, rgba(var(--brand-teal-rgb), 0) 60%),
+    var(--surface-tint);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.ll-lhero-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: end;
+  gap: clamp(2rem, 5vw, 5rem);
+  padding-top: clamp(2.75rem, 4.5vw, 4rem);
+}
+
+.ll-lhero-copy {
+  /* room under the copy for the search bar that overlaps the hero's edge */
+  padding-bottom: calc(clamp(3rem, 5vw, 4.25rem) + 46px);
+  max-width: 640px;
+}
+
+.ll-lhero-crumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: clamp(1.25rem, 2vw, 1.75rem);
+  font-size: 0.78rem;
+  color: var(--body-text);
+}
+
+.ll-lhero-crumbs a {
+  transition: color 0.2s ease;
+}
+
+.ll-lhero-crumbs a:hover {
+  color: var(--action-teal);
+}
+
+.ll-lhero-crumbs svg {
+  color: var(--brand-teal-50);
+}
+
+.ll-lhero-crumbs [aria-current] {
+  color: var(--heading);
+  font-weight: 500;
+}
+
+.ll-lhero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.3rem, 4.4vw, 3.75rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--heading);
+}
+
+.ll-lhero-title span {
+  display: block;
+  color: var(--brand-teal);
+}
+
+.ll-lhero-desc {
+  max-width: 540px;
+  margin-top: clamp(1rem, 1.6vw, 1.35rem);
+  font-size: clamp(0.94rem, 1.05vw, 1.02rem);
+  line-height: 1.7;
+  color: var(--body-text);
+}
+
+/* Buy / Rent switch: the homepage search's segmented control, in light. */
+.ll-lhero-modes {
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: clamp(1.5rem, 2.4vw, 2rem);
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--white);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 6px 18px rgba(16, 42, 44, 0.06);
+}
+
+.ll-lhero-mode-thumb {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc((100% - 8px) / 2);
+  border-radius: 999px;
+  background: var(--action-teal);
+  box-shadow: 0 6px 16px rgba(var(--action-teal-rgb), 0.35);
+}
+
+.ll-lhero-mode {
+  position: relative;
+  z-index: 1;
+  min-width: 6.4rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  font-size: 0.86rem;
+  font-weight: 500;
+  text-align: center;
+  color: var(--body-text);
+  transition: color 0.2s ease;
+}
+
+.ll-lhero-mode:hover {
+  color: var(--action-teal);
+}
+
+.ll-lhero-mode.is-active {
+  color: var(--white);
+}
+
+.ll-lhero-mode:focus-visible {
+  outline: 2px solid var(--action-teal);
+  outline-offset: 2px;
+}
+
+/* The keyhole stands on the hero's bottom edge; its outline sits just behind it. */
+.ll-lhero-visual {
+  position: relative;
+  width: clamp(220px, 19vw, 272px);
+  aspect-ratio: 100 / 150;
+  justify-self: center;
+  margin-bottom: calc(46px + 1.75rem);
+}
+
+.ll-lhero-keyhole,
+.ll-lhero-keyhole-line {
+  position: absolute;
+  inset: 0;
+}
+
+.ll-lhero-keyhole {
+  -webkit-mask: var(--ll-keyhole-mask) center / 100% 100% no-repeat;
+  mask: var(--ll-keyhole-mask) center / 100% 100% no-repeat;
+  background: var(--brand-teal-25);
+}
+
+.ll-lhero-keyhole img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 30% 50%;
+  display: block;
+}
+
+.ll-lhero-keyhole-line {
+  transform: translate(22px, -18px);
+  background: var(--ll-keyhole-line) center / 100% 100% no-repeat;
+  opacity: 0.55;
+}
+
+/* ---------- Listing section ---------- */
+.ll-lb-section {
+  position: relative;
+  /* flow-root: the bar's negative margin must not collapse through the section */
+  display: flow-root;
+  /* the stuck band is full-bleed; clip (not hidden) keeps position: sticky working */
+  overflow-x: clip;
+  background: var(--white);
+  padding-bottom: clamp(3.5rem, 5vw, 5rem);
+}
+
+.ll-lb-bar-wrap {
+  position: sticky;
+  top: calc(82px + 12px);
+  z-index: 30;
+}
+
+/* Marks the bar's resting top, so an observer can tell when it is stuck. */
+.ll-lb-sentinel {
+  height: 0;
+}
+
+/* Buy: the search bar rides the hero's bottom edge. */
+.ll-lb-section .ll-lb-sentinel {
+  margin-top: -46px;
+}
+
+/* Stuck: a full-width glass band continues the header, the bar gets slimmer. */
+.ll-lb-bar-wrap::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -12px;
+  bottom: -12px;
+  left: calc(50% - 50vw);
+  right: calc(50% - 50vw);
+  background-color: rgba(255, 255, 255, 0.86);
+  -webkit-backdrop-filter: blur(18px) saturate(165%);
+  backdrop-filter: blur(18px) saturate(165%);
+  border-bottom: 1px solid rgba(221, 221, 221, 0.72);
+  box-shadow: 0 8px 28px rgba(16, 42, 44, 0.08);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.ll-lb-bar-wrap.is-stuck::before {
+  opacity: 1;
+}
+
+.ll-lb-bar-wrap .ll-lb-bar,
+.ll-lb-bar-wrap .ll-fs-field,
+.ll-lb-bar-wrap .ll-lb-count-btn {
+  transition: box-shadow 0.25s ease, padding 0.25s ease, min-height 0.25s ease,
+    background-color 0.2s ease;
+}
+
+.ll-lb-bar-wrap.is-stuck .ll-lb-bar {
+  box-shadow: 0 2px 8px rgba(16, 42, 44, 0.06);
+}
+
+.ll-lb-bar-wrap.is-stuck .ll-fs-field {
+  padding-top: 0.42rem;
+  padding-bottom: 0.46rem;
+}
+
+.ll-lb-bar-wrap.is-stuck .ll-lb-count-btn {
+  min-height: 48px;
+}
+
+.ll-lb-bar {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 0.85fr) minmax(0, 1.1fr)
+    auto;
+  align-items: stretch;
+  padding: 7px;
+  border-radius: 20px;
+  background: var(--white);
+  border: 1px solid var(--border-subtle);
+  box-shadow:
+    0 2px 6px rgba(16, 42, 44, 0.04),
+    0 24px 50px -18px rgba(16, 42, 44, 0.22);
+}
+
+/* Light HeroSelect (classPrefix="ll-fs") */
+.ll-fs-field {
+  position: relative;
+  min-width: 0;
+  padding: 0.68rem 1.15rem 0.7rem;
+  border-radius: 14px;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ll-lb-bar .ll-fs-field + .ll-fs-field::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 24%;
+  bottom: 24%;
+  width: 1px;
+  background: var(--border-subtle);
+  transition: opacity 0.2s ease;
+}
+
+.ll-fs-field:hover:not(.is-disabled),
+.ll-fs-field.is-open {
+  background: var(--brand-teal-10);
+}
+
+.ll-lb-bar .ll-fs-field:hover::before,
+.ll-lb-bar .ll-fs-field.is-open::before,
+.ll-lb-bar .ll-fs-field:hover + .ll-fs-field::before,
+.ll-lb-bar .ll-fs-field.is-open + .ll-fs-field::before {
+  opacity: 0;
+}
+
+.ll-fs-field:has(.ll-fs-trigger:focus-visible) {
+  box-shadow: inset 0 0 0 1.5px var(--action-teal);
+}
+
+.ll-fs-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--body-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ll-fs-label svg {
+  flex-shrink: 0;
+  color: var(--brand-teal);
+}
+
+.ll-fs-label-short {
+  display: none;
+}
+
+.ll-fs-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  margin-top: 0.3rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--heading);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+}
+
+.ll-fs-trigger::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.ll-fs-value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ll-fs-chevron {
+  flex-shrink: 0;
+  color: var(--brand-teal);
+  transition: transform 0.25s ease;
+}
+
+.ll-fs-field.is-open .ll-fs-chevron {
+  transform: rotate(180deg);
+}
+
+.ll-fs-pop {
+  position: absolute;
+  z-index: 60;
+  top: calc(100% + 10px);
+  left: 0;
+  width: max(100%, 248px);
+  padding: 6px;
+  border-radius: 14px;
+  background: var(--white);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 24px 50px rgba(16, 42, 44, 0.16);
+  color: var(--heading);
+  animation: ll-fs-pop-in 0.18s ease-out;
+}
+
+.ll-fs-pop.is-up {
+  top: auto;
+  bottom: calc(100% + 10px);
+}
+
+@keyframes ll-fs-pop-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.ll-fs-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 4px;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--brand-teal);
+}
+
+.ll-fs-filter input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  font-size: 0.88rem;
+  color: var(--heading);
+}
+
+.ll-fs-options {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: min(300px, 46vh);
+  overflow-y: auto;
+  outline: none;
+  overscroll-behavior: contain;
+}
+
+.ll-fs-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.64rem 0.8rem;
+  border-radius: 9px;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+
+.ll-fs-option.is-active {
+  background: var(--brand-teal-10);
+}
+
+.ll-fs-option.is-selected {
+  color: var(--dark-teal);
+  font-weight: 600;
+}
+
+.ll-fs-option svg {
+  flex-shrink: 0;
+  color: var(--brand-teal);
+}
+
+.ll-fs-empty {
+  padding: 0.75rem 0.8rem;
+  font-size: 0.85rem;
+  color: var(--body-text);
+}
+
+/* Live result count (also jumps to the list) */
+.ll-lb-count-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 56px;
+  margin-left: 7px;
+  padding: 0 1.7rem;
+  border-radius: 999px;
+  background: var(--action-teal);
+  color: var(--white);
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 10px 24px rgba(var(--action-teal-rgb), 0.3);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.ll-lb-count-btn span:first-child {
+  font-weight: 700;
+}
+
+.ll-lb-count-btn:hover {
+  background: var(--action-teal-hover);
+  transform: translateY(-1px);
+}
+
+.ll-lb-count-btn:focus-visible {
+  outline: 2px solid var(--action-teal);
+  outline-offset: 3px;
+}
+
+/* ---------- Toolbar: count, chips, sort ---------- */
+.ll-lb-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+  flex-wrap: wrap;
+  margin: clamp(2.25rem, 3.2vw, 3rem) 0 clamp(1.5rem, 2vw, 1.9rem);
+  scroll-margin-top: calc(82px + 120px);
+}
+
+.ll-lb-summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  min-width: 0;
+}
+
+.ll-lb-heading {
+  font-size: clamp(1.25rem, 1.6vw, 1.5rem);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+
+.ll-lb-heading span {
+  color: var(--action-teal);
+  font-weight: 600;
+}
+
+.ll-lb-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ll-lb-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.38rem 0.6rem 0.38rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--brand-teal-25);
+  background: var(--brand-teal-10);
+  color: var(--dark-teal);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.ll-lb-chip svg {
+  color: var(--brand-teal);
+}
+
+.ll-lb-chip:hover {
+  background: var(--brand-teal-25);
+  border-color: var(--brand-teal-50);
+}
+
+.ll-lb-clear {
+  padding: 0.38rem 0.25rem;
+  border: none;
+  background: none;
+  color: var(--body-text);
+  font: inherit;
+  font-size: 0.8rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.ll-lb-clear:hover {
+  color: var(--action-teal);
+}
+
+.ll-lb-chip:focus-visible,
+.ll-lb-clear:focus-visible {
+  outline: 2px solid var(--action-teal);
+  outline-offset: 2px;
+}
+
+/* Sort: the same dropdown, as one compact pill */
+.ll-fs-field.ll-fs-sort {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.9rem 0.5rem 1.1rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  background: var(--white);
+}
+
+.ll-fs-sort .ll-fs-label {
+  letter-spacing: 0.1em;
+}
+
+.ll-fs-sort .ll-fs-trigger {
+  width: auto;
+  margin-top: 0;
+  font-size: 0.88rem;
+}
+
+.ll-fs-sort .ll-fs-pop {
+  left: auto;
+  right: 0;
+  width: 236px;
+}
+
+/* ---------- Grid: 3 / 2 / 1 columns ---------- */
+.ll-lb-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* ---------- Brief tile ---------- */
+.ll-brief {
+  position: relative;
+  overflow: hidden;
+  container-type: inline-size;
+  min-height: 300px;
+  padding: clamp(1.6rem, 2.4vw, 2.1rem);
+  border-radius: var(--radius-md);
+  background: var(--brand-gradient);
+  color: var(--white);
+  box-shadow: var(--shadow-card);
+}
+
+.ll-brief::after {
+  content: '';
+  position: absolute;
+  width: 360px;
+  aspect-ratio: 1;
+  right: -110px;
+  bottom: -120px;
+  background: var(--keyhole-white) center / contain no-repeat;
+  opacity: 0.14;
+  pointer-events: none;
+}
+
+.ll-brief[data-free3='1'] {
+  grid-column: span 1;
+}
+
+.ll-brief[data-free3='2'] {
+  grid-column: span 2;
+}
+
+.ll-brief[data-free3='0'] {
+  grid-column: 1 / -1;
+  min-height: 0;
+}
+
+.ll-brief-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.5rem;
+  height: 100%;
+}
+
+.ll-brief-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  color: var(--white);
+}
+
+.ll-brief-title {
+  font-size: clamp(1.3rem, 1.7vw, 1.55rem);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: var(--white);
+}
+
+.ll-brief-text {
+  max-width: 440px;
+  margin-top: 0.6rem;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.ll-brief-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.ll-brief-btn {
+  border-color: rgba(255, 255, 255, 0.5);
+  color: var(--white);
+}
+
+.ll-brief-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--white);
+}
+
+.ll-brief-btn--solid {
+  background: var(--white);
+  border-color: var(--white);
+  color: var(--dark-teal);
+}
+
+.ll-brief-btn--solid:hover {
+  background: var(--brand-teal-10);
+  color: var(--dark-teal);
+}
+
+.ll-brief-btn:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 2px;
+}
+
+/* Wide tile (spans 2-3 columns): one row, icon / copy / buttons */
+@container (min-width: 620px) {
+  .ll-brief-inner {
+    flex-direction: row;
+    align-items: center;
+    gap: 1.75rem;
+  }
+  .ll-brief-copy {
+    flex: 1;
+  }
+  .ll-brief-actions {
+    flex-shrink: 0;
+  }
+}
+
+/* ---------- Empty state ---------- */
+.ll-lb-empty {
+  max-width: 620px;
+  margin: 1rem auto 0;
+  padding: clamp(2.5rem, 4vw, 3.5rem) clamp(1.5rem, 4vw, 3rem);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--surface-tint);
+  text-align: center;
+}
+
+.ll-lb-empty-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  margin-bottom: 1.1rem;
+  border-radius: 50%;
+  background: var(--white);
+  border: 1px solid var(--brand-teal-25);
+  color: var(--action-teal);
+}
+
+.ll-lb-empty h3 {
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.ll-lb-empty p {
+  margin: 0.6rem auto 1.5rem;
+  max-width: 460px;
+  font-size: 0.92rem;
+}
+
+.ll-lb-empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+/* ---------- Plan your purchase ---------- */
+/* White like the list above it (the footer below is tinted), set apart by a hairline. */
+.ll-lplan {
+  background: var(--white);
+  padding: 0 0 clamp(4.5rem, 6.5vw, 6.75rem);
+}
+
+.ll-lplan-inner {
+  padding-top: clamp(3.5rem, 5vw, 5rem);
+}
+
+/* hairline across the content only (the container's padding is the page gutter) */
+.ll-lplan .ll-container {
+  background: linear-gradient(var(--border-subtle), var(--border-subtle)) top / 100% 1px no-repeat;
+  background-origin: content-box;
+  background-clip: content-box;
+}
+
+.ll-lplan-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  align-items: center;
+  gap: clamp(2rem, 6vw, 6rem);
+}
+
+.ll-lplan-title {
+  font-size: clamp(2rem, 3vw, 2.6rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+
+.ll-lplan-lead {
+  margin-top: 0.75rem;
+  max-width: 360px;
+  font-size: 1rem;
+}
+
+.ll-lplan-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.ll-lplan-list li {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.ll-lplan-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.45rem 0.75rem;
+  border-radius: var(--radius-md);
+  transition: background-color 0.25s ease, padding 0.3s ease;
+}
+
+.ll-lplan-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  background: var(--brand-teal-10);
+  border: 1px solid var(--brand-teal-25);
+  color: var(--action-teal);
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.ll-lplan-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.ll-lplan-text strong {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--heading);
+}
+
+.ll-lplan-text span {
+  font-size: 0.9rem;
+  color: var(--body-text);
+}
+
+.ll-lplan-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--brand-teal-25);
+  color: var(--action-teal);
+  transition: background-color 0.25s ease, color 0.25s ease, transform 0.3s ease;
+}
+
+.ll-lplan-row:hover {
+  background: var(--surface-tint);
+  padding-left: 1.25rem;
+}
+
+.ll-lplan-row:hover .ll-lplan-icon {
+  background: var(--action-teal);
+  border-color: var(--action-teal);
+  color: var(--white);
+}
+
+.ll-lplan-row:hover .ll-lplan-arrow {
+  background: var(--action-teal);
+  color: var(--white);
+  transform: rotate(45deg);
+}
+
+.ll-lplan-row:focus-visible {
+  outline: 2px solid var(--action-teal);
+  outline-offset: 2px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1080px) {
+  .ll-lb-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ll-brief[data-free3] {
+    grid-column: span 1;
+  }
+  .ll-brief[data-free2='0'] {
+    grid-column: 1 / -1;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 960px) {
+  /* The site header changes here; the bar scrolls with the page. */
+  .ll-lb-bar-wrap {
+    position: static;
+  }
+  .ll-lb-bar-wrap::before {
+    display: none;
+  }
+  .ll-lb-bar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .ll-fs-field {
+    background: var(--surface-tint);
+  }
+  .ll-lb-bar .ll-fs-field + .ll-fs-field::before {
+    display: none;
+  }
+  .ll-lb-count-btn {
+    grid-column: 1 / -1;
+    margin-left: 0;
+    min-height: 50px;
+  }
+  .ll-lplan-inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .ll-lhero-inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ll-lhero-visual {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .ll-lb-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ll-brief[data-free2],
+  .ll-brief[data-free3] {
+    grid-column: auto;
+  }
+  .ll-fs-f-location {
+    grid-column: 1 / -1;
+  }
+  .ll-fs-field {
+    padding: 0.6rem 0.9rem 0.64rem;
+  }
+  .ll-fs-trigger {
+    font-size: 0.9rem;
+  }
+  .ll-fs-pop {
+    width: max(100%, 220px);
+  }
+  .ll-fs-f-beds .ll-fs-pop {
+    left: auto;
+    right: 0;
+  }
+  .ll-fs-sort .ll-fs-pop {
+    left: 0;
+    right: auto;
+  }
+  /* budget + count share the last row */
+  .ll-lb-count-btn {
+    grid-column: auto;
+    min-height: 0;
+    padding: 0 1rem;
+  }
+  .ll-lb-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .ll-lplan-row {
+    gap: 1rem;
+    padding: 1.2rem 0.25rem;
+  }
+  .ll-lplan-row:hover {
+    padding-left: 0.6rem;
+  }
+  .ll-lplan-icon {
+    width: 46px;
+    height: 46px;
+  }
+}
+
+@media (max-width: 400px) {
+  .ll-fs-label-full {
+    display: none;
+  }
+  .ll-fs-label-short {
+    display: inline;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ll-lplan-row,
+  .ll-lplan-arrow,
+  .ll-lb-count-btn,
+  .ll-fs-pop {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* Rent: the switch's thumb sits on the second option. */
+.ll-lhero[data-mode='rent'] .ll-lhero-mode-thumb {
+  transform: translateX(100%);
+}
+
+/* Rent: frame the Marina towers (and keep the waterfront signage out of the keyhole). */
+.ll-lhero[data-mode='rent'] .ll-lhero-keyhole img {
+  object-position: 64% 50%;
+}

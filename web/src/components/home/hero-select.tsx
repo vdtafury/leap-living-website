@@ -28,6 +28,11 @@ interface HeroSelectProps {
   searchable?: boolean
   disabled?: boolean
   className?: string
+  /**
+   * Class-name prefix for every element (default `ll-hs`, the homepage's glass search).
+   * The listing pages pass `ll-fs` for a light theme, so the two never share rules.
+   */
+  classPrefix?: string
 }
 
 /**
@@ -48,6 +53,7 @@ export function HeroSelect({
   searchable = false,
   disabled = false,
   className = '',
+  classPrefix: p = 'll-hs',
 }: HeroSelectProps) {
   const uid = useId()
   const buttonId = `${uid}-button`
@@ -184,14 +190,14 @@ export function HeroSelect({
   return (
     <div
       ref={rootRef}
-      className={`ll-hs-field${open ? ' is-open' : ''}${disabled ? ' is-disabled' : ''} ${className}`}
+      className={`${p}-field${open ? ' is-open' : ''}${disabled ? ' is-disabled' : ''} ${className}`}
     >
-      <span id={labelId} className="ll-hs-label">
+      <span id={labelId} className={`${p}-label`}>
         {icon}
         {shortLabel ? (
           <>
-            <span className="ll-hs-label-full">{label}</span>
-            <span className="ll-hs-label-short" aria-hidden="true">
+            <span className={`${p}-label-full`}>{label}</span>
+            <span className={`${p}-label-short`} aria-hidden="true">
               {shortLabel}
             </span>
           </>
@@ -203,7 +209,7 @@ export function HeroSelect({
         ref={buttonRef}
         id={buttonId}
         type="button"
-        className="ll-hs-trigger"
+        className={`${p}-trigger`}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={listId}
@@ -212,14 +218,14 @@ export function HeroSelect({
         onClick={() => (open ? close() : openList())}
         onKeyDown={onButtonKeyDown}
       >
-        <span className="ll-hs-value">{selected?.label}</span>
-        <ChevronDownIcon className="ll-hs-chevron" />
+        <span className={`${p}-value`}>{selected?.label}</span>
+        <ChevronDownIcon className={`${p}-chevron`} />
       </button>
 
       {open && (
-        <div className={`ll-hs-pop${placeUp ? ' is-up' : ''}`}>
+        <div className={`${p}-pop${placeUp ? ' is-up' : ''}`}>
           {searchable && (
-            <div className="ll-hs-filter">
+            <div className={`${p}-filter`}>
               <SearchIcon size={15} />
               <input
                 ref={filterRef}
@@ -247,10 +253,10 @@ export function HeroSelect({
             aria-labelledby={labelId}
             tabIndex={-1}
             aria-activedescendant={searchable ? undefined : activeId}
-            className="ll-hs-options"
+            className={`${p}-options`}
             onKeyDown={onListKeyDown}
           >
-            {visible.length === 0 && <li className="ll-hs-empty">No matches</li>}
+            {visible.length === 0 && <li className={`${p}-empty`}>No matches</li>}
             {visible.map((o, i) => {
               const isSelected = o.value === value
               return (
@@ -259,7 +265,7 @@ export function HeroSelect({
                   id={`${uid}-opt-${i}`}
                   role="option"
                   aria-selected={isSelected}
-                  className={`ll-hs-option${i === activeIndex ? ' is-active' : ''}${
+                  className={`${p}-option${i === activeIndex ? ' is-active' : ''}${
                     isSelected ? ' is-selected' : ''
                   }`}
                   onPointerEnter={() => setActiveIndex(i)}

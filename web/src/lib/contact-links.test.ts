@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { listingContactLinks, type SiteContact } from './contact-links'
+import { briefWhatsappLink, listingContactLinks, type SiteContact } from './contact-links'
 
 const CONTACT: SiteContact = {
   phoneHref: 'tel:+971521459888',
@@ -67,5 +67,20 @@ describe('listing contact links', () => {
     expect(
       listingContactLinks({ ...CONTACT, phoneHref: 'tel:+971 52 145 9888' }, LISTING).call,
     ).toBe('tel:+971521459888')
+  })
+})
+
+describe('search brief WhatsApp link', () => {
+  it('says what the visitor is looking for, per mode', () => {
+    const buy = new URL(briefWhatsappLink(CONTACT, 'BUY')!)
+    expect(buy.searchParams.get('text')).toBe(
+      'Hello Leap Living, I am looking for a property to buy in Dubai.',
+    )
+    const rent = new URL(briefWhatsappLink(CONTACT, 'RENT')!)
+    expect(rent.searchParams.get('text')).toContain('a property to rent')
+  })
+
+  it('returns null when the WhatsApp setting is not an https link', () => {
+    expect(briefWhatsappLink({ ...CONTACT, whatsapp: 'javascript:alert(1)' }, 'BUY')).toBeNull()
   })
 })

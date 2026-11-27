@@ -17,6 +17,15 @@ export interface MortgageInput {
 /** UAE lenders cap residential mortgage terms at 25 years. */
 export const MAX_LOAN_YEARS = 25
 
+/** Starting values of the calculator (the property page quotes the same estimate). */
+export const DEFAULT_INTEREST_RATE = 4.25
+export const DEFAULT_LOAN_YEARS = 25
+
+/** UAE LTV rule of thumb: 20% down up to AED 5M, 30% above (the lender decides). */
+export function defaultDownPayment(price: number): number {
+  return price > 5_000_000 ? 30 : 20
+}
+
 export function loanAmount(price: number, downPaymentPercent: number): number {
   if (!Number.isFinite(price) || price <= 0) return 0
   const pct = Math.min(

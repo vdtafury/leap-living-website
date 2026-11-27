@@ -81,3 +81,12 @@ export function listingContactLinks(
     ),
   }
 }
+
+/**
+ * WhatsApp link for a general search brief (the "can't find it?" card on Buy / Rent): no
+ * listing yet, so the message only says what the visitor is looking for.
+ */
+export function briefWhatsappLink(contact: SiteContact, mode: 'BUY' | 'RENT'): string | null {
+  const wanted = mode === 'BUY' ? 'a property to buy' : 'a property to rent'
+  return whatsappLink(contact.whatsapp, `Hello Leap Living, I am looking for ${wanted} in Dubai.`)
+}
