@@ -8,6 +8,14 @@
 
 ## Last updated
 
+2026-11-27 — by: Arena agent. **Sell pill fields + lighter header; symmetric panels on Sell and Contact (D-60):**
+- `/sell`: every field is a pill like the *List With Us* button, panels use a soft 28 px radius; the dark arched photo became a bright capsule photo + round inset + *Free Property Valuation* chip.
+- *Schedule a Briefing* (Sell) and the second section of `/contact` are now two panels of the same width and height. `ConsultationForm` takes an optional `header`. New `styles/33-contact.css`.
+- Checked the owner's Pixxi commit (D-59) locally: `prisma generate` + tsc clean, vitest 170/170. Review notes given in chat (Pixxi field `propertyReference`, email on List With Us leads, webhook event names) — not changed yet.
+- tsc, lint, vitest 170/170, build, verify.sh 106/106, Playwright 33 passed / 3 skipped.
+
+### Previous update
+
 2026-11-27 — by: Antigravity. **Two-way Pixxi CRM integration built & ready for credentials (`D-59`):**
 - **Additive schema (`prisma/schema.prisma`, `server/schema.ts`, `schema.test.ts`, `package-cpanel.sh`):** added `PixxiLink`, `PixxiLeadOutbox`, and `PixxiSyncRun` (24 total tables, zero `ALTER TABLE` on existing tables, zero-downtime staging upgrade).
 - **Core module (`web/src/modules/pixxi-crm/`):** clean-architecture `domain/pixxi.ts`, `infrastructure/client.ts`, `application/sync.ts`, `application/leads.ts`, `application/workers.ts`, `index.ts`, plus unit/integration suite (`pixxi-crm.test.ts`).

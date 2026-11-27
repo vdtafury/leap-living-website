@@ -64,4 +64,35 @@ test.describe('sell page', () => {
       'true',
     )
   })
+  test('pill fields, and the two side-by-side panels match in size', async ({ page }, info) => {
+    const box = async (selector: string) => {
+      const b = await page.locator(selector).first().boundingBox()
+      if (!b) throw new Error(`no box for ${selector}`)
+      return b
+    }
+
+    await page.goto('/sell')
+    // Every single-line field on the page is a pill (D-60).
+    const radii = await page
+      .locator('.ll-sell-hero input.ll-input, .ll-sell-brief input.ll-input')
+      .evaluateAll((inputs) => inputs.map((el) => parseFloat(getComputedStyle(el).borderRadius)))
+    expect(radii.length).toBeGreaterThanOrEqual(7)
+    for (const r of radii) expect(r).toBeGreaterThanOrEqual(24)
+
+    if (info.project.name !== 'desktop') return
+
+    const near = (a: number, b: number) => expect(Math.abs(a - b)).toBeLessThanOrEqual(2)
+    const details = await box('.ll-sell-brief-panel')
+    const form = await box('.ll-sell-brief-form .ll-form-card')
+    near(details.width, form.width)
+    near(details.height, form.height)
+    near(details.y, form.y)
+
+    await page.goto('/contact')
+    const channels = await box('.ll-contact-card')
+    const briefing = await box('.ll-contact-form .ll-form-card')
+    near(channels.width, briefing.width)
+    near(channels.height, briefing.height)
+    near(channels.y, briefing.y)
+  })
 })
