@@ -1,0 +1,457 @@
+/* ==========================================================================
+   About → Meet the Team (D-57)
+   Portrait cards (4:5) with name, title and the start of the bio; "Read bio"
+   opens the full profile in a native <dialog> (centred card; bottom sheet on phones).
+   ========================================================================== */
+
+.ll-team-head {
+  max-width: 760px;
+  margin-bottom: clamp(2rem, 3.4vw, 3rem);
+}
+
+.ll-team-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2vw, 1.75rem);
+}
+
+/* Small teams: keep the cards a portrait size instead of stretching across the row. */
+.ll-team-grid[data-count='1'],
+.ll-team-grid[data-count='2'],
+.ll-team-grid[data-count='3'] {
+  grid-template-columns: repeat(auto-fill, minmax(0, 300px));
+}
+
+.ll-team-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--white);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+.ll-team-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: rgba(var(--brand-teal-rgb), 0.35);
+}
+
+.ll-team-photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--surface-tint);
+}
+
+.ll-team-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 18%;
+  display: block;
+  transition: transform 0.6s ease;
+}
+
+.ll-team-card:hover .ll-team-photo img {
+  transform: scale(1.035);
+}
+
+/* No photo yet: initials on the brand gradient, a large faint keyhole off to the corner. */
+.ll-team-monogram {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--brand-gradient);
+  color: var(--white);
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  font-weight: 300;
+  letter-spacing: 0.1em;
+}
+
+.ll-team-monogram::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  width: 120%;
+  aspect-ratio: 1;
+  right: -48%;
+  bottom: -30%;
+  background: var(--keyhole-white) center / contain no-repeat;
+  opacity: 0.16;
+}
+
+.ll-team-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1.15rem 1.2rem 1.2rem;
+}
+
+.ll-team-name {
+  margin: 0;
+  font-size: 1.06rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--heading);
+  letter-spacing: -0.01em;
+}
+
+.ll-team-role {
+  margin: 0.3rem 0 0;
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--action-teal);
+}
+
+.ll-team-brn {
+  margin: 0.35rem 0 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--body-text);
+}
+
+.ll-team-excerpt {
+  margin: 0.8rem 0 0;
+  font-size: 0.84rem;
+  line-height: 1.6;
+  color: var(--body-text);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ll-team-foot {
+  margin-top: auto;
+  padding-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: calc(34px + 1rem);
+}
+
+.ll-team-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--action-teal);
+  cursor: pointer;
+}
+
+.ll-team-more svg {
+  transition: transform 0.25s ease;
+}
+
+.ll-team-more:hover {
+  color: var(--action-teal-hover);
+}
+
+.ll-team-more:hover svg {
+  transform: translateX(3px);
+}
+
+.ll-team-more:focus-visible,
+.ll-team-links a:focus-visible,
+.ll-team-close:focus-visible {
+  outline: 2px solid var(--brand-teal);
+  outline-offset: 3px;
+  border-radius: 999px;
+}
+
+.ll-team-links {
+  display: flex;
+  gap: 0.4rem;
+  margin-left: auto;
+}
+
+.ll-team-links a {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  color: var(--dark-teal);
+  background: var(--white);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.ll-team-links a:hover {
+  background: var(--action-teal);
+  border-color: var(--action-teal);
+  color: var(--white);
+}
+
+/* In the profile: labelled pill buttons */
+.ll-team-links.is-large {
+  margin: 1.6rem 0 0;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.ll-team-links.is-large a {
+  width: auto;
+  height: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.62rem 1.1rem;
+  font-size: 0.84rem;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- profile dialog ---------- */
+
+.ll-team-dialog {
+  width: min(920px, calc(100vw - 2.5rem));
+  max-width: none;
+  max-height: min(640px, calc(100dvh - 2.5rem));
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--white);
+  color: var(--body-text);
+  box-shadow: 0 40px 90px rgba(7, 22, 23, 0.35);
+  overflow: hidden;
+}
+
+.ll-team-dialog::backdrop {
+  background: rgba(7, 22, 23, 0.62);
+  backdrop-filter: blur(4px);
+}
+
+.ll-team-dialog[open] {
+  animation: ll-team-in 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes ll-team-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+}
+
+.ll-team-profile {
+  display: grid;
+  grid-template-columns: minmax(0, 380px) minmax(0, 1fr);
+  min-height: min(500px, calc(100dvh - 2.5rem));
+  max-height: inherit;
+}
+
+.ll-team-profile-photo {
+  position: relative;
+  min-height: 100%;
+  background: var(--surface-tint);
+}
+
+.ll-team-profile-photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 18%;
+}
+
+.ll-team-profile-body {
+  position: relative;
+  padding: clamp(1.75rem, 3.5vw, 2.75rem);
+  padding-right: clamp(3.5rem, 5vw, 4.25rem);
+  overflow-y: auto;
+  max-height: min(640px, calc(100dvh - 2.5rem));
+}
+
+.ll-team-profile-name {
+  margin: 0.35rem 0 0;
+  font-size: clamp(1.5rem, 2.4vw, 1.95rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--heading);
+}
+
+.ll-team-profile-body > .ll-team-role {
+  margin: 0;
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ll-team-profile-bio {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.ll-team-profile-bio p {
+  margin: 0 0 0.95rem;
+  font-size: 0.93rem;
+  line-height: 1.75;
+}
+
+.ll-team-profile-bio p:last-child {
+  margin-bottom: 0;
+}
+
+.ll-team-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  background: var(--white);
+  color: var(--heading);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.ll-team-close:hover {
+  background: var(--action-teal);
+  border-color: var(--action-teal);
+  color: var(--white);
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 1100px) {
+  .ll-team-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .ll-team-grid,
+  .ll-team-grid[data-count] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Profile becomes a bottom sheet: photo on top, text scrolls. */
+  .ll-team-dialog {
+    width: 100vw;
+    max-height: 92dvh;
+    margin: auto 0 0;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .ll-team-dialog[open] {
+    animation-name: ll-team-up;
+  }
+
+  @keyframes ll-team-up {
+    from {
+      transform: translateY(40px);
+      opacity: 0;
+    }
+  }
+
+  .ll-team-profile {
+    display: block;
+    min-height: 0;
+    max-height: 92dvh;
+    overflow-y: auto;
+  }
+
+  .ll-team-profile-photo {
+    height: min(52vw, 300px);
+    min-height: 0;
+  }
+
+  .ll-team-profile-body {
+    max-height: none;
+    overflow: visible;
+    padding: 1.5rem 1.25rem 2rem;
+    position: static;
+  }
+
+  .ll-team-close {
+    top: 0.85rem;
+    right: 0.85rem;
+    background: rgba(255, 255, 255, 0.92);
+  }
+}
+
+@media (max-width: 560px) {
+  .ll-team-grid,
+  .ll-team-grid[data-count] {
+    gap: 0.85rem;
+  }
+
+  .ll-team-body {
+    padding: 0.85rem 0.85rem 0.9rem;
+  }
+
+  .ll-team-name {
+    font-size: 0.94rem;
+  }
+
+  .ll-team-role {
+    font-size: 0.74rem;
+  }
+
+  /* Phones: name and title on the card, the bio lives in the profile sheet. */
+  .ll-team-excerpt {
+    display: none;
+  }
+
+  /* Same layout on every card: "Read bio", then the contact icons under it. */
+  .ll-team-foot {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    min-height: 0;
+    padding-top: 0.75rem;
+  }
+
+  .ll-team-links {
+    margin-left: 0;
+  }
+
+  .ll-team-links a {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ll-team-card,
+  .ll-team-photo img,
+  .ll-team-more svg {
+    transition: none;
+  }
+
+  .ll-team-card:hover {
+    transform: none;
+  }
+
+  .ll-team-card:hover .ll-team-photo img {
+    transform: none;
+  }
+
+  .ll-team-dialog[open] {
+    animation: none;
+  }
+}

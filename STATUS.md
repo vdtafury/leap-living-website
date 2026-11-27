@@ -8,6 +8,14 @@
 
 ## Last updated
 
+2026-11-27 — by: Arena agent. **About → Meet the Team, ready for the photoshoot material (D-57):**
+- Admin → About page → *Meet the Team*: add people (name, title, photo upload, bio, optional BRN / email / LinkedIn), order them, save draft, preview, publish. Nothing shows on the site until at least one person is published (no placeholder people).
+- Public: `#team` section under the CEO panel, 4:5 portrait cards with *Read bio* opening the full profile (dialog; bottom sheet on phones). New CMS field kind `image`.
+- New: `components/about/team-section.tsx`, `styles/31-team.css`, `lib/team.ts`, `e2e/team.spec.ts`. tsc, lint, vitest 161/161, build, verify.sh 106/106, Playwright 27 passed / 3 skipped.
+- Waiting on: team photos (portrait, same background) and bios from the owner.
+
+### Previous update
+
 2026-11-27 — by: Arena agent. **Sell page redesign + Private Consultation first (D-56):**
 - The briefing form now opens on **Private Consultation** everywhere; it opens on Free Property Valuation only for `/contact?topic=valuation` or when the visitor followed a *Free Valuation* link (`/sell#valuation-form`).
 - `/sell`: light header with the quick *List With Us* form in it and an arched photo; *How Leap Living Protects Asset Value* as a connected path; dark *Schedule a Briefing* band. Copy unchanged (owner kept *Strategic Disposition*). `ListWithUsForm` takes an optional `header`.

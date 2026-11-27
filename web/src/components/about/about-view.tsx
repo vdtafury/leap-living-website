@@ -6,6 +6,8 @@ import { ArrowUpRightIcon, ChevronRightIcon } from '@/components/ui/icons'
 import type { DeveloperBrand } from '@/data/catalog'
 import type { AboutContent } from '@/data/content-defaults'
 import { DeveloperShowcase } from '@/components/home/developer-showcase'
+import { visibleMembers } from '@/lib/team'
+import { TeamSection } from './team-section'
 
 /** About page markup: published content (app/about/page.tsx) or the draft (admin preview). */
 export function AboutView({
@@ -15,7 +17,9 @@ export function AboutView({
   content: AboutContent
   developers: DeveloperBrand[]
 }) {
-  const { hero, pillars, leadership, services } = content
+  const { hero, pillars, leadership, team, services } = content
+  // Section backgrounds alternate; with no team published, services keeps its white.
+  const hasTeam = visibleMembers(team.members).length > 0
   return (
     <>
       <SiteHeader />
@@ -151,8 +155,11 @@ export function AboutView({
           </div>
         </section>
 
+        {/* Meet the Team (D-57): hidden until the admin publishes at least one person */}
+        <TeamSection title={team.title} intro={team.intro} members={team.members} />
+
         {/* Full 9 Core Advisory Services including Consultancy */}
-        <section id="services" className="ll-section-light">
+        <section id="services" className={hasTeam ? 'll-section-muted' : 'll-section-light'}>
           <div className="ll-container">
             <div className="ll-section-header">
               <div>

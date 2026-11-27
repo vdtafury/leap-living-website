@@ -197,6 +197,42 @@ export const ABOUT_SECTIONS: Record<keyof AboutContent, SectionDef> = {
       ctaHref: { kind: 'href', label: 'Button link' },
     },
   },
+  team: {
+    label: 'Meet the Team',
+    help: 'Shown under the CEO profile once at least one person is added and the page is published. Photos: portrait, 4:5 (e.g. 1600 × 2000 px), face in the upper third, same background for everyone. An empty photo shows the initials.',
+    fields: {
+      title: { kind: 'text', label: 'Heading', max: 60 },
+      intro: { kind: 'textarea', label: 'Short text under the heading', max: 260, optional: true },
+      members: {
+        kind: 'list',
+        label: 'Team members',
+        itemLabel: 'Person',
+        min: 0,
+        max: 24,
+        help: 'The order here is the order on the page.',
+        item: {
+          name: { kind: 'text', label: 'Full name', max: 60 },
+          role: { kind: 'text', label: 'Job title', max: 70 },
+          photo: { kind: 'image', label: 'Photo', optional: true },
+          bio: {
+            kind: 'textarea',
+            label: 'Biography',
+            max: 1200,
+            optional: true,
+            help: 'About 60–120 words. The card shows the start; “Read bio” opens all of it.',
+          },
+          brn: {
+            kind: 'text',
+            label: 'BRN (broker registration number)',
+            max: 20,
+            optional: true,
+          },
+          email: { kind: 'email', label: 'Email', optional: true },
+          linkedin: { kind: 'url', label: 'LinkedIn profile', optional: true },
+        },
+      },
+    },
+  },
   services: {
     label: 'Services',
     fields: {

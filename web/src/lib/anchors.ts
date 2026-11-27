@@ -6,3 +6,6 @@
 
 /** The Sell page's briefing form; every "Free Valuation" link goes to `/sell#valuation-form`. */
 export const VALUATION_ANCHOR = 'valuation-form'
+
+/** About → Meet the Team (D-57). Only rendered while at least one person is published. */
+export const TEAM_ANCHOR = 'team'

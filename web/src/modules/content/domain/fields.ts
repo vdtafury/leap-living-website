@@ -10,7 +10,9 @@ export type Field =
   | { kind: 'textarea'; label: string; max: number; optional?: boolean; help?: string }
   | { kind: 'href'; label: string; help?: string }
   | { kind: 'url'; label: string; optional?: boolean; help?: string }
-  | { kind: 'email'; label: string }
+  | { kind: 'email'; label: string; optional?: boolean; help?: string }
+  /** An uploaded image (/media/…) or a built-in one (/images/…); the editor shows an upload button. */
+  | { kind: 'image'; label: string; optional?: boolean; help?: string }
   | { kind: 'number'; label: string; min: number; max: number; step?: number; help?: string }
   | { kind: 'boolean'; label: string; help?: string }
   | {
@@ -44,6 +46,9 @@ export interface SectionDef {
 /** Site links: an internal path, https, mailto: or tel:. Never javascript:, data:, or // / /\. */
 const HREF = /^(\/(?![/\\])[^\s<>"]*|https:\/\/[^\s<>"]+|mailto:[^\s<>"]+|tel:\+?[0-9]{6,16})$/
 
+/** Same rule as listing photos: only files served by the site itself. */
+const IMAGE = /^\/(images|media)\/[A-Za-z0-9][A-Za-z0-9._/-]*$/
+
 export const isFieldMap = (item: Fields | Field): item is Fields =>
   typeof (item as Field).kind !== 'string'
 
@@ -71,8 +76,22 @@ function fieldSchema(field: Field): z.ZodType {
         .regex(/^https:\/\/[^\s<>"]+$/, `${field.label}: enter an https:// link.`)
       return field.optional ? z.union([z.literal(''), url]) : url
     }
-    case 'email':
-      return z.string().trim().email(`${field.label}: enter a valid email.`).max(120)
+    case 'email': {
+      const email = z.string().trim().email(`${field.label}: enter a valid email.`).max(120)
+      return field.optional ? z.union([z.literal(''), email]) : email
+    }
+    case 'image': {
+      const image = z
+        .string()
+        .trim()
+        .max(300)
+        .regex(IMAGE, `${field.label}: upload an image.`)
+        .refine(
+          (url) => !url.includes('..') && !url.includes('//'),
+          `${field.label}: invalid path.`,
+        )
+      return field.optional ? z.union([z.literal(''), image]) : image
+    }
     case 'number':
       return z.coerce
         .number()
