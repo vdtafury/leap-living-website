@@ -63,5 +63,3 @@ docs/source-materials/*
 
 # local screenshots (never commit)
 .shots/
-.vercel
-.env*

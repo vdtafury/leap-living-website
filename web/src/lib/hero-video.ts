@@ -48,7 +48,6 @@ export function isDevOrPreviewHost(hostname?: string): boolean {
   if (!hostname) return false
   if (LOCAL_HOSTS.has(hostname)) return true
   if (hostname.startsWith('staging.')) return true
-  if (hostname.endsWith('.vercel.app')) return true
   return false
 }
 
@@ -60,7 +59,7 @@ export function shouldPlayHeroVideo(ctx: HeroVideoContext): boolean {
   if (!ctx.hasVideo) return false
   if (ctx.isMobile) return false
   if (ctx.saveData) return false
-  // Development and preview environments (e.g. Vercel) always play it so owners/reviewers see it working.
+  // Development and staging hosts always play it so owners/reviewers see it working.
   if (ctx.hostname && isDevOrPreviewHost(ctx.hostname)) return true
   if (ctx.effectiveType && /(^|-)(2g|3g)$/.test(ctx.effectiveType)) return false
   if (ctx.downlink !== undefined && ctx.downlink < HERO_MIN_DOWNLINK_MBPS * (1 - DOWNLINK_NOISE))

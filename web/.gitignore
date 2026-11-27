@@ -3,14 +3,10 @@ node_modules/
 generated/
 storage/
 .env
+.env.*
+!.env.example
 *.tsbuildinfo
 next-env.d.ts
 deploy-out/
+# Keep all video masters/renders out of Git (GitHub 100 MB cap; hero video lives in cPanel leapliving-data/).
 *.mp4
-!public/videos/hero/*.mp4
-# Client's original hero video (~150 MB): over GitHub's 100 MB limit. Lives on the dev machine
-# and the server only; scripts/prepare-hero-original.sh puts it here, package-cpanel.sh ships it.
-public/videos/hero/client-hero-original.mp4
-public/videos/hero/client-hero-hevc.mp4
-.vercel
-.env*

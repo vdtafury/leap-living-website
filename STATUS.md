@@ -12,6 +12,13 @@
 
 ### Previous update
 
+2026-11-27 — by: Antigravity. **Vercel cleanup & repo housekeeping (Tasjeel cPanel-only):**
+- Removed all Vercel runtime/preview/config remnants from `web/src/app/page.tsx`, `web/src/app/admin/preview/[key]/page.tsx`, `web/src/components/home/hero-video-backdrop.tsx`, `web/src/lib/hero-video.ts`, `web/src/lib/hero-video.test.ts`, `web/src/server/db.ts`, `web/eslint.config.mjs`, `.gitignore`, and `web/.gitignore` (also removed obsolete `client-hero-hevc.mp4` ignore & duplicate trailing `.env*` rules).
+- Replaced stale Phase 0 root `.env.example` with a clear pointer to `web/.env.example`, and refreshed `README.md` to reflect all 12 modules, 24 DB models, Pixxi CRM, Meet the Team, and Tasjeel cPanel auto-deploy.
+- Prepared full A-to-Z project audit, completion breakdown, open decisions list, and end-to-end data pipeline documentation for the owner.
+
+### Previous update
+
 2026-11-27 — by: Arena agent. **Sell pill fields + lighter header; symmetric panels on Sell and Contact (D-60):**
 - `/sell`: every field is a pill like the *List With Us* button, panels use a soft 28 px radius; the dark arched photo became a bright capsule photo + round inset + *Free Property Valuation* chip.
 - *Schedule a Briefing* (Sell) and the second section of `/contact` are now two panels of the same width and height. `ConsultationForm` takes an optional `header`. New `styles/33-contact.css`.
