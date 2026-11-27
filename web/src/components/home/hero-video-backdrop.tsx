@@ -28,15 +28,13 @@ interface NetworkInformationLike {
 
 function canPlayHere(hasVideo: boolean): boolean {
   const connection = (navigator as Navigator & { connection?: NetworkInformationLike }).connection
-  const hostname = window.location.hostname
-  const isVercelPreview = hostname.endsWith('.vercel.app')
   return shouldPlayHeroVideo({
     hasVideo,
     saveData: connection?.saveData,
     effectiveType: connection?.effectiveType,
     downlink: connection?.downlink,
-    hostname,
-    isMobile: isVercelPreview ? false : window.matchMedia(HERO_MOBILE_QUERY).matches,
+    hostname: window.location.hostname,
+    isMobile: window.matchMedia(HERO_MOBILE_QUERY).matches,
   })
 }
 

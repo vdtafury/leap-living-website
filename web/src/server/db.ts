@@ -3,9 +3,7 @@ import { PrismaClient } from '../../generated/client'
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
 import { SCHEMA_STATEMENTS } from './schema'
 
-// Explicit DATABASE_URL always wins; on Vercel Serverless (Lambda) without one, only /tmp is writable.
-const url =
-  process.env.DATABASE_URL || (process.env.VERCEL ? 'file:/tmp/leap_dev.db' : 'file:./storage/dev.db')
+const url = process.env.DATABASE_URL || 'file:./storage/dev.db'
 
 const globalForPrisma = globalThis as typeof globalThis & { __llPrisma?: PrismaClient }
 

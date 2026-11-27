@@ -39,5 +39,5 @@ export default defineConfig([
       ],
     },
   },
-  globalIgnores(['.next/**', '.vercel/**', 'generated/**', 'storage/**', 'deploy-out/**', 'next-env.d.ts']),
+  globalIgnores(['.next/**', 'generated/**', 'storage/**', 'deploy-out/**', 'next-env.d.ts']),
 ])

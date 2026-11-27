@@ -44,13 +44,8 @@ describe('shouldPlayHeroVideo', () => {
     expect(shouldPlayHeroVideo({ ...site, downlink: 0.8 })).toBe(false)
   })
 
-  it('always plays on a development machine, staging, or preview host, whatever the speed estimate', () => {
-    for (const hostname of [
-      'localhost',
-      '127.0.0.1',
-      'staging.leapliving.ae',
-      'web-ecru-delta-79.vercel.app',
-    ]) {
+  it('always plays on a development machine or staging host, whatever the speed estimate', () => {
+    for (const hostname of ['localhost', '127.0.0.1', 'staging.leapliving.ae']) {
       expect(
         shouldPlayHeroVideo({ hasVideo: true, hostname, downlink: 1.2, effectiveType: '3g' }),
       ).toBe(true)
