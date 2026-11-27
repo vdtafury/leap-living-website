@@ -4,8 +4,8 @@ import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { PropertyListingBrowser } from '@/components/property/property-listing-browser'
 import { ListingsHero } from '@/components/listings/listings-hero'
-import { ListingsPlan, type PlanStep } from '@/components/listings/listings-plan'
-import { HandshakeIcon, HomeIcon, KeyIcon } from '@/components/ui/icons'
+import { ListingsPlan } from '@/components/listings/listings-plan'
+import { KeyIcon } from '@/components/ui/icons'
 import { listPublishedProperties } from '@/modules/listings'
 
 export const metadata: Metadata = pageMetadata({
@@ -14,28 +14,6 @@ export const metadata: Metadata = pageMetadata({
     'Residential and Grade-A commercial leasing across Dubai Marina, Jumeirah Islands, and DIFC curated by Leap Living.',
   path: '/rent',
 })
-
-/* For tenants first, then landlords: each link opens a page that already exists. */
-const PLAN_STEPS: PlanStep[] = [
-  {
-    href: '/contact',
-    icon: HandshakeIcon,
-    title: 'Private consultation',
-    text: 'Talk to an advisor about your area, budget and move-in date.',
-  },
-  {
-    href: '/buy',
-    icon: KeyIcon,
-    title: 'Thinking of buying?',
-    text: 'Compare with properties for sale and model a mortgage.',
-  },
-  {
-    href: '/sell#list-with-us',
-    icon: HomeIcon,
-    title: 'Own a property to rent out?',
-    text: 'List it with us: just your name, number and community.',
-  },
-]
 
 export default async function RentPage({
   searchParams,
@@ -79,9 +57,22 @@ export default async function RentPage({
         </section>
 
         <ListingsPlan
+          mode="RENT"
           title="Plan your move"
           lead="Next steps for tenants, and for owners with a home to let."
-          steps={PLAN_STEPS}
+          tool={{
+            icon: KeyIcon,
+            tag: 'Thinking of buying?',
+            title: 'Compare your rent with a mortgage.',
+          }}
+          feature={{
+            href: '/sell#list-with-us',
+            image: '/images/residence-boutique-facade.jpg',
+            imageAlt: 'Boutique residence facade',
+            title: 'Own a property to rent out?',
+            text: 'List it with us: just your name, number and community.',
+          }}
+          consultText="Talk to an advisor about your area, budget and move-in date."
         />
       </main>
 

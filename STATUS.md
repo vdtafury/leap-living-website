@@ -8,6 +8,10 @@
 
 ## Last updated
 
+2026-11-27 — by: Arena agent. **Buy / Rent "Plan your purchase / move" rebuilt (D-58):** a bento of a working estimator (Buy: price → monthly repayment, down payment, loan, DLD fee; Rent: annual rent → price of a home with the same monthly payment), a photo tile (New projects with the real count / List your property) and a dark consultation tile with WhatsApp and Call. New `plan-estimator.tsx`, `styles/32-listings-plan.css`, `e2e/plan.spec.ts`; `lib/mortgage.ts` +4 helpers. tsc, lint, vitest 164/164, build, verify.sh 106/106, Playwright 31 passed / 3 skipped.
+
+### Previous update
+
 2026-11-27 — by: Arena agent. **About → Meet the Team, ready for the photoshoot material (D-57):**
 - Admin → About page → *Meet the Team*: add people (name, title, photo upload, bio, optional BRN / email / LinkedIn), order them, save draft, preview, publish. Nothing shows on the site until at least one person is published (no placeholder people).
 - Public: `#team` section under the CEO panel, 4:5 portrait cards with *Read bio* opening the full profile (dialog; bottom sheet on phones). New CMS field kind `image`.

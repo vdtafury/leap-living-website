@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import {
   PRICE_SLIDER,
+  buyBudgetFor,
+  defaultDownPayment,
+  formatAed,
+  loanForPayment,
+  priceForPayment,
   formatAmountInput,
   loanAmount,
   monthlyPayment,
@@ -109,5 +114,47 @@ describe('input helpers', () => {
       expect(v).toBeGreaterThanOrEqual(last)
       last = v
     }
+  })
+})
+
+describe('rent vs buy guide (Plan your move)', () => {
+  it('inverts the monthly payment', () => {
+    const loan = 2_000_000
+    const monthly = monthlyPayment({
+      price: loan,
+      downPaymentPercent: 0,
+      interestRatePercent: 4.25,
+      years: 25,
+    })!
+    expect(loanForPayment(monthly, 4.25, 25)).toBeCloseTo(loan, 0)
+    expect(loanForPayment(1000, 0, 10)).toBe(120_000)
+    expect(loanForPayment(0, 4.25, 25)).toBe(0)
+    expect(loanForPayment(Number.NaN, 4.25, 25)).toBe(0)
+  })
+
+  it('prices a home whose payment matches the rent, with the right down payment', () => {
+    const price = priceForPayment(10_000)
+    expect(price).toBeLessThanOrEqual(5_000_000)
+    const back = monthlyPayment({
+      price,
+      downPaymentPercent: defaultDownPayment(price),
+      interestRatePercent: 4.25,
+      years: 25,
+    })!
+    expect(back).toBeCloseTo(10_000, 0)
+    const big = priceForPayment(40_000)
+    expect(big).toBeGreaterThan(5_000_000)
+    expect(
+      monthlyPayment({ price: big, downPaymentPercent: 30, interestRatePercent: 4.25, years: 25 }),
+    ).toBeCloseTo(40_000, 0)
+    expect(priceForPayment(0)).toBe(0)
+  })
+
+  it('formats dirhams and maps a price to the Buy price filter', () => {
+    expect(formatAed(2_500_000.4)).toBe('2,500,000')
+    expect(formatAed(Number.NaN)).toBe('0')
+    expect(buyBudgetFor(3_000_000)).toBe('UNDER_10M')
+    expect(buyBudgetFor(12_000_000)).toBe('10M_15M')
+    expect(buyBudgetFor(20_000_000)).toBe('OVER_15M')
   })
 })
