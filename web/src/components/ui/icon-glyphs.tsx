@@ -215,4 +215,24 @@ export const ICON_GLYPHS: Record<string, ReactNode> = {
       <circle cx="16.5" cy="7.5" r="0.6" fill="currentColor" />
     </>
   ),
+  'chevron-left': (
+    <>
+      <path d="m15 6-6 6 6 6" />
+    </>
+  ),
+  share: (
+    <>
+      <path d="M12 3v12" />
+      <path d="m7 8 5-5 5 5" />
+      <path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" />
+    </>
+  ),
+  images: (
+    <>
+      <rect x="3" y="3" width="7" height="7" rx="1.5" />
+      <rect x="14" y="3" width="7" height="7" rx="1.5" />
+      <rect x="3" y="14" width="7" height="7" rx="1.5" />
+      <rect x="14" y="14" width="7" height="7" rx="1.5" />
+    </>
+  ),
 }

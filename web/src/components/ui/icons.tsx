@@ -582,3 +582,48 @@ export function KeyIcon(props: IconProps) {
     </LineIcon>
   )
 }
+
+/* ---- Property page: gallery and share (round caps, same weight as the arrows) ---- */
+function StrokeIcon({ size = 18, children, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.65}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+      {...props}
+    >
+      {children}
+    </svg>
+  )
+}
+
+export function ChevronLeftIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <use href="#ll-i-chevron-left" />
+    </StrokeIcon>
+  )
+}
+
+export function ShareIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <use href="#ll-i-share" />
+    </StrokeIcon>
+  )
+}
+
+export function ImagesIcon(props: IconProps) {
+  return (
+    <StrokeIcon {...props}>
+      <use href="#ll-i-images" />
+    </StrokeIcon>
+  )
+}

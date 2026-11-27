@@ -8,6 +8,14 @@
 
 ## Last updated
 
+2026-11-27 — by: Arena agent. **Property page redesign (`/properties/[slug]`, D-55):**
+- The price and every way to reach us now sit beside the photos (sticky on desktop) and right under them on phones: price, Buy mortgage estimate (same figures as the calculator), *Book a private viewing*, WhatsApp / Call / Email.
+- New `components/property/detail/`: `property-gallery.tsx` (mosaic, phone slider, full-screen viewer), `property-contact.tsx` (price card, phone contact bar, direct lines), `share-button.tsx`. Icons +3 (chevron-left, share, images). `lib/mortgage.ts` now exports the calculator defaults.
+- Facts, overview, highlights, details table, calculator (Buy), dark viewing panel with the existing form, and "More homes for sale/rent". The project page still uses `ImageGallery` (unchanged).
+- `e2e/property-detail.spec.ts` (2 tests). tsc, lint, vitest 151/151, build, verify.sh 106/106, Playwright 20 passed / 2 skipped. DECISIONS D-54 (Buy/Rent) and D-55 added.
+
+### Previous update
+
 2026-11-27 — by: Arena agent. **Rent page redesign (owner approved the Buy page: "تحفه"):**
 - `/rent` now uses the same light header as Buy, via the new shared `ListingsHero` (`components/listings/listings-hero.tsx`; Rent active on the switch, Dubai Marina towers in the keyhole) and `ListingsPlan` (`listings-plan.tsx`). Buy was moved onto both, with no visual change.
 - Rent's closing list is "Plan your move": Private consultation (`/contact`), Thinking of buying? (`/buy`), Own a property to rent out? (`/sell#list-with-us`).
