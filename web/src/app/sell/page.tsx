@@ -177,11 +177,12 @@ export default function SellPage() {
           </div>
         </section>
 
-        {/* 3. Schedule a briefing: two equal panels, details | form (D-60) */}
+        {/* 3. Schedule a briefing: light band, a teal brand panel with the keyhole mark | the form (D-62) */}
         <section id={VALUATION_ANCHOR} className="ll-sell-brief" aria-labelledby="sell-brief-title">
           <div className="ll-container ll-sell-brief-inner">
             <div className="ll-sell-brief-panel">
               <div className="ll-sell-brief-copy">
+                <span className="ll-sell-brief-mark" aria-hidden="true" />
                 <h2 id="sell-brief-title">Schedule a Briefing</h2>
                 <p className="ll-sell-brief-lead">
                   Select whether you are seeking a private consultation or an asset valuation.
@@ -208,7 +209,7 @@ export default function SellPage() {
             </div>
 
             <div className="ll-sell-brief-form">
-              <ConsultationForm mode="CONSULTATION" darkSurface />
+              <ConsultationForm mode="CONSULTATION" />
             </div>
           </div>
         </section>

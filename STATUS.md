@@ -8,6 +8,10 @@
 
 ## Last updated
 
+2026-11-27 — by: Arena agent. **Sell "Schedule a Briefing" light and on-brand (D-62):** light tint band; a teal brand panel (logo keyhole mark, cropped keyhole outline, teal shadow) beside the white form card, same size. tsc, lint, vitest 170/170, build, verify.sh 106/106, Playwright 35 passed / 3 skipped.
+
+### Previous update
+
 2026-11-27 — by: Arena agent. **Sell "How Leap Living Protects Asset Value" as a value line (D-61):** a rising teal line through the three steps, ending on the brand keyhole (keys change hands); drop lines to each step; draws itself on scroll where supported. Phones keep a vertical thread. tsc, lint, vitest 170/170, build, verify.sh 106/106, Playwright 35 passed / 3 skipped.
 
 ### Previous update

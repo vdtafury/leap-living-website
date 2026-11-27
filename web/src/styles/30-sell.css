@@ -4,8 +4,8 @@
                       beside a bright photo pair: a tall capsule, a round inset and a chip (D-60)
    - .ll-sell-method  "How Leap Living Protects Asset Value": a value line rising through the
                       three steps, ending on the brand keyhole (D-61)
-   - .ll-sell-brief   "Schedule a Briefing": dark band, two equal panels: valuation details |
-                      the Private Consultation / Free Valuation form (#valuation-form)
+   - .ll-sell-brief   "Schedule a Briefing": light band, two equal panels: a teal brand panel with
+                      the keyhole mark | the Private Consultation / Free Valuation form (#valuation-form)
    - Every field on this page is a pill and every panel uses the soft --sell-radius (D-60)
    ========================================================================== */
 
@@ -520,15 +520,19 @@
   }
 }
 
-/* ---- 3. Schedule a briefing ------------------------------------------- */
+/* ---- 3. Schedule a briefing ------------------------------------------
+   Light band (D-62). Two panels of the same size: a teal brand panel (the logo's
+   keyhole mark on top, a large cropped keyhole outline in the corner, a soft teal
+   shadow) | the white form card. Every text on the teal panel is pure white on
+   #287F82 or darker (4.7:1 and up). */
 .ll-sell-brief {
   position: relative;
   padding: clamp(4rem, 7vw, 6rem) 0;
   background:
-    radial-gradient(60% 90% at 0% 0%, rgba(var(--brand-teal-rgb), 0.32) 0%, rgba(var(--brand-teal-rgb), 0) 62%),
-    radial-gradient(40% 70% at 100% 100%, rgba(var(--brand-teal-rgb), 0.18) 0%, rgba(var(--brand-teal-rgb), 0) 60%),
-    var(--brand-deep);
-  color: var(--white);
+    radial-gradient(48% 75% at 0% 100%, rgba(var(--brand-teal-rgb), 0.12) 0%, rgba(var(--brand-teal-rgb), 0) 70%),
+    radial-gradient(40% 70% at 100% 0%, rgba(var(--brand-teal-rgb), 0.08) 0%, rgba(var(--brand-teal-rgb), 0) 70%),
+    var(--surface-tint);
+  border-top: 1px solid var(--border-subtle);
   scroll-margin-top: 82px;
 }
 
@@ -541,14 +545,49 @@
 }
 
 .ll-sell-brief-panel {
+  --brief-teal:
+    radial-gradient(45% 55% at 100% 0%, rgba(125, 205, 207, 0.22) 0%, rgba(125, 205, 207, 0) 70%),
+    linear-gradient(150deg, #287f82 0%, #237679 55%, #1c6467 100%);
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: clamp(1.5rem, 2.6vw, 2.25rem);
   padding: clamp(1.5rem, 2.6vw, 2.25rem);
-  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: var(--sell-radius);
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--brief-teal);
+  box-shadow:
+    0 2px 6px rgba(16, 42, 44, 0.06),
+    0 34px 64px -26px rgba(var(--action-teal-rgb), 0.6);
+  color: var(--white);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* the logo's keyhole, large and cropped by the panel's corner */
+.ll-sell-brief-panel::after,
+.ll-sell-brief-box::after {
+  content: '';
+  position: absolute;
+  right: -18%;
+  bottom: -26%;
+  z-index: -1;
+  width: clamp(280px, 30vw, 380px);
+  aspect-ratio: 1;
+  background: var(--keyhole-white) center / contain no-repeat;
+  opacity: 0.13;
+  pointer-events: none;
+}
+
+/* the brand mark above the heading */
+.ll-sell-brief-mark {
+  display: block;
+  width: 54px;
+  height: 54px;
+  margin-bottom: clamp(1rem, 1.8vw, 1.35rem);
+  background: var(--white);
+  -webkit-mask: var(--keyhole-white) center / contain no-repeat;
+  mask: var(--keyhole-white) center / contain no-repeat;
 }
 
 .ll-sell-brief-form {
@@ -573,12 +612,17 @@
   margin-top: 0.85rem;
   font-size: 0.98rem;
   line-height: 1.7;
-  color: rgba(255, 255, 255, 0.78);
+  color: var(--white);
 }
 
 .ll-sell-brief-box {
   padding-top: clamp(1.25rem, 2vw, 1.6rem);
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+/* on desktop the panel carries the keyhole; the box only does on phones */
+.ll-sell-brief-box::after {
+  display: none;
 }
 
 .ll-sell-brief-box h3 {
@@ -589,9 +633,9 @@
 
 .ll-sell-brief-box p {
   margin-top: 0.5rem;
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   line-height: 1.65;
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--white);
 }
 
 .ll-sell-brief-box ul {
@@ -619,15 +663,19 @@
   height: 22px;
   margin-top: -0.05rem;
   border-radius: 999px;
-  background: var(--brand-teal);
-  color: var(--white);
+  background: var(--white);
+  box-shadow: 0 4px 10px rgba(7, 43, 45, 0.18);
+  color: var(--action-teal);
 }
 
 .ll-sell-brief-form .ll-form-card {
   padding: clamp(1.5rem, 2.6vw, 2.25rem);
+  border: 1px solid rgba(10, 52, 54, 0.07);
   border-radius: var(--sell-radius);
   color: var(--body-text);
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.25);
+  box-shadow:
+    0 2px 6px rgba(16, 42, 44, 0.04),
+    0 34px 64px -30px rgba(16, 42, 44, 0.22);
 }
 
 /* ---- Responsive ------------------------------------------------------- */
@@ -646,7 +694,8 @@
     display: none;
   }
 
-  /* phones and tablets: the form comes straight after the title */
+  /* phones and tablets: the form comes straight after the title; the title sits on the
+     light band and the valuation details keep the teal brand panel */
   .ll-sell-brief-inner {
     grid-template-columns: minmax(0, 1fr);
     gap: 0;
@@ -656,8 +705,27 @@
     display: contents;
   }
 
+  /* a display: contents box still draws its ::after, so drop it */
+  .ll-sell-brief-panel::after {
+    display: none;
+  }
+
   .ll-sell-brief-copy {
     order: 1;
+  }
+
+  .ll-sell-brief-mark {
+    width: 46px;
+    height: 46px;
+    background: var(--action-teal);
+  }
+
+  .ll-sell-brief-copy h2 {
+    color: var(--heading);
+  }
+
+  .ll-sell-brief-lead {
+    color: var(--body-text);
   }
 
   .ll-sell-brief-form {
@@ -666,12 +734,23 @@
   }
 
   .ll-sell-brief-box {
+    position: relative;
     order: 3;
     margin-top: 1.75rem;
-    padding: clamp(1.25rem, 4vw, 1.6rem);
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    padding: clamp(1.35rem, 4vw, 1.75rem);
+    border-top: 0;
     border-radius: var(--sell-radius);
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--brief-teal);
+    box-shadow: 0 30px 56px -26px rgba(var(--action-teal-rgb), 0.6);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .ll-sell-brief-box::after {
+    display: block;
+    width: 220px;
+    right: -18%;
+    bottom: -30%;
   }
 }
 
