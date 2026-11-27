@@ -44,6 +44,13 @@ const PILLARS: Pillar[] = [
   },
 ]
 
+/**
+ * The value line (viewBox 1200 x 200): it passes through the centres of the three step markers,
+ * which sit at x = 200 / 600 / 1000 (the column centres) and y = 158 / 118 / 44 (rising faster towards the transfer).
+ */
+const VALUE_LINE =
+  'M0 176 C33.3 173 100 167.7 200 158 C300 148.3 466.7 137 600 118 C733.3 99 900 61.3 1000 44 C1100 26.7 1166.7 19 1200 14'
+
 const VALUATION_POINTS = [
   'Senior valuation review directed by CEO Mohab Samak',
   'Comparative DLD transaction analysis by community & tower',
@@ -124,23 +131,49 @@ export default function SellPage() {
           </div>
         </section>
 
-        {/* 2. How we sell: one path from valuation to transfer */}
+        {/* 2. How we sell: a value line that rises through the three steps and ends on the
+            brand keyhole, where the keys change hands (D-61) */}
         <section className="ll-sell-method" aria-labelledby="sell-method">
           <div className="ll-container">
             <h2 id="sell-method" className="ll-sell-h2">
               How Leap Living Protects Asset Value
             </h2>
-            <ol className="ll-sell-path">
-              {PILLARS.map(({ icon: Icon, title, desc }) => (
-                <li key={title}>
-                  <span className="ll-sell-path-icon">
-                    <Icon size={24} />
-                  </span>
-                  <h3>{title}</h3>
-                  <p>{desc}</p>
-                </li>
-              ))}
-            </ol>
+            <div className="ll-sell-value">
+              <svg
+                className="ll-sell-value-chart"
+                viewBox="0 0 1200 200"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <defs>
+                  <linearGradient id="ll-sell-value-fill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stopColor="currentColor" stopOpacity="0.22" />
+                    <stop offset="1" stopColor="currentColor" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+                <path className="ll-sell-value-base" d="M0 176 H1200" />
+                <path className="ll-sell-value-area" d={`${VALUE_LINE} V200 H0 Z`} />
+                <path className="ll-sell-value-line" d={VALUE_LINE} pathLength={1} />
+              </svg>
+              <ol className="ll-sell-path">
+                {PILLARS.map(({ icon: Icon, title, desc }, index) => (
+                  <li key={title}>
+                    <span className="ll-sell-path-icon">
+                      {index === PILLARS.length - 1 ? (
+                        <span className="ll-sell-path-keyhole" />
+                      ) : (
+                        <Icon size={24} />
+                      )}
+                    </span>
+                    <div className="ll-sell-path-text">
+                      <h3>{title}</h3>
+                      <p>{desc}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
           </div>
         </section>
 

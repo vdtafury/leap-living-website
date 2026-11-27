@@ -8,6 +8,10 @@
 
 ## Last updated
 
+2026-11-27 — by: Arena agent. **Sell "How Leap Living Protects Asset Value" as a value line (D-61):** a rising teal line through the three steps, ending on the brand keyhole (keys change hands); drop lines to each step; draws itself on scroll where supported. Phones keep a vertical thread. tsc, lint, vitest 170/170, build, verify.sh 106/106, Playwright 35 passed / 3 skipped.
+
+### Previous update
+
 2026-11-27 — by: Arena agent. **Sell pill fields + lighter header; symmetric panels on Sell and Contact (D-60):**
 - `/sell`: every field is a pill like the *List With Us* button, panels use a soft 28 px radius; the dark arched photo became a bright capsule photo + round inset + *Free Property Valuation* chip.
 - *Schedule a Briefing* (Sell) and the second section of `/contact` are now two panels of the same width and height. `ConsultationForm` takes an optional `header`. New `styles/33-contact.css`.
