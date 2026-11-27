@@ -1003,3 +1003,13 @@
     animation: none;
   }
 }
+
+/* Rent: the switch's thumb sits on the second option. */
+.ll-lhero[data-mode='rent'] .ll-lhero-mode-thumb {
+  transform: translateX(100%);
+}
+
+/* Rent: frame the Marina towers (and keep the waterfront signage out of the keyhole). */
+.ll-lhero[data-mode='rent'] .ll-lhero-keyhole img {
+  object-position: 64% 50%;
+}

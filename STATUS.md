@@ -8,7 +8,14 @@
 
 ## Last updated
 
-2026-11-27 — by: Arena agent. **Buy page redesign (first of the inner pages; awaiting owner review):**
+2026-11-27 — by: Arena agent. **Rent page redesign (owner approved the Buy page: "تحفه"):**
+- `/rent` now uses the same light header as Buy, via the new shared `ListingsHero` (`components/listings/listings-hero.tsx`; Rent active on the switch, Dubai Marina towers in the keyhole) and `ListingsPlan` (`listings-plan.tsx`). Buy was moved onto both, with no visual change.
+- Rent's closing list is "Plan your move": Private consultation (`/contact`), Thinking of buying? (`/buy`), Own a property to rent out? (`/sell#list-with-us`).
+- `e2e/listings.spec.ts` +1 Rent test. tsc, lint, vitest 151/151, build, verify.sh 106/106, Playwright 17 passed.
+
+### Previous update
+
+2026-11-27 — by: Arena agent. **Buy page redesign (first of the inner pages):**
 - **Hero (`/buy`):** the dark-teal band became a light tint header in the homepage's language (dark title + teal second line, "Properties for sale / in Dubai."), a Buy / Rent segmented switch, and the brand keyhole used as a photo window (`hero-villa-dusk.jpg`, decorative, hidden under 900 px).
 - **Listing section (`PropertyListingBrowser`, shared with `/rent`):** a light version of the homepage search (`HeroSelect` now takes `classPrefix`; the listing pages use `ll-fs`, so no rule is shared with the homepage's `ll-hs`), riding the hero's edge and sticky under the header on desktop with a glass band; live result count; filters kept in the URL (`replaceState`, incl. `sort`); removable chips + Clear all; sorting (Featured / price / size); 3 / 2 / 1 columns; a teal "Can't find the right home?" tile (`listing-brief-card.tsx`, WhatsApp via `briefWhatsappLink` + `/contact`) that always fills the empty end of the last row; new empty state. Filter labels now match the homepage search.
 - **"Plan your purchase":** link list to the calculator (`/#mortgage-calculator`), `/projects` and `/contact`.

@@ -49,4 +49,19 @@ test.describe('buy listings', () => {
     await expect(page).toHaveURL(/\/buy$/)
     await expect(page.locator('.ll-pc').first()).toBeVisible()
   })
+
+  test('rent page: same listing tools, Rent is the current page', async ({ page }) => {
+    await page.goto('/rent')
+    const modes = page.getByRole('navigation', { name: 'Browse properties' })
+    await expect(modes.getByRole('link', { name: 'Rent' })).toHaveAttribute('aria-current', 'page')
+    await expect(
+      page.getByRole('heading', { level: 2, name: /properties? for rent$/ }),
+    ).toBeVisible()
+    await expect(
+      page.getByRole('complementary', { name: /Can’t find the right rental/ }),
+    ).toBeVisible()
+    await page.getByRole('button', { name: /Annual budget/ }).click()
+    await page.getByRole('option', { name: 'AED 1M + / yr' }).click()
+    await expect(page).toHaveURL(/\/rent\?budget=OVER_1M$/)
+  })
 })
