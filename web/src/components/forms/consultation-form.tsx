@@ -1,12 +1,45 @@
 'use client'
 
-import { useId, useState, type FormEvent } from 'react'
+import { useId, useState, useSyncExternalStore, type FormEvent } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAccount } from '@/components/account/account-provider'
 import { useSiteContact } from '@/components/layout/site-contact'
 import { ArrowUpRightIcon, CheckIcon } from '@/components/ui/icons'
+import { VALUATION_ANCHOR } from '@/lib/anchors'
 import { fieldErrors, inquirySchema, type InquiryType } from '@/lib/inquiry'
+
+type TabType = 'VALUATION' | 'CONSULTATION'
+
+/** Counts clicks on "Free Valuation" links, so a second click still reopens that tab. */
+let valuationVisits = 0
+
+/** '' on a plain visit; a token that changes with every visit through a valuation link. */
+function valuationSnapshot() {
+  return window.location.hash === `#${VALUATION_ANCHOR}` ? `v${valuationVisits}` : ''
+}
+
+/**
+ * Re-reads the hash when it changes. Next.js changes it with pushState on same-page links,
+ * which fires no event, so clicks on a valuation link are watched too.
+ */
+function subscribeValuationLinks(onChange: () => void) {
+  const onClick = (event: MouseEvent) => {
+    const link = event.target instanceof Element ? event.target.closest('a[href]') : null
+    if (link?.getAttribute('href')?.endsWith(`#${VALUATION_ANCHOR}`)) {
+      valuationVisits += 1
+      window.setTimeout(onChange, 0)
+    }
+  }
+  window.addEventListener('hashchange', onChange)
+  window.addEventListener('popstate', onChange)
+  document.addEventListener('click', onClick)
+  return () => {
+    window.removeEventListener('hashchange', onChange)
+    window.removeEventListener('popstate', onChange)
+    document.removeEventListener('click', onClick)
+  }
+}
 
 interface ConsultationFormProps {
   mode?: InquiryType
@@ -22,9 +55,16 @@ export function ConsultationForm({
   const formId = useId()
   const contact = useSiteContact()
   const fallbackError = `We could not send your request. Please try again, or call ${contact?.phoneDisplay ?? '+971 52 145 9888'}.`
-  const [selectedType, setSelectedType] = useState<'VALUATION' | 'CONSULTATION'>(
-    mode === 'VALUATION' ? 'VALUATION' : 'CONSULTATION',
-  )
+  // Private Consultation opens first (client, 2026-11-27). The valuation tab opens instead when
+  // the page asks for it (mode="VALUATION", e.g. /contact?topic=valuation) or the visitor came
+  // through a "Free Valuation" link (#valuation-form). A tab the visitor picks wins until the
+  // next such link is followed.
+  const valuationVisit = useSyncExternalStore(subscribeValuationLinks, valuationSnapshot, () => '')
+  const [picked, setPicked] = useState<{ type: TabType; visit: string } | null>(null)
+  const linkedType: TabType =
+    mode === 'VALUATION' || valuationVisit !== '' ? 'VALUATION' : 'CONSULTATION'
+  const selectedType: TabType = picked && picked.visit === valuationVisit ? picked.type : linkedType
+  const setSelectedType = (type: TabType) => setPicked({ type, visit: valuationVisit })
   const pathname = usePathname()
   // Signed in on the website (D-40): the visitor's details are filled in, still editable.
   const { account } = useAccount()

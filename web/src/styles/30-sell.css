@@ -1,0 +1,478 @@
+/* ==========================================================================
+   SELL PAGE (/sell)
+   - .ll-sell-hero    light owners' header; the quick "List With Us" form sits in it,
+                      beside an arched photo (the keyhole is Buy / Rent's, the arch is Sell's)
+   - .ll-sell-method  "How Leap Living Protects Asset Value" as one connected path
+   - .ll-sell-brief   "Schedule a Briefing": dark band, valuation details + the
+                      Private Consultation / Free Valuation form (#valuation-form)
+   ========================================================================== */
+
+/* ---- 1. Header ------------------------------------------------------- */
+.ll-sell-hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(55% 80% at 92% 20%, rgba(var(--brand-teal-rgb), 0.14) 0%, rgba(var(--brand-teal-rgb), 0) 62%),
+    var(--surface-tint);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.ll-sell-hero-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  align-items: stretch;
+  gap: clamp(2rem, 5vw, 5rem);
+}
+
+.ll-sell-hero-copy {
+  padding: clamp(2.25rem, 4vw, 3.5rem) 0 clamp(2.75rem, 5vw, 4.25rem);
+}
+
+.ll-sell-crumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: clamp(1.1rem, 1.8vw, 1.5rem);
+  font-size: 0.78rem;
+  color: var(--body-text);
+}
+
+.ll-sell-crumbs a {
+  transition: color 0.2s ease;
+}
+
+.ll-sell-crumbs a:hover {
+  color: var(--action-teal);
+}
+
+.ll-sell-crumbs svg {
+  color: var(--brand-teal-50);
+}
+
+.ll-sell-crumbs [aria-current] {
+  color: var(--heading);
+  font-weight: 500;
+}
+
+.ll-sell-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  margin-bottom: 0.95rem;
+  padding: 0 0.8rem;
+  border-radius: 999px;
+  background: rgba(var(--brand-teal-rgb), 0.14);
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--dark-teal);
+}
+
+.ll-sell-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.06;
+  color: var(--heading);
+}
+
+.ll-sell-title span {
+  display: block;
+  color: var(--brand-teal);
+}
+
+.ll-sell-desc {
+  max-width: 600px;
+  margin-top: clamp(0.9rem, 1.4vw, 1.2rem);
+  font-size: clamp(0.94rem, 1.05vw, 1.01rem);
+  line-height: 1.7;
+  color: var(--body-text);
+}
+
+/* The quick form: name and phone, then community and the button */
+.ll-sell-list {
+  margin-top: clamp(1.5rem, 2.4vw, 2rem);
+  scroll-margin-top: 104px;
+}
+
+.ll-sell-list .ll-form-card {
+  padding: clamp(1.25rem, 2vw, 1.6rem);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 18px 44px rgba(16, 42, 44, 0.08);
+}
+
+.ll-sell-list-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin-bottom: 1.1rem;
+}
+
+.ll-sell-list-head h2 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--heading);
+}
+
+.ll-sell-list-head p {
+  flex: 1 1 260px;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: var(--body-text);
+}
+
+.ll-sell-list .ll-quick-form-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem 1rem;
+  align-items: end;
+}
+
+.ll-sell-list .ll-quick-form-submit {
+  min-width: 0;
+  margin-top: 0;
+}
+
+.ll-sell-list .ll-quick-form-submit .ll-btn {
+  min-height: 44px;
+}
+
+.ll-sell-list .ll-form-success {
+  padding: 0.5rem 0;
+}
+
+.ll-sell-jump {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 1.15rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--action-teal);
+}
+
+.ll-sell-jump svg {
+  transition: transform 0.2s ease;
+}
+
+.ll-sell-jump:hover svg {
+  transform: translateX(3px);
+}
+
+.ll-sell-jump:focus-visible {
+  outline: 2px solid var(--action-teal);
+  outline-offset: 3px;
+}
+
+/* Arched photo standing on the header's bottom edge */
+.ll-sell-hero-visual {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-top: clamp(2.5rem, 4.5vw, 4rem);
+}
+
+.ll-sell-hero-visual::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: calc(min(100%, 400px) + 44px);
+  height: calc(100% - clamp(2.5rem, 4.5vw, 4rem) + 22px);
+  border: 1px solid rgba(var(--brand-teal-rgb), 0.4);
+  border-bottom: 0;
+  border-radius: 999px 999px 0 0;
+  transform: translateX(-50%);
+}
+
+.ll-sell-arch {
+  position: relative;
+  width: min(100%, 400px);
+  height: 100%;
+  min-height: 460px;
+  border-radius: 999px 999px 0 0;
+  overflow: hidden;
+  background: var(--dark-teal);
+  box-shadow: 0 30px 60px rgba(10, 52, 54, 0.18);
+}
+
+.ll-sell-arch img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 42% 50%;
+}
+
+/* ---- 2. Method --------------------------------------------------------- */
+.ll-sell-method {
+  padding: clamp(4rem, 7vw, 6rem) 0;
+  background: var(--white);
+}
+
+.ll-sell-h2 {
+  max-width: 820px;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  color: var(--heading);
+}
+
+.ll-sell-path {
+  --path-gap: clamp(1.5rem, 3vw, 3rem);
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--path-gap);
+  margin: clamp(2.25rem, 4vw, 3.25rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* the thread that joins the three steps, through the icons' centres */
+.ll-sell-path::before {
+  content: '';
+  position: absolute;
+  top: 31px;
+  /* from the first icon to the last one */
+  right: calc((100% - 2 * var(--path-gap)) / 3 - 31px);
+  left: 31px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--brand-teal) 0%, rgba(var(--brand-teal-rgb), 0.25) 100%);
+}
+
+.ll-sell-path li {
+  position: relative;
+}
+
+.ll-sell-path-icon {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  margin-bottom: 1.35rem;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--brand-teal-rgb), 0.35);
+  background: var(--white);
+  box-shadow: 0 0 0 8px var(--white);
+  color: var(--action-teal);
+}
+
+.ll-sell-path li:first-child .ll-sell-path-icon {
+  border-color: transparent;
+  background: var(--action-teal);
+  color: var(--white);
+}
+
+.ll-sell-path h3 {
+  margin-bottom: 0.55rem;
+  font-family: var(--font-display);
+  font-size: 1.12rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--heading);
+}
+
+.ll-sell-path p {
+  max-width: 360px;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--body-text);
+}
+
+/* ---- 3. Schedule a briefing ------------------------------------------- */
+.ll-sell-brief {
+  position: relative;
+  padding: clamp(4rem, 7vw, 6rem) 0;
+  background:
+    radial-gradient(60% 90% at 0% 0%, rgba(var(--brand-teal-rgb), 0.32) 0%, rgba(var(--brand-teal-rgb), 0) 62%),
+    radial-gradient(40% 70% at 100% 100%, rgba(var(--brand-teal-rgb), 0.18) 0%, rgba(var(--brand-teal-rgb), 0) 60%),
+    var(--brand-deep);
+  color: var(--white);
+  scroll-margin-top: 82px;
+}
+
+.ll-sell-brief-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  grid-template-areas:
+    'copy form'
+    'box  form';
+  grid-template-rows: auto 1fr;
+  column-gap: clamp(2rem, 5vw, 5rem);
+}
+
+.ll-sell-brief-copy {
+  grid-area: copy;
+  align-self: end;
+}
+
+.ll-sell-brief-form {
+  grid-area: form;
+  align-self: center;
+}
+
+.ll-sell-brief-copy h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.12;
+  color: var(--white);
+}
+
+.ll-sell-brief-lead {
+  max-width: 460px;
+  margin-top: 0.85rem;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.ll-sell-brief-box {
+  grid-area: box;
+  align-self: start;
+  margin-top: clamp(1.75rem, 3vw, 2.5rem);
+  padding: clamp(1.25rem, 2vw, 1.6rem);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.ll-sell-brief-box h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.ll-sell-brief-box p {
+  margin-top: 0.5rem;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.ll-sell-brief-box ul {
+  display: grid;
+  gap: 0.7rem;
+  margin: 1.15rem 0 0;
+  padding: 1.1rem 0 0;
+  list-style: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.ll-sell-brief-box li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--white);
+}
+
+.ll-sell-brief-check {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  margin-top: -0.05rem;
+  border-radius: 999px;
+  background: var(--brand-teal);
+  color: var(--white);
+}
+
+.ll-sell-brief-form .ll-form-card {
+  padding: clamp(1.4rem, 2.4vw, 2rem);
+  border-radius: var(--radius-lg);
+  color: var(--body-text);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.25);
+}
+
+/* ---- Responsive ------------------------------------------------------- */
+@media (max-width: 1100px) {
+  .ll-sell-hero-inner {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
+  }
+}
+
+@media (max-width: 960px) {
+  .ll-sell-hero-inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ll-sell-hero-visual {
+    display: none;
+  }
+
+  /* phones and tablets: the form comes straight after the title */
+  .ll-sell-brief-inner {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'copy'
+      'form'
+      'box';
+    grid-template-rows: none;
+  }
+
+  .ll-sell-brief-form {
+    margin-top: 1.75rem;
+  }
+}
+
+@media (max-width: 760px) {
+  .ll-sell-path {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  /* the thread turns vertical: from each icon down to the next */
+  .ll-sell-path::before {
+    display: none;
+  }
+
+  .ll-sell-path li:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    top: 56px;
+    bottom: 0;
+    left: 28px;
+    width: 1px;
+    background: rgba(var(--brand-teal-rgb), 0.4);
+  }
+
+  .ll-sell-path li {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    column-gap: 1.1rem;
+    padding-bottom: 1.75rem;
+  }
+
+  .ll-sell-path li:last-child {
+    padding-bottom: 0;
+  }
+
+  .ll-sell-path-icon {
+    grid-row: 1 / span 2;
+    width: 56px;
+    height: 56px;
+    margin-bottom: 0;
+  }
+
+  .ll-sell-path h3 {
+    margin-top: 0.85rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .ll-sell-list .ll-quick-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

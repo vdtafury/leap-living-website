@@ -1,6 +1,6 @@
 'use client'
 
-import { useId, useState, type FormEvent } from 'react'
+import { useId, useState, type FormEvent, type ReactNode } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAccount } from '@/components/account/account-provider'
@@ -11,8 +11,9 @@ import { fieldErrors, inquirySchema } from '@/lib/inquiry'
 /**
  * Quick 3-field owner intake form ("List with us" on /sell): collects only name, phone/WhatsApp,
  * and community, persisting through the same /api/inquiries endpoint as full consultation forms.
+ * `header` (optional) is drawn inside the card, above the fields.
  */
-export function ListWithUsForm() {
+export function ListWithUsForm({ header }: { header?: ReactNode } = {}) {
   const formId = useId()
   const pathname = usePathname()
   const contact = useSiteContact()
@@ -113,6 +114,7 @@ export function ListWithUsForm() {
 
   return (
     <div className="ll-form-card">
+      {header}
       <form onSubmit={handleSubmit} className="ll-quick-form" noValidate>
         <div className="ll-hp" aria-hidden="true">
           <label htmlFor={`${formId}-website`}>Website</label>

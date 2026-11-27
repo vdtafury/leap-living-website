@@ -8,6 +8,13 @@
 
 ## Last updated
 
+2026-11-27 — by: Arena agent. **Sell page redesign + Private Consultation first (D-56):**
+- The briefing form now opens on **Private Consultation** everywhere; it opens on Free Property Valuation only for `/contact?topic=valuation` or when the visitor followed a *Free Valuation* link (`/sell#valuation-form`).
+- `/sell`: light header with the quick *List With Us* form in it and an arched photo; *How Leap Living Protects Asset Value* as a connected path; dark *Schedule a Briefing* band. Copy unchanged (owner kept *Strategic Disposition*). `ListWithUsForm` takes an optional `header`.
+- New: `src/styles/30-sell.css`, `src/lib/anchors.ts`, `e2e/sell.spec.ts` (2 tests). tsc, lint, vitest 151/151, build, verify.sh 106/106, Playwright 24 passed / 2 skipped.
+
+### Previous update
+
 2026-11-27 — by: Arena agent. **Property page redesign (`/properties/[slug]`, D-55):**
 - The price and every way to reach us now sit beside the photos (sticky on desktop) and right under them on phones: price, Buy mortgage estimate (same figures as the calculator), *Book a private viewing*, WhatsApp / Call / Email.
 - New `components/property/detail/`: `property-gallery.tsx` (mosaic, phone slider, full-screen viewer), `property-contact.tsx` (price card, phone contact bar, direct lines), `share-button.tsx`. Icons +3 (chevron-left, share, images). `lib/mortgage.ts` now exports the calculator defaults.
