@@ -17,7 +17,13 @@ export const metadata: Metadata = pageMetadata({
 export default async function RentPage({
   searchParams,
 }: {
-  searchParams: Promise<{ community?: string; type?: string; beds?: string; budget?: string }>
+  searchParams: Promise<{
+    community?: string
+    type?: string
+    beds?: string
+    budget?: string
+    sort?: string
+  }>
 }) {
   const params = await searchParams
   const rentalItems = await listPublishedProperties({ transactionType: 'RENT' })
@@ -52,6 +58,7 @@ export default async function RentPage({
               initialType={params.type ?? 'ALL'}
               initialBeds={params.beds ?? 'ALL'}
               initialBudget={params.budget ?? 'ALL'}
+              initialSort={params.sort}
             />
           </div>
         </section>
