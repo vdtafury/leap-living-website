@@ -44,12 +44,16 @@ function subscribeValuationLinks(onChange: () => void) {
 interface ConsultationFormProps {
   mode?: InquiryType
   contextTitle?: string
+  listingType?: 'PROPERTY' | 'PROJECT'
+  listingId?: string
   darkSurface?: boolean
 }
 
 export function ConsultationForm({
   mode = 'CONSULTATION',
   contextTitle,
+  listingType,
+  listingId,
   darkSurface = false,
 }: ConsultationFormProps) {
   const formId = useId()
@@ -88,6 +92,7 @@ export function ConsultationForm({
       notes: text('notes'),
       context: contextTitle,
       pagePath: pathname,
+      ...(listingType && listingId ? { listingType, listingId } : {}),
       website: text('website'),
     }
     const checked = inquirySchema.safeParse(payload)

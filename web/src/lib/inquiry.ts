@@ -32,6 +32,8 @@ export const inquirySchema = z
     notes: z.string().trim().max(2000).default(''),
     context: z.string().trim().max(200).optional(),
     pagePath: z.string().trim().max(300).optional(),
+    listingType: z.enum(['PROPERTY', 'PROJECT']).optional(),
+    listingId: z.string().trim().max(64).optional(),
     /** Honeypot: hidden from people, so only bots fill it. */
     website: z.string().max(500).optional(),
   })

@@ -37,6 +37,7 @@ import {
 } from '@/modules/content'
 import { deleteDeveloper, moveDeveloper, saveDeveloper } from '@/modules/developers'
 import { retryOutbox, setInquiryStatus } from '@/modules/inquiries'
+import { retryPixxiLeads, syncPixxiCatalog } from '@/modules/pixxi-crm'
 import { setCustomerActive } from '@/modules/customers'
 import { moderateReview, type ModerationOp } from '@/modules/reviews'
 import { deleteMedia } from '@/modules/media'
@@ -366,4 +367,34 @@ export async function deleteMediaAction(formData: FormData) {
   const error = !result.ok ? result.error : !result.value.ok ? result.value.error : null
   revalidatePath('/admin/media')
   redirect(withMessage('/admin/media', error ? 'error' : 'ok', error ?? 'Image deleted.'))
+}
+
+/* ------------------------------------------------------------------ Pixxi CRM */
+
+export async function pixxiSyncAction(formData: FormData) {
+  const result = await guarded(formData, (actor) =>
+    syncPixxiCatalog({ trigger: 'MANUAL', actor }),
+  )
+  const error = !result.ok ? result.error : !result.value.ok ? result.value.error : null
+  revalidatePath('/admin', 'layout')
+  revalidatePath('/')
+  revalidatePath('/buy')
+  revalidatePath('/rent')
+  revalidatePath('/projects')
+  const summary =
+    result.ok && result.value.ok
+      ? `Sync complete: ${result.value.created} created, ${result.value.updated} updated, ${result.value.archived} archived.`
+      : ''
+  redirect(withMessage('/admin/crm', error ? 'error' : 'ok', error ?? summary))
+}
+
+export async function pixxiRetryLeadsAction(formData: FormData) {
+  const result = await guarded(formData, (actor) =>
+    retryPixxiLeads(actor, text(formData, 'id') || undefined),
+  )
+  const error = !result.ok ? result.error : !result.value.ok ? result.value.error : null
+  revalidatePath('/admin/crm')
+  const summary =
+    result.ok && result.value.ok ? `Sent ${result.value.sent}, failed ${result.value.failed}.` : ''
+  redirect(withMessage('/admin/crm', error ? 'error' : 'ok', error ?? summary))
 }

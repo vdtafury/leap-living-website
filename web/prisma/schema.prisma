@@ -393,3 +393,73 @@ model Review {
 
   @@index([status, reviewedAt])
 }
+
+// ---------------------------------------------------------------------------
+// Pixxi CRM integration: additive tables only (safe on existing SQLite DBs).
+// ---------------------------------------------------------------------------
+
+/// Maps a local Property or Project to its source record in Pixxi CRM.
+model PixxiLink {
+  /// PROPERTY | PROJECT
+  entityType     String
+  /// Local Property.id or Project.id
+  entityId       String
+  /// Pixxi CRM's external propertyId (e.g. "1003101351047")
+  pixxiId        String   @unique
+  /// Pixxi CRM's internal numeric id (stringified), when provided
+  pixxiNumericId String?
+  /// SELL | RENT | NEW
+  listingType    String
+  /// ACTIVE | REMOVED
+  syncStatus     String   @default("ACTIVE")
+  /// SHA-256 of the normalized mapped payload to skip redundant updates
+  contentHash    String   @default("")
+  lastSyncedAt   DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@id([entityType, entityId])
+  @@index([listingType, syncStatus])
+}
+
+/// Persist-first delivery queue for website leads pushed to Pixxi CRM Forms API.
+model PixxiLeadOutbox {
+  id              String    @id @default(cuid())
+  /// Local Inquiry.id (one-to-one)
+  inquiryId       String    @unique
+  formId          String    @default("")
+  formName        String    @default("")
+  /// Pixxi listing propertyId when the enquiry came from a synced listing/project
+  pixxiPropertyId String?
+  /// JSON snapshot of inquiry fields prepared for POST /pixxiapi/webhook/v1/form
+  payload         String
+  /// PENDING | SENT | FAILED
+  status          String    @default("PENDING")
+  attempts        Int       @default(0)
+  nextAttemptAt   DateTime  @default(now())
+  lastError       String?
+  sentAt          DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([status, nextAttemptAt])
+}
+
+/// History of Pixxi CRM catalog sync runs (manual, scheduled, or webhook-triggered).
+model PixxiSyncRun {
+  id         String    @id @default(cuid())
+  /// MANUAL | SCHEDULED | WEBHOOK
+  trigger    String
+  /// RUNNING | OK | ERROR
+  status     String    @default("RUNNING")
+  fetched    Int       @default(0)
+  created    Int       @default(0)
+  updated    Int       @default(0)
+  archived   Int       @default(0)
+  errors     Int       @default(0)
+  message    String    @default("")
+  startedAt  DateTime  @default(now())
+  finishedAt DateTime?
+
+  @@index([startedAt])
+}

@@ -3,6 +3,7 @@ import { ensureReady } from '@/server/bootstrap'
 import { recordAudit } from '@/modules/audit-logs'
 import { authorize, type Actor } from '@/modules/authorization'
 import { getPublishedContent } from '@/modules/content'
+import { processPixxiLeadOutbox, queuePixxiLead } from '@/modules/pixxi-crm'
 import type { Inquiry } from '@/lib/inquiry'
 import { csvCell } from '@/lib/csv'
 import { notificationRecipients } from '../infrastructure/mailer'
@@ -58,21 +59,23 @@ export async function submitInquiry(
   await ensureReady()
   const settings = await getPublishedContent('settings')
   const to = notificationRecipients() ?? settings.company.email
+  const { listingType, listingId, ...inquiryFields } = data
   const inquiry = await prisma.$transaction(async (tx) => {
     const created = await tx.inquiry.create({
       data: {
-        ...data,
-        context: data.context || null,
-        pagePath: data.pagePath || null,
+        ...inquiryFields,
+        context: inquiryFields.context || null,
+        pagePath: inquiryFields.pagePath || null,
         ipHash: meta.ipHash,
         userAgent: meta.userAgent?.slice(0, 300) ?? null,
       },
       select: { id: true },
     })
-    const email = notificationEmail({ ...data, id: created.id })
+    const email = notificationEmail({ ...inquiryFields, id: created.id })
     await tx.emailOutbox.create({
       data: { to, ...email, relatedType: 'Inquiry', relatedId: created.id },
     })
+    await queuePixxiLead({ ...inquiryFields, id: created.id, listingType, listingId }, tx)
     // Signed-in visitor: the request also appears on their account page (D-40).
     if (meta.customerId) {
       await tx.customerInquiry.create({
@@ -81,8 +84,9 @@ export async function submitInquiry(
     }
     return created
   })
-  // Fire and forget: the visitor's answer does not wait for SMTP.
+  // Fire and forget: the visitor's answer does not wait for SMTP or Pixxi CRM.
   processOutbox().catch((error) => console.error('[outbox] send after inquiry failed', error))
+  processPixxiLeadOutbox().catch((error) => console.error('[pixxi] send after inquiry failed', error))
   return inquiry
 }
 

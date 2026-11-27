@@ -17,6 +17,10 @@ export function useTestEnvironment(extra: Record<string, string> = {}) {
     SMTP_HOST: '',
     MAIL_FROM: '',
     MAIL_TO: '',
+    PIXXI_API_TOKEN: '',
+    PIXXI_FORM_GENERAL_ID: '',
+    PIXXI_FORM_LISTING_ID: '',
+    PIXXI_WEBHOOK_SECRET: '',
     ...extra,
   })
   return dir

@@ -275,7 +275,12 @@ export default async function PropertyDetailPage({
                     )}
                     <ViewingDirectLines />
                   </div>
-                  <ConsultationForm mode="PROPERTY_INQUIRY" contextTitle={property.title} />
+                  <ConsultationForm
+                    mode="PROPERTY_INQUIRY"
+                    contextTitle={property.title}
+                    listingType="PROPERTY"
+                    listingId={property.id}
+                  />
                 </section>
               </div>
             </div>

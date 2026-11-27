@@ -6,6 +6,7 @@ import { seedListings } from '@/modules/listings/application/seed'
 import { seedDevelopers } from '@/modules/developers/application/seed'
 import { seedContent } from '@/modules/content/application/seed'
 import { startOutboxWorker } from '@/modules/inquiries/application/outbox'
+import { startPixxiWorkers } from '@/modules/pixxi-crm/application/workers'
 import { recordAudit } from '@/modules/audit-logs'
 
 type Env = Record<string, string | undefined>
@@ -46,6 +47,7 @@ export function ensureReady(): Promise<void> {
     await bootstrapAdmin()
     await seedStarterContent()
     startOutboxWorker()
+    startPixxiWorkers()
   })().catch((error) => {
     ready = null
     throw error

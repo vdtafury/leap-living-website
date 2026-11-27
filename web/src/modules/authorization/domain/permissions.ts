@@ -31,6 +31,8 @@ export const PERMISSIONS = {
   'developer.manage': 'Manage the developer logo strip',
   'user.view': 'See admin users',
   'user.manage': 'Create users, assign roles, deactivate, reset passwords',
+  'crm.view': 'See Pixxi CRM integration status and lead delivery queue',
+  'crm.manage': 'Run Pixxi CRM catalog syncs and retry lead deliveries',
   'audit.view': 'Read the audit log',
 } as const
 

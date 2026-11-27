@@ -12,15 +12,23 @@ export interface ListingImage {
 }
 
 /**
- * Images may only point at the site's own files: the bundled `/images/...` set or an upload
- * served from `/media/<file>`. No external URLs, no traversal, no query strings.
+ * Images may point at the site's own files (`/images/...`, `/media/<file>`) or trusted HTTPS
+ * hosts used by Pixxi CRM media storage. Arbitrary external URLs and path traversal are rejected.
  */
+const LOCAL_IMAGE_PATH = /^\/(images|media)\/[A-Za-z0-9][A-Za-z0-9._/-]*$/
+const TRUSTED_CRM_IMAGE_URL =
+  /^https:\/\/([a-z0-9-]+\.)*(pixxicrm\.(ae|com)|amazonaws\.com|cloudfront\.net|digitaloceanspaces\.com|aliyuncs\.com|storage\.googleapis\.com|blob\.core\.windows\.net)\/[^\s<>"]+$/i
+
 export const imageUrlSchema = z
   .string()
   .trim()
-  .max(300)
-  .regex(/^\/(images|media)\/[A-Za-z0-9][A-Za-z0-9._/-]*$/, 'Image must be an uploaded file.')
-  .refine((url) => !url.includes('..') && !url.includes('//'), 'Invalid image path.')
+  .max(600)
+  .refine(
+    (url) =>
+      (LOCAL_IMAGE_PATH.test(url) && !url.includes('..') && !url.includes('//')) ||
+      TRUSTED_CRM_IMAGE_URL.test(url),
+    'Image must be an uploaded file or a Pixxi CRM image URL.',
+  )
 
 export const imageSchema = z.object({
   url: imageUrlSchema,

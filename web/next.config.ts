@@ -23,7 +23,8 @@ const CSP = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  // HTTPS images allowed so synced Pixxi CRM property/project photos render from Pixxi's CDN.
+  "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
   "media-src 'self'",
   "connect-src 'self'",

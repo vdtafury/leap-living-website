@@ -141,7 +141,12 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                   Request verified unit availability, floorplans, and developer payment schedules.
                 </p>
               </div>
-              <ConsultationForm mode="PROJECT_BRIEFING" contextTitle={project.title} />
+              <ConsultationForm
+                mode="PROJECT_BRIEFING"
+                contextTitle={project.title}
+                listingType="PROJECT"
+                listingId={project.id}
+              />
             </div>
           </div>
         </section>

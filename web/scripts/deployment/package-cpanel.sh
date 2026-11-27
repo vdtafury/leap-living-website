@@ -252,11 +252,11 @@ const required = [
   'MediaAsset', 'Inquiry', 'User', 'Role', 'Permission', 'RolePermission', 'UserRole',
   'Session', 'AuditLog', 'Property', 'Project', 'EmailOutbox', 'ContentDocument',
   'ContentRevision', 'Developer', 'Customer', 'CustomerSession', 'CustomerToken',
-  'Favorite', 'CustomerInquiry', 'Review'
+  'Favorite', 'CustomerInquiry', 'Review', 'PixxiLink', 'PixxiLeadOutbox', 'PixxiSyncRun'
 ]
 for (const t of required) if (!names.includes(t)) { console.error('missing table ' + t); process.exit(1) }
 " "$OUT/leapliving-data/leapliving.db" || { echo "Initial database is missing tables"; exit 1; }
-echo "health OK, home/buy/sign-in 200, admin guard OK, hero video OK, all 21 database tables OK"
+echo "health OK, home/buy/sign-in 200, admin guard OK, hero video OK, all 24 database tables OK"
 rm -rf "$OUT/leapliving-data/storage"/* "$OUT/smoke.log"
 
 log "Zipping"

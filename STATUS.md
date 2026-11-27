@@ -8,6 +8,16 @@
 
 ## Last updated
 
+2026-11-27 — by: Antigravity. **Two-way Pixxi CRM integration built & ready for credentials (`D-59`):**
+- **Additive schema (`prisma/schema.prisma`, `server/schema.ts`, `schema.test.ts`, `package-cpanel.sh`):** added `PixxiLink`, `PixxiLeadOutbox`, and `PixxiSyncRun` (24 total tables, zero `ALTER TABLE` on existing tables, zero-downtime staging upgrade).
+- **Core module (`web/src/modules/pixxi-crm/`):** clean-architecture `domain/pixxi.ts`, `infrastructure/client.ts`, `application/sync.ts`, `application/leads.ts`, `application/workers.ts`, `index.ts`, plus unit/integration suite (`pixxi-crm.test.ts`).
+  - **Listings & Projects sync (Pixxi → local DB):** syncs `SELL`, `RENT`, and `NEW` (off-plan) via `POST /pixxiapi/v1/properties` with 2.1 s rate-limit spacing, SHA-256 hash skip, preservation of local `featured`/`sortOrder`/`slug`, automatic archiving of removed listings & starter samples (`PIXXI_HIDE_STARTER_ON_SYNC`), periodic background worker, and real-time webhook `POST /api/webhooks/pixxi`.
+  - **Leads delivery (Website → Pixxi Forms):** `submitInquiry()` queues `PixxiLeadOutbox` in the same transaction (persist before notify), auto-attaching `propertyId` from property/project detail pages (`ConsultationForm` + `PixxiLink`), with 6-attempt exponential backoff and safe waiting when `PIXXI_API_TOKEN` is unset.
+- **Admin & security:** added `crm.view` / `crm.manage` RBAC permissions (Super Admin only), `/admin/crm` management dashboard (config checklist, manual **Sync from Pixxi now**, lead queue & retry), `PIXXI_*` documentation in `web/.env.example`, CSP `img-src` (`https:`), and trusted Pixxi/cloud CDN allowlist in `listings/domain/shared.ts`.
+- **Verification note:** `node`/`npm` is unavailable locally; `bash -n` and static schema/boundary/regex checks passed (0 issues). Full `tsc`, `eslint`, `vitest`, `next build`, and staging deployment run via GitHub Actions on push.
+
+### Previous update
+
 2026-11-27 — by: Arena agent. **Buy / Rent "Plan your purchase / move" rebuilt (D-58):** a bento of a working estimator (Buy: price → monthly repayment, down payment, loan, DLD fee; Rent: annual rent → price of a home with the same monthly payment), a photo tile (New projects with the real count / List your property) and a dark consultation tile with WhatsApp and Call. New `plan-estimator.tsx`, `styles/32-listings-plan.css`, `e2e/plan.spec.ts`; `lib/mortgage.ts` +4 helpers. tsc, lint, vitest 164/164, build, verify.sh 106/106, Playwright 31 passed / 3 skipped.
 
 ### Previous update
