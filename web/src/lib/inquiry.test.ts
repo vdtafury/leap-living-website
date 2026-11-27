@@ -41,4 +41,15 @@ describe('inquirySchema', () => {
     expect(inquirySchema.safeParse({ ...valid, notes: 'x'.repeat(2001) }).success).toBe(false)
     expect(inquirySchema.safeParse({ ...valid, name: 'x'.repeat(121) }).success).toBe(false)
   })
+
+  it('allows quick List With Us submissions without an email', () => {
+    const parsed = inquirySchema.parse({
+      type: 'LIST_PROPERTY',
+      name: 'Aisha Rahman',
+      phone: '+971 52 145 9888',
+      interest: 'Palm Jumeirah',
+    })
+    expect(parsed.email).toBe('')
+    expect(parsed.interest).toBe('Palm Jumeirah')
+  })
 })

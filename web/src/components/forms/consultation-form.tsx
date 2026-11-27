@@ -128,20 +128,20 @@ export function ConsultationForm({
           <button
             type="button"
             role="tab"
+            aria-selected={selectedType === 'CONSULTATION'}
+            onClick={() => setSelectedType('CONSULTATION')}
+            className={`ll-switch-tab ${selectedType === 'CONSULTATION' ? 'active' : ''}`}
+          >
+            Private Consultation
+          </button>
+          <button
+            type="button"
+            role="tab"
             aria-selected={selectedType === 'VALUATION'}
             onClick={() => setSelectedType('VALUATION')}
             className={`ll-switch-tab ${selectedType === 'VALUATION' ? 'active' : ''}`}
           >
             Free Property Valuation
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={selectedType === 'CONSULTATION'}
-            onClick={() => setSelectedType('CONSULTATION')}
-            className={`ll-switch-tab ${selectedType === 'CONSULTATION' ? 'active' : ''}`}
-          >
-            Private Consultancy
           </button>
         </div>
       )}

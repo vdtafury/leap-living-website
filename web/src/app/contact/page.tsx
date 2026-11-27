@@ -135,7 +135,7 @@ export default async function ContactPage({
                   Schedule a Briefing
                 </h2>
                 <p style={{ fontSize: '0.86rem' }}>
-                  Select whether you are seeking an asset valuation or advisory consultation.
+                  Select whether you are seeking a private consultation or an asset valuation.
                 </p>
               </div>
               <ConsultationForm mode={formMode} contextTitle={contextTitle} />

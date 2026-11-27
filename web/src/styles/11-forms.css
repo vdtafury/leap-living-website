@@ -70,6 +70,29 @@
   gap: 1rem;
 }
 
+.ll-quick-form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+  gap: 1rem;
+  align-items: start;
+}
+
+.ll-quick-form-submit {
+  min-width: 170px;
+  margin-top: 1.55rem;
+}
+
+@media (max-width: 960px) {
+  .ll-quick-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+  }
+  .ll-quick-form-submit {
+    min-width: 0;
+    margin-top: 0;
+  }
+}
+
 .ll-input {
   width: 100%;
   border: 1px solid var(--neutral-grey);

@@ -14,6 +14,7 @@ export type InquiryStatus = (typeof INQUIRY_STATUSES)[number]
 const TYPE_LABEL: Record<string, string> = {
   CONSULTATION: 'Consultation request',
   VALUATION: 'Valuation request',
+  LIST_PROPERTY: 'List with us request',
   PROPERTY_INQUIRY: 'Viewing request',
   PROJECT_BRIEFING: 'Project briefing request',
 }
@@ -32,7 +33,7 @@ export function notificationEmail(inquiry: Omit<Inquiry, 'website'> & { id: stri
     '',
     `Name: ${oneLine(inquiry.name)}`,
     `Phone: ${oneLine(inquiry.phone)}`,
-    `Email: ${oneLine(inquiry.email)}`,
+    ...(inquiry.email ? [`Email: ${oneLine(inquiry.email)}`] : []),
     `Interest: ${oneLine(inquiry.interest, 200)}`,
     ...(inquiry.context ? [`About: ${oneLine(inquiry.context, 200)}`] : []),
     ...(inquiry.pagePath ? [`Page: ${oneLine(inquiry.pagePath, 300)}`] : []),
@@ -173,6 +174,7 @@ export async function exportInquiries(actor: Actor, format: 'json' | 'csv') {
 const PUBLIC_TYPE_LABEL: Record<string, string> = {
   CONSULTATION: 'Consultation',
   VALUATION: 'Valuation',
+  LIST_PROPERTY: 'List with us',
   PROPERTY_INQUIRY: 'Viewing request',
   PROJECT_BRIEFING: 'Project briefing',
 }

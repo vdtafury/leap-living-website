@@ -5,6 +5,7 @@ import { pageMetadata } from '@/lib/seo'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { ConsultationForm } from '@/components/forms/consultation-form'
+import { ListWithUsForm } from '@/components/forms/list-with-us-form'
 import { CheckIcon, ChevronRightIcon } from '@/components/ui/icons'
 
 export const metadata: Metadata = pageMetadata({
@@ -46,6 +47,22 @@ export default function SellPage() {
                 style={{ height: '320px' }}
               />
             </div>
+          </div>
+        </section>
+
+        <section id="list-with-us" className="ll-section-muted">
+          <div className="ll-container">
+            <div style={{ marginBottom: '1.5rem' }}>
+              <div className="ll-eyebrow">Quick Owner Desk</div>
+              <h2 className="ll-serif-title ll-section-title" style={{ marginBottom: '0.45rem' }}>
+                List With Us
+              </h2>
+              <p style={{ fontSize: '0.92rem', maxWidth: '620px' }}>
+                Ready to bring your property to market or explore discreet private placement? Leave
+                your name, number, and community and a senior consultant will call you back directly.
+              </p>
+            </div>
+            <ListWithUsForm />
           </div>
         </section>
 

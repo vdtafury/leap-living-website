@@ -20,6 +20,7 @@ export const metadata = { title: 'Form requests' }
 const TYPE_LABEL: Record<string, string> = {
   CONSULTATION: 'Consultation',
   VALUATION: 'Valuation',
+  LIST_PROPERTY: 'List with us',
   PROPERTY_INQUIRY: 'Viewing',
   PROJECT_BRIEFING: 'Project briefing',
 }
@@ -113,9 +114,11 @@ export default async function InquiriesPage({ searchParams }: { searchParams: Se
                     <div>
                       <a href={`tel:${r.phone.replace(/[^\d+]/g, '')}`}>{r.phone}</a>
                     </div>
-                    <div>
-                      <a href={`mailto:${r.email}`}>{r.email}</a>
-                    </div>
+                    {r.email && (
+                      <div>
+                        <a href={`mailto:${r.email}`}>{r.email}</a>
+                      </div>
+                    )}
                   </td>
                   <td style={{ maxWidth: 420 }}>
                     <div>{r.interest}</div>

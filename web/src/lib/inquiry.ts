@@ -8,6 +8,7 @@ z.config({ jitless: true })
 export const INQUIRY_TYPES = [
   'CONSULTATION',
   'VALUATION',
+  'LIST_PROPERTY',
   'PROPERTY_INQUIRY',
   'PROJECT_BRIEFING',
 ] as const
@@ -15,22 +16,36 @@ export type InquiryType = (typeof INQUIRY_TYPES)[number]
 
 export const MAX_INQUIRY_BYTES = 16 * 1024
 
-export const inquirySchema = z.object({
-  type: z.enum(INQUIRY_TYPES),
-  name: z.string().trim().min(2, 'Please enter your full name').max(120),
-  phone: z
-    .string()
-    .trim()
-    .max(40)
-    .regex(/^\+?[\d\s().-]{7,}$/, 'Please enter a valid phone number'),
-  email: z.string().trim().max(254).pipe(z.email('Please enter a valid email address')),
-  interest: z.string().trim().min(2, 'Please fill in this field').max(200),
-  notes: z.string().trim().max(2000).default(''),
-  context: z.string().trim().max(200).optional(),
-  pagePath: z.string().trim().max(300).optional(),
-  /** Honeypot: hidden from people, so only bots fill it. */
-  website: z.string().max(500).optional(),
-})
+const emailCheck = z.email('Please enter a valid email address')
+
+export const inquirySchema = z
+  .object({
+    type: z.enum(INQUIRY_TYPES),
+    name: z.string().trim().min(2, 'Please enter your full name').max(120),
+    phone: z
+      .string()
+      .trim()
+      .max(40)
+      .regex(/^\+?[\d\s().-]{7,}$/, 'Please enter a valid phone number'),
+    email: z.string().trim().max(254).default(''),
+    interest: z.string().trim().min(2, 'Please fill in this field').max(200),
+    notes: z.string().trim().max(2000).default(''),
+    context: z.string().trim().max(200).optional(),
+    pagePath: z.string().trim().max(300).optional(),
+    /** Honeypot: hidden from people, so only bots fill it. */
+    website: z.string().max(500).optional(),
+  })
+  .superRefine((data, ctx) => {
+    // Quick "List with us" form collects only name, phone, and community; other forms require email.
+    if (data.type === 'LIST_PROPERTY' && data.email === '') return
+    if (!emailCheck.safeParse(data.email).success) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['email'],
+        message: 'Please enter a valid email address',
+      })
+    }
+  })
 
 export type InquiryInput = z.input<typeof inquirySchema>
 export type Inquiry = z.output<typeof inquirySchema>
