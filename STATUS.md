@@ -8,6 +8,14 @@
 
 ## Last updated
 
+2026-11-27 — by: Arena agent. **Sell "Schedule a Briefing" light and on-brand (D-62):** light tint band; a teal brand panel (logo keyhole mark, cropped keyhole outline, teal shadow) beside the white form card, same size. tsc, lint, vitest 170/170, build, verify.sh 106/106, Playwright 35 passed / 3 skipped.
+
+### Previous update
+
+2026-11-27 — by: Arena agent. **Sell "How Leap Living Protects Asset Value" as a value line (D-61):** a rising teal line through the three steps, ending on the brand keyhole (keys change hands); drop lines to each step; draws itself on scroll where supported. Phones keep a vertical thread. tsc, lint, vitest 170/170, build, verify.sh 106/106, Playwright 35 passed / 3 skipped.
+
+### Previous update
+
 2026-11-27 — by: Antigravity. **Vercel cleanup & repo housekeeping (Tasjeel cPanel-only):**
 - Removed all Vercel runtime/preview/config remnants from `web/src/app/page.tsx`, `web/src/app/admin/preview/[key]/page.tsx`, `web/src/components/home/hero-video-backdrop.tsx`, `web/src/lib/hero-video.ts`, `web/src/lib/hero-video.test.ts`, `web/src/server/db.ts`, `web/eslint.config.mjs`, `.gitignore`, and `web/.gitignore` (also removed obsolete `client-hero-hevc.mp4` ignore & duplicate trailing `.env*` rules).
 - Replaced stale Phase 0 root `.env.example` with a clear pointer to `web/.env.example`, and refreshed `README.md` to reflect all 12 modules, 24 DB models, Pixxi CRM, Meet the Team, and Tasjeel cPanel auto-deploy.

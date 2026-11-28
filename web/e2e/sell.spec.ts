@@ -95,4 +95,24 @@ test.describe('sell page', () => {
     near(channels.height, briefing.height)
     near(channels.y, briefing.y)
   })
+  test('value line: three steps, ending on the brand keyhole', async ({ page }, info) => {
+    await page.goto('/sell')
+    const method = page.getByRole('region', { name: 'How Leap Living Protects Asset Value' })
+    const steps = method.getByRole('listitem')
+    await expect(steps).toHaveCount(3)
+    await expect(steps.last()).toContainText('Structured Negotiation & Transfer')
+    await expect(steps.last().locator('.ll-sell-path-keyhole')).toBeVisible()
+    const chart = method.locator('.ll-sell-value-chart')
+    if (info.project.name === 'desktop') {
+      await expect(chart).toBeVisible()
+      // each marker rises above the one before it
+      const tops = await method
+        .locator('.ll-sell-path-icon')
+        .evaluateAll((els) => els.map((el) => el.getBoundingClientRect().top))
+      expect(tops[0]).toBeGreaterThan(tops[1])
+      expect(tops[1]).toBeGreaterThan(tops[2])
+    } else {
+      await expect(chart).toBeHidden()
+    }
+  })
 })

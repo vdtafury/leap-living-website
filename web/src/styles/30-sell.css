@@ -2,9 +2,10 @@
    SELL PAGE (/sell)
    - .ll-sell-hero    light owners' header; the quick "List With Us" form sits in it,
                       beside a bright photo pair: a tall capsule, a round inset and a chip (D-60)
-   - .ll-sell-method  "How Leap Living Protects Asset Value" as one connected path
-   - .ll-sell-brief   "Schedule a Briefing": dark band, two equal panels: valuation details |
-                      the Private Consultation / Free Valuation form (#valuation-form)
+   - .ll-sell-method  "How Leap Living Protects Asset Value": a value line rising through the
+                      three steps, ending on the brand keyhole (D-61)
+   - .ll-sell-brief   "Schedule a Briefing": light band, two equal panels: a teal brand panel with
+                      the keyhole mark | the Private Consultation / Free Valuation form (#valuation-form)
    - Every field on this page is a pill and every panel uses the soft --sell-radius (D-60)
    ========================================================================== */
 
@@ -319,7 +320,12 @@
   color: var(--body-text);
 }
 
-/* ---- 2. Method --------------------------------------------------------- */
+/* ---- 2. Method: the value line ---------------------------------------
+   One rising line through the three steps (Valuation -> Positioning -> Transfer).
+   The chart is 200 px tall and stretches across the panel; each marker sits on the
+   line at its column centre (x = 1/6, 1/2, 5/6) and at y = 158 / 118 / 44 px, so the
+   step markers below are offset by (y - 31 px). The last marker is the brand mark:
+   a white keyhole in a teal circle, where the keys change hands. (D-61) */
 .ll-sell-method {
   padding: clamp(4rem, 7vw, 6rem) 0;
   background: var(--white);
@@ -335,51 +341,128 @@
   color: var(--heading);
 }
 
-.ll-sell-path {
-  --path-gap: clamp(1.5rem, 3vw, 3rem);
+.ll-sell-value {
+  --value-chart-h: 200px;
+  --value-marker: 62px;
   position: relative;
+  margin-top: clamp(2rem, 3.5vw, 2.75rem);
+  padding: clamp(1.75rem, 3vw, 2.5rem) 0 clamp(2rem, 3.5vw, 2.75rem);
+  border: 1px solid rgba(10, 52, 54, 0.06);
+  border-radius: 28px;
+  background: var(--surface-tint);
+  overflow: hidden;
+}
+
+.ll-sell-value-chart {
+  position: absolute;
+  top: clamp(1.75rem, 3vw, 2.5rem);
+  left: 0;
+  width: 100%;
+  height: var(--value-chart-h);
+  overflow: visible;
+  color: var(--brand-teal);
+}
+
+.ll-sell-value-base {
+  fill: none;
+  stroke: rgba(10, 52, 54, 0.18);
+  stroke-width: 1;
+  stroke-dasharray: 3 6;
+  vector-effect: non-scaling-stroke;
+}
+
+.ll-sell-value-area {
+  fill: url(#ll-sell-value-fill);
+}
+
+.ll-sell-value-line {
+  fill: none;
+  stroke: var(--action-teal);
+  stroke-width: 2;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.ll-sell-path {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--path-gap);
-  margin: clamp(2.25rem, 4vw, 3.25rem) 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 
-/* the thread that joins the three steps, through the icons' centres */
-.ll-sell-path::before {
-  content: '';
-  position: absolute;
-  top: 31px;
-  /* from the first icon to the last one */
-  right: calc((100% - 2 * var(--path-gap)) / 3 - 31px);
-  left: 31px;
-  height: 1px;
-  background: linear-gradient(90deg, var(--brand-teal) 0%, rgba(var(--brand-teal-rgb), 0.25) 100%);
+.ll-sell-path li {
+  --marker-y: 158px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 clamp(1rem, 2.4vw, 2.25rem);
+  text-align: center;
 }
 
-.ll-sell-path li {
-  position: relative;
+.ll-sell-path li:nth-child(2) {
+  --marker-y: 118px;
+}
+
+.ll-sell-path li:nth-child(3) {
+  --marker-y: 44px;
 }
 
 .ll-sell-path-icon {
   position: relative;
   display: inline-grid;
+  flex-shrink: 0;
   place-items: center;
-  width: 62px;
-  height: 62px;
-  margin-bottom: 1.35rem;
+  width: var(--value-marker);
+  height: var(--value-marker);
+  margin-top: calc(var(--marker-y) - var(--value-marker) / 2);
   border-radius: 999px;
-  border: 1px solid rgba(var(--brand-teal-rgb), 0.35);
+  border: 1px solid rgba(var(--brand-teal-rgb), 0.4);
   background: var(--white);
-  box-shadow: 0 0 0 8px var(--white);
+  box-shadow:
+    0 0 0 6px rgba(255, 255, 255, 0.85),
+    0 14px 30px rgba(16, 42, 44, 0.1);
   color: var(--action-teal);
+  transition: transform 0.25s ease;
 }
 
-.ll-sell-path li:first-child .ll-sell-path-icon {
+.ll-sell-path li:hover .ll-sell-path-icon {
+  transform: translateY(-3px);
+}
+
+/* the drop line from each marker down to its text, like a chart annotation */
+.ll-sell-path-icon::after {
+  content: '';
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  width: 0;
+  height: calc(var(--value-chart-h) - var(--marker-y) - var(--value-marker) / 2 + 12px);
+  border-left: 1px dashed rgba(var(--brand-teal-rgb), 0.45);
+}
+
+.ll-sell-path li:last-child .ll-sell-path-icon {
   border-color: transparent;
   background: var(--action-teal);
-  color: var(--white);
+  box-shadow:
+    0 0 0 6px rgba(255, 255, 255, 0.85),
+    0 16px 34px rgba(var(--action-teal-rgb), 0.35);
+}
+
+/* the brand mark: a white keyhole in a thin white circle */
+.ll-sell-path-keyhole {
+  width: 44px;
+  height: 44px;
+  background: var(--white);
+  -webkit-mask: var(--keyhole-white) center / contain no-repeat;
+  mask: var(--keyhole-white) center / contain no-repeat;
+}
+
+.ll-sell-path-text {
+  margin-top: calc(var(--value-chart-h) - var(--marker-y) - var(--value-marker) / 2 + 1.5rem);
 }
 
 .ll-sell-path h3 {
@@ -392,21 +475,64 @@
 }
 
 .ll-sell-path p {
-  max-width: 360px;
+  max-width: 330px;
+  margin: 0 auto;
   font-size: 0.92rem;
   line-height: 1.7;
   color: var(--body-text);
 }
 
-/* ---- 3. Schedule a briefing ------------------------------------------- */
+/* the line draws itself as the panel scrolls into view (where supported) */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* pathLength="1", but the non-scaling stroke measures the dash on screen, so the dash and
+       the gap are 1.5 long: enough to hide or show the whole line at any width */
+    .ll-sell-value-line {
+      stroke-dasharray: 1.5;
+      animation: ll-sell-value-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 90%;
+    }
+
+    .ll-sell-value-area {
+      animation: ll-sell-value-fade linear both;
+      animation-timeline: view();
+      animation-range: entry 20% entry 100%;
+    }
+  }
+}
+
+@keyframes ll-sell-value-draw {
+  from {
+    stroke-dashoffset: 1.5;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes ll-sell-value-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---- 3. Schedule a briefing ------------------------------------------
+   Light band (D-62). Two panels of the same size: a teal brand panel (the logo's
+   keyhole mark on top, a large cropped keyhole outline in the corner, a soft teal
+   shadow) | the white form card. Every text on the teal panel is pure white on
+   #287F82 or darker (4.7:1 and up). */
 .ll-sell-brief {
   position: relative;
   padding: clamp(4rem, 7vw, 6rem) 0;
   background:
-    radial-gradient(60% 90% at 0% 0%, rgba(var(--brand-teal-rgb), 0.32) 0%, rgba(var(--brand-teal-rgb), 0) 62%),
-    radial-gradient(40% 70% at 100% 100%, rgba(var(--brand-teal-rgb), 0.18) 0%, rgba(var(--brand-teal-rgb), 0) 60%),
-    var(--brand-deep);
-  color: var(--white);
+    radial-gradient(48% 75% at 0% 100%, rgba(var(--brand-teal-rgb), 0.12) 0%, rgba(var(--brand-teal-rgb), 0) 70%),
+    radial-gradient(40% 70% at 100% 0%, rgba(var(--brand-teal-rgb), 0.08) 0%, rgba(var(--brand-teal-rgb), 0) 70%),
+    var(--surface-tint);
+  border-top: 1px solid var(--border-subtle);
   scroll-margin-top: 82px;
 }
 
@@ -419,14 +545,49 @@
 }
 
 .ll-sell-brief-panel {
+  --brief-teal:
+    radial-gradient(45% 55% at 100% 0%, rgba(125, 205, 207, 0.22) 0%, rgba(125, 205, 207, 0) 70%),
+    linear-gradient(150deg, #287f82 0%, #237679 55%, #1c6467 100%);
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: clamp(1.5rem, 2.6vw, 2.25rem);
   padding: clamp(1.5rem, 2.6vw, 2.25rem);
-  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: var(--sell-radius);
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--brief-teal);
+  box-shadow:
+    0 2px 6px rgba(16, 42, 44, 0.06),
+    0 34px 64px -26px rgba(var(--action-teal-rgb), 0.6);
+  color: var(--white);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* the logo's keyhole, large and cropped by the panel's corner */
+.ll-sell-brief-panel::after,
+.ll-sell-brief-box::after {
+  content: '';
+  position: absolute;
+  right: -18%;
+  bottom: -26%;
+  z-index: -1;
+  width: clamp(280px, 30vw, 380px);
+  aspect-ratio: 1;
+  background: var(--keyhole-white) center / contain no-repeat;
+  opacity: 0.13;
+  pointer-events: none;
+}
+
+/* the brand mark above the heading */
+.ll-sell-brief-mark {
+  display: block;
+  width: 54px;
+  height: 54px;
+  margin-bottom: clamp(1rem, 1.8vw, 1.35rem);
+  background: var(--white);
+  -webkit-mask: var(--keyhole-white) center / contain no-repeat;
+  mask: var(--keyhole-white) center / contain no-repeat;
 }
 
 .ll-sell-brief-form {
@@ -451,12 +612,17 @@
   margin-top: 0.85rem;
   font-size: 0.98rem;
   line-height: 1.7;
-  color: rgba(255, 255, 255, 0.78);
+  color: var(--white);
 }
 
 .ll-sell-brief-box {
   padding-top: clamp(1.25rem, 2vw, 1.6rem);
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+/* on desktop the panel carries the keyhole; the box only does on phones */
+.ll-sell-brief-box::after {
+  display: none;
 }
 
 .ll-sell-brief-box h3 {
@@ -467,9 +633,9 @@
 
 .ll-sell-brief-box p {
   margin-top: 0.5rem;
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   line-height: 1.65;
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--white);
 }
 
 .ll-sell-brief-box ul {
@@ -497,15 +663,19 @@
   height: 22px;
   margin-top: -0.05rem;
   border-radius: 999px;
-  background: var(--brand-teal);
-  color: var(--white);
+  background: var(--white);
+  box-shadow: 0 4px 10px rgba(7, 43, 45, 0.18);
+  color: var(--action-teal);
 }
 
 .ll-sell-brief-form .ll-form-card {
   padding: clamp(1.5rem, 2.6vw, 2.25rem);
+  border: 1px solid rgba(10, 52, 54, 0.07);
   border-radius: var(--sell-radius);
   color: var(--body-text);
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.25);
+  box-shadow:
+    0 2px 6px rgba(16, 42, 44, 0.04),
+    0 34px 64px -30px rgba(16, 42, 44, 0.22);
 }
 
 /* ---- Responsive ------------------------------------------------------- */
@@ -524,7 +694,8 @@
     display: none;
   }
 
-  /* phones and tablets: the form comes straight after the title */
+  /* phones and tablets: the form comes straight after the title; the title sits on the
+     light band and the valuation details keep the teal brand panel */
   .ll-sell-brief-inner {
     grid-template-columns: minmax(0, 1fr);
     gap: 0;
@@ -534,8 +705,27 @@
     display: contents;
   }
 
+  /* a display: contents box still draws its ::after, so drop it */
+  .ll-sell-brief-panel::after {
+    display: none;
+  }
+
   .ll-sell-brief-copy {
     order: 1;
+  }
+
+  .ll-sell-brief-mark {
+    width: 46px;
+    height: 46px;
+    background: var(--action-teal);
+  }
+
+  .ll-sell-brief-copy h2 {
+    color: var(--heading);
+  }
+
+  .ll-sell-brief-lead {
+    color: var(--body-text);
   }
 
   .ll-sell-brief-form {
@@ -544,24 +734,51 @@
   }
 
   .ll-sell-brief-box {
+    position: relative;
     order: 3;
     margin-top: 1.75rem;
-    padding: clamp(1.25rem, 4vw, 1.6rem);
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    padding: clamp(1.35rem, 4vw, 1.75rem);
+    border-top: 0;
     border-radius: var(--sell-radius);
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--brief-teal);
+    box-shadow: 0 30px 56px -26px rgba(var(--action-teal-rgb), 0.6);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .ll-sell-brief-box::after {
+    display: block;
+    width: 220px;
+    right: -18%;
+    bottom: -30%;
   }
 }
 
 @media (max-width: 760px) {
-  .ll-sell-path {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0;
+  /* phones: the line turns vertical, from each marker down to the next */
+  .ll-sell-value {
+    padding: 1.5rem clamp(1.1rem, 4vw, 1.5rem);
   }
 
-  /* the thread turns vertical: from each icon down to the next */
-  .ll-sell-path::before {
+  .ll-sell-value-chart {
     display: none;
+  }
+
+  .ll-sell-path {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ll-sell-path li {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    column-gap: 1.1rem;
+    align-items: start;
+    padding: 0 0 1.75rem;
+    text-align: left;
+  }
+
+  .ll-sell-path li:last-child {
+    padding-bottom: 0;
   }
 
   .ll-sell-path li:not(:last-child)::before {
@@ -570,30 +787,30 @@
     top: 56px;
     bottom: 0;
     left: 28px;
-    width: 1px;
-    background: rgba(var(--brand-teal-rgb), 0.4);
-  }
-
-  .ll-sell-path li {
-    display: grid;
-    grid-template-columns: 56px minmax(0, 1fr);
-    column-gap: 1.1rem;
-    padding-bottom: 1.75rem;
-  }
-
-  .ll-sell-path li:last-child {
-    padding-bottom: 0;
+    width: 0;
+    border-left: 1px dashed rgba(var(--brand-teal-rgb), 0.5);
   }
 
   .ll-sell-path-icon {
-    grid-row: 1 / span 2;
-    width: 56px;
-    height: 56px;
-    margin-bottom: 0;
+    --value-marker: 56px;
+    margin-top: 0;
   }
 
-  .ll-sell-path h3 {
+  .ll-sell-path-icon::after {
+    display: none;
+  }
+
+  .ll-sell-path-keyhole {
+    width: 36px;
+    height: 36px;
+  }
+
+  .ll-sell-path-text {
     margin-top: 0.85rem;
+  }
+
+  .ll-sell-path p {
+    margin: 0;
   }
 }
 
