@@ -64,7 +64,7 @@ export default function SellPage() {
 
       <main>
         {/* 1. Owners' header: the quick "List With Us" form beside a light photo pair (D-60) */}
-        <section className="ll-sell-hero" aria-labelledby="sell-title">
+        <section className="ll-sell-hero ll-pill-fields" aria-labelledby="sell-title">
           <div className="ll-container ll-sell-hero-inner">
             <div className="ll-sell-hero-copy">
               <nav className="ll-sell-crumbs" aria-label="Breadcrumb">
@@ -178,7 +178,11 @@ export default function SellPage() {
         </section>
 
         {/* 3. Schedule a briefing: light band, a teal brand panel with the keyhole mark | the form (D-62) */}
-        <section id={VALUATION_ANCHOR} className="ll-sell-brief" aria-labelledby="sell-brief-title">
+        <section
+          id={VALUATION_ANCHOR}
+          className="ll-sell-brief ll-pill-fields"
+          aria-labelledby="sell-brief-title"
+        >
           <div className="ll-container ll-sell-brief-inner">
             <div className="ll-sell-brief-panel">
               <div className="ll-sell-brief-copy">

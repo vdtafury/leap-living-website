@@ -165,3 +165,51 @@
   justify-content: center;
   margin-bottom: 0.85rem;
 }
+
+/* ==========================================================================
+   PILL FIELDS (D-60, D-63): add .ll-pill-fields to a form's container and every
+   single-line field becomes a pill like the site's buttons; the notes box is the
+   softest oval that keeps its text clear. Used on /sell and /contact.
+   ========================================================================== */
+.ll-pill-fields {
+  --field-x: 1.2rem;
+}
+
+.ll-pill-fields .ll-input {
+  min-height: 48px;
+  padding: 0.7rem var(--field-x);
+  border-color: rgba(10, 52, 54, 0.14);
+  border-radius: 999px;
+  background-color: var(--page-bg);
+  transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.ll-pill-fields .ll-input:hover {
+  border-color: rgba(var(--brand-teal-rgb), 0.45);
+}
+
+.ll-pill-fields .ll-input:focus {
+  border-color: var(--action-teal);
+  background-color: var(--white);
+  box-shadow: 0 0 0 4px rgba(var(--action-teal-rgb), 0.12);
+}
+
+.ll-pill-fields .ll-input[aria-invalid='true'] {
+  border-color: #b42318;
+}
+
+.ll-pill-fields .ll-textarea {
+  min-height: 104px;
+  padding-top: 0.85rem;
+  border-radius: 26px;
+}
+
+/* labels and errors start where the text inside the pill starts */
+.ll-pill-fields .ll-field-label,
+.ll-pill-fields .ll-field-error {
+  padding-left: var(--field-x);
+}
+
+.ll-pill-fields .ll-form-error {
+  border-radius: 18px;
+}

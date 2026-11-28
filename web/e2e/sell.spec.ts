@@ -94,6 +94,13 @@ test.describe('sell page', () => {
     near(channels.width, briefing.width)
     near(channels.height, briefing.height)
     near(channels.y, briefing.y)
+    // both headings start on the same line, and the channels are real links
+    const left = await box('.ll-contact-card .ll-eyebrow')
+    const right = await box('.ll-contact-form .ll-eyebrow')
+    near(left.y, right.y)
+    await expect(page.locator('a.ll-contact-channel[href^="tel:"]')).toHaveCount(1)
+    await expect(page.locator('a.ll-contact-channel[href^="mailto:"]')).toHaveCount(1)
+    await expect(page.locator('a.ll-contact-channel[href^="https://wa.me/"]')).toHaveCount(1)
   })
   test('value line: three steps, ending on the brand keyhole', async ({ page }, info) => {
     await page.goto('/sell')

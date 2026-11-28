@@ -13,7 +13,6 @@
 .ll-sell-hero,
 .ll-sell-brief {
   --sell-radius: 28px;
-  --sell-field-x: 1.2rem;
 }
 
 .ll-sell-hero {
@@ -174,52 +173,7 @@
   outline-offset: 3px;
 }
 
-/* Pill fields and soft panels: the same rounding as the List With Us button */
-.ll-sell-hero .ll-input,
-.ll-sell-brief .ll-input {
-  min-height: 48px;
-  padding: 0.7rem var(--sell-field-x);
-  border-color: rgba(10, 52, 54, 0.14);
-  border-radius: 999px;
-  background-color: var(--page-bg);
-  transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
-}
-
-.ll-sell-hero .ll-input:hover,
-.ll-sell-brief .ll-input:hover {
-  border-color: rgba(var(--brand-teal-rgb), 0.45);
-}
-
-.ll-sell-hero .ll-input:focus,
-.ll-sell-brief .ll-input:focus {
-  border-color: var(--action-teal);
-  background-color: var(--white);
-  box-shadow: 0 0 0 4px rgba(var(--action-teal-rgb), 0.12);
-}
-
-.ll-sell-hero .ll-input[aria-invalid='true'],
-.ll-sell-brief .ll-input[aria-invalid='true'] {
-  border-color: #b42318;
-}
-
-/* a multi-line box can't be a full pill: the softest oval that keeps the text clear */
-.ll-sell-brief .ll-textarea {
-  min-height: 104px;
-  padding-top: 0.85rem;
-  border-radius: 26px;
-}
-
-/* labels and errors start where the text inside the pill starts */
-.ll-sell-hero .ll-field-label,
-.ll-sell-brief .ll-field-label,
-.ll-sell-hero .ll-field-error,
-.ll-sell-brief .ll-field-error {
-  padding-left: var(--sell-field-x);
-}
-
-.ll-sell-brief .ll-form-error {
-  border-radius: 18px;
-}
+/* Pill fields: .ll-pill-fields on the hero and the briefing band (styles in 11-forms.css) */
 
 /* Bright photo pair, centred beside the copy */
 .ll-sell-hero-visual {
