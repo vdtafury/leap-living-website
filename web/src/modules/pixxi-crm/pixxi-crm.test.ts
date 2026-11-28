@@ -69,7 +69,7 @@ describe('pixxi domain helpers', () => {
     expect(payload).toMatchObject({
       formId: 'form-list-1',
       formName: 'Listing Leads',
-      propertyId: 'PX-1001',
+      propertyReference: 'PX-1001',
       name: 'Amina Buyer',
       email: 'amina@example.com',
     })
@@ -77,6 +77,23 @@ describe('pixxi domain helpers', () => {
       inquiryType: 'PROPERTY_INQUIRY',
       sourceReference: 'inq-1',
     })
+
+    // Quick "List With Us" has no email: omit `email` instead of sending an empty string.
+    const quickSellerPayload = buildPixxiLeadPayload(
+      {
+        id: 'inq-2',
+        type: 'LIST_PROPERTY',
+        name: 'Omar Owner',
+        email: '',
+        phone: '+971 50 222 3333',
+        interest: 'Dubai Hills',
+        notes: '',
+      },
+      null,
+      cfg.forms.sell,
+    )
+    expect(quickSellerPayload).not.toHaveProperty('email')
+    expect(quickSellerPayload).not.toHaveProperty('propertyReference')
   })
 
   it('maps SELL, RENT and NEW listings cleanly and keeps incomplete listings as DRAFT', () => {
@@ -301,7 +318,7 @@ describe('pixxi catalog sync, lead outbox, webhooks and RBAC', () => {
     expect(sent).toEqual({ sent: 1, failed: 0, skipped: false })
     expect(sentPayloads[0]).toMatchObject({
       formId: 'form-list-1',
-      propertyId: 'PX-SALE-101',
+      propertyReference: 'PX-SALE-101',
       name: 'Tariq Investor',
     })
 
@@ -335,7 +352,7 @@ describe('pixxi catalog sync, lead outbox, webhooks and RBAC', () => {
     expect(nextPixxiRetryDelay(PIXXI_MAX_ATTEMPTS)).toBeNull()
   })
 
-  it('verifies webhook secret and archives listings on EventDELETE_LISTINGS', async () => {
+  it('verifies webhook secret and archives listings on DELETE_LISTINGS and EventDELETE_LISTINGS', async () => {
     const denied = await handlePixxiWebhookEvent({
       body: { event: 'EventDELETE_LISTINGS', data: { propertyId: 'PX-SALE-101' } },
       providedSecret: 'wrong-secret',
@@ -344,7 +361,7 @@ describe('pixxi catalog sync, lead outbox, webhooks and RBAC', () => {
     expect(denied).toEqual({ ok: false, status: 401, error: 'Unauthorized webhook.' })
 
     const accepted = await handlePixxiWebhookEvent({
-      body: { event: 'EventDELETE_LISTINGS', data: { propertyId: 'PX-SALE-101' } },
+      body: { event: 'DELETE_LISTINGS', data: { propertyReference: 'PX-SALE-101' } },
       providedSecret: 'wh-secret-123',
       env: TEST_ENV,
     })

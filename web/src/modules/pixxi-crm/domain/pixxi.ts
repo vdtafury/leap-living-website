@@ -125,13 +125,14 @@ export function buildPixxiLeadPayload(
   if (inquiry.notes) extraData.notes = inquiry.notes
   if (inquiry.pagePath) extraData.pagePath = inquiry.pagePath
 
+  const trimmedEmail = inquiry.email.trim()
   return {
     formId: form.formId,
     formName: form.formName,
     name: inquiry.name,
-    email: inquiry.email,
+    ...(trimmedEmail ? { email: trimmedEmail } : {}),
     phone: inquiry.phone,
-    ...(pixxiPropertyId ? { propertyId: pixxiPropertyId } : {}),
+    ...(pixxiPropertyId ? { propertyReference: pixxiPropertyId } : {}),
     extraData,
   }
 }
@@ -141,6 +142,7 @@ export function buildPixxiLeadPayload(
 export interface PixxiRawListing {
   id?: string | number | null
   propertyId?: string | number | null
+  propertyReference?: string | number | null
   listingType?: string | null
   title?: string | null
   description?: string | null
@@ -364,7 +366,7 @@ export function extractPixxiId(raw: PixxiRawListing): {
   pixxiId: string
   pixxiNumericId: string | null
 } | null {
-  const propId = str(raw.propertyId, 80)
+  const propId = str(raw.propertyId, 80) || str(raw.propertyReference, 80)
   const numId = str(raw.id, 80)
   const pixxiId = propId || numId
   if (!pixxiId) return null

@@ -160,7 +160,7 @@ export default async function PixxiCrmPage({ searchParams }: { searchParams: Sea
                   />
                 </td>
                 <td className="adm-sub">
-                  Form name: {config.listingFormName} (auto-attaches Pixxi propertyId)
+                  Form name: {config.listingFormName} (auto-attaches Pixxi propertyReference)
                 </td>
               </tr>
               <tr>

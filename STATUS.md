@@ -8,6 +8,15 @@
 
 ## Last updated
 
+2026-11-27 — by: Antigravity. **Pixxi CRM API alignment audit & fixes (`D-59`):**
+- Audited `modules/pixxi-crm` against `https://api-docs.pixxicrm.com/`, `Pixxi-API-Token-Guide.pdf`, and `Leads form.pdf` and fixed 3 live-integration mismatches before credentials arrive:
+  1. Switched outbound listing-lead field from `propertyId` to **`propertyReference`** per `POST /pixxiapi/webhook/v1/form` spec (and added `propertyReference` fallback in `extractPixxiId`).
+  2. Omitted `email` from the Pixxi lead payload when blank (prevents HTTP 400 validation errors on 3-field quick **List With Us** submissions).
+  3. Normalized incoming webhook event names in `handlePixxiWebhookEvent` to accept both `ADD_LISTINGS`/`UPDATE_LISTINGS`/`DELETE_LISTINGS` and `EventADD_LISTINGS`/`EventUPDATE_LISTINGS`/`EventDELETE_LISTINGS`.
+- Updated `pixxi-crm.test.ts`, `/admin/crm` copy, and `DECISIONS.md` (`D-59`).
+
+### Previous update
+
 2026-11-27 — by: Arena agent. **Sell "Schedule a Briefing" light and on-brand (D-62):** light tint band; a teal brand panel (logo keyhole mark, cropped keyhole outline, teal shadow) beside the white form card, same size. tsc, lint, vitest 170/170, build, verify.sh 106/106, Playwright 35 passed / 3 skipped.
 
 ### Previous update

@@ -478,7 +478,8 @@ function secretValid(expected: string, provided: string | null): boolean {
 
 /**
  * Handles incoming Pixxi CRM listing webhooks:
- * EventADD_LISTINGS, EventUPDATE_LISTINGS, EventDELETE_LISTINGS.
+ * ADD_LISTINGS / EventADD_LISTINGS, UPDATE_LISTINGS / EventUPDATE_LISTINGS,
+ * DELETE_LISTINGS / EventDELETE_LISTINGS.
  */
 export async function handlePixxiWebhookEvent({
   body,
@@ -502,25 +503,26 @@ export async function handlePixxiWebhookEvent({
 
   await ensureReady()
   const payload = (body && typeof body === 'object' ? body : {}) as Record<string, unknown>
-  const event = String(payload.event ?? payload.eventType ?? payload.type ?? '')
+  const event = String(payload.event ?? payload.eventType ?? payload.type ?? '').trim()
+  const normalizedEvent = event.replace(/^Event/i, '').toUpperCase()
   const dataObj = (
     payload.data && typeof payload.data === 'object' ? payload.data : payload
   ) as PixxiRawListing
   const ids = extractPixxiId(dataObj)
 
-  if (event === 'EventDELETE_LISTINGS') {
+  if (normalizedEvent === 'DELETE_LISTINGS') {
     if (!ids) return { ok: true, action: 'ignored_missing_id' }
     const didArchive = await archivePixxiItem(ids.pixxiId)
     await recordAudit({
       action: 'crm.webhook_delete',
       targetType: 'PixxiLink',
       targetId: ids.pixxiId,
-      metadata: { archived: didArchive },
+      metadata: { event, archived: didArchive },
     })
     return { ok: true, action: didArchive ? 'archived' : 'not_found' }
   }
 
-  if (event === 'EventADD_LISTINGS' || event === 'EventUPDATE_LISTINGS') {
+  if (normalizedEvent === 'ADD_LISTINGS' || normalizedEvent === 'UPDATE_LISTINGS') {
     if (!ids) return { ok: true, action: 'ignored_missing_id' }
     const fresh =
       (await fetchPixxiSingleListing({
