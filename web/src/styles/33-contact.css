@@ -1,10 +1,24 @@
 /* ==========================================================================
-   CONTACT PAGE (/contact), D-60
-   - .ll-contact-grid  two panels of the same width and height, side by side:
-                       the contact channels card | the briefing form card.
-                       The photo (left) and the notes box (right) take up the
-                       spare height, so both cards end on the same line.
+   CONTACT PAGE (/contact), D-60 / D-63
+   - .ll-contact-band   light tint band under the page header
+   - .ll-contact-grid   two panels of the same width and height:
+       .ll-contact-card   channels as pill rows (call | WhatsApp, then email)
+                          over the Dubai Marina photo, with the brand keyhole
+                          and the office address on it
+       .ll-contact-form   the briefing form card, pill fields (.ll-pill-fields)
+     The photo (left) and the notes box (right) take up the spare height, so both
+     cards end on the same line.
    ========================================================================== */
+.ll-contact-band {
+  --contact-radius: 28px;
+  position: relative;
+  padding: clamp(3.5rem, 6vw, 5.5rem) 0;
+  background:
+    radial-gradient(45% 70% at 0% 0%, rgba(var(--brand-teal-rgb), 0.1) 0%, rgba(var(--brand-teal-rgb), 0) 70%),
+    radial-gradient(40% 65% at 100% 100%, rgba(var(--brand-teal-rgb), 0.1) 0%, rgba(var(--brand-teal-rgb), 0) 70%),
+    var(--surface-tint);
+}
+
 .ll-contact-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -17,6 +31,15 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  border: 1px solid rgba(10, 52, 54, 0.07);
+  border-radius: var(--contact-radius);
+  background: var(--white);
+  box-shadow:
+    0 2px 6px rgba(16, 42, 44, 0.04),
+    0 34px 64px -30px rgba(16, 42, 44, 0.22);
+}
+
+.ll-contact-form > .ll-form-card {
   padding: clamp(1.5rem, 2.6vw, 2.25rem);
 }
 
@@ -24,10 +47,24 @@
   min-width: 0;
 }
 
+/* the card body keeps the form's padding; the photo sits in a 12 px inset below */
+.ll-contact-card {
+  padding: 0 0 12px;
+  overflow: hidden;
+}
+
+/* a flex column, like the form card, so the eyebrows line up to the pixel */
+.ll-contact-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: clamp(1.5rem, 2.6vw, 2.25rem) clamp(1.5rem, 2.6vw, 2.25rem) 1.5rem;
+}
+
 .ll-contact-title {
   margin-bottom: 0.6rem;
   font-family: var(--font-display);
-  font-size: clamp(1.4rem, 2vw, 1.6rem);
+  font-size: clamp(1.45rem, 2.1vw, 1.7rem);
   font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 1.2;
@@ -41,58 +78,128 @@
   color: var(--body-text);
 }
 
-/* Channels */
+/* ---- Channels: pill rows, like the site's buttons ---------------------- */
 .ll-contact-channels {
+  align-self: stretch;
   display: grid;
-  gap: 1.15rem;
-  margin: 0 0 1.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.ll-contact-channels li {
+/* call | WhatsApp side by side; the last odd row (email) runs full width */
+.ll-contact-channels li:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+/* half-width rows drop the arrow; the icon turning teal is the hover cue */
+.ll-contact-channels li:not(:last-child:nth-child(odd)) .ll-contact-channel-go {
+  display: none;
+}
+
+.ll-contact-channel {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.85rem;
-}
-
-.ll-contact-channels svg {
-  flex-shrink: 0;
-  margin-top: 3px;
-  color: var(--brand-teal);
-}
-
-.ll-contact-channels .ll-field-label {
-  margin-bottom: 0.15rem;
-}
-
-.ll-contact-channels a {
-  font-size: 1.02rem;
-  font-weight: 600;
+  min-height: 60px;
+  padding: 0.55rem 0.7rem 0.55rem 0.55rem;
+  border: 1px solid rgba(10, 52, 54, 0.08);
+  border-radius: 999px;
+  background: var(--page-bg);
   color: var(--heading);
-  overflow-wrap: anywhere;
-  transition: color 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
 
-.ll-contact-channels a:hover {
+a.ll-contact-channel:hover {
+  border-color: rgba(var(--brand-teal-rgb), 0.45);
+  background: var(--white);
+  box-shadow: 0 14px 30px -16px rgba(var(--action-teal-rgb), 0.45);
+  transform: translateY(-1px);
+}
+
+a.ll-contact-channel:focus-visible {
+  outline: 2px solid var(--action-teal);
+  outline-offset: 3px;
+}
+
+.ll-contact-channel-icon {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  background: var(--white);
+  box-shadow: 0 0 0 1px rgba(var(--brand-teal-rgb), 0.22);
   color: var(--action-teal);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
-.ll-contact-channels address {
+a.ll-contact-channel:hover .ll-contact-channel-icon {
+  background: var(--action-teal);
+  color: var(--white);
+}
+
+.ll-contact-channel-text {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  gap: 0.1rem;
+}
+
+.ll-contact-channel-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--body-text);
+}
+
+.ll-contact-channel-value {
+  display: grid;
+  font-size: 0.98rem;
   font-style: normal;
   font-weight: 600;
-  line-height: 1.55;
+  line-height: 1.45;
   color: var(--heading);
+  overflow-wrap: anywhere;
 }
 
-/* the photo fills whatever height is left */
+.ll-contact-channel-go {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  color: var(--action-teal);
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+a.ll-contact-channel:hover .ll-contact-channel-go {
+  background: rgba(var(--action-teal-rgb), 0.1);
+  transform: translate(2px, -2px);
+}
+
+/* ---- The photo: Dubai Marina, fills whatever height is left ------------ */
 .ll-contact-photo {
   position: relative;
   flex: 1;
-  min-height: 170px;
-  border-radius: var(--radius-md);
+  min-height: 250px;
+  margin: 0 12px;
+  border-radius: calc(var(--contact-radius) - 10px);
   overflow: hidden;
-  background: var(--dark-teal);
+  background: var(--surface-tint);
 }
 
 .ll-contact-photo img {
@@ -101,9 +208,82 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: 50% 58%;
 }
 
-/* Form: the notes box grows so the button lines up with the photo's bottom edge */
+/* a whisper of brand teal at the bottom, so the chip always reads */
+.ll-contact-photo::after {
+  content: '';
+  position: absolute;
+  inset: 45% 0 0;
+  background: linear-gradient(180deg, rgba(10, 52, 54, 0) 0%, rgba(10, 52, 54, 0.38) 100%);
+  pointer-events: none;
+}
+
+/* the brand keyhole in a glass circle, top right */
+.ll-contact-photo-mark {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 1;
+  width: 50px;
+  height: 50px;
+  border-radius: 999px;
+  background: rgba(10, 52, 54, 0.32);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.4),
+    0 10px 24px rgba(10, 52, 54, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.ll-contact-photo-mark::before {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  background: var(--white);
+  -webkit-mask: var(--keyhole-white) center / contain no-repeat;
+  mask: var(--keyhole-white) center / contain no-repeat;
+}
+
+/* the office address on a white glass card, bottom left */
+.ll-contact-photo-chip {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  max-width: calc(100% - 28px);
+  padding: 0.7rem 1.1rem 0.75rem 0.7rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 14px 30px rgba(10, 52, 54, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.ll-contact-photo-chip-icon {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: var(--action-teal);
+  color: var(--white);
+}
+
+.ll-contact-photo-chip address {
+  display: grid;
+  margin-top: 0.1rem;
+  font-size: 0.82rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--heading);
+}
+
+/* ---- Form: the notes box grows so the button lines up with the photo --- */
 .ll-contact-form .ll-form-grid {
   display: flex;
   flex: 1;
@@ -132,6 +312,25 @@
 
   .ll-contact-photo {
     flex: none;
-    height: 200px;
+    height: 280px;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .ll-contact-channels {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ll-contact-channel-value {
+    font-size: 0.92rem;
+  }
+
+  .ll-contact-channel-go {
+    display: none;
+  }
+
+  .ll-contact-photo-chip address {
+    font-size: 0.76rem;
   }
 }

@@ -81,6 +81,28 @@
       }
     ]
   },
+  "/images/dubai-marina-morning.jpg": {
+    "width": 1264,
+    "height": 848,
+    "variants": [
+      {
+        "w": 640,
+        "src": "/images/opt/dubai-marina-morning-640.webp"
+      },
+      {
+        "w": 768,
+        "src": "/images/opt/dubai-marina-morning-768.webp"
+      },
+      {
+        "w": 960,
+        "src": "/images/opt/dubai-marina-morning-960.webp"
+      },
+      {
+        "w": 1264,
+        "src": "/images/opt/dubai-marina-morning-1264.webp"
+      }
+    ]
+  },
   "/images/dubai-sunset-waterfront.png": {
     "width": 1920,
     "height": 1084,

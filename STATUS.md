@@ -8,6 +8,10 @@
 
 ## Last updated
 
+2026-11-27 — by: Arena agent. **Contact second section polished + new Marina photo (D-63):** pill-row channels (call | WhatsApp, email), Dubai Marina morning photo with the keyhole mark and the office address on glass, pill fields (shared `.ll-pill-fields`), equal cards. tsc, lint, vitest 170/170, build, verify.sh 106/106, Playwright: all sell/contact specs pass; `carousel.spec.ts` fails in this sandbox on the base code too (environmental, CI is the reference).
+
+### Previous update
+
 2026-11-27 — by: Antigravity. **Pixxi CRM API alignment audit & fixes (`D-59`):**
 - Audited `modules/pixxi-crm` against `https://api-docs.pixxicrm.com/`, `Pixxi-API-Token-Guide.pdf`, and `Leads form.pdf` and fixed 3 live-integration mismatches before credentials arrive:
   1. Switched outbound listing-lead field from `propertyId` to **`propertyReference`** per `POST /pixxiapi/webhook/v1/form` spec (and added `propertyReference` fallback in `extractPixxiId`).
